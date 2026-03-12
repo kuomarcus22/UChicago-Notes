@@ -1,0 +1,42 @@
+\styledchapter{Introduction}
+
+We have a few course objectives:
+\begin{enumerate}[label=(\roman*)]
+	\item Description. We want to learn about some feature of the population from a finite sample. For example, we might be interested in estimating the unemployment rate by sampling from the U.S. population. Oftentimes, we are interested in measuring a difference in means.
+	\item Prediction. We want to come up with best predictions of some variable given some other measurement, ignoring any question of causality. We use available data to find the best fit model.
+	\item Causality. We want to learn the effect of changing an observable characteristic on an individual's outcome.
+\end{enumerate}
+
+\section{Linear Regression}
+
+We consider linear models with explanatory variables $x_1,\ldots,x_k$ and outcome $y$. A linear regression model relating these is of the form \[
+	y = h(x_1,\ldots,x_k)' \beta + u
+	,\] where $h$ is a \emph{known} vector-valued function, $\beta$ is a vector of constants, and $u$ is an error term.\boxednote{In a causal model, $u$ contains determinants of $y$.} After restricting to functions that make the components of $h$, then finds the best $\beta$.\boxednote{A nonparametric model does not fix $h$ and gets rid of $\beta$.}
+
+Note that $h$ itself does not have to be linear, or even of the same dimension as $(x_1,\ldots,x_k)$; consider $h((x_1,x_2)') = (1,x_1, x_2, x_2^2)'$. The model is called linear because it is linear in its parameters, namely $\beta$.
+
+When doing linear regression, we need to decide what the model is actually for. If we are doing prediction, then $u$ is just a prediction error. If we are doing causal inference, then $u$ contains the unobserved determinants of $y$.
+
+In this course, we will just consider $\beta$ to be constant, but this is a strong restriction.
+
+Consider the model between mid-parent height ($x$) and offspring height ($y$). Galton modeled this linearly with $\E\left[y \mid x = x_i\right] = \alpha + \beta x_i$, which we call the true model, or the true regression line.
+Note that $\alpha$ and $\beta$ are population features, since $\E\left[y \mid x\right]$ is a product of the joint distribution of population random variables. We can only do our best to approximate $\alpha$ and $\beta$ and will never actually know them. These estimates themselves will vary from sample to sample as the sample cloud of points changes.
+
+How should we choose a best fit line for a given cloud of points? We will use Ordinary Least Squares, which minimizes squared differences between the cloud and the line. OLS gives us an approximation of the conditional mean, while a quantile regression, which uses absolute loss, approximates the conditional median. Quantile regression is a linear programming problem and can be done numerically.
+
+We call $\hat{y}_i = \hat{\alpha} + \hat{\beta}x_i$ the \emph{fitted values} and $\hat{u}_i = y_i - \hat{y}_i$ the \emph{residual}. The \emph{fitted regression line} is $\hat{y}_i = \hat{\alpha} + \hat{\beta}x_i$. Note that the error $u_i = y_i - x' \beta$, which uses the true regression line, is \emph{not} the same as the residual.
+
+To choose the fitted regression line, we can
+\begin{enumerate}[label=(\roman*)]
+	\item Minimize (over $a,b$) $\sum_{i=1}^{n} \left| y_i - a- b x_i \right|$. This is a quantile regression that is an estimate of the median of $y \mid x$.
+	\item Minimize (over $a,b$) $\sum_{i=1}^{n} \left( y_i - a - bx_i \right)^2$. This is OLS and estimates $\E\left[y\mid x\right]$.
+\end{enumerate}
+
+It can be shown that \[
+	\frac{\hat{y} - \overline{y}_n}{s_y} = \hat{\rho}_{yx} \frac{x - \overline{x}_n}{s_x}
+	,\] where $s_x, s_y$ are the sample standard deviations and $\hat{\rho}_{xy}$ is the sample correlation coefficient.
+
+If $s_x \approx s_y$, we can see $\hat{\rho}_{yx} \approx \hat{\beta}$. Galton found that $\hat{\beta} < 1$; since the units of $x$ and $y$ in this case are the same (and the sample standard deviations are approximately equal), this means that there is non-perfect correlation between parents' height and offspring height. This is where the term ``regression'' originated. When $\hat{\beta} < 1$, we call this \emph{regression to the mean} because the expected deviation of the outcome is less than the deviation of the individual sample.
+
+
+\newpage

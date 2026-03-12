@@ -1,0 +1,379 @@
+\styledchapter{Statistics Review}
+
+\section{Basics}
+
+If the support of a random variable has at most countable support, it is discrete.
+
+A density function is a nonnegative function on $\R$ that integrates to $1$. A random variable $X$ is continuous if there exists a density function $f_X$ such that \[
+	F_X(x) = \int_{-\infty}^{x} f_X(t) dt
+\] for all $x \in \R$.
+
+Absolutely continuous distribution assign probability $0$ to any finite set of points. (This is usually what we mean when we refer to continuous distribution.)
+
+Properties of Expectation. We have the following properties:
+\begin{enumerate}[label=(\roman*)]
+	\item Linearity: $\E\left[aX + bY\right] = a\E\left[X\right]  + b\E\left[Y\right] $.
+	\item If $X \le Y$ with probability $1$, then $\E\left[X\right]  \le \E\left[Y\right] $.
+	\item Jensen's inequality: If $\E\left[X\right] $ and $\E\left[g(X)\right] $ exist and $g$ is convex, then \[
+		      \E\left[g(X)\right] \ge g\left( \E\left[X\right]  \right)
+		      .\] The inequality is strict if $g$ is strictly convex and $X$ is nonconstant.
+\end{enumerate}
+
+For the proof of Jensen's, for a convex function $g$ and the tangent line at $\E\left[X\right] $, given by $a  + bX$, we have
+\begin{align*}
+	a+bX                 & \le g(X)                \\
+	g(\E\left[X\right] ) & = a + b\E\left[X\right] \\
+	                     & = \E\left[a + bX\right] \\
+	                     & \le \E\left[g(X)\right]
+	.\end{align*}
+
+\begin{example}	(Wages.) Wages are often modeled using a log-normal distribution. Consider \[
+		\ln{\left(w\right)} \sim N(\mu,\sigma^2)
+		.\]
+	Then
+	\begin{align*}
+		\E\left[\ln{\left(w\right)}\right]        & = \mu, \quad \E\left[w\right] = \E\left[\operatorname{exp}\left(\ln{\left(w\right)}\right)\right] \\
+		\text{Jensen's} \implies \E\left[w\right] & > e^{\mu}
+		,\end{align*}
+	where the inequality is strict because wages are not constant in the population if $\sigma^2 > 0$ and the exponential function is strictly convex.
+
+	It is known that \[
+		\E\left[w\right] = e^{\mu + \frac{\sigma^2}{2}}
+		.\]
+
+\end{example}
+
+\begin{definition}[Statistical terms]
+	If $\E\left[X^k\right] $ exists, it is called the $k$th moment of $X$. $\E\left[\left( X- \E\left[X\right]  \right)^{k}\right] $ is the $k$th central moment of $X$. Moments and central moments exist iff the other exists.
+
+	Covariance is given by \[
+		\operatorname{Cov}\left(X,Y\right) = \E\left[\left( X-\E\left[X\right]  \right)\left( Y - \E\left[Y\right]  \right)\right] = \E\left[XY\right] - \E\left[X\right] \E\left[Y\right]
+		.\] Correlation is given by \[
+		\operatorname{Corr}\left(X,Y\right) = \frac{\operatorname{Cov}\left(X,Y\right)}{\sqrt{\operatorname{Var}\left(X\right)\operatorname{Var}\left(Y\right)} }
+		.\]
+\end{definition}
+
+\begin{theorem}[Existence of Moments] Suppose $\E\left[\left| X \right|^{k}\right] < \infty$ for some $k >0$. Then for $r \in (0,k)$, $\E\left[\left| X \right|^r\right] <\infty$.
+\end{theorem}
+
+\begin{proof}
+	Take\marginimage[Segmenting the bound.]{1-8-1}
+	an expectation of \[
+		\left| X \right|^r \le 1 \cdot \mathds{1}_{\left| X \right| < 1} + \left| X \right|^{k} \mathds{1}_{\left| X \right| \ge 1}
+		.\]
+\end{proof}
+
+\section{Useful Inequalities}
+
+\begin{theorem}	(Chebyshev's Inequality.) Suppose $X^r$ is a nonnegative integrable random variable for some $r>0$ (its expectation exists). Then for any $\delta > 0$, \[
+		\P\left[X \ge \delta\right] \le \frac{\E\left[X^r\right] }{\delta^r}
+		.\]
+\end{theorem}
+
+\begin{proof}
+	Take an expectation on \[
+		X^r \ge X^r \mathds{1}_{X < \delta} + \delta^r \mathds{1}_{X \ge \delta} \ge \delta^r \mathds{1}_{X \ge \delta}
+		.\] The picture is similar to the existence of moments.
+\end{proof}
+
+\begin{example}	One application is taking $X$ as $\left| X - \E\left[X\right]  \right|$ and $r=2$. We can further extend this and get \[
+		\P\left[\left| \overline{X} - \E\left[X\right]  \right| \ge \delta\right] \le \frac{\sigma^2}{n \delta^2}
+	\] to prove the WLLN when the second moment exists.
+\end{example}
+
+\begin{theorem}	(Cauchy-Schwartz.) If the second moments of $X,Y$ exist, \[
+		\left| \E\left[XY\right]  \right|^2 \le \E\left[X^2\right] \E\left[Y^2\right]
+		,\] with equality iff $X = aY$ with probability $1$ for some constant $a$.
+
+	We normally see \[
+		\left| \langle X,Y \rangle \right|^2 \le \|X\|^2 \|Y\|^2
+		.\] Our inner product of random variables $X$ and $Y$ is defined as \[
+		\int_{\R^2}^{} XY dx dy = \int_{}^{} XY d\mu(x,y) = \E\left[XY\right]
+		.\]
+\end{theorem}
+
+\begin{proof}
+	Suppose $Y \ne 0$ with positive probability. (The inequality is trivial when $Y=0$ w.p. $1$.) Then $\E\left[Y^2\right] > 0$.
+
+	Note
+	\begin{align*}
+		0 & \le \min_b \E\left[\left( X-bY \right)^2\right]                             \\
+		  & = \min_b \E\left[X^2\right] - 2b \E\left[XY\right] + b^2 \E\left[Y^2\right]
+		.\end{align*}
+	This is a quadratic in $b$ and since $\E\left[Y^2\right] > 0$, the FOC is sufficient for a minimum.
+	We require
+	\begin{align*}
+		-2 \E\left[XY\right] + 2b^* \E\left[Y^2\right] & = 0                                              \\
+		b^*                                            & = \frac{\E\left[XY\right] }{\E\left[Y^2\right] }
+		.\end{align*}
+	Plugging this back into the first inequality,
+	\begin{align*}
+		0 & \le \E\left[X^2\right] - 2 \frac{\E\left[XY\right] }{\E\left[Y^2\right] }\E\left[XY\right] + \frac{\E\left[XY\right] ^2}{\E\left[Y^2\right] ^2}\E\left[Y^2\right] \\
+		  & = \E\left[X^2\right] - \frac{\E\left[XY\right] ^2}{\E\left[Y^2\right]}
+		.\end{align*}
+
+	Note that equality holds iff $X = \frac{\E\left[XY\right] }{\E\left[Y^2\right] }Y$ with probability $1$ which is iff $X = aY$ for some $a$.
+\end{proof}
+
+\begin{proposition}	$\operatorname{Corr}\left(X,Y\right) \in [-1,1]$. The correlation is $\pm 1$ iff there is an affine relationship between $X$ and $Y$.
+\end{proposition}
+
+\begin{proof}
+	By Cauchy-Schwartz, \[
+		\left| \operatorname{Cov}\left(X,Y\right) \right| \le \sqrt{\operatorname{Var}\left(X\right)\operatorname{Var}\left(Y\right)}
+		,\] and equality holds when $X - \E\left[X\right] = b\left( Y - \E\left[Y\right]  \right)$, or iff $X = a +  bY$.
+\end{proof}
+
+\section{Random Vectors}
+
+The expectation of a matrix $X \in \R^{N \times M}$ is the matrix of the expectations of its components. With $M=1$ we have a random vector. The variance of random $X \in \R^{N \times 1}$ is \[
+	\operatorname{Var}\left(X\right) = \E\left[\left( X-\E\left[X\right]  \right)\left( X - \E\left[X\right]  \right)'\right]
+	.\] This matrix has $(i,j)$ element as $\operatorname{Cov}\left(X_i,X_j\right)$ and $(i,i)$ entry as $\operatorname{Var}\left(X_i\right).$
+
+\begin{remark}	(Properties of variance of random vectors.) Suppose $X \in \R^n$ such that its second moment (variance) exists. For $A \in \R^{M \times  N}$, $b \in \R^m$, \[
+		\operatorname{Var}\left(AX + b\right) = A \operatorname{Var}\left(X\right)A'
+		.\]
+
+	We define the covariance for random vectors $X,Y \in \R^m$ as \[
+		\operatorname{Cov}\left(X,Y\right) = \E\left[\left( X - \E\left[X\right]  \right)\left( Y - \E\left[Y\right]  \right)'\right]
+		.\]
+\end{remark}
+
+\begin{proof}
+	Exercise in HW.
+\end{proof}
+
+\begin{definition}[Conditional distributions]
+	Suppose $(X,Y)$ have joint density $f_{XY}$. The conditional density of $Y$ given $X$ is \[
+		f_{Y \mid X} (y \mid x) = \frac{f_{XY}(x,y)}{f_X(x)}
+		,\] and it follows that \[
+		f_Y(y) = \int_{-\infty}^{\infty} f_{Y \mid X}(y\mid x) f_X(x) dx
+		.\]
+
+	The definition for it $X,Y$ are jointly discrete is analogous.
+
+	There are mixed cases as well. Their densities and expectations can be calculated.
+
+	Conditional expectation is defined as expected\footnote{!} and conditional variance is defined by replacing all expectations with conditional expectations.
+\end{definition}
+
+\begin{example}	Suppose $Y$ models wage, and $X = 1$ if the individual is in IL, and $0$ if the individual is in $WI$.
+
+	$\E\left[Y \mid X=1\right] $ is the average wage in IL. We can decompose the conditional wage as \[
+		\E\left[Y \mid X\right] = \E\left[Y \mid X = 1\right] \mathds{1}_{X = 1} + \E\left[Y \mid X = 0\right] \mathds{1}_{X= 0}
+		.\] The expectations are known; the randomness of $Y \mid X$ comes from the indicator variables.
+\end{example}
+
+\begin{remark}	(Properties of Conditional Expectation and Variance.) For conditional expectation, we have linearity, the Law of Iterated Expectation \[
+		\E\left[Y\right]  = \E\left[\E\left[Y \mid X\right] \right]
+		,\] and can take out known values \[
+		\E\left[f(X) + g(X) Y \mid X\right] = f(X) + g(X) \E\left[Y \mid X\right]
+		.\]
+
+	We have the following property for conditional variance: \[
+		\operatorname{Var}\left(Y\right) = \E\left[\operatorname{Var}\left(Y \mid X\right)\right] + \operatorname{Var}\left(\E\left[Y \mid X\right] \right)
+		.\] Consider the average wages in Illinois and Wisconsin being tightly clustered around \$100k and \$80k respectively. Then the first term is small and the second term is large, making the unconditional variance large.
+\end{remark}
+
+\begin{definition}[Conditional Mean Independence]
+	We say that $Y$ is mean independent of $X$ if $\E\left[Y \mid X\right] = \E\left[Y\right] $.
+
+	Full independence is strong; it implies \[
+		\P_{Y \mid X}\left[Y \in B \mid X \in A\right] = \P_Y\left[Y \in B\right]
+		.\]
+\end{definition}
+
+\marginimage[Uncorrelated does not imply independence.]{1-8-2}
+\begin{proposition}	We have that $X$ independent of $Y \implies Y$ mean independent of $X \implies \operatorname{Cov}\left(X,Y\right) = 0$.
+	The second implication follows from the LIE:
+	\begin{align*}
+		\operatorname{Cov}\left(X,Y\right) & = \E\left[XY\right] - \E\left[X\right] \E\left[Y\right]                                             \\
+		                                   & = \E\left[X \E\left[Y \mid X\right] \right]  - \E\left[X\right]  \E\left[Y\right]                   \\
+		                                   & = \E\left[X \E\left[Y\right] \right] - \E\left[X\right] \E\left[Y\right] \quad \text{by assumption} \\
+		                                   & = \E\left[X\right] \E\left[Y\right] - \E\left[X\right] \E\left[Y\right]                             \\
+		                                   & = 0
+		.\end{align*}
+
+	The converse is not true.
+	For example, two normally distributed RVs that are uncorrelated are not necessarily independent. (They are only independent if they are bivariate normal and uncorrelated.)
+\end{proposition}
+
+\begin{definition}[Binning estimator]
+	Suppose we have sample $\{Y_i, X_i\}_{i=1}^{n}$, $X$ discrete. Let $N_x = \sum_{i=1}^{n}\mathds{1}_{X_i = x}$.
+	The binning estimator of $\E\left[Y \mid X = x\right] $ is defined \[
+		\hat{\mu}(x) = \frac{\sum_{i=1}^{n}Y_i \mathds{1}_{X_i = x}}{\sum_{i=1}^{n}\mathds{1}_{X_i = x}} = \frac{1}{N_x} \sum_{i:\ X_i = x} Y_i
+		.\]
+
+	$\E\left[Y\right] $ is a special case, because we can write $\E\left[Y \mid X \in \R\right] $.
+\end{definition}
+
+\begin{remark}	Consider the curse of dimensionality: we have a small-bin problem in that $N_X$ is small when $X$ takes on many values and $X$ is a random vector in $\R^k$ (equivalently, we condition on $k$ variables).
+
+	Furthermore, imposing that $\E\left[Y \mid X\right] $ is linear makes the problem much easier. We only need the conditional mean for two values of $X$. This is called the linear conditional mean assumption. Alternatively (but equivalently), we can just find the best linear approximation to $\E\left[Y \mid X\right] $.
+\end{remark}
+\boxednote{A symmetric matrix $M$ is positive semidefinite iff
+\[
+	a'Ma \ge 0
+\]
+for every vector $a$; it is positive definite if the inequality is strict for all $a\ne 0$. Equivalently, it is positive (semi)definite if it is symmetric and all of its eigenvalues are positive (nonnegative). In particular, $CC'$ is always positive semidefinite since
+\[
+	a'CC'a=\|C'a\|^2\ge 0.
+\]
+This is how we compare variance matrices in efficiency arguments: if $V_1-V_2$ is positive semidefinite, then
+\[
+	a'V_1a \ge a'V_2a
+\]
+for every $a$, so every linear combination $a'\hat{\theta}$ has weakly smaller variance under $V_2$.}
+\begin{example}	Suppose $(Y,X_1,\ldots,X_k)$ has distribution $P_{YX}$ and that the second moments of $Y$ and $X_j$ exist. If we want to choose $g$ to minimize $\E\left[\left( Y - g(X) \right)^2\right] $, \[
+		g^* = \argmin_{g \in L^2(X)} \E\left[\left( Y - g(X) \right)^2\right]
+		.\] We can show that $g^*(X) = \E\left[Y \mid X\right]$\boxednote{In the lecture slides, write the last term of the first sum as $2\E\left[a b(x)\right] $, and note \[
+			\E\left[ab(x)\right] = \E\left[\E\left[ab(x) \mid x\right] \right]
+			.\] }. The conditional mean $Y \mid X$ is the best predictor of $Y$ under square loss.
+
+	If we restrict $L^2(X)$ to \[
+		H(X) = \{f: f(X) = X'a,\ a \in \R^k\}
+		,\] the best linear predictor of $Y$ given $X$ is given by \begin{align*}
+		b* & = \argmin_{b \in \R^k} \E\left[\left( Y-X'b \right)^2	\right] \\
+		   & = \argmin_{b \in \R^k} \E\left[Y^2\right]  - 2b' \E\left[XY\right]  + b' \E\left[XX'\right] b
+		,\end{align*}
+	where $\E\left[XX'\right] $ being positive semidefinite gives us weak convexity in $b$\boxednote{Think of everything as a scalar/random variable; but it is similar for random vectors}.
+	Then the FOC gives us \[
+		b^* = \E\left[XX'\right] ^{-1}\E\left[XY\right]
+	\]
+	when $\E\left[XX'\right] ^{-1}$ exists.
+
+	Define the prediction error $U = Y-X'b^*$. By construction (in the FOC\boxednote{As a reminder, the FOC is \[
+			2\E\left[XX'\right]b^* - 2\E\left[XY \right] = 0
+			.\] }),
+	\begin{align*}
+		Y                                 & = X' b^* + U, \quad \E\left[XU\right] = 0     \\
+		\text{because } \E\left[XU\right] & = \E\left[XY\right]  - \E\left[XX'\right] b^*
+		.\end{align*}
+	People make a big deal about correlation with the error term, but this is really only a problem for \emph{causal} models.
+\end{example}
+
+In the linear restriction, we only get the expression for the unique estimator $b^* = \E\left[XX'\right] ^{-1} \E\left[XY\right] $ when $\E\left[XX'\right] $ is invertible.
+
+\begin{remark}	We can solve the following problems in decreasing difficulty:
+	\begin{enumerate}[label=(\roman*)]
+		\item $\min_{g \in L^2(X)} \E\left[\left(Y - g\left(X \right)\right)^2\right] $
+		\item $\min_{b \in \R^k} \E\left[\left(Y - X'b\right)^2\right] $
+		\item $\min_{b \in \R^k} \E\left[\left(\E\left[Y \mid X\right] - X'b\right)^2\right] $.
+	\end{enumerate}
+
+	(iii) is in fact equivalent to (ii) because taking expectations conditional on $X$ of $Y = \E\left[Y \mid X \right]  + U$ gives us $\E\left[U \mid X\right] =0$, which implies $\E\left[Uf(X)\right] = 0$; $U$ is orthogonal to any function of $X$. We formalize this in Theorem (\ref{1-13-0}).
+
+	We generally have more observations than dimensions of $X$; the error term is because the span of $X$ is a subset of the space $Y$ lives in.
+
+	The error term exists due to a dimensional constraint: $Y$ lives in the infinite-dimensional space $L^2(\Omega)$,\boxednote{\texthl{Or is it $\E\left[Y \mid X \right] $ that lives in this space?}} while linear functions $X'b$ span only a $k$-dimensional subspace of this space (the span of $\{X_1, \ldots, X_k\}$ as random variables). The optimal $b^*$ in problem (ii) yields $X'b^*$ as the orthogonal projection of $Y$ onto $\text{span}(X)$, and the error $U = Y - X'b^*$ is precisely the component of $Y$ orthogonal to this subspace. This orthogonality is what gives us $\E[U \mid X] = 0$: by construction, $U$ is orthogonal to every function of $X$. Unless $Y$ happens to lie exactly in $\text{span}(X)$ (i.e., $Y$ is truly linear in $X$), there must be a nonzero orthogonal component.
+\end{remark}
+
+\begin{definition}[Perfect collinearity]
+	We say there is perfect collinearity in $X$ if exists a constant vector $a \ne 0$ such that \[
+		\P\left[a' X = 0\right] = 1
+		.\] This means that the components of $X$ are linearly independent.
+
+	``No perfect collinearity'' is equivalent to $\E\left[XX'\right] $ is invertible, so perfect collinearity gives us uniqueness of $b^*$ as an estimator of $\E\left[Y \mid X\right]$
+\end{definition}
+
+
+\begin{example}
+	If $X \sim \operatorname{Unif}(0,1)$, then $X,X^2$ are not perfectly collinear. However if $\operatorname{Supp}(X) = \{0,1\}$, then $X,X^2$ are perfectly collinear.
+\end{example}
+
+\begin{lemma}	Suppose $X \in \R^k$ is a random vector and $\E\left[XX'\right] $ exists. Then $\E\left[XX'\right] $ is invertible iff there is no perfect collinearty in $X$.
+\end{lemma}
+
+\begin{proof}
+	($\implies$) To show the contrapositive, suppose there is perfect collinearity in $X$. Then
+	\begin{align*}
+		\E\left[XX'\right] a = \E\left[X \left( X'a \right)\right] = \E\left[X \cdot 0\right] = 0
+		,\end{align*}so $\E\left[XX'\right]$ is not full rank and not invertible.
+
+	($\impliedby$) If there is no perfect collinearity in $X$, for $c \in \R^k, c \ne 0$, we have $\P\left[c' X \ne 0\right] > 0$, so \[
+		c' \E\left[XX'\right] c = \E\left[c'XX'c\right] = \E\left[\left( X' c \right)^2\right] > 0
+		.\] Then $\E\left[XX'\right] $ is positive definite, so it is invertible.
+\end{proof}
+
+
+\begin{theorem}[Risk decomposition via conditional expectation] \label{1-13-0}
+	We have
+	\begin{align*}
+		\E\left[\left( \E\left[Y \mid X\right]  - X'b \right)^2\right]
+		&= \E\left[\left(\E\left[Y \mid X\right]  - Y + Y - X'b\right)^2 \right] \\
+		&= \E\left[\left(Y - \E\left[Y \mid X\right]\right)^2\right] + \E\left[\left(Y - X'b\right)^2\right] \\
+		&\quad - 2\E\left[\left( Y - \E\left[Y \mid X\right]  \right)\left( Y - X'b \right)\right]
+	.\end{align*}
+	By the law of iterated expectations, we see
+	\begin{align*}
+		\E\left[\left( Y - \E\left[Y \mid X\right]  \right)\left( Y - X'b \right)\right]
+		&= \E\left[\E\left[\left( Y - \E\left[Y \mid X\right]  \right)\left( Y - X'b \right)\mid X\right]\right] \\
+		&= \E\left[\E\left[\left( Y - \E\left[Y \mid X\right]  \right)Y\mid X\right]\right] \\
+		&\quad - \E\left[X' b\, \E\left[ Y - \E\left[Y \mid X\right]\mid X\right]\right] \\
+		&= \E\left[\E\left[\left( Y - \E\left[Y \mid X\right]  \right)Y\mid X\right]\right] \\
+		&= \E\left[\E\left[\left( Y - \E\left[Y \mid X\right]\right)^2\mid X\right]\right] \\
+		&= \E\left[\left( Y - \E\left[Y \mid X\right]\right)^2\right]
+	.\end{align*}
+	Thus
+	\[
+		\begin{aligned}
+			\E\left[\left( \E\left[Y \mid X\right] - X'b \right)^2\right]
+			&= \E\left[\left(Y-X'b\right)^2\right] \\
+			&\quad - \E\left[\left( Y - \E\left[Y \mid X\right]\right)^2\right]
+		\end{aligned}
+	.\]
+	Hence the minimization problems of (ii) and (iii) are equivalent because the second term does not depend on $b$. The key part is that $Y - \E\left[Y \mid X\right]$ is orthogonal to functions of $X$.
+	\end{theorem}
+
+
+% Week 2 slides
+
+\section{Summary}
+
+\begin{remark}[Key inequalities]
+	\leavevmode\hfill\break
+	\textbf{Chebyshev}: $\P[X\ge\delta]\le \E[X^r]/\delta^r$ for $X\ge 0$ and $r>0$. \\
+	\textbf{Cauchy-Schwarz}: $|\E[XY]|^2\le\E[X^2]\E[Y^2]$, with equality iff $X=aY$ a.s. \\
+	\textbf{Jensen}: If $g$ is convex and $\E[X]$ exists, $\E[g(X)]\ge g(\E[X])$.
+\end{remark}
+
+\begin{remark}[Conditional expectation]
+	For random variables $Y$ and $X$:
+	\begin{itemize}
+		\item \textbf{LIE}: $\E[Y]=\E[\E[Y\mid X]]$.
+		\item \textbf{Taking out known values}: $\E[f(X)Y\mid X]=f(X)\E[Y\mid X]$.
+		\item \textbf{Variance decomposition}: $\operatorname{Var}(Y)=\E[\operatorname{Var}(Y\mid X)]+\operatorname{Var}(\E[Y\mid X])$.
+		\item \textbf{Best predictor under square loss}: $g^*(X)=\E[Y\mid X]$.
+	\end{itemize}
+\end{remark}
+
+\begin{remark}[Independence hierarchy]
+	$X\ind Y$ (full independence) $\implies$ $Y$ mean independent of $X$ ($\E[Y\mid X]=\E[Y]$) $\implies$ $\operatorname{Cov}(X,Y)=0$. Neither implication reverses in general.
+\end{remark}
+
+\begin{remark}[Best Linear Predictor]
+	The BLP of $Y$ given $X\in\R^k$ (assuming $\E[XX']$ invertible) is
+	\[
+		b^* = \E[XX']^{-1}\E[XY],
+	\]
+	obtained by minimizing $\E[(Y-X'b)^2]$ over $b\in\R^k$. The prediction error $U=Y-X'b^*$ satisfies $\E[XU]=0$ by construction. \\[0.4em]
+	\textbf{Uniqueness}: $b^*$ is unique iff there is no perfect collinearity in $X$, i.e.\ $\E[XX']$ is invertible.
+\end{remark}
+
+\begin{remark}[When to use what]
+	\begin{center}
+	\small
+	\renewcommand{\arraystretch}{1.1}
+	\begin{tabular}{p{0.22\linewidth}p{0.22\linewidth}p{0.33\linewidth}}
+		\toprule
+		Estimand & Estimator & Required assumption \\
+		\midrule
+		$\E[Y\mid X=x]$, $X$ discrete & Binning estimator & Enough data per cell \\
+		$\E[Y\mid X]$ (any $X$) & Best predictor $\E[Y\mid X]$ & Square-integrable $Y$ \\
+		Linear approx.\ to $\E[Y\mid X]$ & BLP $b^*=\E[XX']^{-1}\E[XY]$ & No perfect collinearity \\
+		\bottomrule
+	\end{tabular}
+	\end{center}
+\end{remark}
+
+\newpage

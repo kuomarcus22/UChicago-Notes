@@ -1,0 +1,458 @@
+\styledchapter{Selection on Observables}
+
+\begin{remark}	So far we have considered counterfactuals using linear regression:
+	\begin{itemize}
+		\item How much does earnings potential increase with another year of experience, holding all else fixed?
+		\item How much does an additional bedroom increase house price, holding floor area/lot size/air pollution (and all else) fixed?
+	\end{itemize}
+	OLS estimates proportional to ``partial correlations'' between outcome and regressors. ``Holding fixed'' other observable factors in this way answers counterfactual question if $y = x'\beta + u$ and $\E\left[xu\right] = 0$. In particular, $\E\left[xu\right] = 0$ implies
+	\[
+		\beta = \E\left[xx'\right]^{-1}\E\left[xy\right]
+	,\]
+	so (scaled) partial correlations are partial (causal) effects, and scaled partial correlations can be estimated.
+\end{remark}
+
+\begin{definition}[Rubin Causal Model]
+	We can think about counterfactuals as `potential outcomes' under different `treatments':
+	\begin{itemize}
+		\item Earnings with college degree, $y(1)$, and without $y(0)$.
+		\item Health outcome with drug A, $y(1)$, vs. drug B, $y(0)$.
+		\item Productivity with job training, $y(1)$ vs. without, $y(0)$.
+	\end{itemize}
+	Define individual treatment effect for individual $i$ as $y_i(1) - y_i(0)$. Denote treatment status of individual $i$ by $D_i \in \left\{0, 1\right\}$.
+\end{definition}
+
+\section{Motivation: Store Upgrades}
+
+Consider $100$ stores where we are trying to measure the effect of receiving an interior upgrade on sales.
+
+\begin{example}[Store Upgrades]
+	$y_i(1)$ denotes sales store $i$ would observe with an upgrade. $y_i(0)$ denotes sales store $i$ would observe without an upgrade. The outcome observed is
+	\[
+		Y_i =
+		\begin{cases}
+			y_i(1) & \text{if store $i$ is upgraded,} \\
+			y_i(0) & \text{if not.}
+		\end{cases}
+	\]
+	In other words,
+	\[
+		Y_i = y_i(1)D_i + y_i(0)\left(1-D_i\right)
+	,\]
+	where $D_i$ is an indicator for if store $i$ received an upgrade.
+
+	We never observe the individual causal effect $y_i(1)-y_i(0)$ for any store because only one of the two potential outcomes is ever observed. However, we can try to measure average effects across treated and untreated stores by comparing averages:
+	\begin{itemize}
+		\item e.g. Average Treatment Effect in store population (ATE): $\E\left[y(1)-y(0)\right]$.
+		\item e.g. Average Treatment Effect on the treated (ATT): $\E\left[y(1)-y(0) \mid D=1\right]$.
+		\item e.g. Average Treatment Effect on untreated (ATU): $\E\left[y(1)-y(0) \mid D=0\right]$.
+	\end{itemize}
+
+	What is identified from $\E\left[Y \mid D\right]$?
+
+	First write out the conditional mean of $Y \mid D$:
+	\begin{align*}
+		\E\left[Y \mid D=1\right] &= \E\left[y(1)D + y(0)(1-D) \mid D=1\right] \\
+		&= \E\left[y(1) \mid D=1\right] \\
+		\E\left[Y \mid D=0\right] &= \E\left[y(1)D + y(0)(1-D) \mid D=0\right] \\
+		&= \E\left[y(0) \mid D=0\right]
+	.\end{align*}
+	We can observe $\E\left[y(1) \mid D=1\right]$ and $\E\left[y(0) \mid D=0\right]$. The data reveal an estimate of the `naive comparison':
+	\[
+		\E\left[y(1) \mid D=1\right] - \E\left[y(0) \mid D=0\right]
+	,\]
+	which is ATT plus selection effects.
+\end{example}
+
+\begin{remark}    Examining stores that are upgraded, not upgraded, and the whole population, we might see that
+	\begin{center}
+		\scriptsize
+		\renewcommand{\arraystretch}{1.15}
+		\begin{tabular}{p{0.24\linewidth}p{0.18\linewidth}p{0.18\linewidth}p{0.18\linewidth}}
+			& $D_i = 0$ & $D_i = 1$ & All \\
+			\hline
+			average sales if upgraded
+				& $\E[y(1)\mid D=0]=?$ 
+				& $\E[y(1)\mid D=1]=100$
+				& $\E[y(1)]=?$ \\
+			average sales if not upgraded
+				& $\E[y(0)\mid D=0]=50$
+				& $\E[y(0)\mid D=1]=?$
+				& $\E[y(0)]=?$ \\
+			difference
+				& $\E[y(1)-y(0)\mid D=0]=ATU$
+				& $\E[y(1)-y(0)\mid D=1]=ATT$
+				& $\E[y(1)-y(0)]=ATE$
+		\end{tabular}
+	\end{center}
+\end{remark}
+
+\begin{proposition}[Relationship between ATE, ATT, ATU]
+	We can decompose the ATE as follows:
+		\begin{align*}
+			\E\left[y(1)-y(0)\right]
+			&= \E\left[y(1)-y(0) \mid D=1\right]\P\left(D=1\right) \\
+			&\quad + \E\left[y(1)-y(0) \mid D=0\right]\P\left(D=0\right) \\
+			&= ATT \cdot \P\left(D=1\right) + ATU \cdot \P\left(D=0\right)
+		.\end{align*}
+\end{proposition}
+\begin{proof}
+	By the law of iterated expectation.
+\end{proof}
+
+\begin{proposition}[Regression and selection bias]
+	Write out the conditional mean of $Y \mid D$:
+	\[
+		\E\left[Y \mid D=1\right] = \E\left[y(1) \mid D=1\right], \qquad
+		\E\left[Y \mid D=0\right] = \E\left[y(0) \mid D=0\right]
+	.\]
+	It follows that
+	\[
+		\E\left[Y \mid D\right] = \beta_0 + \beta_1 D
+	,\]
+	where
+	\[
+		\beta_0 = \E\left[y(0) \mid D=0\right], \qquad
+		\beta_1 = \E\left[y(1) \mid D=1\right] - \E\left[y(0) \mid D=0\right]
+	.\]
+\end{proposition}
+\begin{proof}
+	Thus $\beta_1$ equals the naive comparison. Moreover,
+	\begin{align*}
+		\beta_1
+		&= \E\left[y(1) \mid D=1\right] - \E\left[y(0) \mid D=0\right] \\
+		&= \underbrace{\E\left[y(1) \mid D=1\right] - \E\left[y(0) \mid D=1\right]}_{\text{ATT}}
+		+ \underbrace{\E\left[y(0) \mid D=1\right] - \E\left[y(0) \mid D=0\right]}_{\text{Selection Bias}}
+	.\end{align*}
+		$\beta_1$ measures the average effect on stores that were upgraded (ATT) but is offset by ``selection bias'' in $y(0)$, which measures differences in average sales in the absence of upgrades.\boxednote{Equivalent decompositions are $\beta_1=ATT+SB_{y(0)}$ and $\beta_1=ATU+SB_{y(1)}$.}
+\end{proof}
+
+\begin{remark}	There is a big difference between selection bias in $y(0)$ vs selection bias in $y(1)$.
+	
+	For selection bias in $y(0)$ but not in $y(1)$, consider factories that do not get training who have scrap rates of $0.01$, factories that do get training who initially have scrap rates of $0.05$, but then $0.01$ after training.
+
+	For selection bias in $y(1)$ but not $y(0)$, consider factories all with the same scrap rate, then factory managers who only opt into training if their employees are trainable, whose scrap rates go down after treatment. If the factories who opted out of training would have had the same scrap rate as before even if they received training, we would have selection bias in $y(1)$ only.
+
+	Furthermore, the naive comparison can equal the ATE if the probability of selection and the magnitude of ATT/ATU cancel each other out, but this is generally not the case.
+\end{remark}
+
+\section{Random assignment}
+
+\begin{definition}[Random assignment]
+	How treatment is assigned determines whether selection bias is present. Random assignment:
+	\[
+		D_i \ind \left(y_i(0), y_i(1)\right)
+	.\]
+	This says treatment choice/assignment is independent of outcomes under treatment and no treatment.
+\end{definition}
+
+\begin{proposition}[Random assignment implies $\beta_1 = ATE$]
+	Under random assignment,
+	\[
+		\E\left[y(0) \mid D\right] = \E\left[y(0)\right], \qquad
+		\E\left[y(1) \mid D\right] = \E\left[y(1)\right]
+	,\]
+	i.e.\ the treatment and control groups are representative of the entire population. Hence,
+	\[
+		\beta_1 = \E\left[y(1)\right] - \E\left[y(0)\right] = ATE
+	.\]
+\end{proposition}
+\begin{proof}
+	\begin{align*}
+		\beta_1
+		&= \E\left[y(1) \mid D=1\right] - \E\left[y(0) \mid D=0\right] \text{ (naive comparison)}\\
+		&= \E\left[y(1)\right] - \E\left[y(0)\right] \\
+		&= ATE
+	.\end{align*}
+	Hence, under randomized treatment assignment, estimating a linear regression (which gives a coefficient that is the naive estimator) produces an unbiased estimate of the ATE.
+\end{proof}
+
+\begin{remark}[Multiple possible treatments]
+	Suppose in a randomized clinical trial there is a control group and $k$ possible treatments for a particular health condition. Suppose participants are randomly assigned to either control or one of the treatments. Let
+	\[
+		x_{i1} =
+		\begin{cases}
+			1 & \text{if $i$ receives treatment 1,} \\
+			0 & \text{otherwise,}
+		\end{cases}
+		\qquad
+		x_{i2} =
+		\begin{cases}
+			1 & \text{if $i$ receives treatment 2,} \\
+			0 & \text{otherwise,}
+		\end{cases}
+	\]
+	and similarly for $x_{ik}$. There are now $k+1$ potential outcomes $y_i(0), y_i(1), \ldots, y_i(k)$ and
+	\[
+		Y_i = y_i(0) + x_{i1}\left(y_i(1)-y_i(0)\right) + \cdots + x_{ik}\left(y_i(k)-y_i(0)\right)
+	.\]
+	Now let $x_i = \left(1, x_{i1}, \ldots, x_{ik}\right)'$. We have
+	\[
+		\E\left[Y_i \mid x_i\right] = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_k x_{ik}
+	,\]
+	where $\beta_0 = \E\left[y(0)\right]$ and, for each $j = 1, \ldots, k$, $\beta_j = \E\left[y(j)-y(0)\right]$.
+
+	If we have random assignment, 
+	\begin{align*}
+		\E\left[Y_i \mid x_{i,1} = 0,\ldots,x_{i,k} = 0\right] &= \E\left[y_i(0) \mid x_{i,1} = 0 ,\ldots, x_{i,k} = 0\right] = \E\left[y_i(0)\right] \\
+		\E\left[Y_i \mid x_{i,1} = 0 ,\ldots,x_{i,k} = 1\right] &= \E\left[y_i(k) \mid x_{i,1}= 0,\ldots,x_{i,k} = 1\right] = \E\left[y_i(k)\right] 
+	.\end{align*}
+
+	We can test whether these effects are statistically different from zero (or from each other) by forming appropriate hypotheses, e.g. $H_0:\beta_k=0$ or $H_0:\beta_1=\beta_2$.
+\end{remark}
+
+\section{Nonrandom assignment}
+
+Now we examine when we don't have random assignment and in fact have selection bias.
+
+\begin{example}[Job Training]
+	JTRAIN98 contains data on labor market outcomes for men, some of whom enrolled in a job training program in 1997. Only men who had low earnings were allowed to enroll in the program:
+
+	Considering the potential outcomes of earnings in 1998 without and with training, we see that the potential outcomes are correlated with treatment, because those who were eligible to be treated were lower income to begin with. (We expected both potential outcomes to be negatively correlated with $D$.) But conditioning on earnings in 1996 may remove this.
+
+	\begin{itemize}
+		\item Whether or not individual took training in 1997: $train = 1$ if training taken
+		\item Earnings in 1998 (in \$1000s): $earn98$
+		\item Earnings in 1996 (in \$1000s): $earn96$
+		\item Whether or not individual is married: $married = 1$ if married
+		\item Education in years of schooling: $educ$
+		\item Age in years: $age$
+	\end{itemize}
+	First, compute naive comparison by running regression:
+	\[
+		earn98 = \beta_0 + \beta_1 train + \epsilon
+	.\]Then $\hat{\beta}_1 = \overline{y}_{train} - \overline{y}_{not train} \xrightarrow{p} \E\left[Y \mid D = 1\right] - \E\left[Y \mid D = 0\right] $.
+	$\hat{\beta}_1$ is a comparison of means between individuals who did/did not take training, and indicates that individuals who took training earned \$2050 less on average in 1998. This is because the selection bias is outweighing the treatment effect.
+
+	Or, controlling for observable characteristics:
+	\[
+		earn98 = \beta_0 + \beta_1 train + \beta_2 educ + \beta_3 age + \beta_4 married + \beta_5 earn96 + \epsilon
+	.\]
+
+	The regression results show a negative coefficient on training when not controlling for observable characteristics, but a statistically significant positive coefficient on training when controlling for observable characteristics.
+\end{example}
+\begin{definition}[Covariate balance test]
+	One way random assignment is justified statistically is by a ``balance test.'' We want to see if individuals with particular covariates are more likely to select into treatment. Practically: Regress treatment dummy $D_i$ on observable characteristics $x_i$:
+	\[
+		D_i = \gamma_0 + x_i'\gamma_1 + \epsilon_i
+	.\]
+	Conduct $F$-test of $H_0:\gamma_1=0$ vs. $H_1:\gamma_1 \ne 0$.\boxednote{The $F$-test is the finite sample analog of the test of multiple linear restrictions ($t$-test vs. $z$-test).}
+\end{definition}
+
+\begin{remark}[Issues with balance tests]
+	The goal of a balance test is to show that $D$ is independent of potential outcomes. But this is not something that is measurable.
+	A balance test can show that $x$ is uncorrelated with potential outcomes, but this is not the same thing. Both directions can fail --- there may be unobserved factors that are causally linked to the outcome, while some observables may be correlated with the outcome but have no causal relationship.
+
+	If the significance level is 5\%, we will reject $H_0$ 5\% of the time even when $\gamma_1 = 0$. This means calling into question validity of 5\% of experimental results. If the balance test fails to reject, it doesn't mean randomization holds. $D_i$ may just be independent of observed covariates, leading to $\gamma_1 = 0$. What is really needed is
+	\[
+		D_i \ind \left(y_i(0), y_i(1)\right)
+	.\]
+\end{remark}
+
+\begin{definition}[Unconfounded treatment assignment]
+	Treatment assignment is unconfounded if, conditional on observed covariates $x_i$, treatment is as good as randomly assigned:
+	\[
+		D_i \ind \left(y_i(0), y_i(1)\right) \mid x_i
+	.\]
+	By this, we mean \[
+		\P\left[D \in A, \left( y(0),y(1) \right) \in B \mid X\right] = \P\left[D \in A \mid X\right] \P\left[\left( y(0),y(1) \right) \in B \mid X\right] 
+	\] for any events $A,B$. Conditional independence does not imply independence, and the converse is not true either.
+\end{definition}
+
+\begin{remark}[Conditioning on too much]
+	Conditioning on too much (adding more covariates) is not always a good thing. Sometimes people argue that as long as you include all of the ``right'' covariates such that $D_i \ind \left( y_i(0), y_i(1) \right) \mid x_i$, you can add more covariates and maintain independence. But this is not true --- consider $X_{n+1}$ determining treatment assignment.
+	Some machine learning fans are disappointed by this.
+\end{remark}
+	
+\begin{example}[Selection on observables]
+	Consider $W$ as earnings potential (wage) and $D = \mathds{1}_{\text{employed}}$. If we assume $W \ind D$, then $F_W(\cdot \mid D=1) = F_W(\cdot \mid D=0)$, so we could measure the population distribution of earnings potential by just looking at wages of the employed individuals.
+
+	Now, consider a situation with a reservation wage $R$ such that $D = 1 \iff W \ge R$. Then if everyone has the same reservation wage, this independence obviously does not hold. Suppose the reservation wage is not identical and independence still holds.
+	Then 
+	\begin{align*}
+		\E\left[W \mid D = 1, R = r\right] &= \E\left[W \mid W \ge R , R= r\right]  \\
+											&= \E\left[W \mid W \ge r, R = r\right] \ge r\\
+		\E\left[W \mid D=0, R = r\right]  &= \E\left[W \mid W < r, R = r\right] \\
+										  &< r
+	.\end{align*}
+	We see that missingness at random does not imply missingness at random conditional on reservation wage. In other words, unconfoundedness may fail to hold if we condition on too much.
+	
+\end{example}
+
+\begin{proposition}[Selection on observables via linear regression]
+	Unconfounded treatment assignment implies
+	\[
+		\E\left[y(1) \mid D, x\right] = \E\left[y(1) \mid x\right], \qquad
+		\E\left[y(0) \mid D, x\right] = \E\left[y(0) \mid x\right]
+	,\]
+	so we can estimate $\E\left[y(1) \mid D=1, x\right]$ and $\E\left[y(0) \mid D=0, x\right]$ and then estimate the ATE by aggregating over $x$.
+\end{proposition}
+\begin{proof}
+	We see that 
+	\begin{align*}
+		ATE
+		&= \E\left[y(1) - y(0)\right] \\
+		&\overset{\text{LIE}}{=} \E\left[\E\left[y(1) - y(0) \mid X\right] \right] \\
+		&= \E\left[\E\left[y(1) \mid X\right] - \E\left[y(0) \mid X\right] \right] \\
+		&= \E\left[\E\left[y(1) \mid D=1,X\right] - \E\left[y(0) \mid D =0 , X\right] \right]  \text{ by unconfoundedness} \\
+		&= \E\left[\E\left[Y \mid D = 1 , X\right] - \E\left[Y \mid D = 0, X\right] \right]
+	.\end{align*}
+	So if we can estimate $\E\left[Y \mid D=1, X\right] $, $\E\left[Y \mid D=0, X\right] $, and $F_X$, then we can estimate the ATE.
+		Note that this expression is not the naive comparison, because\boxednote{The weights differ:
+		$\E[Y \mid D=1]$ uses $\P(X=x \mid D=1)$, while $\E[\E[Y \mid D=1,X]]$ uses the unconditional distribution of $X$.} \[
+			\E\left[Y \mid D= 1\right]  \ne \E\left[\E\left[Y \mid D=1 ,X\right] \right] 
+		.\] 
+
+	We approximated conditional means with a linear model
+	\[
+		\E\left[Y_i \mid D_i, x_i\right] \approx \beta_0 + \beta_1 D_i + x_i'\beta_2
+	.\]
+	This approximation gives
+	\[
+		\E\left[Y \mid D=1, x\right] - \E\left[Y \mid D=0, x\right] \approx \beta_1
+	.\]
+	The LIE implies that $\beta_1 = \E\left[y(1)-y(0)\right]$ (which is the ATE).
+
+		The approximation works if\boxednote{This imposes common slopes across treated and untreated groups. It is convenient, but not necessary, for identification.}
+		\[
+			\E\left[y(0) \mid x\right] = \alpha_0 + x'\beta_2, \qquad
+			\E\left[y(1) \mid x\right] = \alpha_1 + x'\beta_2
+	,\]
+	so that by the LIE,
+	\[
+		ATE = \E\left[y(1)-y(0)\right] = \alpha_1 - \alpha_0
+	.\]
+		It follows by unconfoundedness that\boxednote{Replace the observed outcome by $Y=y(0)+D(y(1)-y(0))$ and then drop the conditioning on $D$ term-by-term using unconfoundedness.}
+	\begin{align*}
+		\E\left[Y \mid D, x\right]
+		&= \E\left[y(0) + D\left(y(1)-y(0)\right) \mid D, x\right] \\
+		&= \E\left[y(0) \mid D, x\right] + D\E\left[y(1)-y(0) \mid D, x\right] \\
+		&= \E\left[y(0) \mid x\right] + D\E\left[y(1)-y(0) \mid x\right] \\
+		&= \alpha_0 + x'\beta_2 + D\left(\alpha_1-\alpha_0\right) \\
+		&= \beta_0 + \beta_1 D + x'\beta_2
+	.\end{align*}
+
+	We turned the coefficient on $D$ from the naive comparison to the ATE.
+\end{proof}
+
+\begin{proposition}[Interaction terms and centering]
+	As hinted to in the margin above, we may think that potential outcomes should have different slopes:
+	\[
+		\E\left[y(0) \mid x\right] = \alpha_0 + x'\beta_0, \qquad
+		\E\left[y(1) \mid x\right] = \alpha_1 + x'\beta_1
+	.\]
+	The ATE ($\tau$) is therefore written as
+	\begin{align*}
+		\E\left[y(1)-y(0)\right]
+		&= \E\left(\E\left[y(1) \mid x\right] - \E\left[y(0) \mid x\right]\right) \\
+		&= \E\left[\left(\alpha_1-\alpha_0\right) + x'\left(\beta_1-\beta_0\right)\right]
+	.\end{align*}
+	Under unconfoundedness,
+	\[
+		\E\left[y(0) \mid D=0, x\right] = \alpha_0 + x'\beta_0, \qquad
+		\E\left[y(1) \mid D=1, x\right] = \alpha_1 + x'\beta_1
+	,\]
+	so having different slopes changes the linear regression model:\boxednote{\begin{align*}
+		Y &= y(0) + D(y(1)-y(0)) \\
+		\E[Y \mid D,x] &= \E[y(0) \mid x] \\
+		  &\quad{}+ D\E[y(1)-y(0) \mid x] \\
+		  &= \alpha_0 + (\alpha_1-\alpha_0)D \\
+		  &\quad{}+ x'\beta^0 + Dx'(\beta^1-\beta^0).
+	\end{align*}}
+	\[
+		\E\left[Y \mid D, x\right] = \alpha_0 + \left(\alpha_1-\alpha_0\right)D + x'\beta_0 + D x'\left(\beta_1-\beta_0\right)
+	.\]
+
+	Estimating the coefficients in this model is equivalent to running two regressions:
+	\begin{align*}
+		Y_i &= \alpha_0 + x_i'\beta_0 \quad \text{using observations with $D_i=0$,} \\
+		Y_i &= \alpha_1 + x_i'\beta_1 \quad \text{using observations with $D_i=1$.}
+	.\end{align*}
+	Let $\hat{y}_i(1) = \hat{\alpha}_1 + x_i'\hat{\beta}_1$ and $\hat{y}_i(0) = \hat{\alpha}_0 + x_i'\hat{\beta}_0$. Then natural to estimate $\E\left[y(1)-y(0)\right]$ as
+	\[
+		\hat{\tau} = \frac{1}{n}\sum\limits_{i=1}^{n}\left[\hat{y}_i(1)-\hat{y}_i(0)\right]
+		= \hat{\alpha}_1 - \hat{\alpha}_0 + \bar{x}_n'\left(\hat{\beta}_1-\hat{\beta}_0\right)
+	.\]
+
+	We want the treatment effect to be the coefficient on $D$ in the combined regression, \emph{not on the interaction}. Fix: Center $x$ about $0$:
+	\[
+		\E\left[y(0) \mid x\right] = \delta_0 + \left(x-\mu_x\right)'\beta_0, \qquad
+		\E\left[y(1) \mid x\right] = \delta_1 + \left(x-\mu_x\right)'\beta_1
+	.\]
+	Now the ATE is difference in intercepts:
+	\[
+		\E\left[y(1)-y(0)\right] = \E\left(\E\left[y(1) \mid x\right]-\E\left[y(0) \mid x\right]\right) = \delta_1-\delta_0 \equiv \tau
+	.\]
+
+	Now
+	\begin{align*}
+		\E\left[Y \mid D, x\right]
+		&= \E\left[y(0) + D\left(y(1)-y(0)\right) \mid D, x\right] \\
+		&= \E\left[y(0) \mid x\right] + D\E\left[y(1)-y(0) \mid x\right] \\
+		&= \delta_0 + \tau D + \left(x-\mu_x\right)'\beta_0 + D\left(x-\mu_x\right)'\rho
+	.\end{align*}
+		where $\rho = \beta_1-\beta_0$. Note now that the coefficient on $D$ is $\tau = \delta_1 - \delta_0$. We don't know $\mu_x$, but replace it with $\bar{x}_n$ to obtain $\hat{\tau}$:\boxednote{Because $\bar{x}_n$ is estimated, the standard error for $\hat{\tau}$ should account for its sampling variation.}
+		\[
+			\begin{aligned}
+				Y_i
+				&= \delta_0 + \tau D_i + \left(x_i-\bar{x}_n\right)'\beta_0 \\
+				&\quad + D_i\left(x_i-\bar{x}_n\right)'\rho \\
+				&\quad + \epsilon_i
+			\end{aligned}
+		.\] 
+\end{proposition}
+
+\section{Summary}
+
+\begin{remark}[Potential-outcomes framework]
+	Potential outcomes are $y(1)$ under treatment and $y(0)$ without treatment.
+	The main targets are $ATE = \E[y(1)-y(0)]$, $ATT = \E[y(1)-y(0)\mid D=1]$, and $ATU = \E[y(1)-y(0)\mid D=0]$.
+	They satisfy $ATE = ATT \cdot \P(D=1) + ATU \cdot \P(D=0)$.
+\end{remark}
+
+\begin{remark}[Naive comparisons and selection bias]
+	The naive regression of $Y$ on $D$ identifies
+	\[
+		\beta_1 = \E\left[y(1)\mid D=1\right] - \E\left[y(0)\mid D=0\right]
+	.\]
+	This equals $ATT$ plus selection bias in untreated potential outcomes, so a raw difference in means is not automatically causal.
+\end{remark}
+
+\begin{remark}[Random assignment]
+	If $D \ind \left(y(0),y(1)\right)$, then treatment and control groups are representative of the same population:
+	\[
+		\E\left[y(0)\mid D\right] = \E\left[y(0)\right], \qquad
+		\E\left[y(1)\mid D\right] = \E\left[y(1)\right]
+	.\]
+	Hence the naive comparison equals the $ATE$.
+\end{remark}
+
+\begin{remark}[Selection on observables]
+	If treatment is unconfounded conditional on covariates, $D \ind \left(y(0),y(1)\right) \mid X$, then
+	\[
+		ATE = \E\left[\E\left[Y \mid D=1, X\right] - \E\left[Y \mid D=0, X\right]\right]
+	.\]
+	With the linear approximation $\E\left[Y \mid D,x\right] \approx \beta_0 + \beta_1 D + x'\beta_2$ and common slopes across treatment states, the coefficient on $D$ is the $ATE$.
+\end{remark}
+
+\begin{remark}[Different slopes and centering]
+	Allowing different slopes across treatment states yields
+	\[
+		\E\left[Y \mid D, x\right] = \alpha_0 + \left(\alpha_1-\alpha_0\right)D + x'\beta_0 + Dx'\left(\beta_1-\beta_0\right)
+	.\]
+	Centering $x$ about $\mu_x$ makes the coefficient on $D$ equal to the $ATE$.
+	\begin{center}
+	\small
+	\renewcommand{\arraystretch}{1.1}
+	\begin{tabular}{p{0.22\linewidth}p{0.20\linewidth}p{0.33\linewidth}}
+		\toprule
+		Method & What it identifies & Key assumption \\
+		\midrule
+		Naive comparison & $ATT + SB$ & None \\
+		Random assignment & $ATE$ & $D \ind \left(y(0),y(1)\right)$ \\
+		Regression adjustment & $ATE$ & Unconfoundedness + common slopes \\
+		Centered interactions & $ATE$ & Unconfoundedness + different slopes + centering \\
+		\bottomrule
+	\end{tabular}
+	\end{center}
+\end{remark}

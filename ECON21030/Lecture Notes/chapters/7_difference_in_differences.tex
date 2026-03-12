@@ -1,0 +1,239 @@
+\styledchapter{Difference-in-Differences}
+
+\section{Example: Store Upgrades}
+
+\begin{remark}	The common trends assumption says absent treatment, sales would follow the same trend across treated and control stores. When is this a plausible assumption? It's a counterfactual, so can't ever test it. But likely to hold if the two groups are fairly similar, or if we can add covariates to ensure they are. We can provide evidence by checking whether the two groups had similar trends before the treatment occurred (with multiple time periods).\boxednote{Note that we implicitly assume no anticipation in our notation: $Y_i(0)$ is observed for everyone for period pre-treatment, and $Y_i(1)$ is observed only for periods after the treatment time.}
+
+	Imagine the store upgrade program happened randomly among a set of similar stores. In that context, this assumption likely holds.
+\end{remark}
+
+\begin{remark}[Data requirements]
+	Comparing trends requires us to have a cross-section of outcome data before the treatment occurs, and a cross section after. Observing a random sample of observations in several time periods is called a repeated cross section. Observing the same units in several time periods is called panel data. In a repeated cross-section there is no need for the units to be the same over time. Every panel is a repeated cross-section, but not vice versa.
+\end{remark}
+
+\begin{example}[Store Upgrades setup for DiD]
+	We observe sales figures $Y$ before and after upgrades for stores that were (eventually) upgraded ($G=1$) and stores that were never upgraded ($G=0$). Let $T=1$ if the sales figure is observed after upgrades, and $T=0$ otherwise. Let $y(0)$ be the sales figure we would observe without an upgrade, and $y(1)$ be the sales figure we would observe with an upgrade. Then
+	\[
+		Y =
+		\begin{cases}
+			y(1) & \text{if $G=1$, $T=1$,} \\
+			y(0) & \text{otherwise.}
+		\end{cases}
+	\]
+	We want 
+	\[
+		ATT = \E\left[y(1)-y(0) \mid G=1, T=1\right]
+	,\]
+	the effect of upgrades on sales for stores that were upgraded after they were upgraded.
+\end{example}
+
+\begin{proposition}[Before--after comparison and the trend term]
+	A naive comparison across time periods gives the ATT + untreated potential outcome trend for upgraded stores.
+\end{proposition}
+\begin{proof}
+	Comparison of means across time:
+	\begin{align*}
+		&\E\left[Y \mid G=1, T=1\right] - \E\left[Y \mid G=1, T=0\right] \\
+		&= \E\left[Y \mid G=1, T=1\right] - \E\left[y(0) \mid G=1, T=1\right] \\
+		&\quad + \E\left[y(0) \mid G=1, T=1\right] - \E\left[Y \mid G=1, T=0\right] \\
+		&= \E\left[y(1)-y(0) \mid G=1, T=1\right] \\
+		&\quad + \E\left[y(0) \mid G=1, T=1\right] - \E\left[y(0) \mid G=1, T=0\right]
+	.\end{align*}
+\end{proof}
+
+\begin{proposition}[After-only comparison and selection bias]
+	A naive comparison across groups at $T=1$ gives the ATT + differences in untreated potential outcomes across groups (selection bias).
+\end{proposition}
+\begin{proof}
+	Comparison of means across groups after treatment:
+	\begin{align*}
+		&\E\left[Y \mid G=1, T=1\right] - \E\left[Y \mid G=0, T=1\right]\\
+		&= \E\left[y(1) \mid G=1, T=1\right] - \E\left[y(0) \mid G=0, T=1\right] \\
+		&= \E\left[y(1)-y(0) \mid G=1, T=1\right] \\
+		&\quad + \E\left[y(0) \mid G=1, T=1\right] - \E\left[y(0) \mid G=0, T=1\right]
+	.\end{align*}
+\end{proof}
+
+\begin{assumption}[Common Trends Assumption]
+	In the absence of treatment, the trend in sales for upgraded stores and non-upgraded stores would have been the same. Formally,
+	\begin{align*}
+		&\E\left[y(0) \mid G=1, T=1\right] - \E\left[y(0) \mid G=1, T=0\right] \\
+		&= \E\left[y(0) \mid G=0, T=1\right] - \E\left[y(0) \mid G=0, T=0\right]
+	.\end{align*}
+\end{assumption}
+
+\begin{proposition}[DiD identifies the ATT]
+	Now compute difference in trends for treated and control groups:
+	\begin{align*}
+		\text{Diff-in-Diff}
+		&= \left[\E\left(Y \mid G=1, T=1\right) - \E\left(Y \mid G=1, T=0\right)\right]\\
+		& \quad- \left[\E\left(Y \mid G=0, T=1\right) - \E\left(Y \mid G=0, T=0\right)\right] \\
+		&= \left[\E\left(Y \mid G=1, T=1\right) - \E\left(Y \mid G=1, T=0\right)\right] \\
+		&\quad - \left[\E\left(y(0) \mid G=0, T=1\right) - \E\left(y(0) \mid G=0, T=0\right)\right] \\
+		&= \left[\E\left(Y \mid G=1, T=1\right) - \E\left(Y \mid G=1, T=0\right)\right] \\
+		&\quad - \left[ \E\left[y(0) \mid G=1, T= 1\right] - \E\left[y(0) \mid G = 1, T = 0\right]  \right] \\
+		&= ATT
+	,\end{align*}
+	where the second-to-last equality follows from the common trends assumption.
+\end{proposition}
+
+\begin{proposition}[Regression implementation of DiD]
+	The difference-in-differences estimator is implemented by using sample averages across the four groups:
+	\[
+		ATT = \left[\bar{Y}_{G=1,T=1} - \bar{Y}_{G=1,T=0}\right] - \left[\bar{Y}_{G=0,T=1} - \bar{Y}_{G=0,T=0}\right]
+	.\]
+	We can use linear regression to generate this estimate. First, note that $\E\left[y(0) \mid G, T\right]$ can take 4 values, so WLOG:
+	\[
+		\E\left[y(0) \mid G, T\right] = \beta_0 + \beta_1 G + \beta_2 T + \beta_3 G \cdot T
+	.\]
+	The common trends assumption holds iff $\beta_3 = 0$.
+
+	Now write the conditional mean of the observed outcome:
+	\begin{align*}
+		\E\left[Y \mid G, T\right]
+		&= \E\left[y(0) \mid G, T\right] + \E\left[y(1)-y(0) \mid G, T\right]\cdot G \cdot T \\
+		&= \E\left[y(0) \mid G, T\right] + \E\left[y(1)-y(0) \mid G=1, T=1\right]\cdot G \cdot T \\
+		&= \E\left[y(0) \mid G, T\right] + ATT \cdot G \cdot T
+	.\end{align*}
+	since $y(1)$ is only observed if $G=T=1$. Hence
+	\[
+		\E\left[Y \mid G, T\right] = \beta_0 + \beta_1 G + \beta_2 T + \left[\beta_3 + ATT\right]G \cdot T
+	,\]
+	so under common trends, the coefficient on $G \cdot T$ is the ATT.
+\end{proposition}
+
+\begin{example}[Effect of Incinerator on Home Prices]
+	Wooldridge Example 13.3: Have home values in 1978 ($y81=0$) and in 1981 ($y81=1$), when a new garbage incinerator was built. Hypothesise that house prices fell as a result of the incinerator. House defined to be near the incinerator ($nearinc$) if within 3 miles. Price ($rprice$) measured in 1978 dollars for each house. Define
+	\[
+		y81 =
+		\begin{cases}
+			1 & \text{if year = 1981} \\
+			0 & \text{if year = 1978}
+		\end{cases}
+	.\]
+	Model:
+	\begin{align*}
+		y
+		&= \beta_0 + \beta_1 \cdot y81 + nearinc\left(\gamma_0 + \gamma_1 y81\right) + v \\
+		&= \beta_0 + \beta_1 \cdot y81 + \gamma_0 nearinc + \gamma_1 y81 \cdot nearinc + v
+	.\end{align*}
+	Under the assumption of common trends, $\gamma_1$ is the ATT, the effect of building the incinerator on house prices near where it was built.
+\end{example}
+
+\begin{remark}[Incinerator example: selection concern]
+	We could compare average house prices in 1981 across near and far. But this does not imply the incinerator caused the reduction in house prices because it might be the case that the houses in the treatment group were systematically different from the control group. The incinerator might have been built in a low-income area, where house prices would have been lower anyway.
+\end{remark}
+
+\section{Including Controls}
+
+\begin{remark}[Including controls in DiD]
+	We may include controls in main regression to:
+	\begin{enumerate}[label=(\roman*)]
+		\item Modify common trends assumption to hold conditional on controls.
+		\item Reduce standard error on interaction term.
+	\end{enumerate}
+\end{remark}
+
+\begin{assumption}[Common trends conditional on controls $X$]
+	Common trends conditional on controls $X$:
+	\begin{align*}
+		&\E\left[y(0) \mid G=1, T=1, X=x\right] - \E\left[y(0) \mid G=1, T=0, X=x\right] \\
+		&= \E\left[y(0) \mid G=0, T=1, X=x\right] - \E\left[y(0) \mid G=0, T=0, X=x\right]
+	.\end{align*}
+	This doesn't imply common trends because covariates can adjust over time differently for both groups.
+\end{assumption}
+
+\begin{remark}[Linearity with controls]
+	If we do impose conditional common trends and linearity, then we can write
+	\[
+		\E\left[y(0) \mid G, T, X\right] = \beta_0 + \beta_1 G + \beta_2 T + X'\delta
+	.\]
+	\boxednote{This specification excludes interactions $X \times G$ and $X \times T$ by assumption. Including $X \times G$ would allow the relationship between covariates and $y(0)$ to differ between treated and control groups (e.g.\ house size matters more for treated stores). Including $X \times T$ would allow this relationship to change over time (e.g.\ the premium on house size grows post-incinerator). The no-interaction model imposes that the marginal effect of $X$ on $y(0)$ is the same across groups and time periods --- a strong but tractable restriction. Without it, one would need to explicitly interact $X$ with $G$ and $T$ in the regression, and the common trends calculation in the next line would require those additional terms to cancel as well.}
+	Then
+	\begin{align*}
+		& \E\left[y(0) \mid G=1, T=1\right] - \E\left[y(0) \mid G=1, T=0\right]\\
+		&= \beta_2 + \left[\E\left(X \mid G=1, T=1\right) - \E\left(X \mid G=1, T=0\right)\right]'\delta
+	.\end{align*}
+	The same calculation for $G=0$ shows that common trends only holds if the composition of covariates across time changes in the same way in both groups, or if $\delta=0$.
+
+\end{remark}
+
+We can write the conditional mean of the observed outcome as 
+\begin{align*}
+	\E\left[Y \mid G, T, X\right]
+	&= \E\left[y(0) \mid G, T, X\right] + \E\left[y(1)-y(0) \mid G=1, T=1, X\right]\cdot G \cdot T \\
+	&= \E\left[y(0) \mid G, T, X\right] + ATT(X)\cdot G \cdot T
+.\end{align*}
+since $y(1)$ is only observed if $G=T=1$. Hence
+\[
+	\E\left[Y \mid G, T, X\right] = \beta_0 + \beta_1 G + \beta_2 T + X'\delta + ATT(X)\cdot G \cdot T
+,\]
+so under conditional common trends\footnote{This is what gives the coefficient $ATT(X)$ and not $ATT(X) + \beta_3$.} and assuming a homogeneous effect across covariate values, the coefficient on $G \cdot T$ is the ATT.
+
+If the composition of covariates doesn't change differently across groups, the standard error may still reduce significantly as a result of their inclusion. Let $\tilde{d}_i$ denote the residual from regressing $G_i T_i$ on $(1, G_i, T_i, X_i)$. By Frisch--Waugh, the variance and standard error of the ATT estimator are
+\[
+	\operatorname{Var}(\hat\beta_{GT} \mid G,T,X)
+	= \frac{\sigma^2}{\displaystyle\sum_{i=1}^n \tilde d_i^2},
+	\qquad
+	\operatorname{SE}(\hat\beta_{GT})
+	= \frac{\hat\sigma}{\sqrt{\displaystyle\sum_{i=1}^n \tilde d_i^2}}
+.\]
+More precisely, if $G \cdot T \perp X \mid G, T$ (no differential composition change), then $\tilde{d}_i$ equals the residual from projecting $G_i T_i$ on $(1, G_i, T_i)$ alone, so $\sum_i \tilde{d}_i^2$ is the same with or without $X$. We saw in homework that including more regressors weakly decreases the error variance (both population and in finite sample), so the standard error weakly decreases.
+
+We have that $\sigma$ decreases strictly whenever $X$ has explanatory power (in sample!) for $Y$ beyond group and time indicators. Hence conditioning on $X$ \emph{always} reduces the SE under this condition, and the reduction is larger when $X$ is more predictive of $Y$.
+
+\section{Triple Difference-in-Differences}
+
+In the store upgrades example, parallel trends between urban and suburban stores may fail---urban stores might follow systematically different sales dynamics than suburban ones. If we observe a second city where no upgrades occurred, we can difference out these group-specific trends by running a diff-in-diff across cities.
+
+Formally, let $G \in \{0,1\}$ denote group membership (treated subgroup vs.\ control subgroup), $T \in \{0,1\}$ denote the time period (pre vs.\ post), and $C \in \{0,1\}$ denote location (treated vs.\ control location). Treatment occurs only when $G=T=C=1$:
+\[
+	Y = \begin{cases} y(1) & \text{if } G=1,\ T=1,\ C=1, \\ y(0) & \text{otherwise.} \end{cases}
+\]
+The ATT is $\E\left[y(1)-y(0) \mid G=1, T=1, C=1\right]$.
+
+\begin{assumption}[Common difference-in-trends across locations]
+	In the absence of treatment, the difference in trends between the treated and control groups is the same across locations. Formally,
+	\begin{align*}
+		&\bigl[\E\left[y(0)\mid G=1,T=1,C=1\right] - \E\left[y(0)\mid G=1,T=0,C=1\right]\bigr] \\
+		&\quad - \bigl[\E\left[y(0)\mid G=0,T=1,C=1\right] - \E\left[y(0)\mid G=0,T=0,C=1\right]\bigr] \\
+		&= \bigl[\E\left[y(0)\mid G=1,T=1,C=0\right] - \E\left[y(0)\mid G=1,T=0,C=0\right]\bigr] \\
+		&\quad - \bigl[\E\left[y(0)\mid G=0,T=1,C=0\right] - \E\left[y(0)\mid G=0,T=0,C=0\right]\bigr].
+	\end{align*}
+	This is weaker than requiring parallel trends within either location: group-specific trends are permitted, as long as they do not differ across locations.
+\end{assumption}
+
+\begin{proposition}[Triple difference in differences]
+	We now define the ATT as
+	\[
+		ATT = \E\left[y(1)-y(0) \mid G=1, T=1, C=1\right]
+	,\]
+	where $G=1$ denotes urban stores, $C=1$ denotes city A, and $T=1$ denotes the time period after upgrades.
+
+	Compute a diff-in-diff for city A, where treatment occured, and city B, where no treatment occurred, and difference them:
+	\begin{align*}
+		\E\left(Y \mid G, T, C\right)
+		&= \underbrace{\beta_0 + \beta_1 G + \beta_2 T + \underbrace{\beta_3}_{\mathclap{\text{DiD, city B}}} G \cdot T}_{\text{city B base}} \\
+		& \quad+ \underbrace{C\left(\gamma_0 + \gamma_1 G + \gamma_2 T + \underbrace{\left[\gamma_3 + ATT\right]}_{\mathclap{\text{DiD, city A}}}G \cdot T\right)}_{\text{deviation in city A}}
+	.\end{align*}
+	Under the assumption that the difference in trends is the same across the two cities, $\gamma_3 = 0$, so the triple diff-in-diff estimate of the ATT is the coefficient on $C \cdot G \cdot T$:
+	\begin{align*}
+		ATT &=
+		\left[\bar{Y}_{G=1,T=1,C=1} - \bar{Y}_{G=1,T=0,C=1}\right]
+		- \left[\bar{Y}_{G=0,T=1,C=1} - \bar{Y}_{G=0,T=0,C=1}\right]
+		 \\ &- \left(
+		\left[\bar{Y}_{G=1,T=1,C=0} - \bar{Y}_{G=1,T=0,C=0}\right]
+		- \left[\bar{Y}_{G=0,T=1,C=0} - \bar{Y}_{G=0,T=0,C=0}\right]
+		\right)
+	.\end{align*}
+	Running a diff in diff in $y_0$ for $C=0$ gives $\beta_3$, while on $C=1$ gives $\beta_3 + \gamma_3$, so $\gamma_3$ is the difference in violation of parallel trends. This is why we need $\gamma_3 = 0$ as the assumption for triple diff-in-diff.
+\end{proposition}
+
+\begin{remark}	Triple diff-in-diff and regular diff-in-diff produce the same estimate when there are parallel trends in both groups the triple diff-in-diff is running across.
+
+	Both fail when there are no parallel trends in either group and the violation is different between the groups.
+\end{remark}
+
+\begin{remark}[A note on standard errors]
+	Computing standard errors assuming all observations are independent may be inappropriate. Heteroskedasticity robust standard errors maintain the independence assumption. The concern is that the house price in 1978 will be correlated with its price in 1981, so we should not compute standard errors assuming independence. Often, cluster-robust standard errors are used, where a `cluster' contains groups of observations that are likely to exhibit correlation over time, or within a particular subset of the cross section (say, at the state level).
+\end{remark}

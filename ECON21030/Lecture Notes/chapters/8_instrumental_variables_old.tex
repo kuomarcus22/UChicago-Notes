@@ -1,0 +1,586 @@
+\styledchapter{Instrumental Variables}
+
+\section{Motivation and the Simple IV Estimator}
+
+\begin{remark}[Motivation]
+	Consider the simple linear regression model \[
+		y = \beta_0 + \beta_1 x_1 + v
+	.\]
+	We want to interpret $\beta_1$ as the causal effect of increasing $x_1$ by one unit on $y$, holding $v$ fixed. OLS produces a scaled correlation between $x_1$ and $y$, but this is not causal unless \[
+		\E\left[v\right] = \E\left[x_1 v\right] = 0
+	.\]
+	Hence, if $\E\left[x_1 v\right] \ne 0$, then $x_1$ is correlated with unobserved determinants of $y$.
+\end{remark}
+
+\begin{remark}[When controls may fail]
+	Control variables may not solve endogeneity when:
+	\begin{itemize}
+		\item We do not observe key confounders.
+		\item $x_1$ is measured with error.
+		\item $y$ and $x_1$ are determined simultaneously.
+	\end{itemize}
+	So selection on observables may be implausible if unobserved factors affect both treatment choice and outcomes.
+\boxednote{With classical measurement error in a regressor, OLS slopes are attenuated toward zero.}
+\end{remark}
+
+\begin{definition}[Exogenous, Endogenous, Instrument]
+	In \[
+		y = \beta_0 + \beta_1 x_1 + v
+	,\]
+	$x_1$ is \emph{exogenous} if $\E\left[x_1 v\right] = 0$, and \emph{endogenous} if $\E\left[x_1 v\right] \ne 0$. An instrumental variable $z$ satisfies:
+	\begin{enumerate}[label=(\roman*)]
+		\item \textbf{Relevance}: $\operatorname{Cov}(x_1, z) \ne 0$.
+		\item \textbf{Validity}: $\operatorname{Cov}(z, v) = 0$.
+		\item \textbf{Exclusion}: $z$ is not itself a determinant of $y$.
+	\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Why OLS is inconsistent under endogeneity]
+	If $\E\left[x_1 v\right] \ne 0$, then \[
+		\hat{\beta}_1 = \beta_1 + \frac{\widehat{\operatorname{Cov}}(x_1, v)}{\widehat{\operatorname{Var}}(x_1)}
+	,\]
+	so \[
+		\hat{\beta}_1 \xrightarrow{p} \beta_1 + \frac{\operatorname{Cov}(x_1, v)}{\operatorname{Var}(x_1)} = \beta_1 + \frac{\E\left[x_1 v\right]}{\operatorname{Var}(x_1)} \ne \beta_1
+	,\]
+	using \[
+		\operatorname{Cov}(x_1, v) = \E\left[x_1 v\right] - \E\left[x_1\right]\E\left[v\right] = \E\left[x_1 v\right]
+	.\]
+\end{proposition}
+
+\begin{proposition}[Simple IV identification and estimator]
+	Using validity and relevance:
+	\begin{align*}
+		\operatorname{Cov}(z, y)
+		&= \operatorname{Cov}(z, \beta_0 + \beta_1 x_1 + v) \\
+		&= \beta_1 \operatorname{Cov}(z, x_1) + \operatorname{Cov}(z, v) \\
+		&= \beta_1 \operatorname{Cov}(z, x_1)
+	.\end{align*}
+	Hence \[
+		\beta_1 = \frac{\operatorname{Cov}(z, y)}{\operatorname{Cov}(z, x_1)}
+	,\]
+	and the sample IV estimator is \[
+		\hat{\beta}_1^{IV} = \frac{\sum_{i=1}^{n}(z_i-\bar{z}_n)(y_i-\bar{y}_n)}{\sum_{i=1}^{n}(z_i-\bar{z}_n)(x_{1i}-\bar{x}_{1n})} \xrightarrow{p} \frac{\operatorname{Cov}(z, y)}{\operatorname{Cov}(z, x_1)} = \beta_1
+	.\]
+\end{proposition}
+
+\begin{example}[Returns to education]
+	Common IV application: effect of education on wages.
+	\begin{enumerate}[label=(\roman*)]
+		\item Schooling is a choice, so treatment may depend on unobservables.
+		\item Schooling is measured with error, creating attenuation bias.
+	\end{enumerate}
+	A common proposed instrument is distance to nearest college: proximity affects schooling cost (relevance) but is argued not to directly determine wages (exclusion/validity).
+\end{example}
+
+\begin{remark}[Which IV conditions are testable?]
+	Relevance is testable via first stage: \[
+		x = \pi_0 + \pi_1 z + \epsilon
+	.\]
+	Since \[
+		\hat{\pi}_1 = \frac{\widehat{\operatorname{Cov}}(x, z)}{\widehat{\operatorname{Var}}(z)}
+	,\]
+	we can test $\pi_1=0$ with a $t$-test. Failure to reject indicates potential weak instruments.
+
+	Validity is not directly testable with one instrument, but with multiple instruments one can run overidentification tests (the $J$-test).
+\end{remark}
+
+\begin{proposition}[Asymptotic distribution and standard error in simple IV]
+	Suppose $\E\left[u \mid z\right]=0$ and $\operatorname{Var}(u \mid z)=\sigma^2$. Then \[
+		\sqrt{n}\left(\hat{\beta}_1^{IV}-\beta_1\right) \xrightarrow{d} N\left(0, \frac{\sigma^2}{\operatorname{Var}(x)\operatorname{Corr}(x,z)^2}\right)
+	.\]
+	Large-sample variance is approximately \[
+		\frac{\sigma^2/n}{\operatorname{Var}(x)\operatorname{Corr}(x,z)^2}
+	.\]
+	A standard practical formula is \[
+		se\left(\hat{\beta}_1^{IV}\right) = \sqrt{\frac{\hat{\sigma}^2}{SSTX \cdot R_{x,z}^2}}
+	,\]
+	where \[
+		\hat{\sigma}^2 = \frac{\sum_{i=1}^{n}\left(y_i-\hat{\beta}_0^{IV}-\hat{\beta}_1^{IV}x_i\right)^2}{n-2}
+	.\]
+	Here $\hat{\sigma}^2$ must be built from IV residuals; using OLS residuals would generally be inconsistent when regressors are endogenous.
+	Because of the $R_{x,z}^2$ term, IV standard errors are typically larger than OLS standard errors.
+\end{proposition}
+
+\begin{remark}[Weak instruments]
+	If validity fails slightly so that $\operatorname{Cov}(z,v)$ is small but nonzero, then \[
+		\hat{\beta}_1^{IV} \xrightarrow{p} \beta_1 + \frac{\operatorname{Cov}(z,v)}{\operatorname{Cov}(z,x)}
+	.\]
+	Even with small $\operatorname{Cov}(z,v)$, a small denominator $\operatorname{Cov}(z,x)$ can create large asymptotic bias.
+
+	In very weak-IV settings, finite-sample IV estimates can behave erratically and may be centered near OLS with much larger dispersion.
+\end{remark}
+
+\begin{example}[Smoking and birthweight]
+	Wooldridge Example 15.3: \[
+		\log(\text{bwght}) = \beta_0 + \beta_1\text{packs} + u
+	,\]
+	where \texttt{packs} is packs smoked per day. We expect $\beta_1<0$.
+
+	Endogeneity concern: smoking may be correlated with unobserved maternal health factors in $u$. A proposed instrument is cigarette price.
+	\begin{itemize}
+		\item Validity claim: cigarette prices are unrelated to unobserved determinants of birthweight.
+		\item Relevance claim: cigarette prices shift smoking intensity.
+	\end{itemize}
+	\boxednote{If cigarette demand is inelastic, first-stage relevance can be weak, making IV estimates very noisy in finite samples.}
+\end{example}
+
+\begin{remark}[Slides with empirical output]
+	The deck includes image-only slides for (i) first-stage regression output and (ii) OLS vs IV estimates in this smoking application.
+\end{remark}
+
+\section{Sources of Endogeneity}
+
+\begin{remark}[Omitted variable bias setup]
+	Suppose \[
+		y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + u, \quad \E\left[u \mid x\right]=0
+	.\]
+	If $x_2$ is unobserved, write \[
+		y = \beta_0 + \beta_1 x_1 + v, \quad v=\beta_2 x_2 + u
+	,\]
+	so \[
+		\operatorname{Cov}(x_1,v)=\beta_2\operatorname{Cov}(x_1,x_2)
+	.\]
+\end{remark}
+
+\begin{proposition}[OVB formula]
+	OLS on $y=\beta_0+\beta_1 x_1+v$ yields an estimator $\tilde{\beta}_1$ with \[
+		\tilde{\beta}_1 = \hat{\beta}_1 + \hat{\beta}_2\frac{\widehat{\operatorname{Cov}}(x_1,x_2)}{\widehat{\operatorname{Var}}(x_1)}
+	,\]
+	and \[
+		\tilde{\beta}_1 \xrightarrow{p} \beta_1 + \beta_2\frac{\operatorname{Cov}(x_1,x_2)}{\operatorname{Var}(x_1)}
+	.\]
+\end{proposition}
+
+\begin{remark}[IV solution for OVB]
+	Bias sign depends on $\beta_2$ and $\operatorname{Cov}(x_1,x_2)$. If both are positive, OLS tends to overestimate $\beta_1$.
+
+	IV conditions here:
+	\begin{itemize}
+		\item Validity: choose $z$ uncorrelated with $v$.
+		\item Relevance: in $x_1 = \gamma_0 + \gamma_1 z + \epsilon$, require $\gamma_1\ne 0$ (equivalently $\operatorname{Cov}(x_1,z)\ne 0$).
+	\end{itemize}
+\end{remark}
+
+Consider the following setup to analyze measurement error.
+	Let \[
+		y = \beta_0 + \beta_1 x_1^* + u
+	,\]
+	with $\E\left[u\right]=0$, $\operatorname{Cov}(x_1^*,u)=0$. Observe noisy regressor \[
+		x_1 = x_1^* + v
+	,\]
+	where $\E\left[v\right]=0$, $\operatorname{Cov}(x_1^*,v)=0$, and $\operatorname{Cov}(u,v)=0$.
+
+\begin{proposition}[Attenuation bias derivation]
+	Rewrite as \[
+		y = \beta_0 + \beta_1 x_1 + \epsilon, \quad \epsilon = u-\beta_1 v
+	.\]
+	Then \[
+		\operatorname{Cov}(x_1,\epsilon)=\operatorname{Cov}(x_1,u-\beta_1 v)=-\beta_1\operatorname{Var}(v)
+	,\]
+	and OLS converges to \[
+		\hat{\beta}_1^{OLS} \xrightarrow{p}  \frac{\operatorname{Cov}\left(y,x_1\right)}{\operatorname{Var}\left(x_1\right)} = \beta_1 + \frac{\operatorname{Cov}(x_1,\epsilon)}{\operatorname{Var}(x_1)} = \beta_1\left(1-\frac{\operatorname{Var}(v)}{\operatorname{Var}(x_1)}\right)
+	.\]
+	Also,
+	\begin{align*}
+		\operatorname{Var}(x_1)
+		&= \operatorname{Var}(x_1^*) + \operatorname{Var}(v) + 2\operatorname{Cov}(x_1^*,v) \\
+		&= \operatorname{Var}(x_1^*) + \operatorname{Var}(v) \\
+		&\ge \operatorname{Var}(v)
+	.\end{align*}
+	Hence $1-\operatorname{Var}(v)/\operatorname{Var}(x_1)\in[0,1]$, so OLS shrinks $\beta_1$ toward zero in magnitude.
+\end{proposition}
+
+\begin{remark}[IV for measurement error]
+	A possible instrument is another noisy measure:\boxednote{Think of the example with one twin estimating the other's amount of education received.} \[
+		z_1 = x_1^* + w
+	,\]
+	with $\E\left[w\right]=0$, $\operatorname{Cov}(x_1^*,w)=0$, $\operatorname{Cov}(u,w)=0$, and $\operatorname{Cov}(w,v)=0$.
+
+	Validity: \[
+		\operatorname{Cov}(z_1,\epsilon)=\operatorname{Cov}(x_1^*+w, u-\beta_1 v)=0
+	.\]
+	Relevance (from first stage $x_1=\gamma_0+\gamma_1 z_1+\eta$): \[
+		\operatorname{Cov}(z_1,x_1)=\operatorname{Cov}(x_1^*+w, x_1^*+v)=\operatorname{Var}(x_1^*)
+	,\]
+	nonzero if $x_1^*$ is not constant.
+\end{remark}
+
+\section{IV with Potential Outcomes Notation}
+
+\begin{definition}[IV conditions in potential outcomes notation]
+	We observe outcome $y$, covariates $w$, treatment status $d$, and instrument $r$. Potential outcomes are $y(d,r)$.
+	\begin{enumerate}[label=(\roman*)]
+		\item \textbf{Relevance}: instrument correlated with treatment (possibly conditional on covariates).
+		\item \textbf{Exclusion}: for all $d,r',r''$, $y(d,r')=y(d,r'')$.
+		\item \textbf{Exogeneity}: for all $d$, $y(d) \perp\!\!\!\perp r \mid w$.
+	\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Linear potential outcomes specification]
+	Assume for all $d,w$: \[
+		y(d)=x(w,d)'\beta + u, \quad \E\left[u \mid w\right]=0
+	,\]
+	with $x$ known and $\beta$ unknown constants.
+
+	Then $\E\left[y(d)\mid w\right]$ is linear in parameters, and treatment effects are constant conditional on $w$: \[
+		y(d)-y(d') = \left[x(w,d)-x(w,d')\right]'\beta
+	.\]
+\end{proposition}
+
+\begin{remark}[Equivalent assumptions]
+	Given the challenge describing what $u$ is and why it is constant across potential outcomes, an equivalent route is to first assume constant effects:
+	\begin{enumerate}[label=(\roman*)]
+		\item For all $d,w$, $\E\left[y(d)\mid w\right] = x(w,d)'\beta$.
+		\item Constant effects conditional on $w$: for all $d,d^*$, there exists $c$ with \[
+			y(d)-y(d^*) = c(w,d,d^*)
+		.\]
+	\end{enumerate}
+	These imply there exists a common $u$ (not depending on $d$) such that \[
+		y(d)=x(w,d)'\beta + u, \quad \E\left[u\mid w\right]=0
+	.\]
+\end{remark}
+
+\begin{remark}[Deriving a common $u$]
+	Let $u_d = y(d)-x(w,d)'\beta$, so $\E\left[u_d \mid w\right]=0$. Using constant effects and linear conditional means gives \[
+		y(d)=\left[x(w,d)-x(w,d^*)\right]'\beta + y(d^*)
+	,\]
+	which implies $u_d=u_{d^*}$ for all $d,d^*$. Denote this common term by $u$.\boxednote{$u$ is part projection residual and unobserved determinants of $y$.}
+\end{remark}
+
+\begin{remark}[Interpretation]
+	``Linear'' means linear in parameters, not necessarily in observables: $x(w,d)$ may include nonlinear terms and interactions. Treatment effects may vary with covariates $w$, but conditional on the same $w$, effects are constant across individuals.
+\end{remark}
+
+\begin{proposition}[Observed outcome and orthogonality]
+	Let $\mathcal{D}$ be the set of possible treatments and $D$ the realized treatment. Then \[
+		Y = \sum_{d \in \mathcal{D}} y(d)\mathds{1}(D=d) \equiv y(D)
+	,\]
+	so \[
+		Y = x(w,D)'\beta + u \equiv x'\beta + u
+	.\]
+	Since $u=y(d)-x(w,d)'\beta$ for any $d$, and $y(d) \perp\!\!\!\perp r \mid w$, we get
+	\begin{align*}
+		\E\left[u \mid r,w\right] 
+		&= \E\left[y (d) - x(w,d)' \beta \mid r,w\right]  \\
+		&= \E\left[Y(d) \mid r,w\right] - x(w,d)'\beta \\
+		&= \E\left[y(d) \mid w\right]  - x(w,d)'\beta \\
+		&= x(w,d)'\beta + \E\left[ u \mid w\right] - x(w,d)'\beta \\
+		&= 0
+	.\end{align*}
+	In particular, this implies \[
+		\E\left[ru\right]=0
+	.\]
+
+	The covariares are \texthl{``exogenous'' (to conditional mean?)} because we correctly specified the conditional mean $y(d) \mid w$. The covariates are included to justify the instrument exogeneity assumption, but they ar enot exogenous for the same reason $r$ is. $w$ is sometimes called a set of control variables.
+	Meanwhile, $\E\left[ru\right] = 0 $ because of the exogeneity assumption on $r$ of $r \ind y(d) \mid w$.
+
+	The covariate is valid (uncorrelated with $u$ because we correctly specify the conditional mean $y(d) \mid w$. On the other hand, $r$ must be argued to be conditionally independent of $y(d) \mid w$.
+\end{proposition}
+
+\section{General IV: Identification, Rank Condition, and Estimation}
+
+\begin{definition}[General IV setup]
+	Let $(y,x,u)$ satisfy $y=x'\beta+u$, where $y,u$ are scalar and $x\in\R^{k+1}$ with first component $x_0=1$. Let $\beta=(\beta_0,\ldots,\beta_k)'$.
+
+	A regressor $x_j$ is exogenous if $\E\left[ux_j\right]=0$, endogenous if $\E\left[ux_j\right]\ne 0$.
+
+	Let instruments be $z\in\R^{l+1}$ with $z_0=1$ (note that this makes $\E\left[u \right] =0$) and validity condition \[
+		\E\left[zu\right]=0
+	.\]
+	Exogenous components of $x$ are included instruments; remaining instrument components are excluded instruments.
+\end{definition}
+
+Note that since $z = (1 \ z_1)'$, \[
+		\E\left[zu\right] = \begin{pmatrix}
+		\E\left[u\right]  \\
+		\E\left[z_1 u\right] 
+		\end{pmatrix} = \begin{pmatrix}
+		0 \\
+		\E\left[z_i\right] 
+		\end{pmatrix} = 0 \iff \operatorname{Cov}\left(z_1,u\right) = 0
+	.\] 
+
+\begin{proposition}[Rank condition and identification]
+	Assume $\E\left[zz'\right]<\infty$ and no perfect collinearity in $z$. Identification requires \[
+		\operatorname{rank}\left(\E\left[zx'\right]\right)=k+1
+	,\]
+	the rank (relevance) condition, necessary and sufficient for unique $\beta$.
+
+	If $l=k$ (exact identification), then \[
+		\beta = \E\left[zx'\right]^{-1}\E\left[zy\right]
+	.\]
+\end{proposition}
+\begin{proof}
+	Our model is $y = x'\beta + u$. Premultiplying by $z$ and taking an expectation,
+	\begin{align*}
+		zy &= zx' \beta + zu \\
+		\E\left[zy\right] &= \E\left[zx'\right] \beta + \underbrace{\E\left[zu\right] }_{\mathclap{=0 \text{ (validity)}}} \\
+						  &= \E\left[zx'\right] \beta
+	.\end{align*}
+	If $l=k$, then $\E\left[zx'\right]$ is square, so \[
+		\beta = \E\left[zx'\right] ^{-1} \E\left[zy\right] 
+	,\] where the inverse exists by the relevance condition.
+\end{proof}
+
+\begin{proposition}[IV estimator when $l=k$]
+	Sample analog: \[
+		\hat{\beta}^{IV} = \left(\frac{1}{n}\sum_{i=1}^{n} z_i x_i'\right)^{-1}\left(\frac{1}{n}\sum_{i=1}^{n} z_i y_i\right) \xrightarrow{p} \E\left[zx'\right] ^{-1} \E\left[zy\right] = \beta
+	.\]
+	With stacked data ($Z'=(z_1,\ldots,z_n)$, $X'=(x_1,\ldots,x_n)$, $Y=(y_1,\ldots,y_n)'$), \[
+		\hat{\beta}^{IV} = (Z'X)^{-1}Z'Y
+	.\]
+\end{proposition}
+
+\begin{remark}[Order condition]
+	A necessary condition for the rank condition is $l\ge k$.
+	\begin{itemize}
+		\item $l=k$: exactly identified.
+		\item $l>k$: overidentified.
+	\end{itemize}
+	More than labeling something as overidentification and paying attention to the number of instruments vs. covariates, the following rank condition is more important.
+\end{remark}
+
+
+\begin{remark}[Equivalent rank characterization]
+	$\E\left[zx'\right]$ is full rank iff \[
+		\E\left[zz'\right]^{-1}\E\left[zx'\right]
+	\]
+	is full rank.
+
+	If $x_j = z'\gamma_j + v_j$ with $\E\left[zv_j\right]=0$, then columns of $\E\left[zz'\right]^{-1}\E\left[zx'\right]$ are the first-stage linear projection coefficients $\gamma_j$.
+
+	\texthl{Check the slides for the matrix derivation.}
+
+	In the special case with one endogenous regressor $x_k$ and exact identification, the rank condition is equivalent to a nonzero coefficient on the excluded instrument in the regression of $x_k$ on included regressors plus excluded instrument(s), i.e. correlation between endogeneous regressor $x_j$ with the excluded instrument $z$ ``after controlling for'' included regressors. In particular, it does not matter what the coefficients of the endogeneous regressor on the included instruments are.
+
+	In the more general case, keeping a square matrix, the submatrix from $\gamma_{k,l}$ to $\gamma_{k+x,l+x}$ must have nonzero determinant.
+\end{remark}
+
+\begin{definition}[First stage and reduced form]
+	First stage: \[
+		x' = z'\pi + v', \quad \E\left[zv'\right]=0
+	.\]
+	Reduced form: \[
+		y = z'\delta + \epsilon, \quad \E\left[z\epsilon\right]=0
+	.\]
+	Under exact identification:\footnote{We use that $\left( AB \right)^{-1} = A^{-1}B^{-1}$, so we can add the $\E\left[zz'\right] ^{-1}$ terms freely.} \begin{align*}
+		\beta &= \E\left[zx'\right] ^{-1} \E\left[zy\right] \setminus 
+			  &=\underbrace{\left[\E\left[zz'\right]^{-1}\E\left[zx'\right]\right]^{-1}}_{\text{First Stage Coefficients}}\underbrace{\E\left[zz'\right]^{-1}\E\left[zy\right]}_{\text{Reduced Form Coefficients}}
+	.\end{align*}
+\end{definition}
+
+\begin{example}[Simultaneous equations: supply and demand]
+	Consider \[
+		q_D = \beta_0 + \beta_1 p + u, \quad \E\left[u\right]=0
+	,\] \[
+		q_S = \gamma_0 + \gamma_1 p + v, \quad \E\left[v\right]=0
+	,\]
+	with $\E\left[uv\right]=0$. Equilibrium $q_D=q_S$ gives \[
+		p = \frac{1}{\beta_1-\gamma_1}(\gamma_0-\beta_0+v-u)
+	,\]
+	so \[
+		\operatorname{Cov}(p,u) = -\frac{\operatorname{Var}(u)}{\beta_1-\gamma_1}, \quad \operatorname{Cov}(p,v)=\frac{\operatorname{Var}(v)}{\beta_1-\gamma_1}
+	,\]
+	and price is endogenous.
+
+	Now add an exogenous supply shifter $z$: \[
+		q_S = \gamma_0 + \gamma_1 p + \gamma_2 z + v, \quad \E\left[vz\right]=0, \quad \E\left[uz\right]=0
+	.\]
+	Then \[
+		p = \frac{1}{\beta_1-\gamma_1}(\gamma_0-\beta_0+\gamma_2 z+v-u)
+	,\]
+	and \[
+		\operatorname{Cov}(p,z) = \frac{\gamma_2\operatorname{Var}(z)}{\beta_1-\gamma_1}
+	.\]
+	If $\gamma_2\ne 0$, $z$ is relevant and excluded from demand, so it can identify demand parameters.
+\end{example}
+
+\section{Overidentification, GMM, and 2SLS}
+
+\begin{remark}[Why GMM when $l>k$]
+	The moment condition is\boxednote{There are $l$ instruments (which includes some covariates and excluded instruments) and $k$ covariates.} \[
+		\E\left[z(y-x'\beta)\right]=0
+	.\]
+	When overidentified, the sample analog may have no exact solution because there are more moment equations than parameters.
+	We cannot guarantee that there exists $\hat{\beta}$ such that \[
+		\frac{1}{n} \sum\limits_{i=1}^{n} z_i y_i  = \frac{1}{n} \sum\limits_{i-1}^{n} z_i x_i' \hat{\beta}
+	,\] 
+	and this requires that the $(l+1)\times 1$ vector on the left is a linear combination of the $k+1 < l+1$ columns of $\frac{1}{n} \sum_{i=1}^{n} z_i x_i'$.
+
+	A poor fix is discarding instruments. Better: take $k+1$ linear combinations of moments.
+\end{remark}
+
+\begin{definition}[Linear-combination GMM estimator]
+	Let $C\in\R^{(k+1)\times(l+1)}$ with $C\E\left[zx'\right]$ full rank. Then since $Czy = Czx'\beta + Czu$, where $\E\left[Czx'\right] $ is square in $\R^{(k+1)\times (k+1)}$, \[
+		\beta = \E\left[Czx'\right]^{-1}\E\left[Czy\right]
+	,\]
+	yielding multiple equivalent ways of representing $\beta$.
+	Sample analog: \[
+		\hat{\beta}(C) = \left(C\frac{Z'X}{n}\right)^{-1}C\frac{Z'Y}{n}
+	,\]
+	whenever $CZ'X$ is invertible.
+\end{definition}
+
+Above, note that if $k=l$, $C$ is square, so $\hat{\beta}(C) = \hat{\beta}_{\text{IV}}$ for all $C$.
+
+Note that with our free choice of $C$, we have infinitely many representations of $\beta$ in the population. But using the sample analogue principle leaves us with different $\hat{\beta}$s. This is analogous to the method of moments, where representations of $\theta$ are all equal in the continuous population distribution but their analogues $\hat{\theta}$ are not equal in population.
+
+\texthl{Furthermore, we must be careful that $C$ picks out a linear combination of $z_i$ that are informative of $x$ (and still satisfy the rank condition in the population --- not sample, as we just care about asymptotics).}
+
+\begin{proposition}[Consistency and asymptotic normality of GMM]
+	Suppose we are given $\hat{C}\xrightarrow{p}C$. (We have not yet determined any $\hat{C}$ such that this holds.) Then \[
+		\hat{\beta} = \left(\hat{C}\frac{Z'X}{n}\right)^{-1}\hat{C}\frac{Z'Y}{n} \xrightarrow{p} \beta
+	.\]
+	Also, \[
+		\sqrt{n}(\hat{\beta}-\beta) \xrightarrow{d} N(0,V)
+	,\]
+	where \[
+		V = \left(C\E\left[z_i x_i'\right]\right)^{-1}C\Omega C'\left(\E\left[z_i x_i'\right]'C'\right)^{-1}, \quad \Omega = \E\left[u_i^2 z_i z_i'\right]
+	.\]
+\end{proposition}
+
+This formula is very very important! It is the asymptotic variance of the estimator given a $C$. Notably, it does not depend on anything other than $C$ having a consistent estimator $\hat{C}$ we can compute.
+
+\begin{proof}
+	With $\hat{C} \xrightarrow{p} C$, 
+	\begin{align*}
+		\hat{\beta} &= \left(\hat{C}\frac{Z'X}{n}\right)^{-1}\hat{C}\frac{Z'Y}{n} \xrightarrow{p} \beta \\
+					&= \beta + \left( \hat{C} \frac{X'X}{n} \right)^{-1} \hat{C} \frac{Z'U}{n} \\
+					&\xrightarrow{p} \beta + \left( C \E\left[z_ix_i'\right]  \right)^{-1} \underbrace{C \E\left[z_i u_i\right] }_{\mathclap{=0\text{ by validity}}} \\
+					&= \beta
+	.\end{align*}
+
+	For the second part, we can rewrite
+	\begin{align*}
+		\sqrt{n} \left( \hat{\beta} - \beta \right)
+		&= \left( \hat{C} \frac{Z'X}{n} \right)^{-1} \hat{C} \frac{Z' U}{\sqrt{n} } \\
+		&= \left( \hat{C} \frac{1}{n }\sum\limits_{i=1}^{n} z_i x_i' \right)^{-1} \hat{C} \underbrace{\frac{1}{\sqrt{n} } \sum\limits_{i=1}^{n} z_i u_i}_{\xrightarrow{d} N(0, \E\left[z_izi' u_i^2\right] \text{ by relevance}} \\
+		&\xrightarrow{d} N(0,V)
+	.\end{align*}
+\end{proof}
+
+\begin{proposition}[Optimal GMM weighting]
+	Let $Q=\E\left[z_i x_i'\right]$ and assume $\Omega$ invertible. The asymptotically optimal choice is \[
+		C^{OGMM}=Q'\Omega^{-1}
+	,\]
+	giving \[
+		V^{OGMM} = (Q'\Omega^{-1}Q)^{-1}
+	.\]
+	For any $C$, the difference in asymptotic covariance matrices is positive semidefinite.
+
+	If $\hat{\Omega}\xrightarrow{p}\Omega$, the feasible optimal GMM is \[
+		\hat{\beta}^{OGMM} = (\overbrace{X'Z\hat{\Omega}^{-1}}^{n \hat{C}}Z'X)^{-1}\overbrace{X'Z\hat{\Omega}^{-1}}^{n \hat{C}}Z'Y
+	,\]
+	with \[
+		\sqrt{n}(\hat{\beta}^{OGMM}-\beta) \xrightarrow{d} N\left(0,(Q'\Omega^{-1}Q)^{-1}\right)
+	.\]
+\end{proposition}
+
+\begin{proof}
+	We can compare the generic GMM variance $\left( CQ\right)^{-1}C\Omega C' \left( Q'C' \right)^{-1}$ to $C^{OGMM} = \left( Q'\Omega^{-1}Q \right)^{-1}$. Using an argument of the difference being positive semidefinite, we can show that $C^{OGMM}$ is optimal.
+\end{proof}
+
+Hence, the asymptotically optimal linear combination of moments is found by setting \[
+	\hat{\beta} = \left( \hat{C} Z' X \right)^{-1} \hat{C} Z' Y
+,\] where $\hat{C}$ is a consistent estimator of $\E\left[z_i x_i'\right] \Omega^{-1}$. The first term is easy to estimate, but $\Omega^{-1} = \E\left[u_i^2 z_i z_i'\right] ^{-1}$ is difficult to estimate.
+
+\begin{proposition}[Conditional homoskedasticity and 2 Stage Least-Squares]
+	If $\E\left[u\mid z\right]=0$ and $\E\left[u^2\mid z\right]=\sigma^2$, then \[
+		\Omega = \E\left[u^2 zz'\right] = \sigma^2\E\left[zz'\right]
+	.\]
+	So feasible optimal GMM becomes \[
+		\hat{\beta}^{2SLS} = (X'P_ZX)^{-1}X'P_ZY, \quad P_Z = Z(Z'Z)^{-1}Z'
+	.\]
+
+	Interpretation:
+	\begin{enumerate}[label=(\roman*)]
+		\item First stage: regress each column of $X$ on $Z$, so $P_ZX=Z\hat{\Pi}$.
+		\item Second stage: regress $Y$ on $P_ZX$.
+	\end{enumerate}
+	Included instruments are unchanged by projection. If $l=k$, $\hat{\beta}^{2SLS}=\hat{\beta}^{IV}$.
+\end{proposition}
+
+In this context, we have
+\begin{align*}
+	\hat{\beta}^{OGMM}
+	&= \left( X'Z \left[ \sigma^2 Z'Z \right]^{-1} Z'X \right)^{-1} X'Z \left[ \sigma^2Z'Z \right]^{-1} Z' Y \\
+	&= \left( X'P_Z X \right)^{-1} X'P_ZY
+,\end{align*}
+as the $\sigma^2$s cancel out.
+This is called the two-stage least squares estimator resulting from the first stage \[
+	X = Z \Pi +  V
+,\] which yields $Z\hat{\Pi} = Z\left( Z'Z \right)^{-1}Z' X = P_Z X$. Under conditional homoskedasticity, we can find the optimal linear combinations of the $l+1$ instruments by regressing $X$ on $Z$ and putting the estimates as the coefficients. \texthl{????}
+
+The second stage specifies $Y = P_Z X \beta + U$ (regressing $Y$ onto the exogenous part of $X$, as the projection onto $Z$ takes out the endogenous component). This results in \[
+	\hat{\beta}^{OLS} = \left( X' P_Z X \right)^{-1} X'P_Z Y
+.\] 
+
+\texthl{Example of having more instruments than regressors? Is there a point where more instruments becomes unhelpful?}
+
+The projection of each column of $X$ onto $Z$ is given by \[
+	P_Z X = Z \hat{\Pi}
+.\] This is the sample analog of the choice \[
+	Cz = \left[ \E\left[zz'\right] ^{-1}\E\left[zx'\right]  \right]' z
+.\] 
+
+In the second stage, the (1. exogenous and 2. endogenous) regressors $X$ are replaced by the (1. exogenous regressors and 2. projection of the endogenous regressors onto the excluded instruments \texthl{?}).
+
+$C^{2SLS} = \left[ \E\left[zz'\right] ^{-1}\E\left[zx'\right]  \right]'$. The \emph{only} thing that heteroskedasticity changes is the asymptotic variance of $\beta^{OGMM}$. Under homoskedasticity, we see that $\hat{\beta}^{OGMM} = \hat{\beta}^{2SLS}$. Under heteroskedasticity, $\hat{\beta}^{2SLS}$ is not optimal (in terms of asymptotic variance), but it is still consistent \texthl{etc.}.
+
+\begin{proposition}[Asymptotic distribution and inference for 2SLS]
+	Under conditional homoskedasticity, \[
+		\sqrt{n}(\hat{\beta}^{2SLS}-\beta) \xrightarrow{d} N\left(0, \sigma^2\left(Q'\E\left[z_i z_i'\right]^{-1}Q\right)^{-1}\right)
+	.\]
+	With $\hat{U}=Y-X\hat{\beta}^{2SLS}$, a consistent estimator is \[
+		\hat{\sigma}^2 = \frac{\hat{U}'\hat{U}}{n}
+	.\]
+	Then \[
+		\hat{V}^{hom} = n\hat{\sigma}^2(X'P_ZX)^{-1}
+	.\]
+	For any constant vector $r\in\R^{k+1}$, \[
+		\frac{\sqrt{n}\,r'\left(\hat{\beta}^{2SLS}-\beta\right)}{\sqrt{r'\hat{V}^{hom}r}} \xrightarrow{d} N(0,1)
+	,\]
+	which gives confidence sets and tests.
+\end{proposition}
+\begin{proof}
+	The GMM asymptotic variance is $\left( Q'\Omega^{-1}Q \right)^{-1}$. Under homoskedasticity, $\hat{\beta}^{2SLS}$ is the GMM estimator, and $\Omega^{-1} = \frac{\E\left[zz'\right] ^{-1}}{\sigma^2}$, so the asymptotic variance of $\hat{\beta}^{2SLS}$ is \texthl{check the slides\ldots}
+
+	We have the expression for $\hat{V}^{hom}$ from 
+	\begin{align*}
+		\hat{V}^{hom} &= \hat{\sigma}^2 \left( \frac{X'Z}{n}\left( \frac{Z'Z}{n} \right)^{-1} \left( \frac{Z'X}{n} \right) \right)^{-1}\\
+		&= n\hat{\sigma}^2 \left( X'Z \left( Z'Z \right)^{-1}Z'X \right)
+	.\end{align*}
+	
+	The convergence expression follows from
+	\begin{align*}
+		r' \left( \sqrt{n} \left( \hat{\beta} - \beta \right) \right)
+		&\xrightarrow{d} r' N\left( 0, V^{hom} \right)\\
+		&\overset{d}{=} N\left( 0, r' V^{hom}r \right)
+	.\end{align*}
+\end{proof}
+
+Importantly, $\hat{U}$ must be estimated using $\hat{\beta}^{2SLS}$ because $\hat{\beta}^{OLS}$ is inconsistent, which leaves us with something that does not converge to $0$. 
+
+\begin{proposition}[Heteroskedasticity and feasible optimal GMM]
+	Under heteroskedasticity, estimate \[
+		\hat{\Omega} = \frac{1}{n}\sum_{i=1}^{n}\hat{u}_i^2 z_i z_i', \quad \hat{u}_i = y_i - x_i'\hat{\beta}^{2SLS}
+	.\]
+	Then optimal feasible GMM is \[
+		\hat{\beta}^{OGMM} = (X'Z\hat{\Omega}^{-1}Z'X)^{-1}X'Z\hat{\Omega}^{-1}Z'Y
+	,\]
+	and \[
+		\sqrt{n}(\hat{\beta}^{OGMM}-\beta) \xrightarrow{d} N(0,V^{het}), \quad V^{het} = (Q'\Omega^{-1}Q)^{-1}
+	.\]
+	A consistent estimator is \[
+		\hat{V}^{het} = \left(\frac{X'Z\hat{\Omega}^{-1}Z'X}{n}\right)^{-1}
+	.\]
+\end{proposition}
+
+Note that the feasible $\hat{\beta}^{FOGMM}$ is reliant on $\hat{\Omega}$, which relies on residuals $\hat{u} = y_i - x_i' \hat{\beta}$. This is a circular problem. We can do 2SLS for the residuals, calculate $\Omega$ from the residuals, then find $\hat{\beta}^{OGMM}$.
+This is called a 2-step GMM estimator.
+
+Under heteroskedasticity, why would we use $\hat{\beta}^{2SLS}$, when $\hat{\beta}^{OGMM}$ and $\hat{\Omega}$ as asymptotically more efficient? It turns out that the estimation $\hat{\Omega}$ of a fourth moment is quite noisy in finite sample, and running 2SLS then finding $\hat{\beta}^{OGMM}$ often yields better \emph{finite-sample} results. We still have that $\hat{\beta}^{2SLS}$ is consistent and asymptotically normal.
+
+All inference theory requires that $\sqrt{n} \left( \hat{\beta} - \beta \right)$ converges to a Gaussian distribution with a variance we can estimate consistently. Thus, once we get to a place like \[
+	\sqrt{n} \left( \hat{\beta}^{OGMM}- \beta \right) \xrightarrow{d} N\left( 0, V^{het} \right)
+,\] we can do inference.

@@ -1,0 +1,56 @@
+% \def\notescheatsheettoggle{1}
+% Speed knobs (set from the command line when desired):
+% - Draft mode (skips loading images): \def\notesdraft{1}
+% - Compile only certain chapters (comma-separated): \def\onlychapters{2_statistics_review}
+%   Example:
+%     pdflatex -output-directory=build "\def\onlychapters{2_statistics_review}\input{econ21030_lecnotes.tex}"
+% Quick toggle (uncomment while editing):
+% \def\notesdraft{1}
+% \def\onlychapters{2_statistics_review}
+\providecommand{\notesdraft}{0}
+\ifnum\notesdraft=1\relax
+  \PassOptionsToPackage{draft}{graphicx}
+\fi
+\providecommand{\onlychapters}{}
+
+\input{~/Documents/UChicago/dotfiles/notes_preamble.tex}
+
+\renewcommand{\notesauthor}{Marcus Kuo}
+\renewcommand{\notesyear}{Winter 2026}
+
+\usepackage{soul}
+\usepackage{mathrsfs}
+\usepackage{comment}
+
+\DeclareMathOperator{\SSR}{SSR}
+\DeclareMathOperator{\TSS}{TSS}
+\DeclareMathOperator{\ESS}{ESS}
+
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{1}
+
+\makeatletter
+\def\input@path{{chapters/}}%
+\makeatother
+
+\if\relax\detokenize\expandafter{\onlychapters}\relax
+\else
+  \includeonly{\onlychapters}
+\fi
+
+\begin{document}
+
+\makelectitle{ECON 21030 \\ \vspace{0.2em} Econometrics -- Honors}{Winter 2026}{Marcus Kuo \\ \small{Lectures by Joseph Hardwick}}
+\tableofcontents
+\clearpage
+
+\include{1_introduction}
+\include{2_statistics_review}
+\include{3_estimation_large_sample_theory}
+\include{4_ols_estimation}
+\include{5_linear_regression}
+\include{6_selection_on_observables}
+\include{7_difference_in_differences}
+\include{8_instrumental_variables}
+
+\end{document}

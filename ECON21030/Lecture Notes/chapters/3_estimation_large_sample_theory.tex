@@ -1,0 +1,816 @@
+\styledchapter{Estimation and Large Sample Theory}
+
+\section{Convergence of Random Variables}
+
+\begin{definition}[Convergence in probability]
+	Let $\{X_n\}_{n\ge 1}$ be a\boxednote{The value of $X_n$ compared to $X$ is irrelevant to the notion of convergence in probability.} sequence of random variables and let $X$ be a random variable. We say $X_n$ converges in probability to $X$ and write $X_n \xrightarrow{p} X$ if, for all $\epsilon>0$,
+	\[
+		\P\left[|X_n-X|>\epsilon\right]\to 0\quad\text{as }n\to\infty.
+	\]
+\end{definition}
+
+\begin{example}	Take
+	\[
+		X_n=\begin{cases}
+			2^n & \text{w.p. }1/n    \\
+			0   & \text{w.p. }1-1/n.
+		\end{cases}
+	\]
+	Then for any $\epsilon>0$,
+	\[
+		\P\left[|X_n-0|>\epsilon\right]=\frac{1}{n}\to 0,
+	\]
+	so $X_n\xrightarrow{p}0$.
+\end{example}
+
+\begin{theorem}[The Weak(er) Law of Large Numbers]
+	Let $\{X_i\}_{i\ge 1}$ be an iid sequence with $\E\left[X_i\right]=\mu$ and finite variance.\footnote{This is what makes the theorem weaker.} Consider the sample mean
+	\[
+		\bar X_n=\frac{1}{n}\sum_{i=1}^n X_i.
+	\]
+	Then $\bar X_n\xrightarrow{p}\mu$.
+\end{theorem}
+
+\begin{proof}
+	Given $\epsilon > 0$,
+	\begin{align*}
+		\P\left[\left| \overline{X}_n - \mu \right| > \epsilon\right] & \le \frac{\E\left[\left| \overline{X}_n - \mu \right|^2\right] }{\epsilon^2} \\
+		                                                              & = \frac{\sigma^2}{n\epsilon^2} \to 0
+		.\end{align*}
+\end{proof}
+
+\begin{example}	Suppose $X_1,\dots,X_n\sim N(0,1)$, and let $\bar X_n=\frac{1}{n}\sum_{i=1}^n X_i$. Then $\bar X_n\sim N(0,1/n)$, so
+	\[
+		\P\left[|\bar X_n-0|>\frac{1}{2}\right]\to 0.
+	\]
+\end{example}
+
+\begin{remark}	The sample average of $X^k$ is
+	\[
+		\hat\mu_k=\frac{1}{n}\sum_{i=1}^n X_i^k.
+	\]
+	Assuming $\E\left[X_i^k\right]<\infty$, the LLN implies $\hat\mu_k\xrightarrow{p}\E\left[X_i^k\right]$.
+\end{remark}
+
+\begin{proposition}	Define the empiricial cumulative distribution function\boxednote{Note that the ECDF is the CDF of the discrete uniform distribution on $X_1,\ldots,X_n$. This provides intuition for why we can compute things like the mean of $F$ with the mean of $\hat{F}$. The expected value of $X^k$ under the distribution $\hat{F}$ is the $k$th sample moment; this is called the sample analogue principle.} as
+	\[
+		\hat F_n(x)=\frac{1}{n}\sum_{i=1}^n \mathds{1}(X_i\le x).
+	\]
+	By the LLN, $\hat F_n(x)\xrightarrow{p}F(x)$ for each $x$.
+\end{proposition}
+
+\begin{proof}
+	Define $Z_i=\mathds{1}(X_i\le x)$. Then $\{Z_i\}_{i\ge 1}$ is iid and
+	\[
+		\P\left[Z_i=1\right]=\P\left[X_i\le x\right]=F_X(x).
+	\]
+	So by the LLN,
+	\[
+		\hat F_n(x)=\frac{1}{n}\sum_{i=1}^n Z_i\xrightarrow{p}\E\left[Z_i\right]=F_X(x).
+	\]
+\end{proof}
+
+\begin{definition}[Convergence in $r$th mean]
+	We say $X_n$ converges in $r$th mean\footnote{Equivalently, moment.} to $X$ and write $X_n\xrightarrow{r\text{th}}X$ if
+	\[
+		\lim_{n\to\infty}\E\left[|X_n-X|^r\right]=0.
+	\]
+\end{definition}
+
+\begin{proposition}	If $X_n\xrightarrow{r\text{th}}X$, then $X_n\xrightarrow{p}X$.
+\end{proposition}
+
+\begin{proof}
+	By Chebyshev's inequality,
+	\[
+		\P\left[|X_n-X|>\epsilon\right]\le\frac{\E\left[|X_n-X|^r\right]}{\epsilon^r}\to 0.
+	\]
+\end{proof}
+
+\begin{remark}	\label{1-13-1}
+	The converse does not hold. Take
+	\[
+		X_n =
+		\begin{cases}
+			2^n & \text{w.p. }1/n^2    \\
+			0   & \text{w.p. }1-1/n^2.
+		\end{cases}
+	\]
+	Then $X_n\xrightarrow{p}0$, but
+	\[
+		\E\left[|X_n-0|^r\right]=\frac{2^{nr}}{n^2}\to\infty.
+	\]
+
+	The reason that the converse does not hold for this example is that $X_n$ diverges quicker than the probability of large deviations shrinks. Convergence in probability implies convergence in $r$th mean if, for example, $\left| X_n \right|$ is uniformly bounded with probability $1$. To see why, suppose $\left| X_n \right|\le K$ with probability $1$ and $X_n \xrightarrow{p} 0$. Then\boxednote{For more on the convergence, refer to Vitali's convergence theorem.}
+	\begin{align*}
+		\left| X_n \right|^{r}                    & \le K^{r} \mathds{1}_{\left| X_n \right| > \epsilon} + \epsilon^{r} \mathds{1}_{\left| X_n \right| \le \epsilon} \\
+		\E\left[\left| X_n - 0 \right|^{r}\right] & \le K^{r} \P\left[\left| X_n \right| > \epsilon\right] + \epsilon^{r}
+		.\end{align*}
+\end{remark}
+
+\begin{definition}[Convergence in probability and $r$th moment (random vectors)]
+	Let $X_n=\begin{pmatrix}X_{n,1}\\ \vdots\\ X_{n,K}\end{pmatrix}$ and $X=\begin{pmatrix}X_1\\ \vdots\\ X_K\end{pmatrix}$. We say $X_n\xrightarrow{p}X$ if, for all $\epsilon>0$,
+	\[
+		\P\left[\|X_n-X\|>\epsilon\right]\to 0.
+	\]
+	We say $X_n\xrightarrow{r\text{th}}X$ if
+	\[
+		\lim_{n\to\infty}\E\left[\|X_n-X\|^r\right]=0.
+	\]
+\end{definition}
+
+\begin{proposition}	We do not assume basic facts on equivalence of norms. Instead:
+	\begin{enumerate}[label=(\roman*)]
+		\item  $X_n \xrightarrow{p} X$ iff for $i=1,\dots,K$, $X_{n,i}\xrightarrow{p}X_i$.
+		\item $X_n \xrightarrow{r\text{th}} X$ iff for $i = 1,\ldots,K$, $X_{n,i} \xrightarrow{r\text{th}} X_i$.
+	\end{enumerate}
+\end{proposition}
+
+\begin{proof} We just show (i), as (ii) was left to Problem Set 1.
+
+	($\implies)$ Note
+	\[
+		|X_{n,i}-X_i|\le \|X_n-X\|\le \sqrt{K}\max_{i\le K}|X_{n,i}-X_i|.
+	\]
+	So if $X_{n,i}\xrightarrow{p}X_i$, then for each $\epsilon>0$,
+	\begin{align*}
+		\P\left[\|X_n-X\|>\epsilon\right]
+		 & \le \P\left[\sqrt{K}\max_{i\le K}|X_{n,i}-X_i|>\epsilon\right]                          \\
+		 & =\P\left[\max_{i\le K}|X_{n,i}-X_i|>\epsilon/\sqrt{K}\right]                            \\
+		 & = \P\left[\cup_{i=1}^{K} \{\left| X_{n,i} - X_i \right| \}> \epsilon / \sqrt{K} \right] \\
+		 & \le \sum_{i=1}^K \P\left[|X_{n,i}-X_i|>\epsilon/\sqrt{K}\right]\to 0.
+	\end{align*}
+	($\impliedby$) If $X_n\xrightarrow{p}X$ then for each $i$ and each $\epsilon$,
+	\[
+		\P\left[|X_{n,i}-X_i|>\epsilon\right]\le \P\left[\|X_n-X\|>\epsilon\right]\to 0.
+	\]
+\end{proof}
+
+\begin{theorem}[Weak LLN for Random Vectors]
+	Let $\{X_i\}_{i\ge 1}$ be iid random vectors such that each element has finite mean, and let $\E\left[X_i\right]=\mu$, where
+	\[
+		\mu=\begin{pmatrix}\mu_1\\ \vdots\\ \mu_K\end{pmatrix}.
+	\]
+	Define
+	\[
+		\bar X_n=\frac{1}{n}\sum_{i=1}^n X_i.
+	\]
+	Then $\bar X_n\xrightarrow{p}\mu$.
+\end{theorem}
+
+\begin{proof}
+	We have
+	\[
+		\bar X_n=\begin{pmatrix}
+			\frac{1}{n}\sum_{i=1}^n X_{i,1} \\
+			\vdots                          \\
+			\frac{1}{n}\sum_{i=1}^n X_{i,K}
+		\end{pmatrix}\xrightarrow{p}
+		\begin{pmatrix}
+			\E\left[X_{i,1}\right] \\
+			\vdots             \\
+			\E\left[X_{i,K}\right]
+		\end{pmatrix}
+		=\E\left[X_1\right].
+	\]
+\end{proof}
+
+\begin{definition}[Convergence in distribution]
+	We\boxednote{Thinking of $X_n$ and $X$ as functions from some domain to $[0,1]$, the domains do not necessarily have to be the same. (I believe Hardwick means the \emph{support} of the two RVs.)} say $X_n$ converges in distribution to $X$ and write $X_n\xrightarrow{d}X$ if
+	\[
+		\lim_{n\to\infty}F_{X_n}(x)=F_X(x)
+	\]
+	for all points $x$ at which $F_X$ is continuous.
+\end{definition}
+
+\begin{remark}	Take $X_n=\frac{1}{n}$ and $X=0$. Then $F_{X_n}(0)=0$ for all $n$, but $F_X(0)=1$. This does not contradict $X_n\xrightarrow{d}X$ because $0$ is a discontinuity point of $F_X$.
+\end{remark}
+
+\begin{remark}	We have that \[
+		X_n \xrightarrow{r\text{th}} X \implies X_n \xrightarrow{p} X \implies X_n \xrightarrow{d} X
+		,\] but neither converse is generally true. Consider Remark (\ref{1-13-1}) for the first. For the second, consider \[
+		X \sim N(0,1), \quad Y_n = (-1)^n X
+		,\] so $\P\left[\left| Y_n - X \right| > \epsilon\right] > \epsilon = \P\left[\left| X \right| > \frac{\epsilon}{2}\right] $, which does not go to $0$.
+\end{remark}
+
+Despite this, if $X_n \xrightarrow{d} c$ for some $c \in \R$, then we do in fact get converge in probability. \emph{This is an exception} to the converse of ($\xrightarrow{p} \implies \xrightarrow{d}$) not being true.
+
+\begin{proposition}	$X_n \xrightarrow{d} c \implies X_n \xrightarrow{p} c$.
+\end{proposition}
+\begin{proof}
+	Given $\epsilon > 0$,
+	\begin{align*}
+		\P\left[\left| X_n - c \right| > \epsilon\right] & = \P\left[X_n > c + \epsilon\right] + \P\left[X_n < c-\epsilon\right] \\
+		                                                 & \le 1 - F_{X_n}(c+ \epsilon) + F_{X_n}(c-\epsilon)
+		.\end{align*}\boxednote{The inequality holds strictly if $\P\left[X_n = c-\epsilon\right] > 0$.}
+	The limit distribution $F_c$ has CDF \[
+		F_c(t) = \mathds{1}_{t \ge c}
+		.\] So
+	\begin{align*}
+		F_{X_n}(c + \epsilon) \to F_c(c + \epsilon) = 1, \quad F_{X_n}(c-\epsilon) \to F_c(c-\epsilon) = 0
+		.\end{align*}
+	Thus $\P\left[\left| X_n - c \right| > \epsilon\right] \to 0$.
+\end{proof}
+
+\section{Asymptotic Theorems}
+
+The following theorem is very very very important in econometrics. Since a lot of estimators are continuous functions of sample mean, which converges to population mean, we get convergence of the estimator to the function evaluated at the population mean. For instance, sample covariance converges to population covariance.
+
+\begin{theorem}[Continuous Mapping Theorem]
+	Let $\{X_n\}_{n\ge 1}$ be a sequence of random vectors in $\mathbb{R}^k$ and let $X$ be a random vector in $\mathbb{R}^k$. Let $g:\mathbb{R}^k\to\mathbb{R}^n$ be continuous on a set $S$ such that $\P\left[X\in S\right]=1$.\footnote{Take care with this condition; the limit random vector lies in the set $S$ with probability $1$. $X$ can be outside $S$ with probability $0$; the Cauchy distribution has denominator zero at one point. While the weakening makes the proof more difficult, it is important for things like instrumental variables.} Then:
+	\begin{itemize}
+		\item If $X_n\xrightarrow{p}X$, then $g(X_n)\xrightarrow{p}g(X)$.
+		\item If $X_n\xrightarrow{d}X$, then $g(X_n)\xrightarrow{d}g(X)$.
+	\end{itemize}
+\end{theorem}
+
+We will mostly use the CMT in conjunction with the WLLN (as this gives us convergence in probability of sample mean to population mean). The CMT may or may not be used for asymptotic theory of order statistics (I didn't understand the explanation), which would not use the WLLN.
+
+\begin{remark}	The theorem does not hold for $r$th moment. Take
+	\[
+		X_n=\begin{cases}
+			n & \text{w.p. }1/n^2    \\
+			0 & \text{w.p. }1-1/n^2,
+		\end{cases}
+		\qquad g(x)=x^2.
+	\]
+	Then
+	\[
+		\E\left[|X_n-0|\right]=\frac{1}{n}\to 0
+	\]
+	but
+	\[
+		\E\left[|g(X_n)-g(0)|\right]=\E\left[|X_n^2-0|\right]=1
+	\]
+	for all $n$. $g(X_n)$ does not converge in $1$st mean to $g\left(0 \right) =0 $.
+\end{remark}
+
+\begin{remark}	Suppose $(X_n,Y_n)\xrightarrow{d}(X,c)$. Then considering $g(x,y) = \frac{x}{y}$, $g$ is continuous on $S = \R^2 \setminus \{(x,0): x \in \R\}$.
+	\[
+		\frac{X_n}{Y_n}\xrightarrow{d}\frac{X}{c}
+	\]
+	provided $c\ne 0$, as $(X,c) \in S$ with probability $1$.
+\end{remark}
+
+\begin{theorem}[Slutsky]
+	Suppose $X_n\xrightarrow{d}X$ and $Y_n\xrightarrow{p}c$ for some constant $c$.\boxednote{Alternatively, by our previous result, $Y_n \xrightarrow{d}c$ is also a sufficient condition.} Then
+	\[
+		X_n+Y_n\xrightarrow{d}X+c;
+		\qquad
+		X_nY_n\xrightarrow{d}Xc;
+		\qquad
+		X_n/Y_n\xrightarrow{d}X/c\ \ \text{provided }c\ne 0.
+	\]
+\end{theorem}
+
+\begin{proof}
+	We take it as given that $X_n\xrightarrow{d}X$ and $Y_n\xrightarrow{p}c$ then
+	\[
+		\begin{pmatrix}X_n\\ Y_n\end{pmatrix}\xrightarrow{d}\begin{pmatrix}X\\ c\end{pmatrix}.
+	\]
+	The result follows by noting that $x+y$, $xy$ and $x/y$ are all continuous functions of $(x,y)$, provided $y\ne 0$ in the last case.
+\end{proof}
+
+\begin{remark}	It's important that $Y_n$ converges in probability to a constant. If $X_n\xrightarrow{d}X$ and $Y_n\xrightarrow{d}Y$, then it is not necessarily true that
+	\[
+		\begin{pmatrix}X_n\\ Y_n\end{pmatrix}\xrightarrow{d}\begin{pmatrix}X\\ Y\end{pmatrix}.
+	\]
+	For example, let $X_n \sim N(0,1)$ and $Y_n = (-1)^{n}X_n$. We have $X_n \xrightarrow{d} N(0,1)$ and $Y_n \xrightarrow{p} N(0,1)$. If Slutsky's theorem held, then $X_n + Y_n$ would converge to some distribution. We find \[F_{X_n + Y_n}(x) =
+		\begin{cases}
+			\mathds{1}_{x \ge 0},\quad n \text{ odd} \\
+			N(0,4), \quad n \text{ even}.
+		\end{cases}.\]
+	$F_{X_n + Y_n}(t)$ does not converge for any $t$, so $X_n + Y_n$ cannot converge in distribution.
+\end{remark}
+
+\begin{aside}	Marginal convergence in probability/$r$th mean imply joint convergence in probability\footnote{This is easily shown with the continuous mapping theorem and putting $g(x,y) = x$.}/$r$th mean. However, this is \emph{not} true for joint convergence in distribution. This is because the marginal distributions miss out on the covariance of the joint distribution.
+\end{aside}
+
+\begin{example}[Consistency of sample correlation coefficient]
+	Suppose we have an iid sample $\{(X_i,Y_i)\}_{i=1}^n$.\footnote{For this example, writing it on paper in terms of $X_i, Y_i$ might make more sense.} Then the sample correlation coefficient is
+	\[
+		\hat\rho_n=\frac{\widehat{\operatorname{Cov}}(X,Y)}{\sqrt{\widehat{\operatorname{Var}}(X)}\sqrt{\widehat{\operatorname{Var}\left(Y\right)}}}
+	\]
+	where
+	\[
+		\widehat{\operatorname{Cov}}(X,Y)=\frac{1}{n}\sum_{i=1}^n X_iY_i-\bar X_n\bar Y_n,
+	\] \[
+		\widehat{\operatorname{Var}}(X)=\frac{1}{n}\sum_{i=1}^n X_i^2-\bar X_n^2,
+		\qquad
+		\widehat{\operatorname{Var}}(Y)=\frac{1}{n}\sum_{i=1}^n Y_i^2-\bar Y_n^2.
+	\]
+	Note that we cannot apply Slutsky's Theorem because the numerator is not a sum of iid variables: $\widehat{\operatorname{Cov}}(X,Y) = \frac{1}{n} \sum (X_i - \overline{X})(Y_i - \overline{Y})$. However, we can decompose to the above expressions to get sums of iid random variables.\boxednote{Nuance: $(X_i,Y_i)$ iid implies that any function of $(x_i,y_i)$, including their product, is iid.}
+	By the LLN,\footnote{We can apply the LLN to $\frac{1}{n}\sum X_i Y_i$ because the condition $\E\left[XY\right] < \infty$ is guaranteed by Cauchy-Schwarz on $\left( \E\left[X^2\right]  \right)^{\frac{1}{2}} \left( \E\left[Y^2\right]  \right)^{\frac{1}{2}}$ and assumption.} we have
+	\[
+		\bar X_n\xrightarrow{p}\E\left[X_i\right],
+		\quad
+		\bar Y_n\xrightarrow{p}\E\left[Y_i\right],
+		\quad
+		\frac{1}{n}\sum_{i=1}^n X_iY_i\xrightarrow{p}\E\left[X_iY_i\right],
+	\] \[
+		\frac{1}{n}\sum_{i=1}^n X_i^2\xrightarrow{p}\E\left[X_i^2\right],
+		\quad
+		\frac{1}{n}\sum_{i=1}^n Y_i^2\xrightarrow{p}\E\left[Y_i^2\right].
+	\]
+
+	Define
+	\[
+		g(x,y,s,t,w)=\frac{s-xy}{\sqrt{t-x^2}\sqrt{w-y^2}}.
+	\]
+	$g$ is continuous everywhere except $t = x^2$ or $w = y^2$. Since the limit of $t$ is $\E\left[x^2\right]$ and $x^2$ is $\E\left[x\right] ^2$ in the limit, and similarly for $w$ and $y^2$, $g$ is continuous as long as $X,Y$ are not constant random variables.\boxednote{If either is constant, it would not make much sense to talk about the correlation between $X$ and $Y$.}
+
+	Then
+	\[
+		\hat\rho_n=g\Big(\bar X_n,\bar Y_n,\frac{1}{n}\sum_{i=1}^n X_iY_i,\frac{1}{n}\sum_{i=1}^n X_i^2,\frac{1}{n}\sum_{i=1}^n Y_i^2\Big).
+	\] converges in probability to \[
+		\rho_{YX} = g\left( \E\left[X\right] ,\E\left[Y\right] ,\E\left[XY\right] ,\E\left[X^2\right] ,\E\left[Y^2\right]  \right)
+		.\]
+
+\end{example}
+
+\begin{proposition}[Linear transformations of asymptotically normal vectors]
+	Suppose $A_n \in \R^{P \times K}$ is a sequence of ($P\times K$) random matrices such that $A_n\xrightarrow{p}A$, where $A$ is a constant matrix. Suppose $B_n$ is a sequence of ($K\times 1$) random vectors such that $B_n\xrightarrow{d}\mathcal{N}(\mu,\Sigma)$. Then
+	\[
+		A_nB_n\xrightarrow{d}A\,\mathcal{N}(\mu,\Sigma)\sim\mathcal{N}(A\mu,A\Sigma A').
+	\]
+	This is a generalized version of Slutsky's theorem, which is a common setup in econometrics. We have something converging in distribution, something converging in probability to a constant, and so their product converges in distribution to the scaled original distribution.
+\end{proposition}
+
+\begin{proof}
+	Let $\operatorname{vec}(A_n)$ denote the columns of $A$, which are themselves vectors. Since $A_n \xrightarrow{p} A$ (a constant vector), we obtain\footnote{This exact property was given to us when we proved Slutsky's theorem.}
+	\[
+		\begin{pmatrix}
+			B_n \\
+			\operatorname{vec}(A_n)
+		\end{pmatrix}
+		\xrightarrow{d}
+		\begin{pmatrix}
+			\mathcal{N}(\mu,\Sigma) \\
+			\operatorname{vec}(A)
+		\end{pmatrix}.
+	\]
+	Then by the CMT, $A_nB_n\xrightarrow{d}A\,\mathcal{N}(\mu,\Sigma)$. Since we know $\E\left[AX\right]=AE(X)$ and $\operatorname{Var}(AX)=A\operatorname{Var}(X)A'$, we conclude
+	\[
+		A\,\mathcal{N}(\mu,\Sigma)\sim\mathcal{N}(A\mu,A\Sigma A')
+	\]
+	because linear transformations of multivariate normals are also normal.
+\end{proof}
+
+\boxednote{For a random vector $X_i$, we have \begin{align*}
+	&\Var\left( X_i \right) \\ &= \E\left[XX'\right] - \E\left[X\right] \E\left[X'\right] 
+.\end{align*} }
+\begin{theorem}[Central Limit Theorem]
+	Let\boxednote{We know that $\E\left[\overline{X}_n\right]  = \mu$ and $\operatorname{Var}\left(\overline{X}_n\right) = \frac{\sigma^2}{n}$. Subtracting $\mu$ from $\overline{X}_n$ and multiplying by $\sqrt{n}$ gives us intuitition for what the expectation and variance should converge to. When the $X_i$ themselves are normally distributed $\sqrt{n} \left( \overline{X}_n - \mu \right)\sim N(0,\sigma^2)$ exactly. The CLT provides an approximation to the distribution of $\sqrt{n} \left( \overline{X}_n - \mu \right)$ when $X_i$ are nonnormal. \\ We like the CLT because it means we don't have to assume things are normally distributed; if they are sample means, they are asymptotically normal.} $\{X_i\}_{i\ge 1}$ be iid with $\E\left[X_i\right]=\mu$ and $\operatorname{Var}(X_i)=\sigma^2<\infty$. Then
+	\[
+		\sqrt{n}(\bar X_n-\mu)\xrightarrow{d}\mathcal{N}(0,\sigma^2).
+	\]
+\end{theorem}
+\begin{theorem}[Central Limit Theorem for Random Vectors]
+	Let $\{X_i\}_{i\ge 1}$ be iid random vectors in $\mathbb{R}^K$ with $\E\left[X_i\right]=\mu$ and $\operatorname{Var}(X_i)=\Sigma$. Then
+	\[
+		\sqrt{n}(\bar X_n-\mu)\xrightarrow{d}\mathcal{N}(0,\Sigma).
+	\]
+\end{theorem}
+
+\begin{remark}	Consider $X_i\sim \text{Unif}[0,1]$. The exact distribution of $Y_n = \sum_{i=1}^{n}X_i$ is given by the Irwin-Hall distribution, which has a very nasty density (search it up).
+
+	The CLT provides an asymptotic approximation to $Y_n$. Then $\mu=1/2$ and $\sigma^2=1/12$, and the CLT yields
+	\[
+		\sqrt{n}(\bar X_n-1/2)\xrightarrow{d}\mathcal{N}\Big(0,\frac{1}{12}\Big).
+	\]
+
+	Looking at a plot of the Irwin-Hall distribution for $n=10$, we see that even for small $n$, the CLT provides a good approximation.
+
+	However, there is no good rule of thumb for how large $n$ should be to invoke the CLT.\boxednote{The Berry-Esseen Theorem gives us a finite sample bound on the inaccuracy of the normal approximation. The bound depends on the skew of the underlying distribution.} If the skew of the distribution of the iid variables is super high, the sample average may still be obviously skewed, even for large sample averages. For an example, consider $X_i \sim \operatorname{Gamma}(k,\theta)$ for $k = \frac{1}{1000}$ (or very small) and look at the lecture slides for plots.
+\end{remark}
+
+\begin{remark}	If $X_i$ has pdf
+	\[
+		f_X(x)=\frac{1}{\pi(1+x^2)},
+	\]
+	then $X_i$ is a $\operatorname{Cauchy}(0,1)$ random variable and notably does not have a mean. Strangely, $\overline{X}_n \sim \operatorname{Cauchy}(0,1)$ as well!
+\end{remark}
+
+\section{Hypothesis testing}
+
+\begin{example}	Suppose $X_1,\ldots,X_n$ are i.i.d.\ $\mathcal{N}(\mu,\sigma^2)$. We want to test
+	\[
+		H_0:\ \mu=\mu_0
+		\qquad
+		H_1:\ \mu\neq \mu_0.
+	\]
+	Under $H_0$, $\sqrt{n}(\bar{X}_n-\mu_0)/\sigma \sim \mathcal{N}(0,1)$, so
+	\[
+		\P\left[\frac{\sqrt{n}\,|\bar{X}_n-\mu_0|}{\sigma}\le z_{1-\alpha/2}\,\Big|\,H_0 \right]
+		=1-\alpha,
+	\]
+	where $z_{1-\alpha}$ is the $1-\alpha$ quantile of $\mathcal{N}(0,1)$.
+	Thus, reject $H_0$ if
+	\[
+		\frac{\sqrt{n}\,|\bar{X}_n-\mu_0|}{\sigma}>z_{1-\alpha/2}.
+	\]
+\end{example}
+
+\begin{remark}	Type I Error: rejecting $H_0$ when it is true.
+	\[
+		\P_{\mu_0}\left[\text{reject }H_0\right]=\alpha.
+	\]
+	Type II Error: failing to reject $H_0$ when it is false. For some $\mu\neq \mu_0$,
+	\[
+		\P_{\mu}\left[\text{fail to reject }H_0\right].
+	\]
+	Power: the probability of rejecting $H_0$ when it is false.
+	\[
+		1-\P_{\mu}\left[\text{fail to reject }H_0\right].
+	\]
+	We aim to maximize the power while keeping the size fixed at $\alpha$.
+\end{remark}
+
+\begin{remark}	In practice $\sigma$ is unknown, and we use a sample analogue:
+	\[
+		S_n^2
+		=
+		\frac{1}{n-1}\sum_{i=1}^n (X_i-\bar{X}_n)^2
+		=
+		\frac{n}{n-1}\left(\frac{1}{n}\sum_{i=1}^n X_i^2-\bar{X}_n^2\right).
+	\]
+\end{remark}
+
+\begin{remark}	For large $n$, we can use an approximate test based on the delta method.
+	Define
+	\[
+		g(x,y,z)=\frac{1}{\sqrt{x(y-z^2)}}.
+	\]
+	Then
+	\[
+		g\left(n,\frac{n}{n-1},\bar{X}_n\right)\sqrt{n}\,|\bar{X}_n-\mu_0|
+		=
+		\frac{\sqrt{n}\,|\bar{X}_n-\mu_0|}{S_n}
+		\ \xrightarrow{d}\ |N(0,1)|.
+	\]
+	Thus, reject $H_0$ if
+	\[
+		\frac{\sqrt{n}\,|\bar{X}_n-\mu_0|}{S_n}>z_{1-\alpha/2}.
+	\]
+\end{remark}
+
+\section{Estimation}
+
+\begin{remark}	Suppose $\{X_i\}_{i=1}^n$ is an i.i.d.\ sample, with density $p(x;\theta)$ (or $p_\theta(x)$).
+	\begin{itemize}
+		\item Goal: to estimate $\theta \in \R^d$ from observed data.
+		\item Let $\theta_0$ denote the true parameter value that generated the data.
+		\item Assume model is correctly specified so some $\theta_0$ exists.
+		\item Let $\hat\theta_n$ denote an estimator: a function of the sample, where $\hat{\theta}_mn: \left( X_1,\ldots,X_n \right)\to \R^d$.
+	\end{itemize}
+\end{remark}
+
+Because $\mu$ is unknown, we often estimate $\operatorname{Var}\left(X\right)$ by \[
+	\hat{\theta}_n = \frac{1}{n-1} \left( \sum_{i=1}^{n} \left( X_i - \overline{X}_n \right)^2 \right)
+.\] Note that $\argmin_a \frac{1}{n}\sum \left( X_i - a \right)^2 = \overline{X}_n$, so \[
+	\frac{1}{n} \sum_{}^{} (X_i - \overline{X})^2 \le \frac{1}{n} \sum_{}^{} \left( X_i - \mu \right)^2
+\] always. We can show that \[
+	\frac{1}{n}\sum \left( X_i - \overline{X} \right)^2 = \frac{1}{n} \sum \left( X_i - \mu \right)^2 - \left( \overline{X}_n - \mu \right)^2
+,\] so we need to correct (and make $\hat{\theta}_n$ larger) by dividing by $n-1$ instead of $n$. This correction is to get $0$ bias.\footnote{I think we actually get smaller variance here. But note that this estimator of $\operatorname{Var}\left(X\right)$ does not minimize MSE; for that, we need to correct in the other direction.}
+
+\begin{remark}[Sample analogue principle]
+	Suppose we want $\theta(F)$. We estimate it using $\theta(\hat{F})$, where $\hat{F}$ is the empirical distribution function. 
+	\begin{itemize}
+		\item Many important quantities depend on unknown $\theta_0$.
+		\item If we can write a function of $\theta_0$ as an expectation,
+		      \[
+			      g(\theta_0)=\E_{\theta_0}\left[h(X_i)\right],
+		      \]
+		      then we can estimate it by a sample analogue:
+		      \[
+			      \hat g_n=\frac{1}{n}\sum_{i=1}^n h(X_i).
+		      \]
+		\item Generally, we can estimate $\theta_0$ itself by searching for $\theta$ such that the equality holds (in some sense).
+		\item i.e., set $g(\theta)=\frac{1}{n}\sum_{i=1}^n h(X_i)$ and solve for $\theta$:
+		      \[
+			      \hat\theta_n=g^{-1}\left(\frac{1}{n}\sum_{i=1}^n h(X_i)\right)
+		      \]
+		      if $g$ invertible.
+	\end{itemize}
+\end{remark}
+
+\begin{definition}[Bias]
+	The\boxednote{An esimator being unbiased is a very strong property. If we suppose $X \sim N(\mu,\sigma^2)$ and we want to estimate $\mu$ with $\hat{\mu}$, $\hat{\mu}$ is unbiased if \emph{regardless of what $\mu_0$ is}, $\E\left[\hat{\mu}\right] = \mu_0$.} \emph{bias} of $\hat\theta_n$ is
+	\[
+		\text{Bias}(\hat\theta_n)=\E_{\theta_0}\left[\hat\theta_n\right]-\theta_0.
+	\]
+	If $\text{Bias}(\hat\theta_n)=0$ for all $\theta_0$, call $\hat\theta_n$ \emph{unbiased}. If $\text{Bias}(\hat\theta_n)\to 0$ as $n\to\infty$, call $\hat\theta_n$ \emph{asymptotically unbiased}.
+\end{definition}
+
+\begin{remark}	Suppose $X \sim F$ with mean $\mu$ and variance $\sigma^2$. Recall the sample variance from the sample analogue principle $S_n^2=\frac{1}{n}\sum_{i=1}^n (X_i-\bar{X}_n)^2$ is biased downward:
+	\[
+		\E\left[S_n^2\right]=\frac{n-1}{n}\sigma^2<\sigma^2.
+	\] This is why we premultiply by $\frac{n}{n-1}$ to get an unbiased estimator of $\operatorname{Var}\left(X\right)$.
+\end{remark}
+
+\begin{definition}[Variance of a estimator]
+	The \emph{variance} of $\hat\theta_n$ is
+	\[
+		\operatorname{Var}(\hat\theta_n)=\E_{\theta_0}\left[\left(\hat\theta_n-\E_{\theta_0}(\hat\theta_n)\right)^2\right].
+	\]
+	Unbiased estimators do not necessarily have small variance. We can always reduce variance by setting $\hat\theta_n=c$ for some constant $c$, but this makes the estimator biased.
+
+	When we search for an estimator with low variance, so that the estimator concentrates most of its probability mass around the true parameter value (assuming bias is relatively small), we are thinking of using Chebyshev's inequality to bound the probability of large deviations.
+\end{definition}
+
+\begin{example}
+	Suppose we want to estimate $\mu$ with a linear estimator: \[
+		\hat{\mu} = \sum\limits_{i=1}^{n} a_iX_i
+	.\] We see that if the estimator is unbiased, i.e. $\E\left[\hat{\mu}\right] = \mu \sum\limits_{i=1}^{n} a_i = \mu$ for all $\mu$, we require $\sum\limits_{i=1}^{n} a_i = 1$.
+
+	What is the best (lowest variance) linear unbiased estimator of $\mu$? It is to put $a_i = \frac{1}{n}$.
+\end{example}
+
+
+\begin{definition}[Mean squared error (MSE)]
+	The \emph{mean squared error} is
+	\[
+		\operatorname{MSE}(\hat\theta_n)=\E_{\theta_0}\left[(\hat\theta_n-\theta_0)^2\right]
+		=
+		\operatorname{Var}(\hat\theta_n)+\text{Bias}(\hat\theta_n)^2.
+	\]
+\end{definition}
+
+Series regression fits a polynomial to data of order based on sample size. Kernel regression computes the sample mean subsetted to a window of $X$, and $g = \E\left[y \mid X\right]$.
+\boxednote{With a uniform kernel,
+\[
+	\hat{\mu}(x) = \frac{\frac{1}{n} \sum Y_i \mathds{1}_{\left| X_i - x \right| < 2h}}{\frac{1}{n}\sum \mathds{1}_{\left| X_i - x \right| < 2h}}
+.\]
+}
+A wide window (high band width) has low variance but high square bias. NPM regression picks the band width to minimize the MSE. Asymptotically, we pick $h \asymp n^{-\frac{1}{5}}$.
+
+\begin{definition}[Consistent estimator, consistency]
+	An estimator $\hat\theta_n:(X_1,\ldots,X_n)\to \R$ of $\theta$ is \emph{consistent} if
+	\[
+		\hat\theta_n \xrightarrow{p} \theta.
+	\]
+\boxednote{$\hat{\mu}=X_1$ is unbiased but inconsistent. By contrast, the variance estimator with denominator $n$ is biased but consistent.}
+\end{definition}
+
+\begin{definition}[Asymptotic distribution]
+	We think of the asymptotic distribution of an estimator as a non-degenerate distribution.\footnote{For instance, the asymptotic distribution of $\hat{\mu} = \overline{X}$ is a degenerate distribution, since it converges to a constant. Instead, we consider the asymptotic distribution of $\sqrt{n} \left( \overline{X} - \mu \right)$.}
+
+	Suppose $\hat{\theta}_n$ is a consistent estimator of $\theta$.\footnote{Consistency is stronger than necessary here. If $\tau_n \to \infty$ and $\tau_n (\hat{\theta}_n-\theta)\xrightarrow{d} X$, then
+	\[
+		\begin{pmatrix}
+			\tau_n (\hat{\theta}_n-\theta) \\
+			\tau_n^{-1}
+		\end{pmatrix} \xrightarrow{d} \begin{pmatrix}
+			X \\
+			0
+		\end{pmatrix},
+	\]
+	so the continuous mapping theorem gives $\hat{\theta}_n-\theta \xrightarrow{d} 0$, hence $\hat{\theta}_n \xrightarrow{p} \theta$.} If for some sequence $\tau_n \to \infty$ and non-degenerate random variable $X$, \[
+		\tau_n \left( \hat{\theta}_n - \theta \right) \xrightarrow{d} X
+	,\] then $F_X$ is the asymptotic distribution function of $\hat{\theta}_n$.
+
+	We often approximate the distribution of $\hat\theta_n$ for large $n$ by an \emph{asymptotic distribution}. For example, we might have
+	\[
+		\sqrt{n}\big(\hat\theta_n-\theta_0\big)\xrightarrow{d}\mathcal{N}(0,\Sigma).
+	.\]
+
+	We may wonder why we do this, if we were already able to come up with $\hat{\theta}_n \to \theta$. Under the null, the probability of rejection is constant. But if the null is not true, a faster convergence of the estimator implies that our power at a given deviation from the null is higher; a more precise estimator $\hat{\theta}$ (one with smaller asymptotic variance) gives us a faster rate of convergence.
+\end{definition}
+
+The CLT gives \[
+	\sqrt{n} \left( \overline{X}_n - \mu \right)\xrightarrow{d}N(0,\sigma^2)
+,\] while the CMT gives \[
+	g\left( \sqrt{n} \left( \overline{X}_n - \mu \right) \right)\xrightarrow{d} g\left( N(0,\sigma^2) \right)
+.\] What about \[
+	\sqrt{n} \left( g(\overline{X}_n) - g(\mu) \right)
+?\] 
+Taylor's theorem gives us
+\begin{align*}
+	\sqrt{n} \left( g(\overline{X}_n) - g(\mu) \right)
+	&\approx \sqrt{n}\, g'(\mu)\left( \overline{X}_n - \mu \right) \\
+	&= g'(\mu)\sqrt{n}\left( \overline{X}_n - \mu \right)
+	\xrightarrow{d} g'(\mu)N(0,\sigma^2)
+.\end{align*}
+
+\begin{theorem}[Delta method]
+	Suppose $\{X_i\}_{i=1}^n$ is an i.i.d.\ sample in $\R^k$ with $\E\left[X_i\right]=c$ and $\operatorname{Var}(X_i)=\Sigma$. Let $g:\R^k\to \R^d$ be differentiable at $c$ with derivative matrix $Dg(c)$ (a $d\times k$ matrix), where
+	\[
+		Dg(c)=
+		\begin{bmatrix}
+			\frac{\partial g_1}{\partial x_1}(c) & \frac{\partial g_1}{\partial x_2}(c) & \cdots & \frac{\partial g_1}{\partial x_k}(c) \\
+			\frac{\partial g_2}{\partial x_1}(c) & \frac{\partial g_2}{\partial x_2}(c) & \cdots & \frac{\partial g_2}{\partial x_k}(c) \\
+			\vdots                               & \vdots                               & \ddots & \vdots                               \\
+			\frac{\partial g_d}{\partial x_1}(c) & \frac{\partial g_d}{\partial x_2}(c) & \cdots & \frac{\partial g_d}{\partial x_k}(c)
+		\end{bmatrix}.
+	\]
+	If
+	\[
+		\sqrt{n}(\bar X_n-c)\xrightarrow{d}\mathcal{N}(0,\Sigma),
+	\]
+	then
+	\[
+		\sqrt{n}\big(g(\bar X_n)-g(c)\big)\xrightarrow{d}\mathcal{N}\big(0,\ Dg(c)\Sigma Dg(c)'\big).
+	\]
+\end{theorem}
+
+\begin{proof}
+	(Scalar case; $g: \R \to \R$.) 
+	By Taylor's theorem, we can write \[
+		g(x) = g(\mu) + g'(\mu) (x - \mu) + h(x) (x- \mu)
+	\] for $h$ such that $\lim_{x \to \mu} h(x) = 0 = h(\mu)$.
+
+	By assumption, we have \[
+		\begin{pmatrix}
+		\sqrt{n} (X_n - \mu) \\
+		n^{-1/2}
+		\end{pmatrix} \xrightarrow{d} \begin{pmatrix}
+		X \\
+		0
+		\end{pmatrix} 
+	.\] Hence $X_n - \mu = n^{-1/2} \left( \sqrt{n}\left( X_n - \mu \right) \right)\xrightarrow{d} 0 \cdot X \xrightarrow{d} 0$. Though convergence in distribution does not imply convergence in probability, recall that if $Y_n \xrightarrow{d} c \in \R$, we have $Y_n \xrightarrow{p} c$. So $X_n - \mu \xrightarrow{p} 0$, implying $X_n \xrightarrow{p} \mu$.
+
+	$h$ is continuous at $\mu$ by construction, so by the CMT, we have $h(X_n) \xrightarrow{p} h(\mu) = 0$.
+	By the Taylor approximation, 
+	\begin{align*}
+		g(X_n) &= g(\mu) + g'(\mu)(X_n - \mu) + h(X_n) (X_n - \mu) \\
+		\implies \sqrt{n}  \left( g(X_n) - g(\mu) \right) &= g'(\mu) \sqrt{n} (X_n - \mu) + h(X_n) \sqrt{n}  (X_n - \mu)
+	.\end{align*}
+	Since $h(X_n) \xrightarrow{p}0$ and $\sqrt{n} (X_n - \mu) \xrightarrow{d}X$, we have $h(X_n)\sqrt{n}(X_n-\mu)\xrightarrow{p}0$, and because $g'(\mu)\sqrt{n} (X_{n} - \mu) \xrightarrow{d}g'(\mu)X$, by Slutsky's theorem, we get
+	\begin{align*}
+		\sqrt{n} \left( g(X_n) - g(\mu) \right) &= g'(\mu) \sqrt{n} \left( X_n - \mu \right) + c_n \\
+												& \xrightarrow{d} \mathcal{N}\big(0,\ (g'(\mu))^2 \sigma^2\big)
+	,\end{align*}
+	where $c_n := h(X_n)\sqrt{n}(X_n-\mu)\xrightarrow{p}0$ and $X\sim \mathcal{N}(0,\sigma^2)$.
+\end{proof}
+\section{Method of Moments}
+
+\begin{definition}[Method of moments estimator]
+	Suppose we want to estimate $\theta \in \R^d$ that solves $g(\theta) = \E\left[h(X)\right] $. If we know $g: \R^d \to \R^k$ and $h$ are known functions, given a sample $\{X_i\}$, we apply the sample analogue principle to get \[
+		g(\hat{\theta}_n) = \frac{1}{n} \sum\limits_{i=1}^{n} h(X_i)
+	.\] A solution to this equation is called a method of moments estimator.
+\end{definition}
+
+\begin{remark}	If $\theta$ is scalar, one way to estimate it is to set a sample moment equal to the corresponding population moment. For example:
+	\begin{itemize}
+		\item If $\E\left[X_i\right]=\theta$, then $\hat\theta_n=\bar X_n$.
+		\item If $\E\left[X_i\right]=g(\theta)$, then $\hat\theta_n=g^{-1}(\bar X_n)$.
+	\end{itemize}
+
+	If $\theta$ is one-dimensional, equating the first moment of $X$ to the first sample moment will suffice, but we could pick any of them. We cannot get the population moments and sample moments to all agree perfectly, because the population moments are derived from a continuous uniform distribution, while the sample moments are derived from a discrete uniform distribtuion (the ECDF).
+
+	In short:
+	\begin{itemize}
+		\item We can use any moment, or multiple moments.
+		\item Different moments yield different estimators.
+		\item Different moments may yield estimators with different properties (bias, variance, MSE, etc.).
+	\end{itemize}
+\end{remark}
+
+\begin{example}	Suppose $X_i\sim U[0,\theta]$. Then $p(x;\theta)=\frac{1}{\theta}$ for $x\in[0,\theta]$.
+	We know
+	\[
+		\E\left[X_i\right]=\frac{\theta}{2},
+		\qquad
+		\E\left[X_i^2\right]=\frac{\theta^2}{3}.
+	\]
+	Using the first moment,
+	\[
+		\frac{\theta}{2}=\bar X_n
+		\qquad\Rightarrow\qquad
+		\hat\theta_{1n}=2\bar X_n.
+	\]
+	Using the second moment,
+	\[
+		\frac{\theta^2}{3}=\frac{1}{n}\sum_{i=1}^n X_i^2
+		\qquad\Rightarrow\qquad
+		\hat\theta_{2n}=\sqrt{\frac{3}{n}\sum_{i=1}^n X_i^2}.
+	\]
+
+	Note that $\hat\theta_{2n}$ is biased, because $\sqrt{\cdot}$ is concave and by Jensen's inequality,
+	\[
+		\E\left[\hat\theta_{2n}\right]
+		=
+		\E\left[\sqrt{\frac{3}{n}\sum_{i=1}^n X_i^2}\right]
+		\le
+		\sqrt{\E\left[\frac{3}{n}\sum_{i=1}^n X_i^2\right]}
+		=
+		\sqrt{3\cdot \E\left[X_i^2\right]}
+		=
+		\theta.
+	\]
+	We can show that $\hat{\theta}_{2n}$ is consistent:
+	\begin{itemize}
+		\item Step 1: Note that $\hat\theta_{2n}$ contains the sample average $\frac{1}{n}\sum_{i=1}^n X_i^2$:
+		      \[
+			      \hat\theta_{2n}=\sqrt{\frac{3}{n}\sum_{i=1}^n X_i^2}.
+		      \]
+		      Now we apply the WLLN to $\frac{1}{n}\sum_{i=1}^n X_i^2$ and conclude that
+		      \[
+			      \frac{1}{n}\sum_{i=1}^n X_i^2 \xrightarrow{p} \E\left[X^2\right]=\frac{\theta^2}{3}.
+		      \]
+		\item Step 2: Use the continuous mapping theorem. The condition we have to check is that $g(x)=\sqrt{3x}$ is continuous at the limit $\theta^2/3$ with probability $1$. Since the limit random variable is a constant, and $\theta>0$, this is satisfied, so
+		      \[
+			      g\left(\frac{1}{n}\sum_{i=1}^n X_i^2\right)\xrightarrow{p} g\left(\frac{\theta^2}{3}\right)=\theta.
+		      \]
+	  \end{itemize}
+	Hence, $\hat\theta_{2n}$ is a consistent estimator of $\theta$.
+
+	Now we derive the asymptotic distribution.
+
+	\begin{itemize}
+		\item Step 1: To establish consistency, we first found a sample average. Apply the CLT to that sample average:
+		      \[
+			      \sqrt{n}\left(\frac{1}{n}\sum_{i=1}^n X_i^2-\frac{\theta^2}{3}\right)\xrightarrow{d}\mathcal{N}\big(0,\operatorname{Var}(X_i^2)\big).
+		      \]
+		      We can show that
+		      \[
+			      \operatorname{Var}(X_i^2)=\E\left[X_i^4\right]-\E\left[X_i^2\right]^2=\frac{\theta^4}{5}-\left(\frac{\theta^2}{3}\right)^2=\frac{4\theta^4}{45},
+		      \]
+		      yielding
+		      \[
+			      \sqrt{n}\left(\frac{1}{n}\sum_{i=1}^n X_i^2-\frac{\theta^2}{3}\right)\xrightarrow{d}\mathcal{N}\left(0,\frac{4\theta^4}{45}\right).
+		      \]
+		\item Step 2: Compare CLT result with what we actually want:
+		      \[
+			      \sqrt{n}\big(\hat\theta_{2n}-\theta\big)
+			      =
+			      \sqrt{n}\left(\sqrt{\frac{3}{n}\sum_{i=1}^n X_i^2}-\sqrt{3\cdot \frac{\theta^2}{3}}\right),
+		      \]
+			  which we recognize as $\sqrt{n} \left(g\left( \frac{1}{n}\sum X_i^2 \right) - g\left( \frac{\theta^2}{3} \right) \right)$,
+		      so we try the Delta Method with $g(x)=\sqrt{3x}$ and $g'(x)=\frac{\sqrt{3}}{2\sqrt{x}}$. This yields
+		      \begin{align*}
+			      \sqrt{n}\!\left(g\!\left(\tfrac{1}{n}\sum_{i=1}^n X_i^2\right)-g\!\left(\tfrac{\theta^2}{3}\right)\right)
+			      &\xrightarrow{d}
+			      \mathcal{N}\!\left(0,\ g'\!\left(\tfrac{\theta^2}{3}\right)^{\!2}\times \tfrac{4\theta^4}{45}\right) \\
+			      &= \mathcal{N}\!\left(0,\tfrac{\theta^2}{5}\right).
+		      \end{align*}
+	\end{itemize}
+\end{example}
+
+% Week 3 slides
+
+\section{Summary}
+
+\begin{remark}[Modes of convergence]
+	Let $\{Z_n\}$ be a sequence of random variables and $Z$ a random variable (or constant).
+	\begin{itemize}
+		\item \textbf{In probability} ($Z_n\xrightarrow{p}Z$): $\P[|Z_n-Z|>\varepsilon]\to 0$ for all $\varepsilon>0$.
+		\item \textbf{In distribution} ($Z_n\xrightarrow{d}Z$): $F_{Z_n}(x)\to F_Z(x)$ at all continuity points of $F_Z$.
+		\item \textbf{Almost surely} ($Z_n\xrightarrow{a.s.}Z$): $\P[\lim_{n\to\infty}Z_n=Z]=1$.
+		\item Hierarchy: a.s.\ $\Rightarrow$ in probability $\Rightarrow$ in distribution.
+	\end{itemize}
+\end{remark}
+
+\begin{remark}[Key limit theorems]
+	Let $X_1,\ldots,X_n$ be i.i.d.\ with mean $\mu$ and variance $\sigma^2<\infty$.
+	\begin{itemize}
+		\item \textbf{WLLN}: $\bar X_n\xrightarrow{p}\mu$.
+		\item \textbf{CLT}: $\sqrt{n}(\bar X_n-\mu)\xrightarrow{d}\mathcal{N}(0,\sigma^2)$.
+		\item \textbf{CMT}: If $g$ is continuous and $Z_n\xrightarrow{p}Z$, then $g(Z_n)\xrightarrow{p}g(Z)$; same for $\xrightarrow{d}$.
+		\item \textbf{Slutsky}: If $A_n\xrightarrow{d}A$ and $B_n\xrightarrow{p}b$ (constant), then $A_n+B_n\xrightarrow{d}A+b$ and $B_nA_n\xrightarrow{d}bA$.
+		\item \textbf{Delta method}: If $\sqrt{n}(T_n-\theta)\xrightarrow{d}\mathcal{N}(0,V)$ and $g$ is differentiable at $\theta$, then
+		      \[
+			      \sqrt{n}(g(T_n)-g(\theta))\xrightarrow{d}\mathcal{N}(0,\,g'(\theta)^2 V).
+		      \]
+	\end{itemize}
+\end{remark}
+
+\begin{remark}[Estimator quality criteria]
+	For an estimator $\hat\theta$ of $\theta$:
+	\begin{itemize}
+		\item \textbf{Bias}: $\Bias(\hat\theta)=\E[\hat\theta]-\theta$. Unbiased if $\Bias=0$.
+		\item \textbf{MSE}: $\MSE(\hat\theta)=\E[(\hat\theta-\theta)^2]=\Var(\hat\theta)+\Bias(\hat\theta)^2$.
+		\item \textbf{Consistent}: $\hat\theta_n\xrightarrow{p}\theta$.
+		\item \textbf{Asymptotic distribution}: $\sqrt{n}(\hat\theta_n-\theta)\xrightarrow{d}\mathcal{N}(0,V)$; $V$ is the asymptotic variance.
+	\end{itemize}
+\end{remark}
+
+\begin{remark}[Method of Moments]
+	Suppose $\theta\in\R^k$. Let $m(\theta)=\E[h(X_i;\theta)]$ for some moment function $h$.
+	\begin{enumerate}
+		\item Choose $k$ moment conditions $m_j(\theta)=0$, $j=1,\ldots,k$.
+		\item Replace population expectations with sample averages:
+		      \[\hat m_j(\hat\theta)=\tfrac{1}{n}\textstyle\sum_{i=1}^n h_j(X_i;\hat\theta)=0.\]
+		\item Solve for $\hat\theta$ (the MoM estimator).
+	\end{enumerate}
+	Under regularity conditions, $\hat\theta^{\text{MoM}}\xrightarrow{p}\theta$ and $\sqrt{n}(\hat\theta^{\text{MoM}}-\theta)\xrightarrow{d}\mathcal{N}(0,V)$; apply the Delta method if $\hat\theta=g(T_n)$.
+\end{remark}
+
+\begin{remark}[Decision guide: which result to apply]
+	\begin{center}
+		\begin{tabular}{lll}
+			\hline
+			\textbf{Goal} & \textbf{Tool} & \textbf{Condition} \\
+			\hline
+			Show $\hat\theta\xrightarrow{p}\theta$ & WLLN + CMT & $\hat\theta=g(\bar X_n)$, $g$ continuous \\
+			CLT for $\bar X_n$ & CLT & i.i.d., finite variance \\
+			CLT for $g(\bar X_n)$ & Delta method & $g$ differentiable at $\mu$ \\
+			Combine limits & Slutsky & one sequence $\xrightarrow{d}$, other $\xrightarrow{p}$ constant \\
+			Estimate $\theta$ from moments & MoM & $k$ params $\Leftrightarrow$ $k$ moment conditions \\
+			Assess finite-sample quality & Bias / MSE & exact distribution available \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{remark}
+
+\newpage
