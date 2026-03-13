@@ -1,0 +1,844 @@
+% Lecture notes preamble
+% Visual target: wide outer margin, boxed marginalia, compact chapter openers,
+% centered captions above tables/figures, rounded code blocks, and restrained
+% running heads/feet.
+
+\documentclass[11pt,oneside]{book}
+
+% Cheat-sheet compile toggle.
+% Uncomment the next line for compact cheat-sheet styling.
+% \notescheatsheettrue
+\newif\ifnotescheatsheet
+\notescheatsheetfalse
+\providecommand{\notescheatsheettoggle}{0}
+\ifnum\notescheatsheettoggle=1\relax
+  \notescheatsheettrue
+\fi
+
+% Page geometry: narrow left margin, generous right margin for notes.
+% Cheatsheet mode uses tight uniform margins with no margin column.
+\ifnotescheatsheet
+\usepackage[
+    paper=letterpaper,
+    includeheadfoot,
+    left=0.5in,
+    right=0.5in,
+    top=0.5in,
+    bottom=0.5in,
+    marginparsep=0pt,
+    marginparwidth=0pt,
+    headheight=15pt,
+    headsep=0.12in,
+    footskip=0.28in
+]{geometry}
+\else
+\usepackage[
+    paper=letterpaper,
+    includeheadfoot,
+    left=0.65in,
+    right=2.58in,
+    top=0.70in,
+    bottom=0.85in,
+    marginparsep=0.18in,
+    marginparwidth=1.96in,
+    headheight=15pt,
+    headsep=0.18in,
+    footskip=0.38in
+]{geometry}
+\fi
+
+% Typography and microtypography.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{textcomp}
+\usepackage{setspace}
+\ifnotescheatsheet
+\setstretch{1.0}
+\else
+\setstretch{1.06}
+\fi
+\raggedbottom
+
+% Core math and theorem support.
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{dsfont}
+\numberwithin{equation}{chapter}
+\usepackage{mathrsfs}
+\DeclareFontFamily{U}{rsfs}{\skewchar\font127 }
+\DeclareFontShape{U}{rsfs}{m}{n}{<-6> rsfs5 <6-8> rsfs7 <8-> rsfs10}{}
+
+% Tables, figures, colors, and graphics.
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{soul}
+
+% Boxes and marginalia.
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{theorems}
+\ifnotescheatsheet
+\tcbset{
+  lecrcodeboxstyle/.style={
+    colback=white,
+    colframe=black,
+    boxrule=0.45pt,
+    arc=0pt,
+    left=4pt,
+    right=4pt,
+    top=4pt,
+    bottom=4pt
+  },
+  lecnoteboxstyle/.style={
+    arc=0pt,
+    colback=white,
+    colframe=black,
+    left=3pt,
+    right=3pt,
+    top=3pt,
+    bottom=3pt
+  },
+  lecthmbasetitlestyle/.style={
+    arc=0pt,
+    left=4pt,
+    right=4pt,
+    top=3pt,
+    bottom=3pt
+  },
+  lecthmbasestyle/.style={
+    arc=0pt,
+    left=5pt,
+    right=5pt,
+    top=5pt,
+    bottom=5pt
+  }
+}
+\newcommand{\lecnotefont}{\tiny}
+\else
+\tcbset{
+  lecrcodeboxstyle/.style={
+    colback=gray!8,
+    colframe=black!65,
+    boxrule=0.45pt,
+    arc=2.4mm,
+    left=6pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt
+  },
+  lecnoteboxstyle/.style={
+    arc=2.4mm,
+    colback=gray!4,
+    colframe=black!65,
+    left=5pt,
+    right=5pt,
+    top=4pt,
+    bottom=4pt
+  },
+  lecthmbasetitlestyle/.style={
+    arc=2.4mm,
+    left=6pt,
+    right=6pt,
+    top=4pt,
+    bottom=4pt
+  },
+  lecthmbasestyle/.style={
+    arc=2.4mm,
+    left=8pt,
+    right=8pt,
+    top=8pt,
+    bottom=8pt
+  }
+}
+\newcommand{\lecnotefont}{\footnotesize}
+\fi
+\usepackage{varwidth}
+\usepackage{marginnote}
+\usepackage{marginfix}
+\setlength{\marginparpush}{18pt}
+\renewcommand*{\marginfont}{\footnotesize}
+
+% Links.
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black,
+    pdfauthor={Marcus Kuo},
+    pdftitle={Notes}
+}
+
+% Lists and TOC helpers.
+\usepackage{enumitem}
+\usepackage{titling}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{etoc}
+\usepackage{xparse}
+\renewcommand{\cfttoctitlefont}{\fontsize{24}{28}\selectfont\bfseries}\renewcommand{\cftaftertoctitle}{\hfill}\setlength{\cftbeforetoctitleskip}{0pt}\setlength{\cftaftertoctitleskip}{1.5em}
+
+% Header/footer styling.
+\usepackage{fancyhdr}
+\usepackage{comment}
+\newcommand{\notesauthor}{Marcus Kuo}
+\newcommand{\notesinstitution}{The University of Chicago}
+\newcommand{\notesyear}{2026}
+
+\makeatletter
+\renewcommand{\chaptermark}[1]{\markboth{Section \thechapter: #1}{}}
+\makeatother
+
+\fancypagestyle{notesbody}{%
+    \fancyhf{}
+    \fancyhead[L]{\itshape\nouppercase{\leftmark}}
+    \fancyhead[R]{\itshape\notesauthor}
+    \fancyfoot[L]{\itshape\notesyear}
+    \fancyfoot[C]{\thepage}
+    \fancyfoot[R]{\itshape\notesinstitution}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+\fancypagestyle{plain}{%
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+\pagestyle{notesbody}
+
+% Section headings.
+\titleformat{\section}
+  {\normalfont\bfseries\large}
+  {\thesection}
+  {0.9em}
+  {}
+\titleformat{\subsection}
+  {\normalfont\bfseries\large}
+  {\thesubsection}
+  {0.8em}
+  {}
+\titlespacing*{\section}{0pt}{1.4\baselineskip}{0.8\baselineskip}
+\titlespacing*{\subsection}{0pt}{1.1\baselineskip}{0.55\baselineskip}
+
+% TOC appearance.
+\setcounter{tocdepth}{2}
+\renewcommand{\contentsname}{Contents}
+
+% Figure/table captions: centered, caption above, notes below by command.
+\captionsetup{
+    font=normalsize,
+    labelfont=bf,
+    textfont=normalfont,
+    justification=centering,
+    singlelinecheck=false,
+    skip=8pt
+}
+\captionsetup[figure]{position=top}
+\captionsetup[table]{position=top}
+
+% Code block styling.
+\usepackage{listings}
+\lstdefinelanguage{Rnote}{
+  language=R,
+  morekeywords={mutate,summarize,filter,group_by,mean,sd,replicate,ggplot,labs,geom_density}
+}
+\ifnotescheatsheet
+\lstdefinestyle{notescode}{
+  language=Rnote,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{black},
+  commentstyle=\itshape\color{black},
+  stringstyle=\color{black},
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  aboveskip=0pt,
+  belowskip=0pt,
+  frame=none
+}
+\else
+\lstdefinestyle{notescode}{
+  language=Rnote,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!75!black},
+  commentstyle=\itshape\color{teal!55!black},
+  stringstyle=\color{red!70!black},
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  aboveskip=0pt,
+  belowskip=0pt,
+  frame=none
+}
+\fi
+\newtcblisting{rcodebox}{
+  enhanced,
+  breakable,
+  lecrcodeboxstyle,
+  listing only,
+  listing options={style=notescode}
+}
+
+% Margin note box.
+\NewDocumentCommand{\lecnotebox}{ +m }{%
+  \begin{tcolorbox}[
+    enhanced,
+    boxrule=0.45pt,
+    lecnoteboxstyle,
+    width=\marginparwidth,
+    before skip=0pt,
+    after skip=0pt
+  ]
+  {\lecnotefont #1}
+  \end{tcolorbox}%
+}
+
+% Boxed-note backends. Normal mode places notes in the margin with optional
+% vertical offsets; cheatsheet mode converts them to footnotes.
+\NewDocumentCommand{\lecnormalboxednoteplace}{ O{0pt} +m }{%
+  \marginnote{\lecnotebox{#2}}[#1]%
+}
+\NewDocumentCommand{\leccheatsheetboxednoteplace}{ O{0pt} +m }{%
+  \footnote{#2}%
+}
+\let\lecboxednoteplace\lecnormalboxednoteplace
+\ifnotescheatsheet
+\let\lecboxednoteplace\leccheatsheetboxednoteplace
+\fi
+
+% Notes triggered in math mode or inside theorem boxes are queued until we hit
+% a stable text boundary where the chosen backend can place them safely.
+\makeatletter
+\newcommand{\lecdeferrednotes}{}
+\NewDocumentCommand{\lecdefernote}{ O{0pt} +m }{%
+  \g@addto@macro\lecdeferrednotes{\lecboxednoteplace[#1]{#2}}%
+}
+\newcommand{\lecflushdeferrednotes}{%
+  \lecdeferrednotes
+  \global\let\lecdeferrednotes\@empty
+}
+\AtEndDocument{\lecflushdeferrednotes}
+\pretocmd{\appendix}{\lecflushdeferrednotes}{}{}
+\makeatother
+
+\NewDocumentCommand{\boxednote}{ O{0pt} +m }{%
+  \ifmmode
+    \lecdefernote[#1]{#2}%
+  \else\ifinner
+    \lecdefernote[#1]{#2}%
+  \else\iflecinbox
+    \lecdefernote[#1]{#2}%
+  \else
+    \lecflushdeferrednotes
+    \lecboxednoteplace[#1]{#2}%
+  \fi\fi\fi
+}
+
+% Margin figure helper: caption (with number) above, image nearly full width.
+% Usage: \marginimage[Caption][fig:label]{filename}
+% - `filename` is relative to `images/`
+% - Omit caption/label by leaving the optional args empty
+\NewDocumentCommand{\marginimage}{ O{} o m }{%
+  \boxednote{%
+    \begingroup
+    \centering
+    \IfNoValueTF{#2}{%
+      \if\relax\detokenize{#1}\relax
+        \includegraphics[width=\linewidth]{images/#3}%
+      \else
+        \refstepcounter{figure}%
+        {\footnotesize\bfseries \figurename~\thefigure.\ \itshape #1\par}%
+        \vspace{4pt}%
+        \includegraphics[width=\linewidth]{images/#3}%
+      \fi
+    }{%
+      \refstepcounter{figure}%
+      \label{#2}%
+      \if\relax\detokenize{#1}\relax
+        \includegraphics[width=\linewidth]{images/#3}%
+      \else
+        {\footnotesize\bfseries \figurename~\thefigure.\ \itshape #1\par}%
+        \vspace{4pt}%
+        \includegraphics[width=\linewidth]{images/#3}%
+      \fi
+    }%
+    \endgroup
+  }%
+}
+\ifnotescheatsheet
+\RenewDocumentCommand{\marginimage}{ O{} o m }{}%
+\fi
+
+% Notes under tables/figures.
+\newcommand{\fignote}[1]{\par\vspace{0.25em}{\footnotesize\textit{Notes:} #1\par}}
+\newcommand{\tabnote}[1]{\par\vspace{0.25em}{\footnotesize\textit{Notes:} #1\par}}
+
+% Line-break penalties: prevent mid-expression line breaks.
+\relpenalty=10000
+\binoppenalty=10000
+
+% =====================================================================
+% MATH SHORTHAND MACROS
+% =====================================================================
+\newcommand*\N{\mathbb{N}}
+\newcommand*\R{\mathbb{R}}
+\newcommand*\Q{\mathbb{Q}}
+\newcommand*\Z{\mathbb{Z}}
+\newcommand*\E{\mathbb{E}}
+\let\oldP\P
+\renewcommand*\P{\mathbb{P}}
+\let\O\varnothing
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+\newcommand{\ind}{\perp\!\!\!\perp}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\plim}{plim}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\Bias}{Bias}
+\DeclareMathOperator{\MSE}{MSE}
+
+% =====================================================================
+% CROSS-REFERENCE MACROS
+% =====================================================================
+\newcommand{\thmref}[1]{Theorem~\ref{thm:#1}}
+\newcommand{\lemref}[1]{Lemma~\ref{thm:#1}}
+\newcommand{\propref}[1]{Proposition~\ref{thm:#1}}
+\newcommand{\defref}[1]{Definition~\ref{thm:#1}}
+\newcommand{\corref}[1]{Corollary~\ref{thm:#1}}
+\newcommand{\exref}[1]{Example~\ref{thm:#1}}
+
+% =====================================================================
+% THEOREM ENVIRONMENTS
+% =====================================================================
+
+% Shared counter: chapter.section.number (e.g., 1.2.3)
+\newcounter{thmcounter}[section]
+\renewcommand{\thethmcounter}{\thesection.\arabic{thmcounter}}
+
+% Colors for theorem boxes.
+% User palette (hex):
+%  - theorem/proposition: #ccd5ae
+%  - lemma/corollary:     #e9edc9 (different now)
+%  - assumption:          #d4a373
+%  - definition/notation: #fefae0
+%  - example:             #faedcd (different now)
+\definecolor{lecthm}{HTML}{CCD5AE}
+\definecolor{leclem}{HTML}{ECF1D3}
+\definecolor{lecassump}{HTML}{DDB892}
+\definecolor{lecdef}{HTML}{FEFAE0}
+\definecolor{lecex}{HTML}{FFD9C7}
+
+% Main box fill shade: lower = darker (closer to the title bar color),
+% higher = lighter (more white mixed in).
+\newcommand{\lecmainmix}{45}
+
+% Darken title bars + outlines slightly by mixing with black.
+% Higher = darker.
+\newcommand{\lectitlebarmix}{95}
+\newcommand{\lecframemix}{95}
+\ifnotescheatsheet
+\colorlet{lecthm}{white}
+\colorlet{leclem}{white}
+\colorlet{lecassump}{white}
+\colorlet{lecdef}{white}
+\colorlet{lecex}{white}
+\renewcommand{\lecmainmix}{100}
+\renewcommand{\lectitlebarmix}{100}
+\renewcommand{\lecframemix}{0}
+\fi
+
+% Proof-end symbol mechanism.
+\newcommand{\currentproofmark}{\ensuremath{\square}}
+\newcommand{\setproofmark}[1]{\renewcommand{\currentproofmark}{#1}}
+
+% Default proof label (auto-updated by theorem-like environments).
+\newcommand{\lecproofname}{Proof}
+\newcommand{\setlecproofname}[1]{%
+  \begingroup
+  \edef\lecprooftmp{#1}%
+  \global\let\lecproofname\lecprooftmp
+  \endgroup
+}
+\newcommand{\resetlecproofname}{\setlecproofname{Proof}}
+
+% Base tcolorbox style for theorem environments.
+\tcbset{
+  thmbasetitle/.style={
+    enhanced,
+    boxrule=0.45pt,
+    lecthmbasetitlestyle,
+    coltitle=black,
+    fonttitle=\bfseries,
+  },
+  thmbase/.style={
+    enhanced,
+    breakable,
+    boxrule=0.45pt,
+    lecthmbasestyle,
+    fonttitle=\bfseries,
+    coltitle=black,
+    separator sign none,
+    description delimiters parenthesis,
+    terminator sign={.},
+    % Use \linewidth so titles wrap correctly inside lists/minipages.
+    varwidth boxed title=\dimexpr\linewidth-3em\relax,
+    attach boxed title to top left={xshift=7pt,yshift*=-2mm},
+    boxed title style={thmbasetitle},
+  },
+	  thmbluestyle/.style={
+	    thmbase,
+	    colback=lecthm!\lecmainmix!white,
+	    colframe=lecthm!\lecframemix!black,
+	    boxed title style={thmbasetitle, colback=lecthm!\lectitlebarmix!black, colframe=lecthm!\lecframemix!black},
+	  },
+	  thmbgstyle/.style={
+	    thmbase,
+	    colback=leclem!\lecmainmix!white,
+	    colframe=leclem!\lecframemix!black,
+	    boxed title style={thmbasetitle, colback=leclem!\lectitlebarmix!black, colframe=leclem!\lecframemix!black},
+	  },
+	  thmyellowstyle/.style={
+	    thmbase,
+	    colback=lecdef!\lecmainmix!white,
+	    colframe=lecdef!\lecframemix!black,
+	    boxed title style={thmbasetitle, colback=lecdef!\lectitlebarmix!black, colframe=lecdef!\lecframemix!black},
+	  },
+	  thmpinkstyle/.style={
+	    thmbase,
+	    colback=lecex!\lecmainmix!white,
+	    colframe=lecex!\lecframemix!black,
+	    boxed title style={thmbasetitle, colback=lecex!\lectitlebarmix!black, colframe=lecex!\lecframemix!black},
+	  },
+	  thmassumpstyle/.style={
+	    thmbase,
+	    colback=lecassump!\lecmainmix!white,
+	    colframe=lecassump!\lecframemix!black,
+	    boxed title style={thmbasetitle, colback=lecassump!\lectitlebarmix!black, colframe=lecassump!\lecframemix!black},
+	  },
+	}
+
+% Boxed theorem environments via newtcbtheorem.
+% Usage: \begin{theorem}{Name}{label} ... \end{theorem}
+%   - Name appears in parentheses after "Theorem 1.2.3"
+%   - Empty name: \begin{theorem}{}{label}
+%   - Label is prefixed with "thm:" automatically
+
+\newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lectheorem}{Theorem}{
+  thmbluestyle,
+  before upper={
+    \setproofmark{\ensuremath{\square}}
+    \setlecproofname{Proof of Theorem~\thethmcounter}
+  },
+}{thm}
+
+\newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecproposition}{Proposition}{
+  thmbluestyle,
+  before upper={
+    \setproofmark{\ensuremath{\square}}
+    \setlecproofname{Proof of Proposition~\thethmcounter}
+  },
+}{thm}
+
+\newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{leclemma}{Lemma}{
+  thmbgstyle,
+  before upper={
+    \setproofmark{\ensuremath{\blacksquare}}
+    \setlecproofname{Proof of Lemma~\thethmcounter}
+  },
+}{thm}
+
+\newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{leccorollary}{Corollary}{
+  thmbgstyle,
+  before upper={
+    \setproofmark{\ensuremath{\circlearrowright}}
+    \setlecproofname{Proof of Corollary~\thethmcounter}
+  },
+}{thm}
+
+\newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecdefinition}{Definition}{
+  thmyellowstyle,
+}{thm}
+
+\newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecexample}{Example}{
+  thmpinkstyle,
+  before upper={\setproofmark{\ensuremath{\triangle}} },
+}{thm}
+
+\newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecassumption}{Assumption}{
+  thmassumpstyle,
+}{thm}
+
+\newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecnotation}{Notation}{
+  thmyellowstyle,
+}{thm}
+
+% Wrapper environments: optional title, optional label.
+%   - \begin{theorem}[Title] ... \end{theorem} (auto-label; use \label{...} only if you want to refer)
+%   - \begin{theorem}[Title][mylabel] ... \end{theorem} (sets \label{thm:mylabel})
+\newcounter{lecautolabel}
+\newif\iflecinbox
+\makeatletter
+\newcommand{\lecsetthmcurrentlabel}{%
+  \protected@edef\@currentlabel{\thethmcounter}%
+}
+\makeatother
+\NewDocumentEnvironment{theorem}{ O{} o }{%
+  \global\lecinboxtrue
+  \IfNoValueTF{#2}{%
+    \stepcounter{lecautolabel}%
+    \begin{lectheorem}{#1}{auto-\arabic{lecautolabel}}%
+    \lecsetthmcurrentlabel
+  }{%
+    \begin{lectheorem}{#1}{#2}%
+    \lecsetthmcurrentlabel
+  }%
+}{\end{lectheorem}\global\lecinboxfalse\lecflushdeferrednotes}
+\NewDocumentEnvironment{proposition}{ O{} o }{%
+  \global\lecinboxtrue
+  \IfNoValueTF{#2}{%
+    \stepcounter{lecautolabel}%
+    \begin{lecproposition}{#1}{auto-\arabic{lecautolabel}}%
+    \lecsetthmcurrentlabel
+  }{%
+    \begin{lecproposition}{#1}{#2}%
+    \lecsetthmcurrentlabel
+  }%
+}{\end{lecproposition}\global\lecinboxfalse\lecflushdeferrednotes}
+\NewDocumentEnvironment{lemma}{ O{} o }{%
+  \global\lecinboxtrue
+  \IfNoValueTF{#2}{%
+    \stepcounter{lecautolabel}%
+    \begin{leclemma}{#1}{auto-\arabic{lecautolabel}}%
+    \lecsetthmcurrentlabel
+  }{%
+    \begin{leclemma}{#1}{#2}%
+    \lecsetthmcurrentlabel
+  }%
+}{\end{leclemma}\global\lecinboxfalse\lecflushdeferrednotes}
+\NewDocumentEnvironment{corollary}{ O{} o }{%
+  \global\lecinboxtrue
+  \IfNoValueTF{#2}{%
+    \stepcounter{lecautolabel}%
+    \begin{leccorollary}{#1}{auto-\arabic{lecautolabel}}%
+    \lecsetthmcurrentlabel
+  }{%
+    \begin{leccorollary}{#1}{#2}%
+    \lecsetthmcurrentlabel
+  }%
+}{\end{leccorollary}\global\lecinboxfalse\lecflushdeferrednotes}
+\NewDocumentEnvironment{definition}{ O{} o }{%
+  \global\lecinboxtrue
+  \IfNoValueTF{#2}{%
+    \stepcounter{lecautolabel}%
+    \begin{lecdefinition}{#1}{auto-\arabic{lecautolabel}}%
+    \lecsetthmcurrentlabel
+  }{%
+    \begin{lecdefinition}{#1}{#2}%
+    \lecsetthmcurrentlabel
+  }%
+}{\end{lecdefinition}\global\lecinboxfalse\lecflushdeferrednotes}
+\NewDocumentEnvironment{example}{ O{} o }{%
+  \global\lecinboxtrue
+  \IfNoValueTF{#2}{%
+    \stepcounter{lecautolabel}%
+    \begin{lecexample}{#1}{auto-\arabic{lecautolabel}}%
+    \lecsetthmcurrentlabel
+  }{%
+    \begin{lecexample}{#1}{#2}%
+    \lecsetthmcurrentlabel
+  }%
+}{\end{lecexample}\global\lecinboxfalse\lecflushdeferrednotes}
+\NewDocumentEnvironment{assumption}{ O{} o }{%
+  \global\lecinboxtrue
+  \IfNoValueTF{#2}{%
+    \stepcounter{lecautolabel}%
+    \begin{lecassumption}{#1}{auto-\arabic{lecautolabel}}%
+    \lecsetthmcurrentlabel
+  }{%
+    \begin{lecassumption}{#1}{#2}%
+    \lecsetthmcurrentlabel
+  }%
+}{\end{lecassumption}\global\lecinboxfalse\lecflushdeferrednotes}
+\NewDocumentEnvironment{notation}{ O{} o }{%
+  \global\lecinboxtrue
+  \IfNoValueTF{#2}{%
+    \stepcounter{lecautolabel}%
+    \begin{lecnotation}{#1}{auto-\arabic{lecautolabel}}%
+    \lecsetthmcurrentlabel
+  }{%
+    \begin{lecnotation}{#1}{#2}%
+    \lecsetthmcurrentlabel
+  }%
+}{\end{lecnotation}\global\lecinboxfalse\lecflushdeferrednotes}
+
+% Unboxed environments: remark and aside (amsthm, sharing thmcounter).
+\theoremstyle{remark}
+\newtheorem{remark}[thmcounter]{Remark}
+\newtheorem{aside}[thmcounter]{Aside}
+\newtheorem{conj}[thmcounter]{Conjecture}
+
+% Override proof environment to use \currentproofmark as QED symbol.
+\makeatletter
+\renewenvironment{proof}[1][\lecproofname]{%
+  \par\pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item[\hskip\labelsep\itshape #1\@addpunct{.}]\ignorespaces
+}{%
+  \popQED\endtrivlist\@endpefalse
+  \resetlecproofname
+}
+\makeatother
+\renewcommand{\qedsymbol}{\currentproofmark}
+
+% =====================================================================
+% TITLE PAGE MACRO
+% =====================================================================
+\newcommand{\makelectitle}[3]{%
+  \begin{titlepage}
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture,overlay]
+      % Vertical rule.
+      \draw[line width=0.6pt]
+        ([xshift=0.78in,yshift=-0.78in]current page.north west) --
+        ([xshift=0.78in,yshift=0.92in]current page.south west);
+
+      % Title block (positions tuned to match the reference layout).
+      \node[
+        anchor=north west,
+        inner sep=0pt,
+        % Use some of the outer margin for long titles, but keep within the page.
+        text width=\dimexpr\textwidth+\marginparsep+\marginparwidth-0.60in\relax,
+        align=left
+      ] at ([xshift=1.18in,yshift=-3.55in]current page.north west) {%
+        \setstretch{1.0}%
+        \fontsize{34}{36}\selectfont\bfseries
+        \spaceskip=0.35em plus 0.04em minus 0.015em\relax
+        \xspaceskip=\spaceskip
+        \hyphenchar\font=-1\relax
+        \raggedright
+        % Prefer non-hyphenated breaks on long titles.
+        \pretolerance=10000\relax
+        \tolerance=10000\relax
+        \emergencystretch=2em\relax
+        \hyphenpenalty=10000\relax
+        \exhyphenpenalty=10000\relax
+        #1%
+      };
+
+      \node[
+        anchor=north west,
+        inner sep=0pt,
+        text width=\textwidth,
+        align=left
+      ] at ([xshift=1.18in,yshift=-5.05in]current page.north west) {%
+        \fontsize{17}{20}\selectfont\itshape #2%
+      };
+
+      \node[
+        anchor=north west,
+        inner sep=0pt,
+        text width=\textwidth,
+        align=left
+      ] at ([xshift=1.18in,yshift=-6.40in]current page.north west) {%
+        \fontsize{14}{16}\selectfont\scshape #3%
+      };
+    \end{tikzpicture}
+  \end{titlepage}
+  \clearpage
+}
+
+% =====================================================================
+% CHAPTER OPENER MACRO
+% =====================================================================
+\newlength{\chaptextwid}
+\newcommand{\chapteropening}[1]{%
+  \thispagestyle{plain}
+  \vspace*{0.10in}
+  \noindent
+  % Span across the main text column only.
+  \setlength{\chaptextwid}{\textwidth}%
+  \begin{tikzpicture}[x=1in,y=1in,line cap=rect,line join=miter]
+    \pgfmathsetmacro{\rr}{\chaptextwid/1in}
+    \pgfmathsetlengthmacro{\lecchapthin}{0.6pt}
+    \pgfmathsetlengthmacro{\lecchaphalfthin}{0.5*\lecchapthin}
+    \pgfmathsetlengthmacro{\lecchapbar}{2.4pt}
+    % The y-values are the centerlines of the thin rules (use lengths to avoid rounding).
+    \pgfmathsetlengthmacro{\lecchaptop}{0.18in}
+    \pgfmathsetlengthmacro{\lecchapbot}{-0.44in}
+    % Rule edges so bars meet the full rule thickness (no anti-aliased gaps at corners).
+    \pgfmathsetlengthmacro{\lecchaptophi}{\lecchaptop+\lecchaphalfthin}
+    \pgfmathsetlengthmacro{\lecchaptoplo}{\lecchaptop-\lecchaphalfthin}
+    \pgfmathsetlengthmacro{\lecchapbothi}{\lecchapbot+\lecchaphalfthin}
+    \pgfmathsetlengthmacro{\lecchapbotlo}{\lecchapbot-\lecchaphalfthin}
+    \pgfmathsetlengthmacro{\lecchapleftpad}{0.06in}
+
+    % Left header: "Chapter" and number.
+    \node[anchor=west,font=\fontsize{26}{28}\selectfont] (chapword) at (\lecchapleftpad,\lecchaptop) {Section};
+    \node[anchor=west,font=\fontsize{42}{42}\selectfont\bfseries] (chapnum) at ([xshift=0.10in]chapword.east) {\thechapter};
+
+    % Right header: author.
+    \node[anchor=east,font=\fontsize{14}{16}\selectfont\itshape] at (\rr,0.27) {\notesauthor};
+
+    % Frame rules as filled rectangles so corners are pixel-perfect.
+    \coordinate (lectopstart) at ([xshift=0.10in]chapnum.east);
+    \path[fill=black] (lectopstart |- 0,\lecchaptoplo) rectangle (\rr,\lecchaptophi);
+    \path[fill=black] (0.00,\lecchapbotlo) rectangle (\rr,\lecchapbothi);
+
+    % Bars drawn last (on top) to avoid anti-aliased join gaps at the corners.
+    \path[fill=black] (0.00,\lecchaptophi) rectangle (\lecchapbar,\lecchapbotlo);
+    \path[fill=black] (\rr,\lecchaptophi) ++(-\lecchapbar,0) rectangle (\rr,\lecchapbotlo);
+
+    % Chapter title: right-aligned on the bottom rule (do not cover the right bar).
+    \node[
+      anchor=base east,
+      font=\fontsize{22}{24}\selectfont\bfseries,
+      fill=white,
+      inner xsep=0.03in,
+      inner ysep=0.04in
+    ] at (\rr-0.04,\lecchapbot) {%
+      \begin{varwidth}{0.95\chaptextwid}\raggedleft #1\end{varwidth}%
+    };
+  \end{tikzpicture}
+	  \vspace{0.28in}
+	  {\parindent=0pt
+	   \etocsettocstyle{}{}
+	   \etocsetnexttocdepth{section}
+   \etocsetstyle{section}
+     {}
+     {\makebox[2.2em][l]{\etocnumber}\etocname\nobreak\leaders\hbox to 0.7em{.\hss}\hfill\etocpage\par}
+     {}
+     {}
+   \localtableofcontents
+  }
+  \vspace{0.35in}
+}
+
+% Convenience wrapper: manual chapter step + styled opener.
+\newcommand{\styledchapter}[1]{%
+  \lecflushdeferrednotes
+  \cleardoublepage
+  \refstepcounter{chapter}%
+  \setcounter{section}{0}%
+  \setcounter{subsection}{0}%
+  \setcounter{equation}{0}%
+  \markboth{Section \thechapter: #1}{}%
+  \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
+  \chapteropening{#1}%
+}
