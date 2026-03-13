@@ -1,8 +1,3 @@
-% Lecture notes preamble
-% Visual target: wide outer margin, boxed marginalia, compact chapter openers,
-% centered captions above tables/figures, rounded code blocks, and restrained
-% running heads/feet.
-
 \documentclass[11pt,oneside]{book}
 
 % Cheat-sheet compile toggle.
@@ -305,10 +300,15 @@
   \end{tcolorbox}%
 }
 
-% Boxed-note backends. Normal mode places notes in the margin with optional
-% vertical offsets; cheatsheet mode converts them to footnotes.
+% Boxed-note backends. Normal mode uses \marginpar so marginfix can prevent
+% overlap and bottom-margin spillover. Notes with an explicit offset fall back
+% to \marginnote as a manual escape hatch.
 \NewDocumentCommand{\lecnormalboxednoteplace}{ O{0pt} +m }{%
-  \marginnote{\lecnotebox{#2}}[#1]%
+  \ifdim#1=0pt\relax
+    \marginpar{\lecnotebox{#2}}%
+  \else
+    \marginnote{\lecnotebox{#2}}[#1]%
+  \fi
 }
 \NewDocumentCommand{\leccheatsheetboxednoteplace}{ O{0pt} +m }{%
   \footnote{#2}%
