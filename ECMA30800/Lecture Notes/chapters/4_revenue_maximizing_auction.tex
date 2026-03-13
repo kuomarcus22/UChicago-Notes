@@ -1,0 +1,206 @@
+\styledchapter{A Revenue-Maximizing Auction}
+
+\section{Constructing a Revenue-Maximizing Auction}
+
+Following Myerson (1981), we can now find the seller's maximum possible revenue among all selling mechanisms\boxednote{Not necessarily a DSM.} that have equilibria by solving the following problem: \[
+	\max_{(p,c)} \sum\limits_{i=1}^{N} \int_0^1 \overline{c}_i (v_i) f_i(v_i)dv_i		
+\] such that
+\begin{enumerate}[label=(\roman*)]
+	\item $\overline{p}_i(v_i)$ is nondecreasing in $ v_i \in [0,1]$ for all $i$,\boxednote{Here, (i) and (ii) give us incentive-compatibility, while (iii) gives us individual rationality.}
+	\item $\overline{c}_i(v_i) = \overline{c}_i(0) + \overline{p}_i(v_i) v_i - \int_{0}^{v_i} \overline{p}_i(x)dx $, and
+	\item $\overline{c}_i(0) \le 0$.\footnote{If we have a non-IC DSM where we have an equilibrium, there must be a bidder who wants to report $r_i \ne v_i$. We can turn this into an ICDSM by just changing the probability assignment functions. See the Revelation Principle.}
+\end{enumerate}
+
+For simplicity, assume that $v_i - \frac{1-F_i(v_i)}{f_i(v_i)}$ is strictly increasing in $v_i \in [0,1]$. Using (ii) to substitute into the objective, we have
+\begin{align*}
+	R &= \sum\limits_{i=1}^{N} \int_{0}^{1}  \left[ \overline{c}_i(0) + \overline{p}_i(v_i)v_i - \int_{0}^{v_i} \overline{p}_i(x)dx  \right] f_i(v_i)dv_i  \\
+	&= \sum\limits_{i=1}^{N} \overline{c}_i(0) + \sum\limits_{i=1}^{N} \left[ \int_{0}^{1} \overline{p}_{i}(v_i) v_i f_i(v_i)dv_i - \underbrace{\int_{0}^{1} \int_{0}^{v_i} \overline{p}_i(x)f_i(v_i)dxdv_i  }_{(I)}  \right] \\
+	(I) &= \int_{0}^{1} \int_{x}^{1} \overline{p}_i(x)f_i(v_i)dv_i   \\
+	&= \int_{0}^{1} \left( \int_{x}^{1} f_i(vi)dv_i  \right) \overline{p}_i (x)dx   \\
+	&= \int_{0}^{1} (1-F_i(x)) \overline{p_i}(x)dx \\
+	R &= \sum\limits_{i=1}^{N} \overline{c}_i(0) + \sum\limits_{i=1}^{N} \int_{0}^{1} \phi_i(v_i)\overline{p}_i(v_i) f_i(v_i)\,dv_i \\
+	  &= \sum\limits_{i=1}^{N} \overline{c}_i(0) + \int \left[ \sum\limits_{i=1}^{N} \phi_i(v_i)p_i(v) \right] f(v)\, dv
+	.\end{align*}
+	where
+	\[
+		\phi_i(v_i) = v_i - \frac{1-F_i(v_i)}{f_i(v_i)}.
+	\]
+
+We will find an upper bound for $R$ and then show that this upper bound can actually be achieved. In fact, we will find an upper bound for $R$ ignoring the monotonicity constraint on $\overline{p}_i$, which will produce a bound no lower than the constrained maximum. Note that at this point, the only constraint we still have is (iii),\footnote{And that $p_i \ge 0$, $\sum_i p_i \le 1$.}
+which implies $\sum_i \overline{c}_i(0) \le 0$.
+
+Looking at the expression for $R$, we get this upper bound by putting
+\[
+	p_i = \mathds{1}\left(i = \argmax_j \left( v_j - \frac{1-F_j(v_j)}{f(v_j)} \right)\right)
+	\mathds{1} \left( v_i - \frac{1-F_i(v_i)}{f(v_i)} \ge 0 \right).
+\]
+Then
+\[
+	R \le \E\left[\max_i \left[ v_i - \frac{1-F_i(v_i)}{f(v_i)} \right]^{+}\right]
+.\]
+
+We want to find $p^*$ and $c^*$ such that IC, IR hold, and $R$ achieves this upper bound.
+We require for each $i$ that\boxednote{In our function for $p^*_i$, a tie has probability $0$ because the maximand is assumed to be increasing in $v_i$. Also, the bidder with the highest value need not win with probability $1$, since the bidders are not assumed symmetric.}
+\begin{align*}
+	\overline{c}_i^*\left(  0 \right) &= 0, \\
+	p^*_i(v_1,\ldots,v_N)
+	&= \mathds{1}\left(i = \argmax_j \left( v_j - \frac{1-F_j(v_j)}{f(v_j)} \right)\right) \\
+	&\quad \cdot \mathds{1} \left( v_i - \frac{1-F_i(v_i)}{f(v_i)} \ge 0 \right).
+\end{align*}
+
+With our constraint on $\overline{c}_i^*$, we can get (ii) to be true by defining \[
+	c_i^*(v_1,\ldots,v_N) = 0 + p_i^*(v_1,\ldots,v_N) - \int_{0}^{v_i} p_i^*(x,v_{-i})dx 
+.\] 
+This $(p^*, c^*)$ achieves the upper bond on revenue is individually rational (satisifes (iii) by construction). It remains to check that this DSM is incentive compatible; i.e., that $\overline{p}_i^*$ is nondecreasing in $v_i$. Since $v_i - \frac{1-F_i(v_i)}{f(v_i)}$ was assumed to be increasing in $v_i$ and $v_j - \frac{1-F_j(v_j)}{f(v_j)}$ is fixed for $j \ne i$, we see that $p_i^*(v_1,\ldots,v_N)$ is nondecreasing in $v_i$. Thus, $\overline{p}_i^*$ as an expectation of $p_i^*(v_1,\ldots,v_N)$ is nondecreasing in $v_i$.
+
+Among all incentive-compatible, individually rational selling mechanisms that have equilibrium, the DSM $(p^*,c^*)$ achieves the upper bound on revenue of \[
+	R = \E\left[\max_i \left[ v_i - \frac{1-F_i(v_i)}{f(v_i)} \right]^{+}\right] 
+.\]
+
+\begin{remark}	We basically showed $p^*$ was unique, while there are multiple ways to choose $c^*$ that yields this maximum revenue, as long as they satisfy (ii) and (iii) in expectation.
+\end{remark}
+
+\begin{remark}	It's possible for a bidder to have a positive value, yet the seller keeps the object for herself. This is because the seller commits ex ante to the mechanism and it's possible for the virtual value to be negative despite a positive value.
+
+	Defining the reserve value where the virtual value is zero, \[
+		r^* : \phi(r^*) = 0 \iff r^* = \frac{1-F(r^*)}{f(r^*)}
+	,\] we see that if the highest value is below $r^*$, all virtual values are negative, so the seller ends up assigning winning probability $0$ to everyone. In other words, the optimal allocation rule is to sell to the highest bidder if $\max_i v_i \ge r^*$ and keep the good otherwise.
+\end{remark}
+
+\begin{example}[Second-price auction with reserve price]
+	Consider an auction where bidders submit bids such that if the highest bid is less than the reserve price $r^*$, there is no sale, and otherwise, the highest bidder pays $\max\{\text{2nd highest bid}, r^*\}$.
+
+	In states where the second-highest bid is low but the highest value is high, the seller earns $r^*$ instead of the second-highest bid, which is lower. If we have two bidders with values $\sim U[0,1]$, then the reserve price is $r^* = 0.5$. There is a tension between the ex ante commitment to the reserve price (which increases expected revenue) and the ex post situation if the second highest value is below the reserve price.
+
+	The revenue equivalence theorem does not hold because the probability assignment functions are not the same.
+\end{example}
+
+	\begin{definition}[Marginal revenue of an auction]
+		Recall \[
+			\begin{aligned}
+				R
+				&= \int \cdots \int \sum\limits_{i=1}^{N} p_i (v_1,\ldots,v_N) \\
+				&\quad \cdot \left( v_i - \frac{1-F_i(v_i)}{f(v_i)} \right) f(v)dv
+			\end{aligned}
+		.\] 
+		Define the marginal revenue from bidder $i$ as \[
+			MR_i(v_i) = v_i - \frac{1-F_i(v_i)}{f_i(v_i)}
+		.\] 
+\end{definition}
+
+\begin{comment}
+What price $P$ must we charge bidder $i$ so that we sell to her with probability $Q$? 
+$P$ must solve $1- F_i(P) = Q$. Then the revenue from $i$ is $P_i(Q) \cdot Q$, so 
+\begin{align*}
+	MR_i &= P_i'(Q) Q + P_i(Q) \\
+		 &= v_i - \frac{1-F_i(v_i)}{f_i(v_i)}
+,\end{align*}
+where we get $P_i'$ from differentiating the identity for $Q$.
+
+Suppose $p^*_i(v_1,\ldots,v_N) = 0$ for some bidder $i$. Then 
+\begin{align*}
+	c_i^*(v_1,\ldots,v_N) &= p_i^*(v_1,\ldots,v_N) v_i - \int_{0}^{v_i} p_i^*(x,v_{-i}dx  \\
+						 &= 0\cdot v_i - \int_{0}^{v_i} p_i^*(x,v_{-i})dx \\
+						 &= 0
+,\end{align*}
+where the last equality follows not from $p_i$ being nondecreasing under incentive compatibility ($\overline{p}$ is nondecreasing under incentive-compatibility), but instead by our definition of $p_i^*$ and assumption that $MR_i$ is strictly increasing \[
+	p_i^*(v_1,\ldots,v_N) = \mathds{1}\left(\underbrace{\left[ v_i - \frac{1-F_i(v_i)}{f_i(v_i)}\right]^+}_{MR_i(v_i)^+}  > \underbrace{\left[ v_j - \frac{1-F_j(v_j)}{f_j(v_j)} \right]^+}_{MR_j(v_j)^+}, \forall\ j\ne i \right)
+.\] 
+
+Thus, the revenue-maximizing auction we constructed is not an all-pay auction, and instead, only the winner pays.
+\end{comment}
+
+	\begin{remark}[Assignment probabilities and marginal revenue]
+	Fix a bidder $i$ with value distribution $F_i$ (density $f_i$).  Consider offering bidder $i$
+	a take-it-or-leave-it price $P$.  Then the probability of sale is
+	\[
+	Q(P)\;=\;\Pr[v_i\ge P]\;=\;1-F_i(P).
+	\]
+	Equivalently, for any target sale probability $Q\in[0,1]$, define the \emph{inverse demand}
+	(or quantile-price) function
+	\[
+	P_i(Q)\;:=\;F_i^{-1}(1-Q),
+	\qquad\text{so that}\qquad
+	1-F_i\!\big(P_i(Q)\big)=Q.
+	\]
+	If we post price $P_i(Q)$, expected revenue from bidder $i$ is
+	\[
+	R_i(Q)\;=\;Q\cdot P_i(Q).
+	\]
+	Define \emph{marginal revenue} as the derivative of this revenue with respect to $Q$:
+	\[
+	MR_i(Q)\;:=\;\frac{d}{dQ}\big(QP_i(Q)\big)\;=\;P_i(Q)+Q\,P_i'(Q).
+	\]
+	To compute $P_i'(Q)$, differentiate the identity $F_i(P_i(Q))=1-Q$:
+	\[
+	f_i\!\big(P_i(Q)\big)\,P_i'(Q)\;=\;-1
+	\qquad\Rightarrow\qquad
+	P_i'(Q)\;=\;-\frac{1}{f_i(P_i(Q))}.
+	\]
+	Substituting back gives
+	\[
+	MR_i(Q)
+	\;=\;
+	P_i(Q)-\frac{Q}{f_i(P_i(Q))}.
+	\]
+	Now write $v:=P_i(Q)$, so that $Q=1-F_i(v)$.  Then
+	\[
+	MR_i(Q)
+	\;=\;
+	v-\frac{1-F_i(v)}{f_i(v)}
+	\;=\;MR_i(v),
+	\]
+	which matches the virtual-value expression in the definition above.
+\end{remark}
+
+\begin{remark}[Optimal allocation rule]
+	Because expected revenue can be written as expected surplus of virtual value, the revenue-maximizing
+	allocation is (pointwise in $v$) to assign the object to the bidder with the highest
+	\emph{nonnegative} marginal revenue:
+	\[
+	p_i^*(v_1,\ldots,v_N)
+	=
+	\mathds{1}\!\left(
+	MR_i(v_i)\ge 0
+	\ \text{ and }\
+	MR_i(v_i)>\max_{j\neq i} MR_j(v_j)^+
+	\right),
+	\]
+	with the convention that in a tie there is no winner.
+
+	In particular, $p_i^*(v)\in\{0,1\}$ for every profile $v$, so the mechanism is not all-pay:
+	all bidders with $p_i^*(v)=0$ receive the object with probability $0$, hence (under the
+	standard normalization $c_i^*(0,v_{-i})=0$) they pay $0$.  Therefore, only the winner pays.
+\end{remark}
+
+Now suppose that $p_i^*(v_1,\ldots,v_N) = 1$. Then 
+\begin{align*}
+	c_i^*(v_1,\ldots,v_N) &= p_i^*(v_1,\ldots,v_N)v_i - \int_{0}^{v_i} p_i^*(x,v_{-i}) dx \\
+	&= 1 \cdot v_i - \int_{v: MR_i(v) = MR_{(2)}}^{v_i} p_i^*(x,v_{-i})dx \\
+	&= v_i - (v_i - r_i^*) = r_i^*
+.\end{align*}
+In the second equality, we are saying the lower limit of integration is $r_i^*$, where \[
+	\left[ r_i^* - \frac{1-F_i(r_i^*)}{f_i(r_i^*)} \right] = \max_{j \ne i} \left[ v_j - \frac{1-F_j(v_j)}{f_j(v_j)} \right]^+
+.\] Existence and uniqueness of $r_i^*$ follows from continuity and strict monotonicity of $MR$. When bidder $i$ is the winner, she pays $r_i^*$, which is the highest report\footnote{This coincides with second-highest value if we know that the auction is incentive-compatible, which is guaranteed for our constructed auction.} bidder $i$ could make without winning (in the case of a tie, there is by definition of $p_i^*$ no winner).
+
+Since $r_i^*$ does not depend on $v_i$, the winner's cost does not depend on her reported value.
+Because $\overline{p}_i$ is increasing in $v_i$, we see another avenue to show incentive-compatibility.
+
+\begin{remark}[Summary of the constructed optimal auction]
+	Given a vector $(v_1,\ldots,v_N)$ of reports, the good is assigned to the bidder $i$ whose $MR_i(v_i)$ is highest and positive, if any such bidder exists. Losers pay nothing and the winner pays $r_i^*$, which is the highest bid she could have made without winning.
+\end{remark}
+
+\section{Efficiency}
+Consider an auction with two bidders who have value densities $f_1,f_2$ and marginal revenue functions $MR_1(v_1), MR_2(v_2)$. 
+
+Referring to the graph, a bidder can win even if her value is not the highest; the constructed auction is not necessarily efficient, because value rankings need not be preserved under bidder-specific marginal-revenue maps: in general,
+\[
+    v_i > v_j \;\not\!\!\!\!\implies\; MR_i(v_i) > MR_j(v_j)
+.\]
+If $f = f_1 = f_2$, then $MR_1 = MR_2$, so the auction becomes efficient.
+
+This common increasing $MR$ function induces a unique $\rho^*$ such that \[
+	0= \rho^* - \frac{1-F(\rho^*)}{f(\rho^*)}
+.\] Bidders who bid below $\rho^*$ have no chance of winning; among bidders with reported values above $\rho^*$, the person with the highest reported value wins and pays $\max\{\rho^*, v_2\}$.
+
+Hence, when there is a common value density among all players, the constructed optimal auction is a second-price auction with a reserve price of $\rho^*$.

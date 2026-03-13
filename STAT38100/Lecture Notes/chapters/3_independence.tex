@@ -1,0 +1,127 @@
+\styledchapter{Independence}
+\section{Preliminaries}
+
+Consider a measure space $\left( \Omega, \mathscr{F}, \P\right)$. 
+
+\begin{notation}
+	For a random variable $X: \left( \Omega, \mathscr{F}, \P \right) \to \left( \R, \mathscr{B}_{\R} \right)$, when we write $\{X \in B\}$, we are really referring to the set as \[
+		\{X \in B\} = \{\omega \in \Omega: X(\omega) \in B\}
+	.\] Similarly, \[
+		\{X \le a\} = \{\omega \in \Omega: X(\omega) \le a\}
+	,\] \[
+		\{X \in A, Y \in B\} = \{\omega \in \Omega: X(\omega) \in A, Y(\omega) \in B\}
+	,\] and so on.
+
+	Perhaps most importantly, \[
+		\P\left[X \in B\right] = \P\left[\omega \in \Omega: X(\omega) \in B\right] 
+	.\] 
+\end{notation}
+
+\begin{definition}[Independent events]
+	We say that the events $A_1,\ldots,A_n \in \mathscr{F}$ are independent if for every $\Lambda \subseteq \{1,\ldots,n\}$, \[
+		\P \left[ \bigcap\limits_{i\in \Lambda}^{} A_i \right] = \prod_{i \in \Lambda}^{} \P\left[A_i\right]  
+	.\] 
+
+	We say $\mathscr{E}_1,\ldots,\mathscr{E}_n \subseteq \mathscr{F}$ are independent if for any $A_1 \in \mathscr{E}_1,\ldots,A_n \in \mathscr{E}_n$, $\left( A_1,\ldots,A_n \right)$ are independent.
+\end{definition}
+
+\begin{definition}[Generated $\sigma$-field (of a random variable)]
+	Let $X: (\Omega, \mathscr{F}, \P) \to \left( \R,\mathscr{B}_{\R} \right)$ be a random variable. We define $\sigma(X)$ to be the smallest $\sigma$-field such that \[
+		X: (\Omega, \sigma(X), \P) \to \left( \R,\mathscr{B}_\R \right)
+	\] is measurable.
+
+	Since $X ^{-1} \mathscr{B}_{\R}$ is a $\sigma$-field containing $X$ (preimage of a $\sigma$-field is also a $\sigma$-field), \[
+		\sigma(X) \subseteq  X^{-1}\mathscr{B}_\R = X^{-1} \sigma\left( \{\{x > a\}: a \in \Q\} \right)
+	.\]
+	Conversely, suppose
+	\[
+		\begin{aligned}
+			X: \left( \Omega, \sigma\left( X \right), \P \right)
+			&\to \left( \R, \mathscr{B}_\R \right)
+		\end{aligned}
+	\]
+	is measurable.
+	Then $X ^{-1}(B) \in \sigma\left( X \right)$ for every $B \in \mathscr{B}_\R$.
+	Hence,
+	\[
+		X ^{-1}\left( \mathscr{B}_\R \right) \subseteq \sigma\left( X \right)
+	.\]
+	Therefore,
+	\[
+		\sigma(X) = X ^{-1}\mathscr{B}_\R
+	.\] 
+\end{definition}
+
+\begin{example}
+	Suppose $A \in \mathscr{F}$ and $X = \mathds{1}_{A}$. Then \[
+		\sigma(X) = \{\O, \Omega, A, A^{c}\}
+	.\] 
+\end{example}
+
+\begin{definition}[Independent random variables]
+	We say that $X_1,\ldots,X_n: (\Omega, \mathscr{F}, \P) \to \left( \R,\mathscr{B}_\R \right)$ are independent if $\sigma\left( X_1 \right),\ldots,\sigma(X_n)$ are independent.
+\end{definition}
+
+Why does this definition make sense? 
+For $X \ind Y$ and for any $A,B \in \mathscr{B}_\R$, we want \[
+	\P\left[X \in A, Y \in B\right] = \P\left[X \in A\right]  \P\left[Y \in B\right] 
+.\] We see that \[
+	\begin{aligned}
+		\P\left[X \in A\right]  &= \P\left[X ^{-1}A\right], \\
+		\P\left[Y \in B\right] &= \P\left[Y ^{-1} B\right], \\
+		\P\left[X \in A, Y \in B\right]  &= \P\left[X ^{-1}A \cap Y ^{-1}B\right]
+	\end{aligned}
+.\] We need $\P$ to be defined on and satisfy the independence condition on sets of this last type.
+
+\begin{lemma}
+	If $X \ind Y$ and $\E \left| X \right|,\E \left| Y \right| < \infty$, then \[
+		\E\left[XY\right]  = \E\left[X\right] \E\left[Y\right] 
+	.\] 
+\end{lemma}
+\begin{proof}
+	\begin{enumerate}[label=(\roman*)]
+		\item If $X = \mathds{1}_{A}, Y = \mathds{1}_{B}$, then $XY = \mathds{1}_{A\cap B}$. Hence
+			\begin{align*}
+				\E\left[XY\right] &= \E\left[\mathds{1}_{A\cap B}\right] \\
+				&= \P\left[A \cap B\right]  \\
+				&=\P\left[A\right] \P\left[B\right]\text{ by independence} \\
+				&= \E\left[X\right] \E\left[Y\right] 
+			.\end{align*}
+		\item For $\{A_i\}, \{B_j\}$ partitions of $\Omega$, if $X = \sum_i a_i \mathds{1}_{A_i}$ and $Y = \sum_j b_j \mathds{1}_{B_j}$, then we are tempted to write
+			\begin{align*}
+				XY &=  \sum\limits_{i=1}^{n} \sum\limits_{j=1}^{m} a_i b_j \mathds{1}_{A_i \cap B_j} \\
+				\E\left[XY\right] &= \sum\limits_{i=1}^{n} \sum\limits_{j=1}^{m} a_i b_j \P\left[A _i \cap B_j\right]  \\
+				&= \sum\limits_{i=1}^{n} \sum\limits_{j=1}^{m} a_i b_j \P\left[A_i\right] \P\left[B_j\right]
+			\end{align*}
+			and continue, but we don't know $A_i$ and $B_j$ are independent, since this requires $A_i \in \sigma(X)$ and $B_j \in \sigma(Y)$. This is not guaranteed if the $a_i$, $b_j$ are not unique. (For example, if $X(\omega) = 1$ for $\omega \in A_1$ and $\omega \in A_2$, then $A_1 \not\in \sigma(X)$, since $A_1$ being in $\sigma(X)$ is not necessary for $X$ to be measurable --- only $A_1 \cup A_2 \in \sigma\left( X \right)$ is required.
+			
+			Instead, we should decompose as \[
+				X = \sum\limits_{i=1}^{n} a_i \mathds{1}_{X = a_i}, \quad Y = \sum\limits_{j=1}^{m} b_j \mathds{1}_{Y = b_j}
+			.\] Then we can actually continue to get
+			\begin{align*}
+				\E\left[XY\right]  &=  \sum\limits_{i=1}^{n} \sum\limits_{j=1}^{m} a_i b_j \P\left[X = a_i, Y = b_j\right]  \\
+				&= \sum\limits_{i=1}^{n} \sum\limits_{j=1}^{m} a_i b_j \P\left[X = a_i\right] \P\left[Y = b_j\right]   \\
+				&= \left( \sum\limits_{i=1}^{n} a_i \P\left[X = a_i\right]  \right)\left( \sum\limits_{j=1}^{m} b_j \P\left[Y = b_j\right]  \right) \\
+				&= \E\left[X\right] \E\left[Y\right] 
+			.\end{align*}
+		\item Now consider $X,Y \ge 0$. Write 
+			\begin{align*}
+				X_n &= \sum\limits_{k=0}^{n2^n - 1} \frac{k}{2^n}\mathds{1}_{\frac{k}{2^n}\le X < \frac{k+1}{2^n}} + n \mathds{1}_{X \ge n} \\
+				Y_n &= \sum\limits_{k=0}^{n2^n - 1} \frac{k}{2^n}\mathds{1}_{\frac{k}{2^n}\le Y < \frac{k+1}{2^n}} + n \mathds{1}_{Y \ge n}
+			.\end{align*}
+			Then $X_n \uparrow X$, $Y_n \uparrow Y$.
+			Since $\sigma(X_n) \subseteq \sigma(X)$\boxednote{Consider $X = 3\mathds{1}_{A_1} + 4\mathds{1}_{A_2} - \mathds{1}_{A_3}$ for disjoint $A_1,A_2,A_3$, and find $\sigma(X)$. This provides intuition for what $\sigma(X)$ generally is.} and $\sigma(Y_n) \subseteq \sigma(Y)$ imply that $X_n \ind Y_n$, \[
+				\E\left[X_n Y_n\right]  = \E\left[X_n\right] \E\left[Y_n\right] 
+			.\] Taking $n\to \infty$ concludes.
+		\item For general $X,Y$, put $X = X^+ - X^-$ and $Y = Y^+ - Y^-$, so \[
+			XY = X^+Y^+ + X^-Y^- - X^+Y^- - X^-Y^+
+		.\] Since $\sigma(X^+) \subseteq \sigma(X)$ and so on, we see that each term in the sum satisfies independence; we can take the expectation termwise.
+		Using linearity of the integral to recombine $X^+$ with $X^-$ and similarly for $Y$, we get independence of $X$ and $Y$.
+	\end{enumerate}
+\end{proof}
+
+\begin{definition}[Identically distributed random variables]
+	We say that $X_1,\ldots,X_n$ are identically distributed if \[
+		\P\left[X_j \in A\right] = \P\left[X_i \in A\right] 
+	\] for all $i,j$ and $A \in \mathscr{F}$.
+\end{definition}

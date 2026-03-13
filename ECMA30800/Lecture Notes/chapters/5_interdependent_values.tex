@@ -1,0 +1,390 @@
+\styledchapter{Interdependent-Values Correlated Private Information}
+
+Suppose there is one unit of an indivisible good for sale with $N$ bidders and $1$ seller. Bidders do not know their values. Instead, each bidder receives a signal $s_i$ about her value $v_i$. A bidder's signal is a random variable before it is received, but then deterministic once it is realized.
+
+Let uppercase letters denote random variables and lowercase letter denote their realization. We have the random variables $V_1,\ldots,V_N,S_1,\ldots,S_N$ with joint density $	f(v_1,\ldots,v_N, s_1,\ldots,s_N)$.
+
+\section{Symmetry and Affiliation}
+
+\begin{assumption}[Symmetry]
+	We assume that for every $i \ne j$ and $\left( v,s \right)= \left( v_1,\ldots,v_N, s_1,\ldots,s_N \right)$, \[
+		f(v_1,\ldots,v_N, s_1,\ldots,s_N) = f(v_1',\ldots,v_N',s_1',\ldots,s_N')
+	\] where $(v',s') = (v_1',\ldots,v_N',s_1',\ldots,s_N')$ is obtained by substituting $v_i, s_i$ for $v_j,s_j$ from $(v,s)$.
+
+	Along this line, we assume that all bidders use the same bidding function.
+\end{assumption}
+
+\begin{assumption}[Signals and values]
+	We require $s_i,v_i \in [0,\infty)$.
+\end{assumption}
+
+Immediately, this implies \[
+	\E\left[V_1 \mid S_1 = s_1, S_2=  s_2, \ldots, S_N = s_N\right]  = \E\left[V_1 \mid S_1 = s_1, S_2 = s_2', \ldots,S_N = s_N'\right] 
+,\] where $(s')$ is a permutation of $(s)$.\boxednote{Note that $s_1$ does not get swapped with anything, because in the definition of symmetry, if we swap $s_i$ with $s_j$, we must also swap $v_i$ with $v_j$.}
+
+\begin{remark}	The correlated private information auction is a generalization of the independent private values model; we can impose $s_i = v_i$.
+\end{remark}
+
+\begin{assumption}[Affiliation]
+	Assume that for all $i$, $\overline{v} = \left( \overline{v}_1,\ldots,\overline{v}_N \right) \ge \left( \underline{v_1},\ldots,\underline{v_N} \right) = \overline{s}$, and $\overline{s} = \left( \overline{s}_1,\ldots,\overline{s}_N \right) \ge \left( \underline{s}_1,\ldots,\underline{s}_N \right) = \underline{s}$,\footnote{Here, the ordering on vectors is defined by the same ordering on all components.} we have $
+	\frac{f\left( v_i, \overline{v}_{-i}, \overline{s}_{-i} \right)}{f\left( v_i, \underline{v}_{-i}, \underline{s}_{-i} \right)}$ is nondecreasing in $v_i$ on $[0,\infty)$ and $\frac{f(\overline{v}, s_i, \overline{s}_{-i})}{f(\underline{v}, s_{i}, \underline{s}_{-i})}$ is nondecreasing in $s_i$ on $[0,\infty)$ and strictly increasing if $\overline{v}_i > \underline{v}_i$.
+\end{assumption}
+
+\begin{proposition}	Given these assumptions of symmetry and affiliation,
+		\begin{enumerate}[label=(\roman*)]
+			\item $\E\left[V_1 \mid S_1=s_1,S_2= s_2, \ldots,S_N = s_N\right] $ is nondecreasing in $s_2,\ldots,s_N$ and strictly increasing in $s_1$.
+			\item $\E\left[\phi(S_1,\ldots,S_N) \mid a_1 \le S_1 \le b_1,\ldots,a_N \le S_N \le b_N\right]$ is nondecreasing in $a_1,b_1,\ldots,a_N,b_N$ whenever $\phi$ is nondecreasing in each of its arguments.
+		\end{enumerate}
+	\end{proposition}
+
+\begin{assumption}[Equilibrium bidding function]
+	Given symmetry, we also assume that all bidders use the same equilibrium bidding strategy.\boxednote{This rules out asymmetric equilibria, which certainly exist.} Furthermore, we assume that bidding is more aggressive when signals are higher. So, one's most serious competitor is the bidder among the others with the highest signal.
+\end{assumption}
+
+\begin{notation}	We can focus on bidder $1$ without loss.
+
+	Let $Y_1,Y_2,\ldots,Y_{N-1}$ denote the highest, second-highest, and so on of the bidders' signals $S_2,\ldots,S_N$.
+	Let $X_1,X_2,\ldots,X_{N-1}$ denote the highest, second-highest, and so on of all the signals $S_1,.S_2,\ldots,S_N$.
+\end{notation}
+
+\section{Second-Price Auction}
+Suppose bidder 1 receives a signal $s_1$. How is she to bid?
+We conjecture that bidder 1 should bid $\E\left[V_1 \mid S_1 = s_1\right] $.
+
+Actually, considering the winner's curse\footnote{If the bid $\E\left[V_i \mid S_i = s_i\right] $ is nondecreasing in $s_i$, the winner is likely to have gotten a high signal that overestimates the value of the good.}, bidding $\E\left[V_1 \mid S_1 = s_1\right] $ is naive and non-strategic.
+
+\begin{definition}[Winner's curse]
+	Suppose in a second price auction that all bidders bid according to $\tilde{b}(s) = \E\left[V_1 \mid S_1 = s\right]$, which is strictly increasing by affiliation in $s$. Then the bidder with the highest signal wins. If your signal is $s$, then $\E\left[V_1 \mid S_1 = s\right] = \E\left[V_1 \mid S_1 = s, 0 \le S_j < \infty \forall\  j \ne 1\right]$. Conditioning on $s$ being the signal that wins, \begin{align*}
+		\E\left[V_1 \mid S_1 = s = X_1\right] &= \E\left[V_1 \mid S_1 = s,\ 0 \le S_j < s \forall\  j \ne 1\right] \\
+													 &\le \E\left[V_1 \mid S_1 = s_1, \ 0 \le S_j < \infty \forall\  j\ne 1\right] \\
+													 &= \E\left[V_1 \mid S_1 = s\right] 
+	,\end{align*} 
+	where the inequality is strict if there is actually correlation (usually the case).
+
+	There is typically a gap between your bid $\tilde{b}(s)$ and what the good is worth to you conditional on winning.
+\end{definition}
+
+If the second highest bid is between this gap, the winner of a SPA would pay more than her value if she bid according to $\E\left[V_1 \mid S_1 = s_1\right] $
+
+Let $b^*(s)$ denote the bidding function that all bidders use and suppose $b^*(s)$ is strictly increasing. Assuming that $b^*$ is an equilibrium function, let's find $b^*$ (and later, check that it actually constitutes and equilibrium).
+
+	Note that $b^*(y_1)$ is the price bidder $1$ pays if she wins.
+	Consider
+	\[
+		\E\left[V_1 \mid S_1 = s, Y_1 = y_1\right],
+	\]
+	the expected value conditional on winning.
+	Suppose this has a higher intercept and lower slope than $b^*(y_1)$ due to affiliation.
+
+Then you should bid $b^*(s)$, which is the value of the intersection point of the two functions.
+We see that $b^*(s) = \E\left[V_1 \mid S_1 = s, Y_1 = s\right] $.
+
+\begin{remark}	Strategic bidding is different from estimating the value of the good given your signal: \[
+		\E\left[V_1 \mid S_1 = s, Y_1 = s\right] \ne \E\left[V_1 \mid S_1 = s\right] 
+	.\] 
+	Suppose $s>y_1$, which means that $b^*(s)$ is a wining bid. Then 
+	\begin{align*}
+		b^*(s) = \E\left[V_1 \mid S_1 = s, Y_1 = s\right]
+		&\ge \underbrace{\E\left[V_1 \mid S_1= s, Y_1 = y_1\right]}_{\text{correct value estimate}}  \\ &> \E\left[V_1 \mid S_1 = y_1, Y_1 =y_1\right] \\ &= b^*(y_1) .\end{align*} There is no winner's curse because the correct value estimate is strictly greater than the price paid. (If a bidder wins, she does not regret the bid ex-post.) Now suppose $s<y_1$, so $b^*(s)$ is a losing bid. The \begin{align*} b^*(s) = \E\left[V_1 \mid S_1 = s, Y_1 = s\right] &\le \underbrace{\E\left[V_1 \mid S_1 =s, Y_1 = y_1\right]}_{\text{correct value estimate}} \\ &< \E\left[V_1 \mid S_1 = y_1, Y_1 =y_1\right] \\
+		&= b^*(y_1)
+	.\end{align*}
+	There is no loser's curse because the correct value estimate is less than the price required to win.
+
+	Winning bids overestimate the true value, while losing bids underestimate the true value.
+\end{remark}
+
+Suppose the seller also has private information, namely, a signal $S_0$. Should the seller reveal or conceal her information? How much should she reveal?
+
+\begin{proposition}	If $X$ and $Z$ have joint density $f(x,z)$, then \[
+		\E_X\left[x \mid Z =z\right] = \int_{}^{} x f(x \mid z)\,dx 
+	.\] This implies \[
+		\E_Z\left[\E_X\left[X \mid Z\right] \right] = \E\left[X\right] 
+	.\] 
+\end{proposition}
+
+Assume $S_0,S_1,S_2,\ldots,S_n,V_1,\ldots,V_N$ are affiliated and $S_1,S_2,\ldots,S_N$ are ex ante symmetric. For now, consider two possibilities: either the seller commits to always revealing $S_0$ or to always conceal $S_0$. If the seller commits to never revealing her information, then the equilibrium is as before: $b^*(s) = \E\left[V_1 \mid S_1 = s, Y_1= s\right] $.
+
+If she commits to always revealing her information, then
+\[
+	b^*(s,s_0) = \E\left[V_1 \mid S_1 = s, Y_1 = s, S_0 = s_0\right].
+\]
+
+By the Law of Iterated Expectations, \[
+	\E\left[V_1 \mid S_1 = s, Y_1 = s\right] = \E_{S_0}\left[\E\left[V_1 \mid S_1 = s, Y_1=s, S_0\right] \mid S_1 = s, Y_1 = s\right] 
+,\] so \[
+	b^*(s) = \E_{S_0}\left[b^*(s,S_0) \mid S_1 = s, Y_1 = s\right] 
+.\] 
+
+Let $R_U$ be the seller's expected revenue when bidders are always uninformed and $R_I$ when they are always informed.
+Let $X_1 \ge X_2 \ge \cdots \ge X_N$ be the order statistics of $S_1,.S_2,\ldots,S_N$. Then \begin{align*}
+	R_U &= \E\left[b^*(X_2)\right] \\
+	R_I &= \E\left[b^*\left( X_2, S_0 \right)\right] \\
+		&= \E_{X_2}\left[\E_{S_0}\left[b^*(S_2,S_0) \mid X_2\right]  \right]\\
+	R_I - R_U &= \E_{X_2}\left[\E_{S_0}\left[b^*(X_2,S_0) \mid X_2\right] - b^*(X_2)\right] 
+.\end{align*} 
+We conjecture this value is nonnegative.
+To show it, it suffices to prove that fixing any value $X_2 = s$ guarantees \[
+	b^*(s) \le \E_{S_0}\left[b^*\left( s,S_0 \right)\mid X_2 = s\right] 
+.\] We see that
+\begin{align*}
+	b^*(s) &=  \E_{S_0}\left[b^*(s,S_0) \mid S_1=s, Y_1=s\right]  \\
+		   &= \E_{S_0}\left[b^*(s,S_0) \mid S_1 = X_2 = s, Y_1 = s\right] \text{ since $Y$ are the values of the \emph{others}} \\
+		   &\le \E_{S_0}\left[b^*(s,S_0) \mid S_1=X_2=s, Y_1 \ge s\right] \\
+		   &= \E_{S_0}\left[b^*(s,S_0) \mid S_1=X_2 =s\right] \text{ because $\P\left[Y_1 = s\right] = 0$} \\
+			   &= \E_{S_0}\left[b^*\left( s,S_0 \right)\mid X_2=s\right]
+	.\end{align*}
+	where the last step uses symmetry: conditioning on $S_1=s$ provides no additional information once $X_2=s$ is fixed.
+
+For intuition on why the seller should reveal/conceal, first consider the concealment case. If the seller's revenue comes from bidder $1$, who bids \[
+	b^*(s) = \E\left[V_1 \mid S_1 = s, Y_1 = s\right] 
+,\] then this bid being a losing bid (it's the second-highest bid) implies that the $Y_1 > s$ and thus $b^*(s)$ actually underestimates the true value $V_1$.
+A more accurate estimate of $V_1$ would be $\E\left[V_1 \mid S_1 = s, Y_1 \ge s\right]  > b^*(s)$.
+By revealing $S_0,$, the seller induces bidder $1$ to bid $b^*(s,S_0) = \E\left[V_1\mid S_1= s, Y_1 = s, S_0\right] .$
+Because $S_0$ is affiliated with $Y_1$ and $V_1$, conditioning on $S_0$ will on average help to correct the bias in the estimate of $V_1$. For losing bids, the bias is downwards, so revealing $S_0$ tends to increase losing bids (and in particular, the second-highest bid).\boxednote{We can conjecture that in a FPA, the seller should \emph{not} reveal her information.}
+
+Suppose the seller can now \emph{sometimes} reveal her information. We only consider that the case where the bidder reveals if the signal is above $\alpha$ and conceals if it is below. The bidders also know this information, as otherwise, they may think that the seller is always revealing/concealing, and this implies the seller is deceiving the bidders. We won't consider this as a possibility!
+
+By mirroring our previous analysis, when the seller gets a low signal and conceals, the bidders know the signal is low and recondition. But then the seller should reveal her information to raise the second-highest bid, so assuming the seller and bidders have the same understanding of the mechanism, the seller's optimal policy is to always reveal her information.
+
+\section{English Auction}
+We will suppose by symmery that all bidders use the same bidding strategy that can be described by the $N-1$ functions $\left( b^*_0, b_1^*,\ldots,b_{N-2}^{*} \right)$, where given your signal $s$, $b_0^*(s)$ is the price you drop out if no one has yet dropped out, $b_1^*(s \mid p_1)$ is the price at which you drop out when $1$ bidder has dropped out at $p_1$, and so on, and $b_k^*(s \mid p_1,\ldots,p_k)$ is the price at which you drop out when $k$ bidders have dropped out at $p_1 < p_2 < \cdots < p_k$.
+
+Let's derive these $b_k^*$ functions starting from $b_0^*$.
+
+Like before, first suppose that $\left( b_0^*,\ldots,b_{N-2}^{*} \right)$ is a symmetric equilibrium and each $b_k^*(s \mid p_1,\ldots,p_k)$ is strictly increasing in $s$ with the intention to verify it later.
+
+Suppose that all others drop out simultaneously. In this case, they must have the same signal. This is the only scenario that makes $b_0^*$ relevant. Let $y := y_1=y_2= \cdots = y_N$. 
+Then $b^*_0(s) = \E\left[V_1 \mid S_1 = s, Y_1 = Y_2 = \cdots = Y_N = y\right]$. Note that $b_0^*(s)$ is strictly increasing.
+
+Suppose one bidder has dropped out first at price $p_1$. We defined $b_1^*(s \mid p_1)$ as the price at which you drop out when $1$ bidder has dropped out at price $p_1$. 
+Observing $p_1$ allows all remaining bidders to infer that $Y_{N-1} = y_{N-1}$, where $p_0^*(y_{N-1}) = p_1$.
+
+If all remaining bidders have the same signal $y$, then \[
+	b_1^*(s \mid p_1) = \E\left[V_1 \mid S_1 = s, Y_1 = \cdots = Y_{N-2} = s, Y_{N-1} = y_{N-1}\right] 
+.\] While $p_1$ does not explicitly appear on the right hand side, $y_{N-1}$ is determined by $p_1$ through $b_0^*(y_{N-1}) = p_1$. We can continue this pattern of proof by graph and find that in general,
+\[
+	\begin{aligned}
+		b_k^*(s\mid p_1,\ldots,p_k)
+		&= \E\left[V_1 \mid S_1=  s, Y_1 = \cdots = Y_{N-k-1} = s,\right. \\
+		&\qquad \left.Y_{N-k} = y_{N-k}, \ldots,Y_{N-1} = y_{N-1}\right].
+	\end{aligned}
+\]
+Here $b_0^*(y_{N-1}) = p_1$, $b_1^*(y_{N-2}) = p_2$, $\ldots$, and $b_{k-1}^*(y_{N-k} \mid p_1,\ldots,p_{k-1}) = p_k$.
+
+Does your drop out price ever jump below the clock price when someone else drops out?
+\begin{proposition}	A bidder's drop out price never jumps below the clock price when someone else drops out.
+\end{proposition}
+\begin{proof}
+	We begin by providing intuition for a particular case. Suppose $y_{N-1} < s$.
+	\begin{align*}
+		p_1 = b_0^*(y_{N-1}) &= \E\left[V_1 \mid S_1 = Y_1 - \cdots = Y_{n-1} = y_{N-1}\right] \\
+							 &< \E\left[V_1 \mid S_1 = Y_1 = \cdots = Y_{N-2}, Y_{N-1} = y_{N-1} \right] = b_1^*(s_1 \mid p_1) \\
+							 &\le \E\left[V_1 \mid S_1=Y_1 =\cdots = Y_{N-1} = s\right] \\
+							 &= b_0^*(s)
+	.\end{align*}
+
+	Therefore, $p_1 < b_1^*(s \mid p_1) \le b_0^*(s)$.
+
+		In general, if $y_{N-1} < y_{N-2} < \cdots < y_{N-k} < s$, then
+		\begin{align*}
+			p_k = b_{k-1}^*\left( y_{N-k} \mid p_1,\ldots,p_{k-1} \right)
+			&= \E\left[V_1 \mid S_1 = Y_1 = \cdots = Y_{N-k} = y_{N-k},\right. \\
+			&\qquad \left.\underbrace{Y_{N_k+1} = y_{N-k+1}, \ldots, Y_{N-1} = y_{N-1}}_{\text{$k-1$ known signals}}\right]  \\
+			&< \E\left[V_1 \mid S_1 = Y_1 \cdots  = Y_{N-k-1} = s,\right. \\
+			&\qquad \left.Y_{N-k} = y_{N-k}, \ldots,Y_{N-1} = y_{N-1}\right]  \\
+			&= b_k^*(s \mid p_1,\ldots,p_k) \\
+			&\le \E\left[V_1 \mid S_1 = Y_1 =\cdots= Y_{N-k} = s,\right. \\
+			&\qquad \left.Y_{N-k+1}= y_{N-k+1}, \ldots,Y_{N-1} = y_{N-1}\right] \\
+			&= b_k^{*}(s \mid p_1,\ldots,p_k) \\
+			&= b_{k-1}^*(s \mid p_1,\ldots,p_{k-1})
+		.\end{align*} 
+\end{proof}
+
+\begin{proposition}	$\left( b_0^*,b_1^*,\ldots,b_{N-2}^* \right)$ is a symmetric equilibrium.
+\end{proposition}
+
+\begin{proof}
+	We must show that if all others use the $b_k^*$ functions to set their drop-out prices, then you can do no better than do so as well.
+
+	Suppose your signal is $s$. Let the others' signals be $y_1 \ge y_2 \ge \cdots \ge y_{N-1}$. Suppose the second-highest signal is $y_{N-1} < s$.
+	To win, you have to pay \begin{align*}
+		b_{N-2}^*\left( y_1 \mid p_1,p_2,\ldots,p_{N-2} \right) 
+		&= \E\left[V_1 \mid S_1 = Y_1 = y_1, Y_2 = y_2, \ldots,Y_{N-1} = y_{N-1}\right]
+	.\end{align*} 
+
+		What is the good worth to you given $y_1 \ge y_2 \ge \cdots \ge y_{N-1}$?
+		It is worth the first term in
+		\[
+			\begin{aligned}
+				\E\left[V_1 \mid S_1 = s_1, Y_1 = y_1,\ldots,Y_{N-1} = y_{N-1}\right]
+				&\gtreqless
+				\E\left[V_1 \mid S_1 = y_1,\ldots,Y_{N-1} = y_{N-1} \right] \\
+				&\iff s \gtreqless y_1
+			\end{aligned}
+		.\]
+		Hence, you want to win exactly when $s > y_1$.
+		You can do this by using the bidding strategy, since drop out prices are increasing in the signal.
+\end{proof}
+
+\section{Revenue Comparison between the Second-Price Auction and English Auction}
+
+We conjecture the ascending price will raise more revenue than the second-price auction, since it reveals more information. (Recall that the seller would ex ante always prefer to reveal information she has; so it would make sense for the seller to like others to reveal information as well.)
+
+Let $X_1 \ge X_2 \ge \cdots \ge X_N$ be the order statistics of the $N$ signals $S_1,\ldots,S_N$.
+
+Let $\SPA_2$ be a second price actuion in which the seller observes all but the two highest signals and reveals the signals she observes.
+So, she observes and reveals $X_3=x_2,\ldots,X_N = x_N$, then allows the bidders with the highest signals to bid in a canoncial SPA. The equilibrium bidding strategy is \[
+	b_{\SPA_2}^{*}\left( s \mid x_3,\ldots,x_N \right)= \E\left[V_1 \mid S_1=Y_1=s, X_3= x_3,\ldots,X_n = x_n\right] 
+.\] 
+
+Therefore, if $X_1=  x_1 \ge X_2 = x_2 \ge \cdots \ge X_N = x_N$, then \[
+	R_{\SPA_2}(x_1,\ldots,x_N) = \E\left[V_1 \mid S_1 = Y_1 = x_2, Y_2 = x_3, \ldots,Y_{N-1}=x_N\right] 
+.\] In this situation, if we had run an ascending auction instead, then the revenue would be the same. This is because the final drop-out price of the person with the second-highest signal is determined by conditioning on all lower signals. Thus, \[
+	R_E\left( x_1,\ldots,x_N \right) = R_{\SPA_2}(x_1,\ldots,x_N) \ge R_{\SPA}(x_1,\ldots,x_N)	
+,\]
+
+\begin{conj}
+	Second-price auctions are used in the real world because of risk aversion.
+\end{conj}
+
+While the highest signal wins in these auctions, the auctions are not necessarily efficient, because someone with a high value can draw a low signal.
+
+\section{First-Price Auction}
+Let $f_{Y_1}(y\mid s)$ be the probability densiity that the highest signal of others is $y$ given that your signal is $s$. By affiliation, \[
+	\frac{f_{Y_1}(\overline{y} \mid s)}{f_{Y_1}(y \mid s)}
+\] is nondecreasing in $s$ for every $\overline{y} > y$. 
+
+This implies that
+\begin{equation} \label{2-12-0}
+	\frac{f_{Y_1}(y \mid s)}{F_{Y_1}(y \mid s)}
+\end{equation}
+is nondecreasing in $s$ for every $y$.
+
+Define $w(s,y) = \E\left[V_1 \mid S_1=s, Y_1 = y\right] $ and let $\hat{b}(\cdot )$ be a strictly increasing symmetric equilibrium bidding function (if it exists). Let $u(r,s)$ be your expected utility when you signal is $s$, you bid $\hat{b}(r)$, and all others bid according to $\hat{b}(\cdot )$. Then, as long as $\hat{b}(\cdot )$ is indeed strictly increasing (which, as before, we plan to check later), 
+
+When the highest signal of the others is $y$, your expected utility is \begin{equation} \label{2-12-1}
+	u(r,s) = \int_{0}^{r} \left( w(s,y) - \hat{b}(r) \right)f_{Y_1}(y\mid s) dy 
+\end{equation} because $\hat{b}$ being strictly increasing implies that $\hat{b}(y) < \hat{b}(r)$ iff $y < r$. 
+Thus, since $\hat{b}$ is an equilibrium, the FOC in $r$ of $u(r,s)$ implies \begin{align*}
+	0 = \left. \frac{d}{dr}u(r,s) \right|_{r = s} &= \left. \left( w(s,r) - \hat{b}(r) \right)f_{Y_1} (r \mid s) + \int_{0}^{r} \left( -\hat{b}'(r) \right)f_{Y_1}(y\mid s) dy \right|_{r=s}  \\
+											  &= \left.\left( w(s,r) - \hat{b}(r) \right) f_{Y_1}(r \mid s) - \hat{b}'(r) F_{Y_1}(r\mid s) \right|_{r=s} \\
+												  \implies \hat{b}'(s) F_{Y_1}(s\mid s) &= \left( w(s,s) - \hat{b}(s) \right)f_{Y_1}(s\mid s)
+	.\end{align*} 
+The LHS is the marginal cost of increasing your bid, while the RHS is the marginal benefit. We can rearrange to se that for every signal $s$,
+\begin{equation} \label{2-12-2}
+	\hat{b}'(s) = \left( w(s,s) - \hat{b}(s) \right) \frac{f_{Y_1} (s\mid s)}{F_{Y_1}(s\mid s)}
+\end{equation}
+We can solve this ODE subject to the boundary condition $\hat{b}(0) = w(0,0)$:\footnote{We impose this boundary condition because it makes sense over the more sensible $\hat{b}\left( 0 \right) = 0$. For instance, we can give a circular reason. \texthl{fix.}}
+\[
+  \hat{b}'(s) + \frac{f_Y(s\mid s)}{F_{Y_1}(s\mid s)}\,\hat{b}(s)
+  = w(s,s)\frac{f_{Y_1}(s\mid s)}{F_{Y_1}(s\mid s)},
+  \qquad \hat{b}(0)=w(0,0).
+\]
+
+Define the integrating factor
+\[
+  \mu(s):=\exp\left(\int_{0}^{s}\frac{f_Y(x\mid x)}{F_{Y_1}(x\mid x)}\,dx\right).
+\]
+Multiplying the ODE by \(\mu(s)\) gives
+\[
+  \frac{d}{ds}\left(\mu(s)\hat{b}(s)\right)
+  = \mu(s)\,w(s,s)\frac{f_{Y_1}(s\mid s)}{F_{Y_1}(s\mid s)}.
+\]
+Integrating from \(0\) to \(s\) and using \(\mu(0)=1\) yields
+\[
+  \mu(s)\hat{b}(s) - \hat{b}(0)
+  = \int_{0}^{s}\mu(y)\,w(y,y)\frac{f_{Y_1}(y\mid y)}{F_{Y_1}(y\mid y)}\,dy,
+\]
+so \[\hat{b}(s)
+  = w(0,0)\exp\left(-\int_{0}^{s}\frac{f_Y(x\mid x)}{F_{Y_1}(x\mid x)}\,dx\right)
++ \int_{0}^{s} w(y,y)\,h(y\mid s)dy.\]
+Evaluating the integral $\int_\epsilon^{s} \frac{f_Y(x\mid x)}{F_{Y_1}(x\mid x)} dx$, we see that as $\epsilon \downarrow 0$, the integral diverges to $\infty$, so the first term in $\hat{b}$ is $0$.
+Therefore,
+\begin{equation} \label{2-12-3}
+	\hat{b}(s) = \int_{0}^{s} w(y,y) h(y\mid s)dy 
+\end{equation}
+where
+\[
+  h(y\mid s)
+  := \frac{f_{Y_1}(y\mid y)}{F_{Y_1}(y\mid y)}
+     \exp\left(-\int_{y}^{s}\frac{f_Y(x\mid x)}{F_{Y_1}(x\mid x)}\,dx\right),
+  \qquad 0\le y\le s.
+\]
+Letting $H(y \mid s) = \int_{0}^{y} h(z\mid s)dz $, we get \[
+	H(y \mid s) = e^{-\int_{y}^{s} \frac{f_{Y_1}(x\mid x)}{F_{Y_1}(x\mid x)} dx }
+\] for every $y \le s$. Thus, \[
+H(s\mid s) = 1, \quad H(0\mid s) = 0
+,\] and thus $h(y\mid s) > 0$ is a density on $y \in [0,s]$.
+
+Equation (\ref{2-12-3}) is defined only for $s > 0$.
+This equation says that $\hat{b}(s)$ is a weighted average of $w(y,y)$s with $y \in [0,s]$.
+Since $w(y,y)$ is strictly increasing in $y$,
+\begin{equation}
+	\begin{aligned}
+		\hat{b}(s)
+		&= \int_{0}^{s} w(y,y) h(y \mid s) dy \\
+		&< \int_{0}^{s} w(s,s) h(y\mid s) dy \\
+		&= w(s,s) \int_{0}^{s} h(y\mid s )dy \\
+		&= w(s,s)
+	\end{aligned}
+	\label{2-12-4}
+\end{equation} 
+for every $s$. 
+Combining equations (\ref{2-12-2}) and (\ref{2-12-4}) yield that $\hat{b}'(s) > 0$ for every $s$. Therefore, (\ref{2-12-1}) is indeed the correct formula for $u(r,s)$ given $\hat{b}(\cdot )$ defined by (\ref{2-12-3}).
+
+We have shown that $\hat{b}$ is increasing and that it satsfies the FOC of a maximization problem (by construction). It remains to check that it satisfies the second-order condition:
+\begin{align*}
+	\frac{d}{dr} u(r,s) &= \left( w(s,r) - \hat{b}(r) \right)f_{Y_1}(r \mid s) - \hat{b}'(R) F_{Y_1}(r \mid s) \\
+						&= F_{Y_1}(r \mid s) \left[ w(s,r) - \hat{b}(r) \frac{f_{Y_1}(r \mid s)}{f_{Y_1}(r \mid s)} - \hat{b}'(r) \right] \gtreqless 0
+.\end{align*}
+Trying to analyze this in terms of fixing $r$ at $s$ and hypothesizing changes in $r$, fix $r=s$ and try changing $s$. By (\ref{2-12-2}) and $w(s,r)$ being strictly increasing in $s$ (both from affiliation), we see that decreasing $s$ to below $r$, the expression is negative, and increasing $s$ to above $r$, the expression is positive. Therefore, the derivative is maximized in $r$ at $r^* = s$.
+
+\begin{aside}	What is the interpretation of $h(y\mid s)$? Reny and Brooks do not know, but Chen may.
+\end{aside}
+
+\begin{proposition}	We claim that $\frac{f_{Y_1}(y\mid s)}{F_{Y_1}(s\mid s)}$ is the density of second highest signal $X_2$ given that the highest signal $X_1$ is $s$.
+\end{proposition}
+\begin{proof}
+	We know that $f_{Y_1}(y\mid s)$ is the density of $Y_1= y$ given $S_1 = s$. Thus, $\frac{f_{Y_1}(y\mid s)}{F_{Y_1}(a \mid s)}$ is the density of $Y_1 = y$ given $S_1=s$ and $Y_1 \le a$.
+	We plug in $a=s$ to conclude, as \[
+		Y_1 = y_1 \mid S_1 = s, Y_1 \le s \iff X_2 = y \mid S_1 = s = X_1 \iff X_2 = y \mid X_1 = s
+	.\] 
+\end{proof}
+
+\begin{proposition}	The revenues of different auctions are ordered as \[
+		R_\FPA \le R_\SPA \le R_E
+	.\] 
+\end{proposition}
+
+\begin{proof}
+	We have already shown the second inequality.
+
+	In a second price auction, \[
+		b^*(s) = \E\left[V_1 \mid S_1 = s, Y_1 = s\right] = w(s,s)
+	.\] 
+	Let $\left. R \right|_{X_1 = s} $ be the expected revenue given that the highest signal is $s$.
+	We see that \[
+		\left.R_\FPA\right|_{X_1 = s} = \hat{b}(s)
+	,\] 
+	while \[
+		\left.R_\SPA\right|_{X_1 = s} = \int_0^{s}w(y,y) \P\left[X_2 = y \mid X_1 = s\right] dy= \int_{0}^{s} w(y,y) \frac{f_{y_1}(y\mid s)}{F_{Y_1}(s \mid s)} dy 
+	.\] 
+	If we can show that $\hat{b}(s)$ is less than this integral for every $s$, then we will have shown the revenue of an SPA is greater than that of a FPA.
+
+	Recall that we found last time \[
+		\hat{b}(s) = \int_{0}^{s} w(y,y) h(y\mid s)dy 
+	.\] We want to show that $h(y \mid s)$ is greater than $\frac{f_{Y_1}(y\mid s)}{F_{Y_1}(s \mid s)}$ for large $y$.
+	Hence, it suffices to show \[
+		e^{- \int_{y}^{s} \frac{f_{Y_1}(x \mid x)}{F_{Y_1}(x \mid x)}dx } = H(y \mid s) \ge \frac{F_{Y_1} (y\mid s)}{F_{Y_1} (s \mid s)}
+	\] for $y \le s$.
+	We have that
+	\begin{align*}
+		H(y \mid s)
+		&= \operatorname{exp}\left( - \int_{y}^{s} \frac{f_{Y_1} (x\mid x)}{F_{Y_1}(x\mid x)}dx \right) \\
+		&\ge \operatorname{exp}\left(-\int_{y}^{s} \frac{F_{Y_1}(x\mid x)}{f_{Y_1}(x \mid x)}dx \right) \text{ since } \frac{f_{Y_1}(a \mid b)}{F_{Y_1}(a \mid b)} \text{ is nondecr. in $b$} \\
+		&= \operatorname{exp}\left(- \left. \left( \ln{\left(F_{Y_1}(x \mid s)\right)}\right|_{y}^{s} \right)\right) \\
+		&= \operatorname{exp}\left(- \left( \ln{\left(\frac{F_{Y_1} (s \mid s)}{F_{Y_1}(y \mid s)}\right)} \right)\right) \\
+		&= \operatorname{exp}\left(\ln{\left(\frac{F_{Y_1} (y \mid s)}{F_{Y_1} (s \mid s)}\right)}\right) \\
+		&= \frac{F_{Y_1} (y \mid s)}{F_{Y_1} (s \mid s)}
+	.\end{align*}
+\end{proof}

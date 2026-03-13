@@ -1,0 +1,37 @@
+\styledchapter{Preliminaries}
+\section{Statistics Review}
+
+We model information on others' bids as random variables with cumulative distribution functions and densities. 
+
+Suppose we have one opponent in the auction. It is important to condition on the event that we win the auction; this is equivalent to conditioning on the event that the other bid is less than yours. 
+
+We define the conditional probability density function given $x \le x_0$ as $\frac{f(x)}{F(x_0)}$ for every $x \le x_0$.
+
+Now suppose we have $k$ bidders. Order statistics are now important. Suppose we have $k$ values drawn independently from the same density $f(\cdot )$. Let $G_{1,k}$ denote the cumulative density function of the highest among the $k$ values, $G_{2,k}$ the CDF of the second highest, and so on. By definition,
+\begin{align*}
+	G_{1,k}(x) &= \P\left[X_{(1)} \le x, \ldots, X_{(k)} \le x\right] \\
+			   &= F^{k}(x) \\
+	g_{1,k}(x) &= k F^{k-1}(x) f(x) \\
+	G_{2,k}(x) &= \P\left[X_{(1)} \le x ,\ldots, X_{(k-1)} \le x\right] \\
+			   &= \underbrace{F^k(x)}_{X_(k) \le x} + \underbrace{k F^{k-1}(x) (1-F(x))}_{X_{(k) > x}} \\
+	g_{2,k}(x) &= k(k-1)F^{k-2}(x) f(x) (1-F(x)).
+\end{align*}
+
+\section{The Four Standard Auctions}
+
+In this course, we will mainly consider one-unit auctions in standard contexts.\boxednote{Because ties have probability zero (we consider bids on a continuum), we will usually skip consideration of ties.} Note that none of these have a reserve price (for now).
+
+\begin{enumerate}[label=(\roman*)]
+	\item \textbf{First-Price Sealed Bid}: Each bidder submits a sealed bid to the seller. The high bidder wins and pays her bid.
+	\item \textbf{Second-Price Sealed Bid}: Each bidder submits a sealed bid to the seller. The high bidder wins and pays the second-highest bid.
+	\item \textbf{Dutch}: A public price starts high enough so there are no takers, then decreases over time until someone signals a willingness to pay. They pay the current price.
+	\item \textbf{English}: The seller starts with a price of zero and increases it. Each bidder signals when they are no longer willing to pay. Once out, the bidder cannot return. The last remaining bidder wins and pays the current price.
+\end{enumerate}
+
+\section{The Independent Private Values Model}
+
+Assuming that private values are independent is very strong; it imposes a restriction on no correlation between values.
+
+Suppose a risk-neutral seller wishes to sell one unit of an indivisible good to one of $N$ risk-neutral bidders. Let $v_i$ denote bidder $i$'s value, known only to her. We assume $v_i$ is drawn independently of others' values from distribution with density $f_i$.
+
+If player $i$ wins and pays $p$, her utility is $v_i - p$. If she does not win and pays $p$, her utility is $-p$.

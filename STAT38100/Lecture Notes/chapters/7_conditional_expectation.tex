@@ -1,0 +1,281 @@
+\styledchapter{Conditional Expectation}
+
+We will talk about conditional expectation from the perspective of the Radom--Nikodym derivative.
+
+\section{Signed Measure and the Radom--Nikodym Derivative}
+
+\begin{definition}[Signed measure]
+	Suppose we have a measurable space $(\Omega, \mathscr{F})$. $\phi$ is a signed measure on $\left( \Omega, \mathscr{F} \right)$ if:
+	\begin{enumerate}[label=(\roman*)]
+		\item $\phi(\O) = 0$
+		\item For disjoint countable $\left\{A_n\right\} \subseteq \mathscr{F}$, \[
+			\phi\left( \bigcup\limits_{n}^{} A_n \right) = \sum\limits_{n}^{} \phi(A_n)
+		.\] (Implicitly, the sum is absolutely convergent.)
+	\end{enumerate}
+
+	The only difference between a measure and signed measure is that a signed measure can take any value, not just nonnegative ones.
+\end{definition}
+
+With nonnegative measures, there was no trouble with sets having measure infinity. But there is a potential collision with signed measure if two sets have measures infinity and negative infinity.
+
+However, the following proposition rules this out.
+\begin{proposition}
+	Either \[
+		-\infty < \phi(A) \le \infty, \quad \forall\ A \in \mathscr{F}
+	\] or \[
+		-\infty \le \phi(A) < \infty, \quad \forall\ A \in \mathscr{F}
+	.\] 
+\end{proposition}
+
+\begin{proof}
+	Suppose not, so there are $A,B \in \mathscr{F}$ such that \[
+		\phi(A) = \infty,\quad \phi(B) = -\infty
+	.\] 
+
+	 By countable additivity, we can write \boxednote{The definition of a signed measure imposes that the measure of any set in $\mathscr{F}$ is well-defined.}
+	 \begin{align*}
+	 	\phi(A \cup B) &= \phi(A) + \phi(B\setminus A) = \infty \\
+		\phi(A \cup B) &= \phi(B) + \phi(A\setminus B) = -\infty
+	 .\end{align*}
+\end{proof}
+
+\begin{theorem}[Hahn decomposition]
+	Given a signed measure $\phi$, there exist $\Omega^+, \Omega^- \in \mathscr{F}$ such that they partition $\Omega$: \[
+		\Omega^+ \cup \Omega^- = \Omega, \quad \Omega^+ \cap \Omega^- = \O
+	\] and for any $A \in \mathscr{F}$, \[
+		\phi(A \cap \Omega^-) \le 0 \le \phi(A \cap \Omega^+)
+	.\] 
+	Furthermore, this partition is unique in the sense that if we have Hahn decompositions $\left( \Omega_1^+, \Omega_1^- \right)$ and $\left( \Omega_2^+, \Omega_1^- \right)$,
+	\begin{align*}
+		&A \subseteq \Omega_1^+ \Delta \Omega_2^+ \implies \phi(A) = 0, \quad \forall\ A \in \mathscr{F} \\
+		&A \subseteq \Omega_1^- \Delta \Omega_2^- \implies \phi(A) = 0
+	.\end{align*}
+\end{theorem}
+
+\begin{proposition}[Jordan decomposition]
+	From a signed measure $\phi$, we can recover measures $\phi^+,\phi^-$ by putting
+	\begin{align*}
+		\phi^+(A) &= \phi(A \cap \Omega^+) \\
+		\phi^-(A) &= \phi(A \cap \Omega^-)
+	.\end{align*}
+
+	Note that Jordan decomposition is unique; starting with different Hahn decompositions yields the same Jordan decomposition.
+	There is a remark if the Jordan decomposition $\phi = \phi^+ - \phi^-$ imposes mutual singularity.
+\end{proposition}
+\begin{proof}
+	Immediate (or maybe not).
+\end{proof}
+
+\begin{example}
+	Given a measure space $\left( \Omega, \mathscr{F}, \mu \right)$, where $f: \left( \Omega, \mathscr{F} \right)\to \left( \R,\mathscr{B}_\R \right)$, we have that \[
+		\phi(A) := \int_A fd\mu
+	\] is a signed measure with the Hahn decomposition \[
+		\Omega^+ = \left\{f \ge 0\right\}, \quad \Omega^- = \left\{f < 0\right\}
+	.\] 
+	Note if $f$ is nonnegative, $\phi$ is a measure. 
+
+	The Jordan decomposition is \[
+		\phi^{\pm}(A) = \int_A f^{\pm}d\mu
+	.\] 
+\end{example}
+
+\begin{definition}[Absolute continuity]
+	Given a signed measure $\phi$ and measure $\mu$ on $(\Omega, \mathscr{F})$, $\phi \ll \mu$\footnote{Read as $\phi$ is absolutely continuous with respect to $\mu$.} if for any $A \in \mathscr{F}$ such that $\mu(A) = 0$, $\phi(A) = 0$.
+\end{definition}
+
+\begin{remark}
+	The signed measure $\phi$ as an integral of $f$ over $\mu$ is absolutely continuous with respect to $\mu$.
+\end{remark}
+
+\begin{theorem}[Radom--Nikodym]
+	Suppose $\phi$ is a signed measure and $\mu$ is a $\sigma$-finite measure on $(\Omega, \mathscr{F})$. If $\phi \ll \mu$, then there exists a function $f$ (unique up to a measure zero set on $(\Omega, \mathscr{F},\mu)$) such that \[
+		\phi(A) = \int_A fd\mu
+	\] for every $A \in \mathscr{F}$.
+
+	$f$ is called the Random--Nikodym derivative (or the derivative between the two measures) and is also notated \[
+		f = \frac{d \phi}{d\mu}
+	.\] 
+\end{theorem}
+\begin{example}
+	Consider $\left( \R, \mathscr{B}_\R \right)$ and $\P = N(0,1)$, with $\lambda$ as Lebesgue measure. Then $\frac{d\P}{d\lambda}$ is the density of a standard Gaussian distribution.
+
+	For $\left( \N, 2^{\N} \right)$ with $\P$ as the Poisson distribution and $\lambda$ the counting measure, $\frac{d\P}{d\lambda}$ is the probability mass function of the Poisson distribution.
+\end{example}
+
+\section{Motivation of Conditional Expectation}
+
+For random variables $X,Y$, what should $\E\left[X \mid Y\right] $ be? In the simplest case, where $X = \mathds{1}_{A}$ and $Y = \mathds{1}_{B}$, we want \[
+	\E\left[X \mid Y\right]  = \P\left[A \mid \mathds{1}_{B}\right] 
+.\] If $\mathds{1}_{B}=  1$, then $\P\left[A \mid \mathds{1}_{B}\right] = \P\left[A \mid B\right] $ and if $\mathds{1}_{B} = 0$, then $\P\left[A \mid \mathds{1}_{B}\right]  = \P\left[A \mid B^{c}\right] $. So,
+\begin{equation} \label{3-3-9}
+	\E\left[X \mid Y\right] = \P\left[A \mid B\right] \mathds{1}_{B} + \P\left[A \mid B^{c}\right] \mathds{1}_{B^{c}}
+,\end{equation} 
+and the conditional expectation is measurable with respect to $\mathscr{G} = \left\{\O, \Omega, B, B^{c}\right\}$.
+
+What if $Z = a \mathds{1}_{B} + b \mathds{1}_{B^{c}}$ with $a \ne b$? Then
+\begin{align*}
+	\E\left[X \mid Z\right] 
+	&= \E\left[X \mid Y\right] = \E\left[X \mid \mathscr{G}\right] 	
+,\end{align*}
+as $\sigma(Z) = \left\{\O, \Omega, B, B^{c}\right\} = \sigma(Y)$.
+
+For any $D \in \mathscr{G} = \left\{\O, \Omega, B, B^{c}\right\}$, we have that by equation (\ref{3-3-9}),
+\begin{align*}
+	\E\left[\E\left[X \mid Y\right] \mathds{1}_{D}\right] 
+	&= \P\left[A \mid B\right] \P\left[B \cap D\right] + \P\left[A \mid B^{c}\right] \P\left[B^{c} \cap D\right]  \\
+	&= \begin{cases}
+		0, \quad D&= \O\\ \P\left[A\right], \quad D &= \Omega \\
+		\P\left[A \cap B\right] , \quad D &= B \\
+		\P\left[A \cap B^{c}\right] , \quad D &= B^{c}
+	\end{cases} \\
+	&= \E\left[X \mathds{1}_{D}\right] 
+.\end{align*}
+
+We have shown that the tower property holds \emph{in this example.}
+
+\begin{proposition}[Tower Property]
+	For $D \in \mathscr{G}$ ($D$ is measurable with respect to $\mathscr{G}$), \[
+		\E\left[\E\left[X \mid \mathscr{G}\right] \mathds{1}_{D}\right] = \E\left[X \mathds{1}_{D}\right] 
+	.\] 
+\end{proposition}
+
+Summarizing our three motivating examples, we see that $\E\left[X \mid Y\right] $ should:
+\begin{enumerate}[label = (\roman*)]
+	\item Equal $\E\left[X \mid \mathscr{G}\right] $ with $\mathscr{G} = \sigma(Y)$,
+	\item Be measurable with respect to $\mathscr{G}$, and
+	\item Satisfy the tower property.
+\end{enumerate}
+
+It can be shown that there is a unique function satisfying all of these requirements. We call this conditional expectation.
+
+\begin{definition}[Conditional expectation with respect to a $\sigma$-field]
+	Suppose $\left( \Omega, \mathscr{F}, \P\right)$ is a probability space, $\mathscr{G} \subseteq \mathscr{F}$ is a $\sigma$-field, and $X: \left( \Omega, \mathscr{F} \right)\to \left( \R, \mathscr{B}_\R \right)$ is a random variable such that $\E\left[\left| X \right|\right] < \infty$.
+
+	$\E\left[X \mid \mathscr{G}\right] $ is defined as the unique\footnote{Up to null sets in $\mathscr{G}$, \emph{not} in $\mathscr{F}$.} $\mathscr{G}$-measurable function such that for every $A \in \mathscr{G}$, \[
+		\int_A \E\left[X \mid \mathscr{G}\right] d\P = \int_A X d\P
+	.\] 
+\end{definition}
+
+\section{Existence and Uniqueness}
+
+Why does $\E\left[X \mid \mathscr{G}\right] $ exist and why is it unique? Define \[
+	\phi(A) = \int_A X d\P
+\] for every $A \in \mathscr{G}$. $\phi$ is a signed measure and $\P$ is a measure on the smaller measurable space $\left( \Omega, \mathscr{G} \right)$ and $\phi \ll \P$. By the Radon--Nikodym theorem applied to $\left( \Omega, \mathscr{G} \right)$, there exists a unique function $\frac{d\phi}{d\P}$ such that \[
+	\int_A Xd\P = \phi(A) = \int_A \frac{d\phi}{d\P}d\P
+,\] which we define to be $\E\left[X \mid \mathscr{G}\right] $.
+
+\begin{example}
+	If $\mathscr{G} = \left\{\O, \Omega\right\}$, then \[
+		\E\left[X \mid \mathscr{G}\right]  = \E\left[X\right] 
+	.\] 
+
+	Returning to one of our motivating examples, if $X = \mathds{1}_{A}$ and $\mathscr{G} = \left\{\O, \Omega, B, B^{c}\right\}$, then
+	\begin{align*}
+		\E\left[X \mid G\right] &= a \mathds{1}_{B} + b \mathds{1}_{B^{c}}\\
+		&= \begin{cases}
+			a \P\left[B \right] = \P\left[A \cap B\right], \quad D &= B \\
+			b \P\left[B^{c}\right] = \P\left[A \cap B^{c}\right],\quad D = B^{c} \\
+			a\P\left[B \right] + b \P\left[B^{c}\right] = \P\left[A\right] , \quad D &= \Omega \\
+			a \cdot 0 + b \cdot 0 = 0, \quad D &= \O
+		\end{cases}
+	.\end{align*} 
+
+	The third and fourth cases are redundant. If $\P\left[B\right] \ne 0$, then we have the solution
+	\begin{align*}
+		a &= \begin{cases}
+			\frac{\P\left[A \cap B\right] }{\P\left[B\right] } = \P\left[A \mid B\right] , \quad &\P\left[B \right] \ne 0, \\
+			\text{arbitrary}, \quad &\P\left[B\right] = 0,
+		\end{cases} \\
+		b &= \begin{cases}
+			\P\left[A \mid B^{c}\right] , \quad \P\left[B^{c}\right]  &\ne 0 \\
+			\text{arbitrary}, \quad \P\left[B^{c}\right]  &= 0
+		\end{cases}
+	.\end{align*}
+
+	If $\mathscr{G} = \mathscr{F}$, then \[
+		\E\left[X \mid \mathscr{G}\right]  = X
+	.\] 
+\end{example}
+
+\begin{lemma}[Doob--Dynkin]
+	Suppose\boxednote{The conditions of this lemma imply $\sigma(Z) \subseteq \sigma(Y)$.} $Y: \left( \Omega, \mathscr{F} \right)\to \left( \R, \mathscr{B}_\R \right)$ and $Z: \left( \Omega, \sigma(Y) \right)\to \left( \R, \mathscr{B}_\R \right)$.
+
+	Then there exists $f: \left( \R, \mathscr{B}_\R \right) \to \left( \R, \mathscr{B}_\R \right)$ such that $Z = f(Y)$.
+\end{lemma}
+\begin{proof}
+	The proof is standard: first check the property for $Z$ simple, then for nonnegative $Z$, and finally for general $Z$. We only check the simple-function case.
+
+	We can write $Z = \sum_{i=1}^{n} a_i \mathds{1}_{A_i}$.
+	Since $\sigma(Z) \subseteq  \sigma(Y)$, we have
+	\[
+		A_i \in \sigma(Y) = \left\{Y^{-1}B: B \in \mathscr{B}_\R\right\}.
+	\]
+	Thus there exists $B_i \in \mathscr{B}_\R$ such that $A_i = Y^{-1}B_i$, which lets us write
+	\begin{align*}
+		Z(\omega)
+		&= \sum\limits_{i=1}^{n} a_i \mathds{1}_{\omega \in A_i}\\
+		&= \sum\limits_{i=1}^{n} a_i \mathds{1}_{\omega \in Y^{-1}(B_i)}\\
+		&= \sum\limits_{i=1}^{n} a_i \mathds{1}_{Y(\omega) \in B_i} \\
+		&= f(Y)
+	,\end{align*}
+	with $f(t) = \sum_{i=1}^{n} a_i \mathds{1}_{t \in B_i}$.
+\end{proof}
+
+\begin{definition}[Conditional expectation with respect to a random variable]
+	For random variables $X,Y$ define \[
+		\E\left[X \mid Y\right]  = \E\left[X \mid \sigma(Y)\right] 
+	.\] By Doob--Dynkin, this is a function of $Y$.
+\end{definition}
+
+Note that the statement \[
+	\E\left[\left( X - \E\left[X \mid \mathscr{G}\right]  \right)\mathds{1}_{A}\right] = 0, \quad \forall\  A \in \mathscr{G}
+\] is equivalent to \[
+	\E\left[\left( X - \E\left[X \mid \mathscr{G}\right]  \right)Y\right] =0, \quad \forall\  Y \text{ s.t. } \sigma(Y) \subseteq \mathscr{G}
+.\] 
+This motivates some sort of orthogonality property --- the conditional expectation $\E\left[X \mid \mathscr{G}\right] $ is a projection of $X$ onto $\left\{Y: \sigma(Y) \subseteq \mathscr{G}\right\}$.
+
+Similarly,\boxednote{We have a condition (from where?) that $\E\left[\left( X - \E\left[X \mid Z\right]  \right)Z\right] = 0$ for all $Z$ such that $\sigma(Z) \subseteq \sigma(Y)$. By Doob--Dynkin, this is equivalent to the proposition.} since $\E\left[X \mid Y\right]  = \E\left[X \mid \sigma(Y)\right] $, we have \[
+	\E\left[\left( X - \E\left[X \mid Y\right]  \right)g(Y)\right] = 0, \forall\ \text{functions $g$ of $Y$}
+.\] 
+We state these formally:
+\begin{proposition}[Conditional expectation as projection]
+	\[\E\left[X \mid \mathscr{G}\right] = \min_{Y: \sigma(Y) \subseteq \mathscr{G}} \E\left[\left( Y-X \right)^2\right]
+	,\] while \[
+		\E\left[X \mid Y\right] = \min_{g} \E\left[\left( g(Y) - X \right)^2\right] 
+	.\] 
+\end{proposition}
+
+\begin{remark}
+We have shown that if the second moment of $X$ exists, we can define conditional expectation from the projection perspective. But the orthogonality condition is more general, as it does not require existence of the second moment.
+\end{remark}
+
+\section{Properties of Conditional Expectation}
+
+\begin{proposition}[Properties of conditional expectation]
+	\begin{enumerate}[label = (\roman*)]
+		\item If $\sigma(X) \subseteq \mathscr{G}$, then $\E\left[X \mid \mathscr{G}\right] = X$ 
+		\item If $\sigma(X) \ind \mathscr{G}$, then $\E\left[X \mid \mathscr{G}\right] = \E\left[X\right] $
+		\item If $\mathscr{G}_0 \subseteq \mathscr{G}$, then \[
+				\E\left[\E\left[X \mid \mathscr{G}_0\right] \mid \mathscr{G}\right] = \E\left[\E\left[X \mid \mathscr{G}\right] \mid \mathscr{G}_0\right] = \E\left[X \mid \mathscr{G}_0\right] 
+		.\] 
+		\item If $X \le Y$, then \[
+			\E\left[X \mid \mathscr{G}\right] \le \E\left[Y \mid \mathscr{G}\right] 
+		.\]
+		\item $\E\left[aX + bY \mid \mathscr{G}\right] = a\E\left[X \mid \mathscr{G}\right] + b\E\left[Y \mid \mathscr{G}\right] $
+		\item Suppose $\left\{X_n\right\}$ is a increasing sequence of nonnegative functions converging to $X$ almost everywhere. Then \[
+			\E\left[X_n \mid \mathscr{G}\right]  \uparrow \E\left[X \mid \mathscr{G}\right] 
+		.\] 
+		\item For $X_n \ge 0$, \[
+			\E\left[\liminf\limits_{n \to \infty} X_n \mid \mathscr{G}\right] \le \liminf\limits_{n \to \infty} \E\left[X_n \mid \mathscr{G}\right] 
+		.\] 
+		\item Suppose $X_n \to X$ almost everywhere, $\left| X_n \right|\le Y$ almost everywhere, and $\E\left[Y\right] < \infty$. Then \[
+			\E\left[X_n \mid \mathscr{G}\right] \to \E\left[X \mid \mathscr{G}\right] 
+		.\] 
+		\item If $\sigma(Y) \subseteq  \mathscr{G}$, then \[
+			\E\left[XY \mid \mathscr{G}\right] = Y \E\left[X \mid \mathscr{G}\right] 
+		.\] 
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	Left as exercises; these are all routine.
+\end{proof}

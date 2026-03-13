@@ -1,0 +1,363 @@
+\styledchapter{Law of Large Numbers}
+\section{Preliminaries}
+
+\begin{lemma}[Borel-Cantelli]
+	If $\sum_n \P\left[A_n\right] < \infty$, then \[
+		\P\left[A_n \text{ infinitely often}\right] = \P\left[\bigcap\limits_{m=1}^{\infty} \bigcup\limits_{n=m}^{\infty} A_n\right] = \P\left[\limsup\limits_{n \to \infty} A_n\right] = 0
+	.\] 
+\end{lemma}
+
+\begin{proof}
+	By finiteness of the entire sum, for any $\epsilon > 0$, there exists $m \in \N$ such that \[
+		\sum\limits_{n=m}^{\infty} \P\left[A_n\right]  < \epsilon
+	.\] 
+
+	Write
+	\begin{align*}
+		\P\left[A_n \text{ i.o.}\right] &= \P\left[\bigcap\limits_{m=1}^{\infty} \bigcup\limits_{n=m}^{\infty} A_n\right]  \\
+										&\le \P\left[\bigcup\limits_{n=m}^{\infty} A_n\right] \\
+										&\le \sum\limits_{n=m}^{\infty} \P\left[A_n\right] < \epsilon
+	.\end{align*}
+	Sending $\epsilon \to 0$ yields the result.
+\end{proof}
+
+We need the following lemma to bound the second moments in one formulation of the LLN.
+
+\begin{lemma}[Existence of lower moments]
+	Suppose $\E\left[\left| X \right|^{r}\right] < \infty$. Then $\E\left[\left| X \right|^{s}\right] < \infty$ for all $s < r$.
+\end{lemma}
+\begin{proof}
+		For all $t \ge 0$,
+		\[
+			t^s \le \max\{t^r, 1\} \le t^r + 1.
+		\]
+		So
+		\[
+			\E\left[\left| X \right|^{s}\right] \le \E\left[\left| X \right|^{r}\right] +1 <\infty.
+		\]
+	\end{proof}
+
+We also need the following lemma.
+
+\begin{lemma}[Maximal inequality] \label{1-29-1}
+	Suppose $Z_1,\ldots,Z_N$ are independent.
+	Then \[
+		\P\left[\max_{i\le N} \left| Z_1+\cdots + Z_i \right| > \epsilon_1 + \epsilon_2\right] \le \beta \P\left[\left| Z_1+\cdots+Z_N\right| > \epsilon_1\right] 
+	,\] 
+	where $\beta = \frac{1}{\min_{i \le N} \P\left[\left| Z_{i+1} + \cdots + Z_N \right|\le \epsilon_2\right] }$
+\end{lemma}
+
+\begin{proof}
+	Define $S_i = Z_1+\cdots+Z_i$ and $T_i = Z_{i+1} + \cdots + Z_N$.
+	We see that 
+	\begin{align*}
+		\P\left[\max_{i \le N} \left| S_i \right| > t\right] \le \sum\limits_{i \le N}^{} \P\left[\left| S_i \right| > t\right] 
+	.\end{align*} This is not helpful, because applying union bound is best when the terms are independent --- if they are highly dependent, then union bound throws out a lot of information (think of $A_1 = A_2 = A_3 =\cdots$.)
+
+	Define the stopping time \[
+		\tau = \begin{cases}
+			\text{first time } \left| S_i \right| > \epsilon_1 + \epsilon_2 \\
+			N \text{ if } \max_{i \le N} \left| S_i \right| \le \epsilon_1 + \epsilon_2
+		\end{cases}
+	.\] Then we can write \boxednote{Note that $\tau$ is random and $S_i$ is random, so $S_\tau$ is very random! That is why we decouple in the second equality.}
+	\begin{align*}
+		\P\left[\max_{i \le N} \left| S_i \right| > \epsilon_1 + \epsilon_2\right] &= \P\left[\left| S_\tau \right| > \epsilon_1 + \epsilon_2\right]  \\
+				   &= \sum\limits_{i=1}^{N} \P\left[\left| S_\tau \right| > \epsilon_1 + \epsilon_2, \tau = i	\right] \\
+				   &= \sum\limits_{i=1}^{N} \P\left[\left| S_i \right| > \epsilon_1 + \epsilon_2, \tau = i\right] \\
+				   &= \sum\limits_{i=1}^{N} \frac{\P\left[\left| S_i \right| > \epsilon_1 + \epsilon_2, \tau = i, \left| T_i \right| \le \epsilon_2\right] }{\P\left[\left| T_i \right| \le \epsilon_2\right] }
+	.\end{align*}
+	This last equality is allowed because $\{\left| S_i \right| > \epsilon_1 + \epsilon_2, \tau = i\}$ is independent from $\left| T_i \right| \le \epsilon_2$.\footnote{Note the nuance with the independence of $\tau = i$ and $\left| T_i \right| \le \epsilon_2$. Also, we know that these events are independent because they are measurable functions of independent random variables (see the Appendix).}
+
+	Continuing,
+		\begin{align*}
+			\P\left[\max_{i\le N} \left| S_i \right| > \epsilon_1 + \epsilon_2\right] &\le \frac{1}{\min_i \P\left[\left| T_i \right| \le \epsilon_2\right] } \sum\limits_{i=1}^{N} \P\left[\left| S_i \right| > \epsilon_1 + \epsilon_2, \tau = i, \left| T_i \right| \le \epsilon_2\right] \\
+																					  &\le \frac{1}{\min_i \P\left[\left| T_i \right| \le \epsilon_2\right] } \sum\limits_{i=1}^{N} \P\left[\left| S_N \right| > \epsilon_1, \tau = i\right] \\
+																					  &= \frac{1}{\min_i \P\left[\left| T_i \right| \le \epsilon_2\right] } \P\left[\left| S_N \right| > \epsilon_1\right] 
+		.\end{align*}
+
+\end{proof}
+
+\section{Strong and Stronger Laws}
+
+\begin{theorem}[Strong law with uniformly bounded second moments]
+	Suppose $\{X_i\}$ is a sequence of independent random variables with $\E\left[X_i\right] = 0$ for each $i$ and
+	\[
+		\sup_i \E\left[X_i^2\right] < \infty
+	.\]
+	Then
+	\[
+		\frac{X_1+\cdots+X_n}{n} \to 0
+	\]
+	almost surely.
+\end{theorem}
+
+\begin{proof}
+	First, consider the stronger condition
+	\[
+		\sup_i \E\left[X_i^4\right] < \infty
+	.\]
+
+	Write $S_n = \sum_{i=1}^{n}X_i$. It suffices to show that \[
+		\sum_{n}^{} \P\left[\frac{\left| S_n \right|}{n} > \epsilon\right] < \infty
+	\] since by Borel-Cantelli we would have \[
+		\P\left[\frac{\left| S_n \right|}{n} > \epsilon \text{ i.o.}\right] = 0
+	,\] which implies \[
+		\P\left[\limsup\limits_{n \to \infty} \frac{\left| S_n \right|}{n} \le \epsilon\right] = 1
+	,\] from which we can send $\epsilon$ to $0$.
+
+	\boxednote{This part of the proof provides a reason for why the easiest case is with a uniform bound on the fourth moments, rather than on the second moments.}By the previous lemma, $\sup_i \E\left[X_i^2\right] < \infty$ as well. We have by Chebyshev's inequality that \[
+		\P\left[\frac{\left| S_n \right|}{n} > \epsilon\right] \le \frac{\E\left[S_n^2\right] }{n^2\epsilon^2}
+	.\] Writing 
+	\begin{align*}
+		\E\left[S_n^2\right]
+		&= \E\left[\left( X_1+\ldots+X_n \right)\left( X_1+\ldots+X_n \right)\right] \\
+		&= \E\left[X_1^2 + X_2^2 + \ldots+ X_n^2 + \text{ terms in $X_i X_j$}\right] \\
+		&= \sum\limits_{i=1}^{n} \E\left[X_i^2\right]
+	,\end{align*}
+	where the last equality follows from independence of $X_i$ and $X_j$ for $i \ne j$.
+	Thus, \[
+		\P\left[\frac{\left| S_n \right|}{n} > \epsilon\right]
+		\le \frac{\sum\limits_{i=1}^{n} \E\left[X_i^2\right] }{n^2\epsilon^2}
+		\le \frac{\sup_i \E\left[X_i^2\right] }{\epsilon^2} \cdot  \frac{1}{n}
+	.\] Summing across $n$, we do \emph{not} get convergence. If we try to use the third power in Chebyshev's inequality, we cannot decompose $\E\left[\left| X_i \right|^3\right] $.
+
+	We compute
+	\begin{align*}
+		S_n^4
+		&= X_1^4 + X_2^4 + \ldots+X_n^4 \\
+		&\quad + \text{terms in $X_i^3X_j$, $i \ne j$} \\
+		&\quad + \underbrace{\text{terms of the form } X_i^2X_j^2}_{\binom{n}{2}\binom{4}{2} \text{ terms}}
+	.\end{align*}
+
+	By assumption, there exists $M > 0$ such that $\E\left[X_i^4\right] < M$ for every $i$. We see by Cauchy--Schwarz that\boxednote{Here, the inner product is defined \[
+		\left< X_i,X_j \right> = \E\left[X_iX_j\right] 
+	.\] Cauchy--Schwarz gives \[
+		\E\left[X_i X_j\right] \le \sqrt{\E\left[X_i^2\right]} \sqrt{\E\left[X_j^2\right] }
+	.\] } \[
+		\E\left[X_1^2 X_2^2\right] \le \sqrt{\E\left[X_1^{4}\right] } \sqrt{\E\left[X_2^4\right] } \le M
+		.\]
+	Note that the ``odd'' terms vanish from independence giving $\E\left[X_i^3X_j\right] = \E\left[X_i^3\right] \cdot 0 = 0$.
+	Computing $\binom{n}{2} = \frac{n!}{2! (n-2)!} = \frac{n(n-1)}{2}$, we have the bound
+	\begin{align*}
+		\E\left[S_n^{4}\right] &\le nM + \binom{4}{2}\binom{n}{2}M \\
+							   &\le 100000 n^2 M
+						   .\end{align*}
+	By Chebyshev's inequality,
+	\[
+		\P\left[\left| S_n \right| > n \epsilon\right] \le \frac{\E\left[S_n^4\right] }{n^4\epsilon^4} \le \frac{100000 M}{\epsilon^4 n^2}
+	.\]
+	Summing across $n$,
+	\[
+		\sum\limits_{n=1}^{\infty} \P\left[\left| S_n \right| > n \epsilon\right] \le \frac{100000 M}{\epsilon^4} \sum\limits_{n=1}^{\infty} \frac{1}{n^2} < \infty
+	.\]
+	We have our result to which we can apply Borel-Cantelli.
+
+	Now suppose the weaker condition $\sup_i \E\left[X_i^2\right] =\sigma^2< \infty$.
+	Define blocks $B_1,B_2,\ldots$ such that \[
+		B_k = \{i \in \N: n_{k-1} < i \le n_k\}
+	\] for $n_k = 2^k$ (this particular choice of $n_k$ is not important to the proof).
+
+	We want to show that \[
+		\max_{n \in B_k} \frac{\left| S_n \right|}{n} \xrightarrow{k\to \infty} 0
+	\] almost surely. We can get this via Borel-Cantelli by showing for any $\epsilon > 0$, \[
+		\sum\limits_{k=1}^{\infty} \P\left[\max_{n \in B_k} \frac{\left| S_n \right|}{n} > \epsilon\right] < \infty
+	.\] 
+	We know thanks to our foresight in Lemma (\ref{1-29-1}) that
+	\begin{align*}
+		\sum\limits_{k=1}^{\infty} \P\left[\max_{n \in B_k} \frac{\left| S_n \right|}{n} > \epsilon\right] &\le \sum\limits_{k=1}^{\infty} \P\left[\frac{1}{n_{k-1}} \max_{n \in B_k} \left| S_n \right| > \epsilon\right] \\
+				&\le \sum\limits_{k=1}^{\infty} \P\left[\max_{n \le n_k} \left| S_n \right| > n_{k-1}\epsilon\right] \\
+					&\le \sum\limits_{k=1}^{\infty} \beta_k\P\left[\left| S_{n_k} \right|> \frac{n_{k-1}\epsilon}{2}\right], \\
+					\beta_k &= \frac{1}{\min_{n \le n_k} \P\left[\left| S_{n_k}-S_n \right| \le \frac{n_{k-1}\epsilon}{2}\right] }
+	.\end{align*}
+
+	Analyzing each term of the product $\beta_k \P\left[\left| S_{n_k} \right| > \frac{n_{k-1}\epsilon}{2}\right] $ separately,
+		\begin{align*}
+			\frac{1}{\beta_k} &= \min_{n \le n_k} \P\left[\left| S_{n_k} - S_n \right| \le \frac{n_{k-1}\epsilon}{2}\right]  \\
+							  &= \min_{n \le k} \left( 1- \P\left[\left| S_{n_k} - S_n \right| > \frac{n_{k-1}\epsilon}{2}\right]  \right) \\
+						  &= 1 -\max_{n \le n_k} \P\left[\left| S_{n_k} - S_n \right| > \frac{n_{k-1}\epsilon}{2}\right] \\
+						  &\ge 1- \frac{4 \E\left[\left| S_{n_k} - S_n \right|^2\right] }{n_{k-1}^2\epsilon^2} \\
+						  &\ge 1 - \max_{n \le n_k} \frac{4 (n_k - n)\sigma^2}{n_{k-1}^2 \epsilon^2} \\
+						  &\ge 1 - \frac{4n_k \sigma^2}{n_{k-1}^2\epsilon^2} \\
+						  &\ge \frac{1}{2} \text{ for } k \ge K
+	\end{align*} and
+	\begin{align*}
+		\P\left[\left| S_{n_k}\right| > \frac{n_{k-1}\epsilon}{2}\right] &\le \frac{4 \E\left[S_{n_k}^2\right] }{n_{k-1}^2 \epsilon^2} \le \frac{4 n_k \sigma^2}{n_{k-1}^2 \epsilon^2}
+	.\end{align*}
+	Hence, 
+	\begin{align*}
+		\P\left[\max_{n \le n_k} \left| S_n \right| > n_{k-1}\epsilon\right] \le 2 \frac{4 n_k \sigma^2}{n_{k-1}^2\epsilon^2} = \frac{8 n_k \sigma^2}{n_{k-1}^2\epsilon^2}
+	\end{align*} for $k \ge K$.
+
+	Since the probabilities for $k < K$ are uniformly bounded by $1$,
+	\begin{align*}
+		\sum\limits_{k=1}^{\infty} \P\left[\max_{n \le n_{k}} \left| S_n \right| > n_{k-1}\epsilon\right] &\le K - 1 + \sum\limits_{k \ge K}^{} \frac{8 n_k \sigma^2}{n_{k-1}^2 \epsilon^2} \\
+																												   &= K - 1 + O\left( \sum_k \frac{1}{2^k} \right)< \infty
+	.\end{align*}
+\end{proof}
+
+\begin{theorem}[Kolmogorov's Law of Large Numbers]
+	Suppose $\{X_i\}$ is a sequence of independent random variables, $\E\left[X_i\right] = 0$ for each $X_i$, and $\sum_i \frac{\E\left[X_i^2\right] }{i^2} < \infty$. Then $\frac{X_1+\cdots+X_n}{n}\to 0$ almost surely.
+\end{theorem}
+
+\begin{proof}
+	Left to homework.
+\end{proof}
+
+\begin{theorem}[Strong Law of Large Numbers]
+	Suppose $\{X_i\}$ is a sequence of independent and identically distributed random variables with $\E\left[\left| X_1 \right|\right] < \infty$. Then
+	\[
+		\frac{X_1 + \cdots + X_n}{n}\to \E\left[X_1\right]
+	\]
+	almost surely.
+\end{theorem}
+
+\begin{proof}
+	By replacing $X_i$ with $X_i - \E\left[X_1\right]$, it suffices to prove the centered case, so assume $\E\left[X_i\right] = 0$.
+
+	We proceed by truncation, splitting the sum $\frac{1}{n} \sum_{i=1}^{n} X_n$ into the difference of bad and good behavior, the difference of good behavior and its expectation, and the expectation of good behavior. Define \[
+		Y_i = X_i \mathds{1}_{\left| X_i \right| \le i}
+	.\] Then
+	\begin{align*}
+		\mu_i := \E\left[Y_i\right] &= \E\left[X_i \mathds{1}_{\left| X_i \right| \le i}\right]  \\
+								   &= \E\left[X \mathds{1}_{\left| X \right| \le i}\right] \text{ by identical distribution } \\
+								   &= - \E\left[X \mathds{1}_{\left| X \right| > i}\right] \text{ by $\E\left[X_i\right] =0$}
+	.\end{align*}
+
+	Decompose \[
+		\frac{1}{n} \sum\limits_{i=1}^{n} X_i = \underbrace{\frac{1}{n} \sum\limits_{i=1}^{n} \left( X_i - Y_i \right)}_{(I)} + \underbrace{\frac{1}{n} \sum\limits_{i=1}^{n} \left( Y_i - \mu_i \right)}_{(II)} + \underbrace{\frac{1}{n}\sum\limits_{i=1}^{n} \mu_i}_{(III)}
+	.\] 
+	
+	Starting with the last term,
+	\begin{align*}
+		\left| (III) \right| = \left| \frac{1}{n} \sum\limits_{i=1}^{n} \mu_i \right| &= \left| \frac{1}{n} \sum\limits_{i=1}^{n} \E\left[X \mathds{1}_{\left| X \right| > i}\right]  \right|\\
+							 &\le \frac{1}{n} \sum\limits_{i=1}^{n} \E\left[\left| X \right| \mathds{1}_{\left| X \right| > i}\right] \\
+							 &= \E\left[\left| X \right| \frac{1}{n} \sum\limits_{i=1}^{n} \mathds{1}_{\left| X \right| > i}\right]
+	.\end{align*}
+	The indicator sum is a counting function:
+	\begin{align*}
+		\sum\limits_{i=1}^{n} \mathds{1}_{\left| X \right| > i} &\le \sum\limits_{i=1}^{\infty} \mathds{1}_{\left| X \right| > i} \\
+																&= \sum\limits_{i=1}^{\infty} \sum\limits_{j=i}^{\infty} \mathds{1}_{j < \left| X \right| \le j+1} \\
+																&= \sum\limits_{j=1}^{\infty} \sum\limits_{i=1}^{j} \mathds{1}_{j < \left| X \right|\le j+1} \\
+																&= \sum\limits_{j=1}^{\infty} j \mathds{1}_{j < \left| X \right| \le j+1}\\
+																&\le \left| X \right| \sum\limits_{j=1}^{\infty} \mathds{1}_{j < \left| X \right| \le j + 1} = \left| X \right|
+	,\end{align*}
+	Naively, we may try to  plug this bound on the count to the bound on $\left| (III) \right|$ and get \[
+		\left| (III) \right| \le \E\left[\left| X \right|\frac{1}{n}\left| X \right|\right] 
+	,\]
+	which may be infinite because we don't have control over the second moment. However, noting that $\frac{1}{n} \sum\limits_{j=1}^{n} \mathds{1}_{\left| X \right| > i} \le 1$, we get \[
+		\left| (III) \right| \le \E\left[\left| X \right| \min \{\frac{1}{n}\left| X \right|, 1\}\right] 
+	.\] Because $\left| X \right|$ dominates $\left| X \right| \min\{\frac{1}{n} \left| X \right|, 1\}$ and $\E\left[\left| X \right|\right] < \infty$, we apply the DCT to see
+	\[
+			\begin{aligned}
+				\lim\limits_{n \to \infty} \left| (III) \right|
+				&\le \lim\limits_{n \to \infty} \E\left[\left| X \right| \min \left\{\frac{1}{n} \left| X \right|, 1\right\}\right] \\
+				&= \E\left[\lim\limits_{n \to \infty} \left| X \right| \min \left\{\frac{1}{n} \left| X \right|, 1\right\}\right] \\
+				&\xrightarrow{n\to \infty} 0
+			\end{aligned}
+	.\] 
+
+	For (I), consider with Borel-Cantelli in mind that
+	\begin{align*}
+		\sum\limits_{i=1}^{\infty} \P\left[X_i \ne Y_i\right]  
+		&\le \sum\limits_{i=1}^{\infty} \P\left[\left| X \right| > i\right] \\
+		&= \E\left[\sum\limits_{i=1}^{\infty} \mathds{1}_{\left| X \right| > i}\right] \\
+		&\le \E\left[\left| X \right|\right] < \infty
+	,\end{align*} so \[
+		\P\left[X_i \ne Y_i\text{ i.o.}\right]  = 0 
+	.\] Then there exists $\Omega_0 \subseteq \Omega$ such that $\P\left[\Omega_0\right] = 1$ and for every $\omega \in \Omega_0$, there exists $i(\omega)$ such that \[
+		X_i(\omega) = Y_i(\omega)
+	\] for all $i > i(\omega)$.
+	For each $\omega \in \Omega_0$,
+		\begin{align*}
+			(I) = \frac{1}{n}\sum\limits_{i=1}^{n} \left( X_i(\omega) - Y_i(\omega) \right)
+			&= \frac{1}{n} \sum\limits_{i=1}^{i(\omega)} \left( X_i(\omega) - Y_i(\omega) \right) \to 0
+		,\end{align*}
+		where the convergence follows from the sum being fixed.
+
+	Since $\P\left[\Omega_0\right] = 1$,
+	\[
+		(I) = \frac{1}{n} \sum\limits_{i=1}^{n} \left( X_i-Y_i \right) \to 0
+	\]
+	almost surely.
+
+	Examining (II), we want to use Kolmogorov's Law of Large Numbers. Note that $Y_i^2 = \left( Y_i - \mu_i + \mu_i \right)^2 = (Y_i-\mu_i)^2 + \mu_i^2 + 2(Y_i-\mu_i)(\mu_i)$. The third term vanishes in expectation. This gives us the Kolmogorov condition: \boxednote{The second inequality holds since $\sum_{i=j}^{\infty} \frac{1}{i^2} \le C \frac{1}{j}$ for some absolute constant $C$.}
+	\begin{align*}
+		\sum\limits_{i=1}^{\infty} \frac{\E\left[(Y_i-\mu_i)^2\right] }{i^2} 
+		&= \sum\limits_{k=1}^{\infty} \frac{\E\left[Y_i^2\right] }{i^2} - \frac{\E\left[\mu_i^2\right] }{i^2} \\
+		&\le \sum\limits_{i=1}^{\infty} \frac{\E\left[Y_i^2\right] }{i^2} \\
+		&= \sum\limits_{i=1}^{\infty} \frac{1}{i^2} \E\left[X^2 \mathds{1}_{\left| X \right|\le i}\right] \\
+		&= \sum\limits_{i=1}^{\infty} \frac{1}{i^2} \E\left[X^2 \sum\limits_{j=1}^{i} \mathds{1}_{j-1 < \left| X \right| \le j}\right] \\
+		&= \sum\limits_{j=1}^{\infty} \sum\limits_{i=j}^{\infty} \frac{1}{i^2} \E\left[X^2 \mathds{1}_{j - 1 < \left| X \right|\le j}\right] \\
+		&\le C \sum\limits_{j=1}^{\infty} \frac{1}{j} \E\left[X^2 \mathds{1}_{j -1 < \left| X \right| \le j}\right] \\
+		&\le C \sum\limits_{j=1}^{\infty} \E\left[\left| X \right| \mathds{1}_{j-1 < \left| X \right| \le j}	\right] \\
+		&\le C \E\left[\left| X \right|\right] < \infty
+	,\end{align*}
+	so we can apply Kolmogorov's LLN to get \[
+		\frac{1}{n} \sum\limits_{i=1}^{n} \left( Y_i - \mu_i \right) \to 0
+	\]  almost surely.
+
+	All three terms converge to $0$ almost surely, so their sum does as well.
+\end{proof}
+
+\section{Proof Techniques}
+
+When proving almost sure convergence for averages of partial sums, it helps to decide early which obstruction is preventing a direct Borel--Cantelli argument.
+
+\begin{enumerate}
+	\item \textbf{Can I sum the tail probabilities directly?} If you can show
+	\[
+		\sum\limits_{n=1}^{\infty} \P\left[\left| S_n \right| > \epsilon a_n\right] < \infty
+	\]
+	for every $\epsilon > 0$, then Borel--Cantelli already gives $\frac{S_n}{a_n} \to 0$ almost surely.
+
+	\item \textbf{Do I only have good estimates at selected times?} If the direct sum diverges but a sparse subsequence is manageable, choose block endpoints $n_k$ and try to prove
+	\[
+		\sum\limits_{k=1}^{\infty} \P\left[\left| S_{n_k} \right| > \epsilon a_{n_k}\right] < \infty.
+	\]
+	Geometric choices such as $n_k = 2^k$ are common because they often turn borderline series into summable ones.
+
+	\item \textbf{Do I need control between block endpoints?} If estimates at the endpoints are not enough, pass to block maxima. For
+	\[
+		B_k = \{n_{k-1} < n \le n_k\},
+	\]
+	one tries to bound
+	\[
+		\P\left[\max_{n \in B_k} \frac{\left| S_n \right|}{a_n} > \epsilon\right].
+	\]
+	When $a_n = n$, blocking is especially natural because
+	\[
+		\max_{n \in B_k} \frac{\left| S_n \right|}{n}
+		\le \frac{1}{n_{k-1}} \max_{n \in B_k} \left| S_n \right|.
+	\]
+	This is the standard signal that a maximal inequality should be used.
+
+	\item \textbf{Are large jumps ruining the moment estimates?} If the original variables do not have enough finite moments, truncate:
+	\[
+		Y_i = X_i \mathds{1}_{\left| X_i \right| \le b_i}.
+	\]
+	Then split the average into three parts:
+	\[
+		\frac{1}{n} \sum\limits_{i=1}^{n} X_i
+		= \frac{1}{n} \sum\limits_{i=1}^{n} (X_i-Y_i)
+		+ \frac{1}{n} \sum\limits_{i=1}^{n} (Y_i-\E[Y_i])
+		+ \frac{1}{n} \sum\limits_{i=1}^{n} \E[Y_i].
+	\]
+	The first term handles rare large jumps, the second is the centered ``good'' part, and the third is the bias introduced by truncation.
+
+	\item \textbf{Does the centered truncated part fit Kolmogorov's LLN?} After truncation, set
+	\[
+		Z_i = Y_i - \E[Y_i].
+	\]
+	If you can verify
+	\[
+		\sum\limits_{i=1}^{\infty} \frac{\E\left[Z_i^2\right]}{i^2} < \infty,
+	\]
+	then Kolmogorov's LLN applies to $\frac{1}{n}\sum_{i=1}^{n} Z_i$. This is often the reason for choosing the truncation threshold $b_i$ to depend on $i$.
+	
+	\item \textbf{When should I expect blocking and maximal inequalities together?} If the theorem concerns all $n$, but your estimates naturally control either $S_N$ or a sparse subsequence, then the usual upgrade is:
+	\[
+		\text{endpoint estimate } \Longrightarrow \text{ block maximum } \Longrightarrow \text{ maximal inequality } \Longrightarrow \text{all } n.
+	\]
+\end{enumerate}
+
+As a quick rule of thumb: use truncation when moments are too weak, use Kolmogorov's LLN for the centered truncated variables, and use blocking plus a maximal inequality when you need to pass from control at selected times to control for every $n$.

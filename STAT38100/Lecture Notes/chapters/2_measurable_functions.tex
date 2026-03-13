@@ -1,0 +1,491 @@
+\styledchapter{Measurable Functions}
+
+\section{Preliminaries}
+
+\begin{definition}[Preimage]
+	Let $f : X \to Y$ be a function, and let $\mathscr{G}$ be a collection of subsets of $Y$ (e.g., a $\sigma$-algebra on $Y$). 
+	For any $B \in \mathscr{G}$, define the preimage of $B$ under $f$ by
+	\[
+		f^{-1}(B) := \{x \in X: f(x) \in B\}.
+	\]
+\end{definition}
+
+\begin{definition}[Measurable function]
+	We say $f: \left(X, \mathscr{F} \right) \to \left( Y , \mathscr{G} \right)$\boxednote{$f$ maps (sample space, $\sigma$-field) to (sample space, $\sigma$-field).} is measurable if $f^{-1}\mathscr{G} \subseteq \mathscr{F}$; i.e. the preimage of any measurable set in the second measurable space is measurable.
+
+	Alternatively, for any $B \in \mathscr{G}$, $f^{-1}B \in \mathscr{F}$.
+\end{definition}
+
+\begin{remark}[Rules of applying preimage]
+	Some of these are shown on homework. We have that
+	\begin{itemize}
+		\item $f^{-1}\O = \O,\ f^{-1}Y = X$
+		\item $f^{-1}\left( B^{c} \right) = \left( f^{-1}B \right)^{c}$
+		\item $A \subseteq B \implies f^{-1}A \subseteq f^{-1}B$
+		\item $f^{-1}\left( \cup_{\lambda}A_\lambda \right) = \cup_\lambda f^{-1}A_\lambda$
+		\item $f^{-1}\left( \cap_\lambda A_\lambda \right) = \cap_\lambda f^{-1} A_\lambda$
+	\end{itemize}
+\end{remark}
+
+
+\begin{definition}[Random variable]
+	$X: (\Omega, \mathscr{F}) \to \left( \R, \mathscr{B}_{\R} \right)$ is a random variable.
+\end{definition}
+
+\section{Properties of Measurable Functions}
+
+
+\begin{lemma}
+	Suppose $f: (X, \mathscr{F}) \to (Y, \sigma(\mathscr{E}))$. $f$ is measurable if $f^{-1} \mathscr{E} \subseteq \mathscr{F}$.
+\end{lemma}
+
+\begin{proof}
+	Suppose $f^{-1} \mathscr{E} \subseteq \mathscr{F}$. We know that because $\mathscr{F}$ is a $\sigma$-field, $\sigma\left( f^{-1}\mathscr{E} \right) \subseteq \mathscr{F}$. We want to show that $f^{-1} \sigma(\mathscr{E}) \subseteq \mathscr{F}$. So, it suffices to show $\sigma\left( f^{-1}\mathscr{E} \right) = f^{-1} \sigma(\mathscr{E})$.
+
+	Since $\mathscr{E} \subseteq \sigma(\mathscr{E})$, it can be shown that $f^{-1} \sigma(\mathscr{E})$ is a $\sigma$-field containing $f^{-1} \mathscr{E}$. Since $\sigma\left( f^{-1}\mathscr{E} \right)$ is the smallest such $\sigma$-field, we have that \[
+		\sigma \left( f^{-1} \mathscr{E} \right) \subseteq f^{-1} \sigma\left( \mathscr{E} \right)
+	.\] 
+
+	For the other direction, write $\mathscr{H} = \{B \subseteq Y: f^{-1}B \in \sigma\left( f^{-1}\mathscr{E} \right)\}$.
+	Since $f^{-1} \mathscr{E} \subseteq \sigma(f^{-1} \mathscr{E})$, we have $\mathscr{E} \subseteq \mathscr{H}$. We can check that $\mathscr{H}$ is actually a $\sigma$-field, so $		\sigma(\mathscr{E}) \subseteq \mathscr{H}$ and thus \[
+		f^{-1} \sigma(\mathscr{E}) \subseteq \sigma \left( f^{-1} \mathscr{E} \right)
+	.\]
+\end{proof}
+
+Since $\mathscr{B}_{\R} = \sigma\left( \{\left( a,\infty \right): a \in \R\} \right)$, a random variable $X: (\Omega, \mathscr{F}) \to \left( \R, \mathscr{B}_\R \right)$ is measurable if $\{X > a\}$ is measurable for all $a \in \R$ (equivalently, if $\{X \ge a\}$ is measurable for all $a \in \R$).
+
+\begin{proposition}
+	Applying a continuous operator to a measurable function produces a measurable function. For instance, for $f,g$ measurable, $f+g$ is measurable.
+	$\limsup$, $\liminf$ and such preserve measurability.
+\end{proposition}
+
+\begin{proof}
+	We see that $\{f+g > a\}$ is equivalent to the statement that there exists some $t$ such that $\{f > t\} \cap \{g > a-t\}$. We can take $t$ to be rational such that $t \in (a-g,f)$, so \[
+		\{f+g > a\} = \bigcup\limits_{t \in \Q}^{} \left[ \{f > t\}\cap \{g > a-t\} \right] \in \mathscr{F}
+	.\] 
+
+	Similarly, \[
+		\{\sup_k f_k \le a\} = \bigcap\limits_{k=1}^{\infty} \{f_k \le a\} \in \mathscr{F}
+	.\] 
+\end{proof}
+
+\begin{lemma}
+	Suppose $f: (X, \mathscr{F}) \to \left( Y , \mathscr{G} \right)$ and $g: \left( Y, \mathscr{G} \right) \to \left( Z, \mathscr{H} \right)$ are measurable. Then $g\circ f$ is measurable.
+\end{lemma}
+
+\begin{proof}
+	Take two preimages.
+\end{proof}
+
+\section{Integration}
+
+
+\begin{definition}[Indicator function]
+	Define the indicator function on $A$ as \[
+		\mathds{1}_{A}(\omega) = \begin{cases}
+			1, \quad \omega \in A \\
+			0, \quad \omega \not\in A
+		\end{cases}
+	.\] 
+
+	Because \[
+		\{\mathds{1}_{A} \le a\} = \begin{cases}
+			\Omega, \quad &a \ge 1 \\
+			A^{c}, \quad & 0 \le a < 1 \\
+			\O, \quad &a < 0
+		\end{cases}
+	,\] the indicator function $\mathds{1}_{A}$ is measurable iff $A$ is measurable.
+\end{definition}
+
+\begin{definition}[Simple function]
+	Suppose $\{A_1,\ldots,A_n\}$ is a finite partition of $\Omega$. A simple function $f$ is a linear combination of indicator functions on sets of the partition: \[
+		f = \sum\limits_{i=1}^{n} a_i \mathds{1}_{A_i}, \quad a_i \in \R
+	.\] 
+\end{definition}
+
+From simple functions, we can approximate measurable nonnegative functions, which we can use to get a general measurable function $f$ as the difference of two nonnegative measurable functions: $f = f^+ - f^-$, where \[
+	\forall\ x \in \R, x^+ = \max(x,0), \quad x^- = \left( -x \right)^+, \quad \left| x \right| = x^+ + x^-
+.\] 
+
+\begin{lemma}[Approximation of nonnegative measurable functions]
+	For any nonnegative measurable function $f$, there exists a sequence $(f_n)$ of nonnegative simple functions such that $f_n \uparrow f$ pointwise.
+
+	If $f$ is bounded, then this convergence is uniform, i.e. \[
+		\sup_{\omega \in \Omega} \left| f_n(\omega) - f(\omega) \right| \to 0
+	.\]
+\end{lemma}
+
+\begin{proof}
+	Define \[
+		f_n = \sum\limits_{k=0}^{n2^n - 1} \frac{k}{2^{n}} \mathds{1}_{\frac{k}{2^n} \le f < \frac{k+1}{2^{n}}} + n \mathds{1}_{f \ge n}
+	.\]
+
+	$f_n$ divides the section where $f \le n$ into $n 2^n -1$ intervals. Equivalently, we can write\boxednote{$\wedge$ acts as a $\min$ operator.} \[
+		f_n = \max \{\frac{k}{2^{n}}: \frac{k}{2^{n}} \le f, k = 0,1,2,\ldots, n 2^n - 1\} \wedge n
+	.\] 
+	We see that $f_n \le f_{n+1}$ because $\frac{2k}{2^{n+1}}, \frac{2k+1}{2^{n+1}} \ge \frac{k}{2^{n}}$ and $n+1 \ge n$.
+
+	If $f(\omega) \le n$, then $\left| f_n(\omega) - f(\omega) \right| < \frac{1}{2^n}$, so we have pointwise convergence. If $f$ is bounded, then eventually, we get a uniform bound on the approximation error.
+\end{proof}
+
+\begin{remark}[Lebesgue integral]
+	Suppose $f: \left( \Omega, \mathscr{F}, \mu \right) \to \left( \R, \mathscr{B}_\R \right)$ and that everything in these definitions is measurable when required. We will follow a similar process for constructing the Lebesgue integral.
+	\begin{enumerate}[label=(\roman*)]
+		\item (Indicator.) Define $\int_{}^{} \mathds{1}_{A}d\mu = \mu(A) $.
+		\item (Nonnegative simple function.) For $f = \sum_{i=1}^{n}a_i \mathds{1}_{A_i}$, where $a_i \ge 0$ and $A_i$ are measurable, define \[
+			\int_{}^{} fd\mu = \sum\limits_{i=1}^{n} a_i \mu\left( A_i \right) 
+		.\] 
+		\item (Nonnegative function.) For $f \ge 0$, define \[
+			\int_{}^{} f d\mu = \sup \{\int_{}^{} gd\mu: g \le f, g \text{ is a nonnegative simple function} \} 
+		.\] 
+		\item (General function.) Define \[
+			\int_{}^{} fd\mu = \int_{}^{} f^+ d\mu - \int_{}^{} f^- d\mu   
+		\] when at least one of the integrals is finite.
+	\end{enumerate}
+\end{remark}
+
+Is the integral of a simple function well-defined? Since simple functions have multiple representations (consider $f = a$ on $A_1 \cup A_2$),  we want to make sure $\int_{}^{} fd\mu = \sum a_i \mu(A_i) $ is well-defined. 
+We can write
+\begin{align*}
+	f= \sum_{i=1}^{n}a_i \mathds{1}_{A_i} &= \sum_{j=1}^{n} b_j \mathds{1}_{f=b_j}, \text{where } b_i \ne b_j,\ m \le n
+,\end{align*}
+which is a unique representation of the simple function.
+
+For each $i,j$, either $A_i \subseteq \{f=b_j\}$ or $A_i \cap \{f = b_j\} = \O$.
+Using the additivity of measure, write
+\begin{align*}
+	\int_{}^{} fd\mu &= \sum\limits_{i=1}^{n} a_i \mu(A_i) \\
+	&= \sum\limits_{i=1}^{n} a_j \sum\limits_{j=1}^{m} \mu\left( A_i \cap \{f = b_j\} \right) \\
+	&= \sum\limits_{j=1}^{m} \sum\limits_{i=1}^{n} a_i \mu\left( A_i \cap \{f = b_j\} \right) \\
+	&= \sum\limits_{j=1}^{m} \sum\limits_{i:\ A_i \subseteq \{f = b_j\}}^{} a_i \mu\left( A_i \cap \{f=b_j\} \right) \\
+	&= \sum\limits_{j=1}^{m} \sum\limits_{i: A_i \subseteq \{f = b_j\}}^{} b_j \mu\left( A_i \cap \{f= b_j\} \right) \\
+	&= \sum\limits_{j=1}^{m} \sum\limits_{i=1}^{n} b_j \mu\left( A_i \cap \{f=b_j\} \right) \\
+	&= \sum\limits_{j=1}^{m} b_j \mu\left( f = b_j \right)
+.\end{align*}
+
+Now that we know the integral of a simple function is well-defined, let's get basic properties.
+\begin{lemma}
+	Suppose $(f_n), f, g$ are nonnegative simple functions. Then
+	\begin{enumerate}[label=(\roman*)]
+		\item $\int_{}^{} fd\mu \ge 0 $
+		\item $\int_{}^{} \left( af \right)d\mu = a \int_{}^{} fd\mu  $, for $a \ge 0$ 
+		\item $\int_{}^{} (f+g)d\mu = \int_{}^{} fd\mu + \int_{}^{} gd\mu   $
+		\item $f \le g \implies \int_{}^{} fd\mu \le \int_{}^{} gd\mu  $
+		\item If $\left( f_n \right) \uparrow$ and $\lim_{n \to \infty} f_n \ge g$, then \[
+			\lim_{n \to \infty} \int_{}^{} f_n d\mu \ge \int_{}^{} g d\mu 
+		.\] \boxednote{Note that even if the limit of $(f_n)$ takes on a value of $\infty$, we are never actually evaluating the integral of the limit, so there is no cause for concern.}
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	\begin{enumerate}[label=(\roman*)] \setcounter{enumi}{2}
+		\item For $f = \sum a_i \mathds{1}_{A_i}$ and $g = \sum b_j \mathds{1}_{B_j}$, we can write \[
+			f+g = \sum\limits_{i=1}^{n} \sum\limits_{j=1}^{m} (a_i + b_j) \mathds{1}_{A_i \cap B_j}
+		,\] so 
+		\begin{align*}
+			\int_{}^{} \left( f+g \right)d\mu &= \sum\limits_{i=1}^{n} \sum\limits_{j=1}^{m} (a_i + b_j) \mu\left( A_i \cap B_j \right) \\
+			&= \sum\limits_{i=1}^{n} a_i \sum\limits_{j=1}^{m} \mu\left( A_i \cap B_j \right) + \sum\limits_{j=1}^{m} b_j \sum\limits_{i=1}^{n} \mu\left( A_i \cap B_j \right) \\
+			&= \sum\limits_{i=1}^{n} a_i \mu\left( A_i \right) + \sum\limits_{j=1}^{m} b_j \mu(B_j) \\
+			&= \int_{}^{} f d\mu + \int_{}^{} gd\mu  
+		.\end{align*}
+		\item Write \[
+			\int_{}^{} gd\mu = \int_{}^{} \left( \left( g-f \right) + f \right)d\mu  
+		,\] where $g-f$ is a nonnegative simple function because $g \ge f$. We can then use property (iii) and property (i).
+		\item Introduce for each $\alpha \in (0,1)$ the set \[
+			A_n (\alpha) = \{f_n \ge \alpha g\}
+		.\] Then $A_n(\alpha) \uparrow \Omega$\boxednote{If $\alpha = 1$, some example like $f_n = 1 - \frac{1}{n} \uparrow 1 = g$, shows that $A_n(\alpha) \uparrow \Omega$ would not hold.}.
+
+		Write $g = \sum_{j=1}^{m}b_j \mathds{1}_{B_j}$. Then by property (iv), we get the first and second inequalities in
+		\begin{align*}
+			\int_{}^{} f_n d\mu &\ge \int_{}^{} f_n \mathds{1}_{A_n(\alpha)}d\mu \\
+								&\ge \int_{}^{}  (\alpha g \mathds{1}_{A_n(\alpha)}) d\mu \\
+								&= \alpha \int_{}^{} g \mathds{1}_{A_n(\alpha)}d\mu \\
+								&= \sum\limits_{j=1}^{m} b_j \mathds{1}_{B_j \cap A_n(\alpha)} d\mu\\
+								&= \sum\limits_{j=1}^{m} b_j \mu\left( B_j \cap A_n(\alpha) \right) \\
+			\implies \lim_{n \to \infty} \int_{}^{} f_n d\mu &\ge \lim_{n \to \infty} \alpha \sum\limits_{j=1}^{m} b_j \mu\left( B_j \cap A_n(\alpha) \right) \\
+															 &= \alpha \sum\limits_{j=1}^{m} b_j \lim\limits_{n \to \infty} \mu\left( B_j \cap A_n(\alpha) \right) \\
+															 &= \alpha \sum\limits_{j=1}^{m} b_j \mu\left( B_j \right) = \alpha \int_{}^{} g d\mu 
+		,\end{align*}
+		where the second-to-last equality follows from continuity of measure from below. Sending $\alpha \to 1^-$, we are done. The introduction of $\alpha$ allows us to reduce the switching of a limit and integral to the switching of a limit and a finite sum.
+	\end{enumerate}
+\end{proof}
+
+Is the integral of a nonnegative function well-defined? 
+Recall that for nonnegative $f$, we define \[
+	\int_{}^{} fd\mu = \sup \{\int gd\mu: g\le f, g \text{ nonnegative simple} \} 
+.\] 
+If $f$ itself is nonnegative and simple, does this definition coincide with our previous one?
+
+Writing $f = \sum_{i=1}^{n} a_i \mathds{1}_{A_i}$ for a partition $\{A_i\}$, define \[
+	T(f) = \sum_{i=1}^{n}a_i \mu(A_i), \quad S(f) = \sup \{T(g): g \le f, g \text{ nonnegative simple }\}
+.\] Is $T(f) = S(f)$?
+
+For any $g \le f$ where $g$ is nonnegative and simple, we see $T(g) \le T(f)$ by monotonicity of the integral of a nonnegative simple function.
+Taking a $\sup$ on both sides over all nonnegative simple minorants $g$ of $f$, we get $S(f) \le T(f)$. Furthermore, since $f \le f$, $S(f) \ge T(f)$ and the integral of a nonnegative function extends the integral of nonnegative simple functions.
+
+\begin{lemma} \label{2-2-1}
+	Assume $f,g$ are nonnegative measurable functions. Suppose we have a sequence $(f_n)$ of nonnegative simple functions that increases to $f$. 
+	\begin{enumerate}[label=(\roman*)]
+		\item Then\boxednote{This shows linearity of the integral of nonnegative functions, which is not immediate from the definition.} \[
+			\int_{}^{} fd\mu = \lim\limits_{n \to \infty} \int_{}^{} f_n d\mu  
+		\] 
+		\item We can write \[
+			\int_{}^{} fd\mu = \lim\limits_{n \to \infty} \sum\limits_{k=1}^{n2^n - 1}  \frac{k}{2^n} \mu\left( \frac{k}{2^n} \le f < \frac{k+1}{2^n} \right) + n \mu\left( f \ge n \right) 
+		.\] 
+		\item For all $a \ge 0$, \[
+			\int_{}^{} (af)d\mu = a \int_{}^{} fd\mu  
+		.\] 
+		\item \[
+			\int_{}^{} (f+g)d\mu= \int_{}^{} fd\mu + \int_{}^{} g d\mu   
+		.\] 
+		\item The integral of nonnegative functions is monotone: \[
+			f\le g \implies \int_{}^{} fd\mu \le \int_{}^{} gd\mu  
+		.\] 
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	\begin{enumerate}[label=(\roman*)]
+		\item 	By definition of the integral of $f$ (not monotonicity), \[
+		\int_{}^{}fd\mu \ge \int_{}^{} f_n d\mu  
+	.\] Taking a limit on both sides, we get \[
+		\int_{}^{}  fd\mu \ge \lim\limits_{n \to \infty} \int_{}^{}  f_n d\mu
+	.\] By property (v) of the integral of nonnegative simple functions, for $g \le f$ where $g$ is nonnegative and simple, we have \[
+		\lim\limits_{n \to \infty} \int_{}^{} f_n d\mu \ge \int_{}^{} g d\mu  
+	.\] Taking a sup over all nonnegative simple minorants $g$ of $f$, we show \[
+		\lim\limits_{n \to \infty} \int_{}^{}  f_n d\mu \ge \int_{}^{} fd\mu 
+	.\] 
+
+		\item Trivial.
+		\item There exists a sequence of simple $f_n \uparrow f$, so $af_n \uparrow af$. Then by repeatedly applying property (ii) of nonnegative simple functions, 
+			\begin{align*}
+				\int_{}^{} (af) d\mu &= \lim\limits_{n \to \infty} \int_{}^{} \left( af_n \right)d\mu  \\
+				&= a \lim\limits_{n \to \infty} \int_{}^{} f_n d\mu  \\
+				&= a \int_{}^{} fd\mu 
+			.\end{align*}
+		\item There exist simple $f_n \uparrow f$ and $g_n \uparrow g$, so $f_n + g_n \uparrow f + g$. Then by property (iii) of nonnegative simple functions, \begin{align*}
+			\int_{}^{} (f+g) d\mu &= \lim\limits_{n \to \infty} \int_{}^{} f_n + g_n d\mu  \\
+			&= \lim\limits_{n \to \infty} \int_{}^{} f_n d\mu + \lim\limits_{n \to \infty} \int_{}^{} g_n d\mu   \\
+			&= \int_{} fd\mu + \int_{}^{} gd\mu  
+		.\end{align*}
+		\item Trivial, since any simple function below $f$ is also below $g$.
+	\end{enumerate}
+\end{proof}
+
+How do we extend the definition to an integral of a general measurable function? Decompose $f = f^+ - f^-$. If $\min\{\int_{}^{} f^+ d\mu, \int_{}^{} f^- d\mu  \} < \infty$, then we say the integral of $f$ exists and define $\int_{}^{} fd\mu = \int_{} f^+ d\mu - \int_{}^{} f^- d\mu   $
+Both integrals are finite iff $\int_{}^{} \left| f \right|d\mu < \infty$, since $\left| f \right| = f^+ + f^-$. In this case (the integral of $f$ is finite), we call $f$ integrable.
+
+From now on, we only consider $f$ that are integrable.\boxednote{The integral of $x^3$ does not exist and $x^3$ is not integrable on the real line.}
+
+\begin{definition}[Definite integral]
+	For any measurable $A$, define \[
+		\int_{A}^{} fd\mu = \int_{}^{} \left( f \mathds{1}_{A} \right)d\mu  
+	.\] 
+\end{definition}
+
+\begin{definition}[Expectation of a random variable]
+	For a random variable $X: \left( \Omega, \mathscr{F}, \P \right) \to \left( \R, \mathscr{B}_\R \right)$, we define the expectation of $X$ as \[
+		\E\left[X\right] := \int_{}^{} X d\P 
+	.\] We say the expectation exists if $\E\left[\left| X \right|\right] < \infty$ ($X$ is integrable).\footnote{Note that the expectation exists if $X$ is integrable. The integral of $X$ existing is not sufficient; it must be finite as well.}
+\end{definition}
+
+\begin{lemma}
+	Suppose $f,g$ are integrable. 
+	\begin{enumerate}[label=(\roman*)]
+		\item If $A \in \mathscr{F}$ such that $\mu(A) = 0$, \[
+			\int_{A}^{} fd\mu = 0 
+		.\] 
+		\item If $f \le g$ almost everywhere ($\mu(f > g) = 0$), then \[
+			\int_{}^{}  fd\mu \le \int_{}^{} g d\mu 
+		.\] 
+		\item If $f= g$ almost everywhere, then \[
+			\int_{}^{} fd\mu = \int_{}^{} gd\mu  
+		.\] 
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	\begin{enumerate}[label=(\roman*)]
+		\item First, consider $f = \sum_i a_i \mathds{1}_{A_i}$ to be a nonnegative simple function. Then \[
+				\int_{A} fd\mu = \int_{}^{} \left( \sum_i a_i \mathds{1}_{A_i \cap A} \right)d\mu = \sum_i a_i \mu\left( A_i \cap A \right) = 0  
+		,\] since $\mu(A_i \cap A) \le \mu(A) = 0$.
+
+		Now consider $f$ nonnegative. Then there exists nonnegative simple function sequence $f_n \uparrow f$, so $f_n \mathds{1}_{A} \uparrow f \mathds{1}_{A}$. Then \[
+			\int_{A}^{} fd\mu = \lim\limits_{n \to \infty} \int_{A}^{} f_n d\mu = 0  
+		.\] 
+
+		For a general $f$, put $f = f^+ - f^-$, so \[
+			f \mathds{1}_{A} = f^+ \mathds{1}_{A} - f^- \mathds{1}_{A}
+		.\] Taking an integral on both sides with linearity of the integral on nonnegative functions, we see the right hand side is $0$.
+			\item Suppose $f \le g$ almost everywhere. Let
+			\[
+				A = \{x: f \le g\}, \quad A^{c} = \{x: f > g\}
+			.\]
+			Then $\mu\left( A^{c} \right) = 0$.
+			Suppose for now that $f,g \ge 0$.
+
+			We can write
+				\begin{align*}
+					\int_{}^{} f d\mu
+					&= \int_{A}^{} fd\mu + \int_{A^{c}}^{} fd\mu \\
+					&= \int_{}^{} f \mathds{1}_{A}d\mu + \int f \mathds{1}_{A^{c}}d\mu \\
+					&\le \int_{A}^{} gd\mu + \int_{A^{c}} gd\mu \\
+					&= \int_{}^{} gd\mu
+				.\end{align*}
+				where the inequality follows from monotonicity of integrals of nonnegative functions.
+
+				For general $f,g$, write $f = f^+ - f^-$ and $g = g^+ - g^-$.
+				If $f \le g$, then $f^+ \le g^+$ and $-f \ge -g$, so \[
+					\left( -f \right)^{+} \ge \left( -g \right)^{+}
+			.\] then $f^- \ge g^-$.
+
+			Using monotonicity for the integral of nonnegative functions, \[
+				\int_{}^{} f^+ d\mu \le \int_{}^{} g^+ d\mu ,\quad \int_{}^{} f^- d\mu \ge \int_{}^{} g^- d\mu    
+			.\] we conclude by subtracting the second inequality from the first.
+		\item Follows from symmetry with (ii).
+	\end{enumerate}
+\end{proof}
+
+\begin{lemma}[Linearity of integral]
+	Suppose $f,g$ are integrable. Then
+	\begin{enumerate}[label=(\roman*)]
+		\item $\int_{}^{} (af) d\mu = a \int_{}^{} fd\mu  $, for all $a \in \R$.
+		\item $\int_{}^{} (f+g)d\mu = \int_{}^{} fd\mu + \int_{}^{} gd\mu   $
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	\begin{enumerate}[label=(\roman*)]
+		\item 	If $a \ge 0$, we see that \[
+		(af)^+ = \max\{0,af\} = a \max\{0,f\} = af^+
+	.\] Similarly, $(af)^- = af^-$. This gives us the second equality in the following:
+	\begin{align*}
+		\int_{}^{} (af)d\mu &= \int_{}^{} (af)^+ d\mu - \int_{}^{} (af)^- d\mu   \\ 
+		&= a \left( \int_{}^{} f^+ d\mu - \int_{}^{} f^- d\mu   \right) \\
+		&= a \int_{}^{} fd\mu 
+	.\end{align*}
+
+	If $a < 0$, then $(af)^+ = \left( (-a)(-f) \right)^{+} = -a (-f)^+ = -a f^-$. Similarly, $(af)^- = -af^+$. We show linearity in the same way.
+
+		\item Note the three decompositions we have: 
+				\begin{itemize}
+					\item $f= f^+ - f^-$
+					\item $g = g^+ - g^-$
+					\item $(f+g) = \left( f+g \right)^{+} - \left( f+g \right)^-$.
+				\end{itemize}
+				We also know that 
+				\begin{align*}
+					(f+g)^+ - (f+g)^- &= f^+ - f^- + g^+ - g^- \\
+					\text{Rearrange: } \left( f+g \right)^{+} + f^- + g^- &= (f+g)^- + f^+ + g^+
+				.\end{align*}
+				We have a nonnegative function on either side; integrate, apply linearity of integral of nonnegative functions, and rearrange again to get \[
+					\int_{}^{} (f+g)^+ d\mu- \int_{}^{} (f+g)^- d\mu= \int_{}^{} f^+ d\mu - \int_{}^{} f^- d\mu + \int_{}^{} g^+ d\mu - \int_{}^{} g^- d\mu      
+				.\] Use linearity of integrals of nonnegative functions again to conclude!
+	\end{enumerate}
+\end{proof}
+
+\section{Convergence Theorems}
+
+
+\begin{theorem}[Levi's monotone convergence]
+	Suppose $(f_n), f \ge 0$ and $f_n \uparrow f$ almost everywhere. Then \[
+		\lim\limits_{n \to \infty} \int_{}^{} f_n d\mu = \int_{}^{} fd\mu  
+	.\] 
+\end{theorem}
+\begin{proof}
+	\boxednote{For the proof, consider $f_n \uparrow f$ everywhere. At the end, we can add in the measure zero set.}We have shown the theorem but with $f_n$ as simple functions. We want to approximate each $f_n$ by a sequence of nonnegative simple functions.
+
+	For each $f_n$, there exist nonnegative simple functions $(f_{n,k})_k$ such that $f_{n,k} \uparrow f_n$ as $k\to \infty$.
+
+	Define $g_k(x) := \max_{1 \le n \le k} f_{n,k}(x)$. We see that each $g_k$ is a nonnegative simple function. Furthermore, because $f_{n,k} \le f_{n,k+1}$, $\left( g_k \right)$ is increasing\boxednote{$f_{n,k+1}$ is not considered in $g_k$, so the addition of $f_{n+1,k+1}$ poses no problem.}.
+	
+	We see that $g_k \le f_k$, so $\lim\limits_{k \to \infty} g_k \le \lim\limits_{k \to \infty} f_k = f$.
+
+	Fix $i \in \N$. For every $k \ge i$, since
+	\[
+		g_k(x) := \max_{1 \le n \le k} f_{n,k}(x),
+	\]
+	we have $g_k(x) \ge f_{i,k}(x)$ for all $x$. Taking $k \to \infty$ and using $f_{i,k} \uparrow f_i$ gives
+	\[
+		\lim_{k \to \infty} g_k(x) \ge \lim_{k \to \infty} f_{i,k}(x) = f_i(x), \quad \forall x.
+	\]
+	Hence $\lim_{k\to\infty} g_k \ge f_i$ pointwise for every $i$. Therefore, pointwise,
+	\[
+		\lim_{k \to \infty} g_k \ge \sup_{i \in \N} f_i = f,
+	\] and we have equality in $\lim\limits_{k \to \infty} g_k = f$.
+
+	Since $(g_k)$ is increasing, by the monotone convergence theorem for simple functions in Lemma (\ref{2-2-1}), \[
+		\lim\limits_{k \to \infty} \int g_k d\mu = \int_{}^{} fd\mu 
+	.\] 
+
+	By monotonicity of the integral of nonnegative functions, $\int_{}^{} f_n d\mu \le \int_{}^{} f d\mu  $. We can take a limit to see $\lim_{n \to \infty} \int_{}^{} f_n d\mu \le \int_{}^{} fd\mu  $. Because $g_n \le f_n$, we see \[
+		\lim\limits_{n \to \infty} \int_{}^{} g_n d\mu \le \lim\limits_{n \to \infty} \int_{}^{} f_n d\mu \le \int_{}^{} fd\mu   
+	.\] The outer terms are equal, so \[
+		\lim\limits_{n \to \infty} \int_{}^{} f_n d\mu = \int_{}^{} fd\mu  
+	.\] 
+\end{proof}
+
+\begin{theorem}[Fatou's lemma]
+	We can take $\liminf$ outside integrals of nonnegative functions, up to an inequality: \[
+		\int_{}^{} \left( \liminf\limits_{n \to \infty} f_n \right)d\mu \le \liminf\limits_{n \to \infty} \int_{}^{} f_n d\mu  
+	.\] 
+\end{theorem}
+\begin{proof}
+	Write 
+	\begin{align*}
+		\liminf\limits_{n \to \infty} f_n &= \lim\limits_{k \to \infty} \left( \inf\limits_{n \ge k}f_n \right) \\
+										  &= \lim\limits_{k \to \infty} g_k
+	.\end{align*}
+	Note that $g_k$ is a monotone increasing sequence of nonnegative functions, so Levi's monotone convergence theorem applies and we get \[
+		\lim\limits_{k \to \infty} \int \inf_{n \ge k} f_n d\mu  = \lim\limits_{k \to \infty} \int g_k d\mu= \int \lim\limits_{k \to \infty} g_k d\mu = \int \liminf\limits_{n \to \infty} f_n d\mu
+	.\] 
+	Since $\inf_{j \ge k} f_j \le f_n$ for all $n \ge k$, we get \[
+		\int \inf_{n \ge k} f_n d\mu \le \inf_{n \ge k} \int f_n d\mu, \forall\  n\ge k
+	.\] Taking a limit, \[
+		\lim\limits_{k \to \infty} \int \inf_{n \ge k} f_n d\mu \le \liminf\limits_{n \to \infty} \int f_n d\mu
+	.\] Making the substitution with the result from Levi's MCT, we have \[
+		\int_{}^{} \liminf\limits_{n \to \infty} f_n d\mu \le \liminf\limits_{n \to \infty} \int f_n d\mu 
+	.\] 
+\end{proof}
+
+The following theorem is the most general of the convergence theorems.
+
+\begin{theorem}[Lebesgue's Dominated Convergence Theorem]
+	Suppose $f_n \to f$ and there exists an integrable function $g$ such that $\left| f_n \right| \le g$ for all $n \in \N$.
+	Then \[
+		\lim\limits_{n \to \infty} \int f_n d\mu = \int f d\mu
+	.\] 
+\end{theorem}
+Finding the \emph{control function} $g$ is often possible, but difficult.
+
+\begin{proof}
+	By hypothesis, $-g \le f_n \le g$ for every $n \in \N$.
+
+	Since $f_n + g \ge 0$, by Fatou's lemma, \begin{align*}
+		\int \liminf\limits_{n \to \infty} f_n + g d\mu &\le \liminf\limits_{n \to \infty} \int (f_n + g)d\mu \\
+		\int \liminf\limits_{n \to \infty} f_n d\mu + \int gd\mu &\le \liminf\limits_{n \to \infty} \int f_n d\mu + \int gd\mu \text{ by linearity} \\
+		\int \liminf\limits_{n \to \infty} f_n d\mu &\le \liminf\limits_{n \to \infty} \int f_n d\mu \text{ since } \int gd\mu < \infty
+	.\end{align*}
+
+	We symmetrically derive the other desired inequality, using the fact that $g - f_n \ge 0$:
+	\begin{align*}
+		\int \liminf\limits_{n \to \infty} g - f_n d\mu &\le \liminf\limits_{n \to \infty} \int g - f_n d\mu \\
+		\int gd\mu + \int \liminf\limits_{n \to \infty} -f_n &\le \int gd\mu + \liminf\limits_{n \to \infty} \int -f_n d\mu \\
+		\int \limsup\limits_{n \to \infty} f_n &\ge \int_{}^{} \limsup\limits_{n \to \infty} \int f_n d\mu 
+	.\end{align*}
+	
+	Chaining together these two inequalities, \[
+		\limsup\limits_{n \to \infty} \int f_n d\mu \le \int \limsup\limits_{n \to \infty} f_n d\mu = \int  fd\mu = \int \liminf\limits_{n \to \infty} f_n d\mu \le \liminf\limits_{n \to \infty} \int f_n d\mu
+	.\] 
+	Since $\liminf\limits_{n \to \infty} \int f_n d\mu \le \limsup\limits_{n \to \infty} \int f_n d\mu$, we see that equality holds and thus the limit exists: \[
+		\lim\limits_{n \to \infty} \int f_n d\mu = \int fd\mu
+	.\] 
+\end{proof}
+\begin{corollary}[Bounded Convergence Theorem]
+	Suppose $f_n \to f$, $\left| f_n \right| \le M < \infty$ almost everywhere, and $\mu(\Omega) < \infty$. Then \[
+		\lim\limits_{n \to \infty} \int f_n d\mu = \int f d\mu
+	.\] 
+\end{corollary}
+\begin{proof}
+	Take $g = M$, which is integrable by finiteness of $\mu(\Omega)$.
+\end{proof}

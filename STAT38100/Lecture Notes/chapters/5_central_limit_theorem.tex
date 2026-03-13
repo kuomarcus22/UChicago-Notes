@@ -1,0 +1,1185 @@
+\styledchapter{Central Limit Theorem}
+\section{Weak Convergence}
+
+We will eventually prove the following.
+\begin{theorem}[Central Limit Theorem]
+	Let $\{X_i\}$ be iid with $\E\left[X_i\right] = 0$ and $\operatorname{Var}\left(X_i\right) = 1$. Then \[
+		\sqrt{n} \frac{X_1+\cdots+X_n}{n} \xrightarrow{d} N(0,1)
+	.\] 
+\end{theorem}
+
+But what does $\xrightarrow{d}$ mean? It means $\leadsto$.
+
+Consider a metric space $(\mathscr{X},d)$ and a random variable
+\[
+	X: (\Omega, \mathscr{F}, \P) \to (\mathscr{X}, \mathscr{B}(\mathscr{X})).
+\]
+For every $B \in \mathscr{B}(\mathscr{X})$, define \[
+	P(B) = \P\left[X^{-1}(B)\right] = \P\left[X \in B\right]
+.\] 
+
+We showed on the midterm that $P$ is a probability measure on $\left( \mathscr{X},\mathscr{B}(\mathscr{X}) \right)$. For $f: (\mathscr{X},\mathscr{B}(\mathscr{X})) \to \left( \R, \mathscr{B}_\R \right)$, we equivalently write all of the following
+\begin{align*}
+	Pf = \int f dP = \int_{\mathscr{X}} f(x)dP(x) = \int_\Omega f(X(\omega)) d\P(\omega) =  \int f(X) d\P = \P f = \E\left[f(X)\right] 
+.\end{align*}
+We say $X \sim P$, where $P$ is the distribution of $X$.
+
+\begin{definition}[Bounded Lipschitz function]
+	Define the class of bounded Lipschitz functions on $\mathscr{X}$ as \[
+		\BL(\mathscr{X}) = \left\{f: \mathscr{X} \to \R : \sup_x \left| f(x) \right| < \infty, \sup_{x \ne y} \frac{\left| f(x) - f(y) \right|}{d(x,y)} < \infty\right\}
+	.\] 
+\end{definition}
+
+\begin{definition}[Weak convergence]
+	Suppose $P_n, P$ are probability measures on $\left( \mathscr{X}, \mathscr{B}\left( \mathscr{X} \right) \right)$. We say $P_n \to P$ weakly if $P_n l \to P l$ for all $l \in \BL(\mathscr{X})$.\boxednote{Equivalently, $\E\left[l(X_n)\right] \to \E\left[l(X)\right]$ for all $X_n \sim P_n$ and $X \sim P$.}
+\end{definition}
+
+Note that $X_1,X_2,\ldots$ can all live on different probability spaces, but they all must map to the same measure space. Each $X_n$ then induces its own probability measure on the common measure space. Essentially,
+\begin{align*}
+	X_1&: (\Omega_1,\mathscr{F}_1, \P_1) \xrightarrow{X_1} \left( \mathscr{X}, \mathscr{B}\left( \mathscr{X} \right) \right), \quad X_1 \sim P_1 = \P \circ X_1^{-1} \\
+	X_2&: \left( \Omega_2, \mathscr{F}_2, \P_2 \right) \xrightarrow{X_2} \left( \mathscr{X}, \mathscr{B}\left( \mathscr{X} \right) \right), \quad X_2 \sim P_2 = \P \circ X_2^{-1}\\
+	   & \qquad\qquad\qquad\qquad\vdots
+\end{align*}
+
+\begin{definition}[Lower semi-continuity, upper semi-continuity]
+	We say that $g: \mathscr{X}\to \R$ is lower semi-continuous if \[
+		\left\{x \in \mathscr{X}: g(x) > t\right\}  = \left\{g> t\right\}
+	\] is open in the topology of $\mathscr{X}$ for every $t \in \R$.
+
+	$f: \mathscr{X} \to \R$ is upper semi-continuous if $-f$ is lower semi-continuous (equivalently, $\left\{f<t\right\}$ is open for every $t \in \R$).
+\end{definition}
+
+\begin{example}
+	$g=\mathds{1}_{(1,2)}$ is lower semi-continuous, but $h=\mathds{1}_{[1,2]}$ is not. All continuous $g$ are lower semi-continuous. 
+	Any indicator function of an open set is LSC.
+\end{example}
+
+\begin{lemma}
+	Suppose $g$ is lower semi-continuous and $g \ge -M$. Then there exist $l_n \in \BL(\mathscr{X})$ such that $l_n \uparrow g$.
+\end{lemma}
+
+\begin{proof}
+	WLOG, assume $g \ge 0$. Define $h_t = t \mathds{1}_{g > t}$. Then for each $x \in \mathscr{X}$, $\sup_t h_t(x) = g(x)$, as \[
+		\sup_t h_t(x) = \sup_t t \mathds{1}_{g(x) > t} = g(x)
+	.\] These step functions are not Lipschitz.
+
+	Define $l_{k,t}(x) = t\wedge \left(k \cdot d\left( x, \left\{g \le t\right\} \right)\right)$ with the metric between a point $x$ and set $B$ defined as \[
+		d(x,B) = \inf_{y \in B} d(x,y)
+	\] 
+	using the metric $d$ on $\mathscr{X}$.
+	We see that $l_{k,t} \in \BL(\mathscr{X})$ and 
+	\begin{align*}
+		\sup_k l_{k,t}(x) &= t \mathds{1}_{d\left( x, \left\{g \le t\right\} \right) > 0} \\
+						 &= t \mathds{1}_{x \not\in \left\{g\le t\right\}} \\
+						 &= t \mathds{1}_{ g(x) > t} = h_t(x)
+	.\end{align*}
+
+	Combining our two results, \[
+		\sup_{k,t} l_{k,t} = g
+	.\] We have approximated $g$ with the supremum of bounded Lipschitz functions, but not rigorously.
+
+	Because $\Q_+$ is countable and dense in $[0,\infty)$, the countable family $\left\{l_{k,t}: k \in \N,\ t \in \Q_+\right\}$ still has supremum $g$. Enumerate it as $f_1,f_2,\ldots$, and replace $f_n$ by $\max_{1 \le i \le n} f_i$; finite maxima preserve the bounded Lipschitz property, so we obtain $l_n \uparrow g$.
+\end{proof}
+
+\begin{lemma} \label{2-5-1}
+	Suppose $P_n \to P$. Then 
+	\begin{enumerate}[label=(\roman*)]
+		\item For any lower semi-continuous $g$ that is bounded below, \[
+			\liminf\limits_{n \to \infty} P_n g \ge Pg
+		.\] 
+		\item For any upper semi-continuous $f$ that is bounded above, \[
+			\limsup\limits_{n \to \infty} P_n f \le Pf
+		.\] 
+	\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+	Note that it suffices to prove (i), since (ii) follows from the definition of upper semi-continuity. We know by our approximation lemma that there exists $\left\{ l_i\right\} \subseteq \BL(\mathscr{X})$ such that $l_i \uparrow g$. For every $i \in \N$,
+	\begin{align*}
+		\liminf\limits_{n \to \infty} P_n g
+		&\ge \liminf\limits_{n \to \infty} P_n l_i \\
+		&= P l_i 
+	\end{align*}
+	by definition of weak convergence of $P_n \to P$.
+	Sending $i \to \infty$, we get by the monotone convergence theorem that $P l_i \to P g$. 
+\end{proof}
+
+\begin{example}
+	While the directions of the inequalities seem counterintuitive when we look at where the inf and sup are, the direction is determined by the LSC/USC property of $f$ and $g$. 
+
+	We can see a simple example of the inequalities holding strictly. Let $X_n : \frac{1}{n}$ and $X := 0$ almost surely, and let $P_n,P$ denote their distributions. Then $P_n \to P$ weakly since for every bounded continuous $l$,
+	\[
+		\E\left[l(X_n)\right] = l\left( \frac{1}{n} \right) \to l(0) = \E\left[l(X)\right].
+	\]
+	Now take
+	\[
+		g = \mathds{1}_{(0,\infty)},
+		\qquad
+		f = \mathds{1}_{\{0\}}.
+	\]
+	Then $g$ is lower semi-continuous and bounded below, while $f$ is upper semi-continuous and bounded above. We see
+	\[
+		P_n g = \P\left(X_n > 0\right) = 1,
+		\qquad
+		P g = \P\left(X > 0\right) = 0,
+	\]
+	so $\limsup_{n\to\infty} P_n g \le P g$ is false; and
+	\[
+		P_n f = \P\left(X_n = 0\right) = 0,
+		\qquad
+		P f = \P\left(X = 0\right) = 1,
+	\]
+	so $\liminf_{n\to\infty} P_n f \ge P f$ is false.
+\end{example}
+
+\begin{corollary}
+	If $P_n \to P$, then 
+	\begin{enumerate}[label=(\roman*)]
+		\item For any open $B$, $\liminf\limits_{n \to \infty} P_n(B) \ge P\left( B \right)$
+		\item For any closed $G$, $\limsup\limits_{n \to \infty} P_n(G) \le P(G)$.
+	\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+	For (i), consider $f := \mathds{1}_{B}$, which is LSC from $B$ being open.
+	Then \[
+		\liminf\limits_{n \to \infty} P_n(B) = \liminf\limits_{n \to \infty} P_n f \ge P f = P(B)
+	.\] For (ii), we can consider the lemma with $g := \mathds{1}_{G}$, which is USC from $G$ being closed.
+\end{proof}
+
+\begin{notation}[Lower semi-continuous minorant]
+	We write \[
+		\mathring{f} := \sup \left\{g \le f: g \text{ is LSC}\right\} = \sup_{g \in \mathscr{G}} g
+	\] and \[
+		\overline{f} = \inf \left\{g \ge f: g \text{ is USC}\right\}
+	.\] 
+\end{notation}
+
+Note that $\mathring{f}$ itself is LSC since \[
+	\left\{\mathring{f} > t\right\} = \left\{\sup_{g \in \mathscr{G}} g > t\right\} = \bigcup\limits_{g \in \mathscr{G}}^{} \left\{g > t\right\}
+\] is open. Hence $\mathring{f}$ is LSC.\boxednote{Since the interior of a set is the largest open subset, $\mathring{f}$ is the function analogue: the largest lower semi-continuous function not exceeding $f$.}
+
+Similarly, $\overline{f}$ is USC. On the homework, we show that $\mathring{\mathds{1}}_B = \mathds{1}_{\mathring{B}}$ and also have $\overline{\mathds{1}}_B = \mathds{1}_{\overline{B}}$. This justifies the notation.
+
+\begin{theorem} \label{2-10-1}
+	Suppose $\left| f \right| \le M$. Then \[
+		\mathring{f}(x) = \overline{f}(x) \iff f \text{ is continuous at }x
+	.\] 
+\end{theorem}
+\begin{proof}
+	Recall $f$ is continuous at $x$ if for every $\epsilon > 0$, there exists open $U \ni x$ such that for every $y \in U$, $\left| f(x) - f(y) \right| < \epsilon$.
+
+	($\implies$) From $\mathring{f}(x) = f(x)$, $U = \left\{y : \mathring{f}(y) > f(x) -\epsilon\right\}$ is open. Then $\mathring{f}(x) = f(x) > f(x) - \epsilon$, so $x \in U$.
+	For every $y \in U$, $f(y) \ge \mathring{f}(y) > f(x) -\epsilon$.
+
+	From $\overline{f}(x) = f(x)$, put
+	\[
+		V = \left\{y : \overline{f}(y) < f(x) + \epsilon\right\}.
+	\]
+	This set is open and contains $x$.
+	For every $y \in V$, $f(y) \le \overline{f}(y) < f(x) + \epsilon$.
+
+	Define $W = U \cap V$, which is the intersection of open sets that contain $x$, so $W \ni x$ is open. For every $y \in W$, $\left| f(x) - f(y) \right| < \epsilon$, so $f$ is continuous at $x$.
+
+	($\impliedby$) 
+	We want to find for any $\epsilon \in (0,1)$ a LSC $g \le f$ and USC $h \ge f$ such that $h(x) - g(x) \le 2\epsilon$, since then we can let $\epsilon \downarrow 0$ and conclude.
+	We can expand the inequality given to us by continuity to see \[
+		f(x) - \epsilon \le f(y) \le f(x) + \epsilon
+	\] for all $y \in U$, where $U \ni x$ is open.
+	We can upgrade this inequality to all of $\mathscr{X}$ from $U$ by fixing some $U$ then seeing \[
+		g := \left( f(x) -\epsilon \right)\mathds{1}_{U} -(M+1)\mathds{1}_{U^{c}} \le f(y) \le \left( f(x) + \epsilon \right) \mathds{1}_{U} + \left( M+1 \right)\mathds{1}_{U^{c}} =: h
+	.\] Since $M \ge \left| f \right|$ and $1 \ge \epsilon$, the upper bound is upper semi-continuous and the lower bound is lower semi-continuous. Also,
+	\[
+		g(x) = f(x) - \epsilon,
+		\qquad
+		h(x) = f(x) + \epsilon.
+	\]
+	Hence
+	\[
+		f(x) - \epsilon = g(x) \le \mathring{f}(x) \le \overline{f}(x) \le h(x) = f(x) + \epsilon.
+	\]
+	Sending $\epsilon \to 0$ gives \[
+		\mathring{f}(x) = \overline{f}(x)
+	.\] 
+\end{proof}
+
+Note that the $\implies$ direction does not require boundedness of $f$.
+
+\begin{remark}
+	From this, we can write the points of $\mathscr{X}$ where $f$ is continuous as
+	\begin{align*}
+		C_f &= \left\{x: \mathring{f}(x) = \overline{f}(x)\right\} \\
+			&= \left\{\mathring{f} = \overline{f}\right\}
+	.\end{align*}
+
+	Because $\mathring{f}$ and $\overline{f}$ are measurable (their definitions characterize the preimage of open sets), $\mathring{f} - \overline{f}$ is measurable. Hence, the preimage of $\left\{0\right\}$ under $\mathring{f} - \overline{f}$ is measurable; i.e., $C_f \in \mathscr{B}(\mathscr{X})$.
+
+	We also see that \[
+		P(C_f) = 1 \iff P\overline{f} = P\mathring{f} \iff P\left( \mathring{f} - \overline{f} \right) = 0
+	.\] 
+\end{remark}
+
+\begin{theorem}
+	Suppose $P_n \to P$ weakly. Then 
+	\begin{enumerate}[label=(\roman*)]
+		\item $P_n f \to Pf$ for every $f$ such that $\left| f  \right| \le M$ and $P(C_f) = 1$
+		\item In particular, applying (i) to indicator functions yields that $P_n B \to P B$ for every $B \in \mathscr{B}(\mathscr{X})$ such that $P\left( \partial B \right) = 0$.
+	\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+	Recall from Lemma (\ref{2-5-1}) that \begin{align*}
+		P\overline{f} &\ge \limsup\limits_{n \to \infty} P_n f \\
+					  &\ge \liminf\limits_{n \to \infty} P_n f \\
+					  &\ge P \mathring{f}
+	.\end{align*}
+	Now applying Theorem (\ref{2-10-1}) yields $P\overline{f} = P \mathring{f}$, so all of the inequalities hold with equality. In particular, \[
+		\limsup\limits_{n \to \infty} P_n f = \liminf\limits_{n \to \infty} P_n f = \lim\limits_{n \to \infty} P_n f = P \overline{f} = P \mathring{f} = Pf
+	.\]
+
+	With $B \in \mathscr{B}(\mathscr{X})$ and $f := \mathds{1}_{B}$, we see that $f$ is discontinuous at $\partial B$. If $P(\partial B) = 0$, then $P (C_f) = 1$, so \[
+		P_n(B) = P_n \mathds{1}_{B} \to P \mathds{1}_{B} = P(B)
+	.\] 
+\end{proof}
+
+\begin{theorem}[Portmanteau] \label{3-7-1}
+	The following are equivalent:
+	\begin{enumerate}[label=(\roman*)]
+		\item $P_n l \to Pl$ for every $l \in \BL(\mathscr{X})$
+		\item $\liminf\limits_{n \to \infty} P_n g \ge Pg$ for every lower semi-continuous $g \ge -M$
+		\item $\limsup\limits_{n \to \infty} P_n f \le Pf$ for every upper semi-continuous $f \le M$
+		\item $\liminf\limits_{n \to \infty} P_n B \ge PB$ for every open $B$
+		\item $\limsup\limits_{n \to \infty} P_n G \le PG$ for every closed $G$
+		\item $P_n f \to Pf$ for every $\left| f \right| \le M$ such that $P(C_f) = 1$
+		\item $P_n B \to PB$ for every $B \in \mathscr{B}(\mathscr{X})$ such that $P\left( \partial B \right) = 0$.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	The implications proved above already showed that (i) implies (ii) and (iii), (iv) and (v), and (vi) and (vii), so we only need to show (vii) $\implies$ (i).
+	
+	Proving the desired result for every bounded continuous $f$ is more than enough, since Lipschitz continuous functions are a subclass of bounded continuous functions.
+
+	By splitting into positive and negative parts, we may assume $0 \le f \le 1$. Note that
+	\begin{align*}
+		f(x) &= \int_{0}^{1} \mathds{1}_{f(x) > t}\,dt \\
+		Pf = \int_{\mathscr{X}} f(x)\,dP(x) &= \int_{\mathscr{X}} \int_{0}^{1} \mathds{1}_{f(x) > t}dtdP(x) \\
+		&= \int_{0}^{1} \int_{\mathscr{X}} \mathds{1}_{f(x) > t}dP(x)dt \\
+		&= \int_{0}^{1} P(f > t) dt
+	\end{align*} by Fubini.
+
+	Similarly,
+	\[
+		P_n f = \int_{0}^{1} P_n(f > t)dt
+	.\]
+
+	We can relate functions to sets by noting \begin{align*}
+		\partial \left\{f > t\right\} &= \overline{\left\{f > t\right\}} \setminus \mathring{\left\{f > t\right\}} \\
+									  &= \overline{\left\{f > t\right\}} \setminus \left\{f > t\right\} \\
+									  &\subseteq \left\{f \ge t\right\} \setminus \left\{f > t\right\} \\
+									  &= \left\{f = t\right\}
+									  .\end{align*} 
+	Hence, if $P\left( f= t \right) = 0$, then $P \left( \partial \left\{f > t\right\} \right) = 0$, so by (vii), we have \[
+		P_n (f > t) \to P(f > t)
+	.\] 
+	
+	Now define $T = \left\{t : P(f= t) > 0\right\}$. We claim that $T$ is countable. To see why, write
+	\begin{align*}
+		T &= \left\{t: P(f=t) > 0\right\} \\
+		&= \bigcup\limits_{n}^{} \left\{t : P(f= t) \ge  \frac{1}{n}\right\}
+	.\end{align*}
+	Since the cardinality of $\left\{t: P(f=t) \ge \frac{1}{n}\right\}$ is at most $n$, $T$ is countable. Thus, the integrals of $P(f>t)$ and $P_n(f>t)$ over $T$ are zero.
+
+	This lets us write
+	\begin{align*}
+		Pf &= \int_{0}^{1} P (f> t ) dt = \int_{T^{c}}^{} P(f > t) dt   \\
+		P_n f &= \int_{0}^{1} P_n (f >t) dt = \int_{T^{c}}^{} P_n(f > t) dt  
+	.\end{align*}
+	For every $t \in T^{c}$, we have convergence of the integrands, and they are all bounded by $1$. By the DCT, \[
+		P_n f \to Pf
+	.\] 
+\end{proof}
+
+\begin{definition}[Products]
+	For $\left( \Omega_1,\mathscr{F}_1, \mu_1 \right)$ and $\left( \Omega_2, \mathscr{F}_2, \mu_2 \right)$ where $\mu_1,\mu_2$ are finite measures, define 
+	\begin{align*}
+		\Omega_1 \times \Omega_2 &= \left\{\left( \omega_1, \omega_2 \right): \omega_1 \in \Omega_1, \omega_2 \in \Omega_2 \right\} \\
+		\mathscr{F}_1 \times \mathscr{F}_2 &= \sigma\left( \{\underbrace{A_1 \times A_2}_{\text{rectangle}}\} : A_1 \in \mathscr{F}_1, A_2 \in \mathscr{F}_2 \right) \\
+	.\end{align*}
+\end{definition}
+
+\boxednote{Note that the product measure is first defined on the field of rectangles, then extended to the generated $\sigma$-field.}
+\begin{theorem}[Fubini]
+	Suppose $\mu_1,\mu_2$ are finite.	\begin{enumerate}[label=(\roman*)]
+		\item There exists a unique $\mu$ on $\left( \Omega_1 \times \Omega_2, \mathscr{F}_1 \times \mathscr{F}_2 \right)$ such that for every $A_1 \in \mathscr{F}_1$ and $A_2 \in \mathscr{F}_2$,
+			\[
+				\mu\left( A_1 \times A_2 \right) = \mu_1(A_1) \mu_2(A_2)
+			.\] 
+		\item Suppose $f: \left( \Omega_1 \times \Omega_2, \mathscr{F}_1 \times \mathscr{F}_2 \right)\to \left( \R,\mathscr{B}_\R \right)$ is measurable and $\int \left| f \right| d\mu < \infty$. Then 
+			\begin{align*}
+				\int_{\Omega_1 \times \Omega_2} f d\mu &= \int_{\Omega_2} \int_{\Omega_1} f(\omega_1,\omega_2) d\mu_1(\omega_1) d\mu_2(\omega_2) \\
+							&= \int_{\Omega_2}\int_{\Omega_1} f(\omega_1,\omega_2) d\mu_2(\omega_2) d\mu_1(\omega_1)
+			.\end{align*}
+	\end{enumerate}
+\end{theorem}
+
+The Portmanteau theorem (\ref{3-7-1}) above gave us several equivalent characteriztions of weak convergence of measures defined on an arbitrary measurable space $\left( \mathscr{X}, \mathscr{B}_{\mathscr{X}} \right)$. We have the following equivalent characterizations when the measurable space is $\left( \R, \mathscr{B}_\R \right)$, the second of which is the usual notion of convergence in distribution.
+
+\begin{theorem}[Weak Convergence on $\R$]
+	The following are equivalent:
+	\begin{enumerate}[label=(\roman*)]
+		\item $P_n l \to Pl$ for every $l \in \BL(\R)$
+		\item $P_n(-\infty,t] \to P(-\infty,t]$ for every $t$ such that $P(\left\{t\right\}) = 0$
+		\item $P_n f \to Pf$ for every $f \in C^{\infty}(\R)$, where \[
+				C^{\infty}(\R) = \left\{f: \R \to \R : \left\|f\right\|_{\infty} < \infty, \left\|f^{(k)}\right\|_\infty < \infty,\ \forall\ k\right\}
+		.\] 
+	\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+	Homework is to show equivalence of (i) and (ii). (i) $\implies $ (iii) because $C^{\infty}(\R) \subseteq \BL(\R)$, while (iii) $\implies$ (i) requires more work.
+
+	Fix $l \in \BL(\R)$. We know $l$ is continuous, but do not know it is infinitely differentiable, nor do we have control over the derivatives, if they exist. Define \[
+		l_\sigma(x) = \E\left[l(x+\sigma Z)\right], \quad Z \sim N(0,1)
+	.\] We can check that $l_\sigma \in C^\infty\left( \R \right)$ with induction. 
+
+	We have that\boxednote{$l_\sigma$ is the Gaussian smoothing of $l$, i.e. convolution with the $N(0,\sigma^2)$ density.}
+	\begin{align*}
+		\left| l_\sigma(x) - l(x) \right|
+		&= \left| \E\left[l(x+\sigma Z)\right] - l(x) \right| \\
+		&\le \E\left[\left| l(x+\sigma Z) - l(x)\right|\right] \\ 
+		&\le K \E\left[\sigma \left| Z \right|\right] \\
+		&= \sigma K \E\left[\left| Z \right|\right]
+	.\end{align*}
+	For every $\epsilon > 0$, there exists $\sigma > 0$ such that \[
+		\sup_x \left| l_\sigma(x) - l(x) \right|\le \epsilon
+	,\] which yields the uniform bounds \[
+		P_n\left( l-l_\sigma \right) \le \epsilon, \quad P\left( l-l_\sigma \right) \le \epsilon
+	.\] By the triangle inequality, \[
+		\left| P_n l - Pl \right| \le \left| P_n l_\sigma - P l_\sigma \right| + 2\epsilon \to 0 + 2\epsilon
+	,\] so \[
+		\limsup\limits_{n \to \infty} \left| P_n l - Pl \right| \le 2\epsilon
+	.\] We send $\epsilon \to 0$ to conclude.
+\end{proof}
+
+\section{Proving the Central Limit Theorem}
+
+We will use Lindeberg swapping, then see a secondary proof using Stein's method.
+
+Because linear combinations of Gaussian random variables are Gaussian, we know that if $Z_i \sim N(0,1)$, \[
+	\frac{Z_1 + \cdots + Z_n}{\sqrt{n} } \sim N(0,1)
+,\] as the first and second moments match. Lindeberg swapping will try to get us from $\frac{X_1 + \cdots + X_n}{\sqrt{n} }$ to $\frac{Z_1 + \cdots + Z_n}{\sqrt{n} }$.
+
+First, we provide intuition for the specific statement of the CLT.
+
+\begin{aside}
+	Consider $X_1,\ldots,X_n \overset{\text{iid}}{\sim} \operatorname{Bernoulli}(p)$. Then the CLT tells us \[
+		\frac{\sum\limits_{i=1}^{n} \left( X_i - p \right)}{\sqrt{n p \left( 1-p \right)} } \leadsto N(0,1)
+	.\] But what if $p$ depends on $n$, for example $p_n \to 0$? Then the previous iid statement no longer applies verbatim. If instead $np_n \to \lambda$, then $\sum\limits_{i=1}^{n} X_i \leadsto \operatorname{Poisson}(\lambda)$.
+	What really happens is that we have 
+	\begin{alignat*}{3}
+		n=1: &\ X_{11} &&\sim \operatorname{Bernoulli}(p_1) \\
+		n=2: &\ X_{21}, X_{22} &&\overset{\text{iid}}{\sim} \operatorname{Bernoulli}(p_2) \\
+		\vdots\ \  \ \  & &&\\
+		n\ \ :&\ X_{n_1},\ldots,X_{nn} &&\overset{\text{iid}}{\sim} \operatorname{Bernoulli}(p_n)
+	.\end{alignat*}
+	We see that we need to consider this triangular array in our statement of the CLT. We want to say \[
+		\frac{\sum\limits_{i=1}^{n} \left( X_{ni} - p_n \right)}{\sqrt{np_n (1-p_n)} } \sim P_n, \quad P_n \leadsto N(0,1)
+	.\] 
+\end{aside}
+\begin{definition}[Triangular array]
+	An array is triangular if it is of the form
+	\begin{align*}
+		&\xi_{1,1}, \xi_{1,2},\ldots,\xi_{1,k(1)} \\
+		&\xi_{2,1}, \xi_{2,2},\ldots,\xi_{2,k(2)}\\
+		&\vdots \\
+		&\xi_{n, 1},\xi_{n, 2}, \ldots, \xi_{n, k(n)}
+	\end{align*}
+	with $k(n) \to \infty$ as $n\to \infty$. We have independence within each row and do not care about dependence across rows.
+\end{definition}
+\begin{theorem}[Central Limit] \label{3-7-2}
+	Suppose we have a triangular array of random variables $\xi_{n,i}$ such that\boxednote{Note that the summations are defined on each row, so the limit takes us \emph{down} the array.}
+	\begin{enumerate}[label=(\roman*)]
+		\item $\sum\limits_{i=1}^{k(n)} \E\left[\xi_{n,i}\right] \to \mu$,
+		\item $\sum\limits_{i=1}^{k(n)} \operatorname{Var}\left(\xi_{n,i}\right) \to \sigma^2$, and
+		\item $\sum\limits_{i=1}^{k(n)} \E\left[\left| \xi_{n,i} \right|^3\right] \to 0$.
+	\end{enumerate}
+	Then \[
+		\sum\limits_{i=1}^{k(n)} \xi_{n,i} \leadsto N\left( \mu,\sigma^2 \right)
+	.\] 
+\end{theorem}
+
+\begin{lemma} \label{2-12-1}
+	Let $\xi_1,\ldots,\xi_k$ and $\eta_1,\ldots,\eta_k$ be independent random variables such that each $\eta_i$ is Gaussian and, for every $i$,
+	\[
+		\E\left[\xi_i\right] = \E\left[\eta_i\right],
+		\qquad
+		\E\left[\xi_i^2\right] = \E\left[\eta_i^2\right],
+		\qquad
+		\E\left[\left| \xi_i \right|^3\right] < \infty.
+	\]
+	Then for every $f \in C^3(\R)$ with $\left\|f'''\right\|_\infty < \infty$,
+	\[
+		\left| \E\left[f\left( \sum\limits_{i=1}^{k} \xi_i \right)\right] - \E\left[f\left( \sum\limits_{i=1}^{k} \eta_i \right)\right] \right|
+		\le C \left\|f'''\right\|_\infty \sum\limits_{i=1}^{k} \E\left[\left| \xi_i \right|^3\right],
+	\]
+	where $C > 0$ is a universal constant.
+\end{lemma}
+\begin{proof}
+	Defining
+	\begin{align*}
+		X_i &= \eta_1 + \eta_2 + \cdots + \eta_{i-1} + \xi_{i+1} + \cdots + \xi_{k}, \\
+		Y_i &= \xi_i, \\
+		Z_i &= \eta_i,
+	\end{align*}
+	the $i$th swap replaces $X_i + Y_i$ with $X_i + Z_i$. By the triangle inequality, it suffices to control one swap and then sum over $i$.
+
+	Let $M = \frac{1}{6}\left\|f'''\right\|_\infty$. Taylor's theorem gives
+	\begin{align*}
+		f(X_i+Y_i) &= f(X_i) + f'(X_i)Y_i + \frac{1}{2} f''(X_i)Y_i^2 + R(X_i,Y_i), \\
+		R(X_i,Y_i) &= \frac{1}{6} f'''(x^*) Y_i^3, \quad x^* \text{ between } X_i \text{ and } X_i+Y_i,
+	\end{align*}
+	so $\left| R(X_i,Y_i) \right| \le M \left| Y_i \right|^3$. The same bound holds with $Z_i$ in place of $Y_i$.
+
+	By independence of $X_i$ from both $Y_i$ and $Z_i$,
+	\begin{align*}
+		\E\left[f(X_i+Y_i)\right]
+		&= \E\left[f(X_i)\right] + \E\left[f'(X_i)\right] \E\left[Y_i\right] \\
+		&\quad + \frac{1}{2}\E\left[f''(X_i)\right] \E\left[Y_i^2\right] + \E\left[R(X_i,Y_i)\right], \\
+		\E\left[f(X_i+Z_i)\right]
+		&= \E\left[f(X_i)\right] + \E\left[f'(X_i)\right] \E\left[Z_i\right] \\
+		&\quad + \frac{1}{2}\E\left[f''(X_i)\right] \E\left[Z_i^2\right] + \E\left[R(X_i,Z_i)\right].
+	\end{align*}
+	Since $\E\left[Y_i\right] = \E\left[Z_i\right]$ and $\E\left[Y_i^2\right] = \E\left[Z_i^2\right]$, the first three Taylor terms cancel, and therefore
+	\begin{align*}
+		\left| \E\left[f(X_i + Y_i)\right] - \E\left[f(X_i + Z_i)\right] \right|
+		&\le \left| \E\left[R(X_i,Y_i)\right] \right| + \left| \E\left[R(X_i,Z_i)\right] \right| \\
+		&\le M \E\left[\left| Y_i \right|^3\right] + M \E\left[\left| Z_i \right|^3\right].
+	\end{align*}
+
+	Write $Z_i \sim N(\mu,\sigma^2) = \mu + \sigma X$ for $X \sim N(0,1)$. We have the bound
+	\begin{align*}
+		\E\left[\left| Z_i \right|^3\right] &= \E\left[\left| \mu + \sigma X \right|^3\right] \\
+											&\le 4\left( \left| \mu \right|^3 + \sigma^3 \left| X \right|^3 \right) \\
+											&\le C_1 \left( \left|\mu\right|^3 + \sigma^3 \right) \\
+		&\le C_2\left( \E\left[\left| Y_i \right|\right] ^3 + \E\left[Y_i^2\right]^{\frac{3}{2}} \right) \\
+		&\le C_3 \E\left[\left| Y_i \right|^3\right],
+	\end{align*}
+	where the second to last step moves the absolute value inside the expectation and the last step follows from Jensen's inequality with convex $f(x) = x^{\frac{3}{2}}$. Hence
+	\[
+		\left| \E\left[f(X_i + Y_i)\right] - \E\left[f(X_i + Z_i)\right] \right|
+		\le C \left\|f'''\right\|_\infty \E\left[\left| \xi_i \right|^3\right].
+	\]
+	Summing over $i=1,\ldots,k$ yields
+	\[
+		\left| \E\left[f\left( \sum\limits_{i=1}^{k} \xi_i \right)\right] - \E\left[f\left( \sum\limits_{i=1}^{k} \eta_i \right)\right] \right|
+		\le C \left\|f'''\right\|_\infty \sum\limits_{i=1}^{k} \E\left[\left| \xi_i \right|^3\right].
+	\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem (\ref{3-7-2})]
+	Define
+	\begin{align*}
+		\mu_n &= \sum\limits_{i=1}^{k(n)}  \E\left[\xi_{n,i}\right]  \\
+		\sigma_n^2 &= \sum\limits_{i=1}^{k(n)} \operatorname{Var}\left(\xi_{n,i}\right)
+	.\end{align*}
+		For every $f \in C^\infty(\R)$ with $\left\|f'''\right\|_\infty < \infty$, 
+		\begin{align*}
+			\left| \E\left[f\left( \sum\limits_{i=1}^{k(n)} \xi_{n,i} \right)\right] - \E\left[f\left( N(\mu,\sigma^2) \right)\right]  \right|
+			&\le \text{(I)} + \text{(II)},
+		\end{align*}
+		where
+		\begin{align*}
+			\text{(I)}
+			&= \left|  \E\left[f\left( \sum\limits_{i=1}^{k(n)} \xi_{n,i} \right)\right] - \E\left[f\left( N\left( \mu_n, \sigma_n^2 \right) \right)\right]  \right|, \\
+			\text{(II)}
+			&= \left| \E\left[f\left( N\left( \mu_n, \sigma_n^2 \right) \right)\right] - \E\left[f\left( N\left( \mu, \sigma^2 \right) \right)\right]  \right|.
+		\end{align*}
+	By moment-matching, there exist independent $y_{n,1},\ldots,y_{n,k(n)}$ that are Gaussian and match the first two moments of $\xi_{n,1},\ldots,\xi_{n,k(n)}$, so\footnote{Because the sum of normal random variables has mean equal to the sum of the means and variance equal to the sum of the variances. We also use that the sum of independent normal random variables is again normal.} \[
+		\sum\limits_{i=1}^{k(n)} y_{n,i} \sim N\left( \mu_n, \sigma_n^2 \right)
+	.\] By assumption (iii) and Lemma (\ref{2-12-1}), we have \[
+	\text{(I)} \le C \left\|f'''\right\|_\infty \sum\limits_{i=1}^{k(n)} \E\left[\left| \xi_{n,i} \right|^3\right] \to 0
+	.\] 
+	
+	We can write
+	\begin{align*}
+		\text{(II)}
+		&= \left| \E\left[f\left( \mu_n + \sigma_n Z \right)\right]  - \E\left[f\left( \mu+\sigma Z \right)\right]  \right|, \quad Z \sim N(0,1), \\
+		&\le L \E\left[\left| \mu_n - \mu \right| + \left| \sigma_n - \sigma \right| \left| Z \right|\right] \\
+		&= L \left| \mu_n - \mu \right| + C_1 \E\left[\left| Z \right|\right] \left| \sigma_n - \sigma \right| \\
+		&\to 0		
+	,\end{align*}
+	where the convergence follows from assumptions (i) and (ii).
+\end{proof}
+
+\begin{example}
+	Returning to our example that motivated the triangular matrix consideration, suppose \[
+		X_{n,1},\ldots,X_{n,n} \overset{\text{iid}}{\sim} \operatorname{Bernoulli}(p_n)
+	.\] We want to show that \[
+		\frac{\sum\limits_{i=1}^{n} \left( X_{n,i} - p_n \right)}{\sqrt{n p_n (1-p_n)} } \leadsto N(0,1)
+	.\] 
+	Define \[
+		\xi_{n,i} = \frac{X_{n,i} - p_n}{\sqrt{n p_n (1-p_n)}}
+	.\] We see that the first two conditions are satisfied and the third when $np_n (1-p_n) \to \infty$:
+	\begin{enumerate}[label=(\roman*)]
+			\item $\sum\limits_{i=1}^{n} \E\left[\xi_{n,i}\right] = n \cdot 0 = 0 $
+			\item $\sum\limits_{i=1}^{n} \operatorname{Var}\left(\xi_{n,i}\right) = 1$
+			\item We see \[
+				\begin{aligned}
+					\sum\limits_{i=1}^{n} \E\left[\left| \frac{\left| X_{n,i} - p_n \right|}{\sqrt{n p_n (1-p_n)} } \right|^3\right]
+					&= n \frac{p_n(1-p_n)^3 + (1-p_n) p_n^3}{(np_n(1-p_n))^{1.5}} \\
+					&= n \frac{p_n(1-p_n)}{n^{1.5}} \frac{(1-p_n)^2 + p_n^2}{\left( p_n(1-p_n) \right)^{1.5}} \\
+					&\asymp \frac{1}{\sqrt{np_n(1-p_n)} }
+				\end{aligned}
+			,\] 
+			which goes to $0$ if $np_n (1-p_n) \to \infty$
+	\end{enumerate}
+\end{example}
+
+\begin{corollary}
+	Suppose $X_i \overset{\text{iid}}{\sim} \P$ where $\P$ does not depend on $n$, $\E\left[X_i\right]  = 0$, and $\operatorname{Var}\left(X_i\right) = 1$. Then \[
+		\frac{X_1+\cdots+X_n}{\sqrt{n}} \leadsto N(0,1)
+	.\] 
+
+	In particular, we do not require a finite third moment.
+\end{corollary}
+
+\begin{proof}
+	We proceed by truncation.
+	Put $\xi_{n,i} = \frac{X_i}{\sqrt{n} } \mathds{1}_{\left| X_i \right| \le \sqrt{n} }$. Then \begin{align*}
+		\left| \sum\limits_{i=1}^{n} \E\left[\xi_{n,i}\right]  \right| 
+		&= \left| \sqrt{n} \E\left[X \mathds{1}_{\left| X \right| \le \sqrt{n} }\right]  \right| \\
+		&= \left| \sqrt{n} \E\left[X \mathds{1}_{\left| X \right| > \sqrt{n}}\right]  \right| \\
+		&\le \E\left[X^2 \mathds{1}_{\left| X \right| > \sqrt{n} }\right]  \\
+		&\to 0
+	,\end{align*}
+	where in the convergence we use a dominating function of $X^2$.
+
+	To check the second condition, consider 
+	\begin{align*}
+		\sum\limits_{i=1}^{n} \operatorname{Var}\left(\xi_{n,i}\right)
+		&= n \operatorname{Var}\left(\frac{X}{\sqrt{n} } \mathds{1}_{\left| X \right| \le \sqrt{n} }\right) \\
+		&= \operatorname{Var}\left(X \mathds{1}_{\left| X \right| \le \sqrt{n} }\right) \\
+		&= \E\left[X^2 \mathds{1}_{\left| X \right| \le \sqrt{n} }\right]  - \left( \E\left[X \mathds{1}_{\left| X \right| \le \sqrt{n}}\right]  \right)^2
+	.\end{align*}
+	We analyze these terms separately.
+	We see from our previous work that
+	\begin{align*}
+		\E\left[X^2 \mathds{1}_{\left| X \right| \le \sqrt{n} }\right] &= \E\left[X^2\right]  - \E\left[X^2 \mathds{1}_{\left| X \right| > \sqrt{n}}\right] \\
+																	   &\to 1 + 0 = 1
+	,\end{align*}
+	while 
+	\begin{align*}
+		\left| \E\left[X \mathds{1}_{\left| X \right|\le \sqrt{n} }\right]  \right|
+		&= \E\left[X \mathds{1}_{\left| X \right| > \sqrt{n} }\right]  \\
+		&\le \E\left[\left| X \right| \mathds{1}_{\left| X \right| > \sqrt{n} }\right] \to 0
+	\end{align*} by the DCT with a dominating function of $\left| X \right|$.
+	Hence, the second condition is satisfied.
+
+	For the third condition, we examine
+	\begin{align*}
+		\sum\limits_{i=1}^{n} \E\left[\left| \xi_{n,i} \right|^3\right] 
+		&= n \E\left[\left( \frac{\left| X \right|}{\sqrt{n} } \right)^3 \mathds{1}_{\left| X \right| \le \sqrt{n} }\right]  \\
+		&= \E\left[\frac{\left| X \right|^3}{\sqrt{n} } \mathds{1}_{\left| X \right| \le \sqrt{n} }\right] \\
+		&= \E\left[X^2 \frac{\left| X \right|}{\sqrt{n} } \mathds{1}_{\left| X \right| \le \sqrt{n} } \right]  \\
+		&\le \E\left[X^2 \min \left\{\frac{\left| X \right|}{\sqrt{n} }, 1\right\}\right]  \to 0
+	\end{align*}
+	by $X^2$ being a dominating function.
+	
+	Therefore, we can invoke the CLT to get $\sum\limits_{i=1}^{n} \xi_{n,i} \leadsto N\left( 0,1 \right)$.
+
+	For any $f\in C^\infty(\R)$, we want to show that \[
+		\left| \E\left[f\left( \sum\limits_{i=1}^{n} \xi_{n,i} \right)\right] - \E\left[f\left( \sum\limits_{i=1}^{n} \frac{X_i}{\sqrt{n} } \right)\right]  \right| \to 0
+	,\] as we can use the triangle inequality with our CLT result.
+
+	Put
+	\[
+		S_n = \sum\limits_{i=1}^{n} \xi_{n,i},
+		\qquad
+		T_n = \sum\limits_{i=1}^{n} \frac{X_i}{\sqrt{n}}.
+	\]
+	Then
+	\begin{align*}
+		\left| \E\left[f\left( S_n \right)\right] - \E\left[f\left( T_n \right)\right] \right|
+		&= \left| \E\left[\left(f\left( S_n \right) - f\left( T_n \right)\right)\mathds{1}_{S_n \ne T_n} \right] \right| \\
+		&\le 2\left\|f\right\|_{\infty} \P\left[S_n \ne T_n\right] \\
+		&\le 2 \left\|f\right\|_\infty \sum\limits_{i=1}^{n} \P\left[\xi_{n,i} \ne \frac{X_i}{\sqrt{n} }\right] \\
+		&\le 2 \left\|f\right\|_\infty \sum\limits_{i=1}^{n} \P\left[\left| X_i  \right| > \sqrt{n} \right] \\
+		&= 2 \left\|f\right\|_{\infty} \E\left[n \mathds{1}_{\left| X \right| > \sqrt{n} }\right] \\
+		&\le 2 \left\|f\right\|_{\infty} \E\left[X^2 \mathds{1}_{\left| X \right| > \sqrt{n} }\right] \to 0
+	.\end{align*}
+		where the convergence follows from $X^2$ being a dominating function and the indicator giving us pointwise convergence to $0$.
+		Consequently, \[
+			\begin{aligned}
+				\left| \E\left[f\left( T_n \right)\right] - \E\left[f\left( N(0,1) \right)\right]  \right|
+				&\le \left| \E\left[f\left( T_n \right)\right] - \E\left[f\left(S_n\right)\right] \right| \\
+				&\quad + \left| \E\left[f\left(S_n\right)\right] - \E\left[f\left( N(0,1) \right)\right] \right| \to 0
+			\end{aligned}
+		.\] 
+	\end{proof}
+
+\begin{theorem}[Lindeberg Central Limit Theorem] \label{2-17-0}
+	Suppose we have a triangular array $\left\{X_{n,i}\right\}$ such that\boxednote{Note that the first two conditions are exact equalities, while in the general CLT, we only require convergence. This is what we give up for the weakening of the third condition.}
+	\begin{enumerate}[label=(\roman*)]
+		\item $\E\left[X_{n,i}\right] =0$
+		\item $\sum\limits_{i=1}^{k(n)} \operatorname{Var}\left(X_{n,i}\right) = 1$
+		\item (Lindeberg condition) For every $\epsilon > 0$, \[
+			L_n(\epsilon) := \sum\limits_{i=1}^{k(n)} \E\left[X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right| > \epsilon}\right] \xrightarrow{n \to \infty} 0
+		.\] 
+	\end{enumerate}
+	Then \[
+		\sum\limits_{i=1}^{k(n)} X_{n,i} \leadsto N(0,1)
+	.\] 
+\end{theorem}
+
+We require a lemma.
+\begin{lemma} \label{2-17-1}
+	Suppose for every $\epsilon > 0$, \[
+		H_n(\epsilon) = \frac{L_n(\epsilon)}{\epsilon^2} \to 0
+	.\] Then there exists a sequence $\left( \epsilon_n \right) \to 0$ such that $H_n(\epsilon_n) \to 0$.
+\end{lemma}
+\begin{proof}
+	For any $k \in \N$, there exists $n_k$ such that if $n \ge n_k$, \[
+		H_n(\frac{1}{k}) \le \frac{1}{k}
+	.\] From this, we can pick an increasing subsequence $\left( n_k \right)$.
+
+	Putting $\epsilon_n = \frac{1}{k}$ for $n_k \le n < n_{k+1}$, we get that \[
+		H_n(\epsilon_n) \le \frac{1}{k} \to 0
+	.\] \boxednote{We cannot simply put $\epsilon_n = \frac{1}{n}$: the hypothesis says $H_n(\epsilon) \to 0$ for each \emph{fixed} $\epsilon > 0$, so we cannot substitute a sequence that changes with $n$ directly.}
+\end{proof}
+
+\begin{proof}[Proof of Theorem (\ref{2-17-0})]
+	Define $H_n(\epsilon) = \frac{L_n(\epsilon)}{\epsilon^2}$. For any fixed $\epsilon > 0$, we see $H_n(\epsilon) \to 0$. By Lemma (\ref{2-17-1}), there exists a sequence $\epsilon_n \to 0$ such that $H_n(\epsilon_n) \to 0$.
+
+	Define \[
+		\xi_{n,i} = X_{n,i} \mathds{1}_{ \left| X_{n,i}  \right|\le \epsilon_n}
+	.\] 
+	Our process is similar to the proof of the previous CLT corollary.
+
+	We check the first condition:
+	\begin{align*}
+		\left| \sum\limits_{i=1}^{k(n)} \E\left[\xi_{n,i}\right]   \right| 
+		&= \left| \sum\limits_{i}^{} \E\left[X_{n,i} \mathds{1}_{\left| X_{n,i} \right| > \epsilon_n}\right]  \right| \\
+		&\le \frac{1}{\epsilon_n} \left|\sum\limits_{i}^{} \E\left[X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right| > \epsilon_n}\right]  \right| \\
+		&= \epsilon_n H_n(\epsilon_n) \to 0
+	,\end{align*}
+	since both $\epsilon_n$ and $H_n \to 0$.
+
+	For the variance condition, note
+	\begin{align*}
+		\sum\limits_{i=1}^{k(n)} \operatorname{Var}\left(\xi_{n,i}\right)
+		&= \sum\limits_{i}^{} \E\left[\xi_{n,i}^2\right] - \sum\limits_{i}^{} \left( \E\left[\xi_{n,i}\right] \right)^2 \\
+		\sum\limits_{i}^{} \E\left[\xi_{n,i}^2\right] 
+		&= \sum\limits_{i}^{} \E\left[X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right| \le \epsilon_n}\right]  \\
+		&= \sum\limits_{i}^{} \E\left[X_{n,i}^2\right] - \sum\limits_{i}^{} \E\left[X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right| > \epsilon_n}\right] \\
+		&= 1 - L_n(\epsilon_n) = 1-\epsilon_n^2 H_n(\epsilon_n) \to 1-0 = 1 \\
+		\sum\limits_{i}^{} \E\left[\xi_{n,i}\right] ^2 
+		&= \sum\limits_{i}^{} \left( \E\left[X_{n,i} \mathds{1}_{\left| X_{n,i} \right| \le \epsilon_n}\right]  \right)^2 \\
+		&= \sum\limits_{i}^{} \left( \E\left[X_{n,i} \mathds{1}_{\left| X_{n,i} \right| > \epsilon_n}\right]  \right)^2 \text{ by $\E\left[X_{n,i}\right] =0$, $a^2 = \left( -a \right)^2$} \\
+		&\le \sum\limits_{i}^{} \E\left[X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right| > \epsilon_n}\right]  = L_n(\epsilon_n)\to 0
+	.\end{align*}
+	Hence the sum of the variances goes to $1$.
+
+	For the third moment condition, we see
+	\begin{align*}
+		\sum\limits_{i}^{} \E\left[\left| \xi_{n,i} \right|^3\right] 
+		&= \sum\limits_{i}^{} \E\left[\left| X_{n,i} \right|^3 \mathds{1}_{\left| X_{n,i} \right|\le \epsilon_n}\right]  \\
+		&\le \epsilon_n \sum\limits_{i}^{} \E\left[X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right|\le \epsilon_n}\right] \\
+		&= \epsilon_n \left(1 - L_n(\epsilon_n)\right) \le \epsilon_n \to 0
+	,\end{align*}
+	so we apply the CLT to get $\sum\limits_{i}^{} \xi_{n,i} \leadsto N(0,1)$.
+
+	As in the previous proof, we write
+	\begin{align*}
+		\left| \E\left[f\left( \sum\limits_{i}^{} \xi_{n,i} \right)\right] - \E\left[f\left( \sum_i X_{n,i} \right)\right]  \right|
+		&\le 2 \left\|f\right\|_{\infty} \P\left[\sum\limits_{i}^{} \xi_{n,i}\ne \sum\limits_{i}^{} X_{n,i}\right] \\
+		&\le 2 \left\|f\right\|_{\infty} \sum\limits_{i}^{} \P\left[\left| X_{n,i} \right| > \epsilon_n\right] \\
+		&= 2 \left\|f\right\|_{\infty} \E\left[\sum\limits_{i}^{} \mathds{1}_{\left| X_{n,i} \right| > \epsilon_n}\right] \\
+		&\le 2\left\|f\right\|_{\infty} \E\left[\sum\limits_{i}^{} \frac{X_{n,i}^2}{\epsilon_n^2} \mathds{1}_{\left| X_{n,i} \right| > \epsilon_n}\right] \\
+		&= 2 \left\|f\right\|_{\infty}H_n(\epsilon_n) \to 0
+	.\end{align*}
+	By the triangle inequality, we see that \[
+		\left|\E\left[f\left( \sum\limits_{i} X_{n,i} \right)\right] - \E\left[f\left( N(0,1) \right)\right] \right| \to 0
+	,\] 
+	so \[
+		\sum\limits_{i=1}^{k(n)} X_{n,i} \leadsto N(0,1)
+	.\] 
+\end{proof}
+
+\begin{theorem}[Lindeberg CLT (arbitrary variance)] \label{2-17-3}
+	Suppose	for each $n$ the random variables $X_{n,1},\ldots,X_{n,k(n)}$ are independent and satisfy $\E\left[X_{n,i}\right] = 0$.
+	Let
+	\[
+		S_n^2 := \sum\limits_{i=1}^{k(n)} \E\left[X_{n,i}^2\right],
+	\]
+	and assume $S_n > 0$ for all sufficiently large $n$. If for every $\epsilon > 0$,
+	\[
+		\frac{1}{S_n^2} \sum\limits_{i=1}^{k(n)} \E\left[ X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right| > \epsilon S_n} \right] \to 0,
+	\]
+	then
+	\[
+		\frac{\sum\limits_{i=1}^{k(n)} X_{n,i}}{S_n} \leadsto N(0,1)
+	.\]
+\end{theorem}
+
+\begin{proof}
+	We standardize the array by setting
+	\[
+		Y_{n,i} = \frac{X_{n,i}}{S_n}.
+	\]
+	Then $\E\left[Y_{n,i}\right] = 0$ and $\sum_i \operatorname{Var}(Y_{n,i}) = 1$.
+	The Lindeberg condition for $\left\{Y_{n,i}\right\}$ follows directly from the hypothesis, with cutoff $\epsilon S_n$.
+	The conclusion follows from Theorem (\ref{2-17-0}).
+
+	Note that there is no problem with (i) losing independence within the array's rows by dividing by $S_n$ nor (ii) having cutoff $\epsilon S_n$ instead of $\epsilon$, because the term $S_n$ is a deterministic value not dependent on realized values of $X_{n,i}$.
+\end{proof}
+
+\begin{theorem}[Lyapunov CLT]
+	Suppose $X_{n,1},\ldots,X_{n, k(n)}$ are independent such that $\E\left[X_{n,i}\right] =0$ and for $S_n = \sqrt{\sum\limits_{i=1}^{k(n)} \E\left[X_{n,i}^2\right] } $, there exists $\delta > 0$ such that \[
+		\frac{1}{S_n^{2+\delta}} \sum\limits_{i=1}^{k(n)} \E\left[\left| X_{n,i} \right|^{2+\delta}\right] \to 0
+	,\] 
+	then \[
+		\frac{X_{n,1} + \cdots + X_{n,k(n)}}{S_n}\leadsto N(0,1)
+	.\] 
+\end{theorem}
+\boxednote[-4\baselineskip]{This is a rescaled version of Theorem (\ref{2-17-3}).}
+\begin{proof}
+	For any $\epsilon > 0$, we see that
+	\begin{align*}
+		X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right|>\epsilon S_n}
+		&= X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right|^\delta > \epsilon^\delta S_n^{\delta}} \\
+		&\le \frac{\left| X_{n,i} \right|^{2+\delta}}{\epsilon^\delta S_n^{\delta}} \\
+		\frac{1}{S_n^2} \sum\limits_{i=1}^{k(n)} \E\left[X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right| > \epsilon S_n}\right] 
+		&\le \frac{1}{\epsilon^\delta} \frac{1}{S_n^{2+\delta}} \sum\limits_{i=1}^{k(n)} \E\left[\left| X_{n,i} \right|^{2+\delta}\right] \to 0
+	.\end{align*}
+	The previous theorem's condition is satisfied.
+\end{proof}
+
+\begin{remark}
+	The Lindeberg condition is \emph{sufficient} for the CLT conclusion, but not in general \emph{necessary}: a triangular array can satisfy the CLT without satisfying the Lindeberg condition. However, if the individual variances are uniformly negligible relative to the total variance, the two are equivalent.
+\end{remark}
+
+\begin{example}[Lindeberg's condition is not necessary] \label{3-12-2}
+	Consider the triangular array with $k(n) = 1$ and $X_{n,1} \sim N(0,1)$ for all $n$. Since $X_{n,1}$ is already standard normal, \[
+		\sum_{i=1}^{k(n)} X_{n,i} = X_{n,1} \sim N(0,1) \leadsto N(0,1)
+	,\] so the CLT conclusion holds trivially.
+
+	However, the Lindeberg condition fails. Since $\E\left[X_{n,1}\right] = 0$ and $\operatorname{Var}\left(X_{n,1}\right) = 1$, conditions (i) and (ii) of Theorem (\ref{2-17-0}) are satisfied. But for any fixed $\epsilon > 0$, \[
+		L_n(\epsilon) = \E\left[X_{n,1}^2 \mathds{1}_{\left|X_{n,1}\right|>\epsilon}\right] = \E\left[Z^2 \mathds{1}_{\left|Z\right|>\epsilon}\right] > 0
+	\] is a positive constant independent of $n$, so $L_n(\epsilon) \not\to 0$.
+
+	Note also that $\E\left[\left|X_{n,1}\right|^3\right] = \E\left[\left|Z\right|^3\right]$ is a positive constant, so condition (iii) of the general triangular CLT (Theorem \ref{3-7-2}) fails as well; the CLT holds here because the distributions are already Gaussian, not because any of our sufficient conditions are met.
+
+	The key reason Lindeberg fails is that the uniform infinitesimality condition $\max_{k=1,\ldots,k(n)} \frac{\sigma_k^2}{s_n^2} \to 0$ is violated: with $k(n)=1$ the only term contributes all of $s_n^2 = 1$ to itself, so $\frac{\sigma_1^2}{s_n^2} = 1 \not\to 0$.
+\end{example}
+
+\boxednote{Theorem (\ref{3-12-1}) was not done in class, nor was Example (\ref{3-12-2}). After the preceeding remark was made in class, I found answers to the resulting question.}
+
+\begin{theorem}[Necessity of Lindeberg's condition under uniform infinitesimality] \label{3-12-1}
+	\label{lindeberg-necessity}
+	Suppose for each $n$ the random variables $X_{n,1},\ldots,X_{n,k(n)}$ are independent with $\E\left[X_{n,i}\right] = 0$, and let $\sigma_{n,i}^2 = \operatorname{Var}(X_{n,i})$ and $s_n^2 = \sum_{i=1}^{k(n)} \sigma_{n,i}^2 > 0$. If
+	\[
+		\max_{i=1,\ldots,k(n)} \frac{\sigma_{n,i}^2}{s_n^2} \to 0 \quad \text{as } n \to \infty
+	,\]
+	then the Lindeberg condition
+	\[
+		\frac{1}{s_n^2}\sum_{i=1}^{k(n)} \E\left[X_{n,i}^2 \mathds{1}_{\left|X_{n,i}\right| > \epsilon s_n}\right] \to 0 \quad \text{for every } \epsilon > 0
+	\]
+	holds if and only if
+	\[
+		\frac{\sum_{i=1}^{k(n)} X_{n,i}}{s_n} \leadsto N(0,1).
+	\]
+\end{theorem}
+
+\begin{proof}
+	The sufficiency direction is Theorem (\ref{2-17-3}). We prove necessity.
+
+	By normalizing, set $\tilde{X}_{n,i} = X_{n,i}/s_n$, so $\E\left[\tilde{X}_{n,i}\right] = 0$, $\sum_i \tilde{\sigma}_{n,i}^2 = 1$ (where $\tilde{\sigma}_{n,i}^2 = \sigma_{n,i}^2 / s_n^2$), $\max_i \tilde{\sigma}_{n,i}^2 \to 0$, and $Y_n = \sum_i \tilde{X}_{n,i} \leadsto N(0,1)$.
+
+	Denote $\phi_{n,i}(t) = \E\left[e^{it\tilde{X}_{n,i}}\right]$. By the continuity theorem, $\prod_i \phi_{n,i}(t) \to e^{-t^2/2}$ for every $t$.
+
+	\textbf{Step 1.} \emph{Under uniform infinitesimality, $\sum_i \E\left[1 - \cos(t\tilde{X}_{n,i})\right] \to \frac{t^2}{2}$.}
+
+	Using $|e^{ix}-1-ix| \le x^2/2$, we get $|\phi_{n,i}(t)-1| \le \frac{t^2}{2}\tilde{\sigma}_{n,i}^2$, so $|\phi_{n,i}(t)-1| \to 0$ uniformly in $i$. For large $n$, each $|\phi_{n,i}(t)-1| \le \frac{1}{2}$, and using $|\log(1+z) - z| \le |z|^2$ for $|z| \le \frac{1}{2}$:
+	\begin{align*}
+		\left|\sum_i \log\phi_{n,i}(t) - \sum_i(\phi_{n,i}(t)-1)\right|
+		&\le \sum_i |\phi_{n,i}(t)-1|^2 \\
+		&\le \max_i |\phi_{n,i}(t)-1| \cdot \sum_i |\phi_{n,i}(t)-1| \\
+		&\le \frac{t^2\max_i \tilde{\sigma}_{n,i}^2}{2} \cdot \frac{t^2}{2} \sum_i \tilde{\sigma}_{n,i}^2 \\
+		&= \frac{t^4 \max_i \tilde{\sigma}_{n,i}^2}{4} \to 0.
+	\end{align*}
+	Hence $\sum_i (\phi_{n,i}(t)-1) \to -t^2/2$.
+
+	Since $\E\left[\tilde{X}_{n,i}\right] = 0$, we write $\phi_{n,i}(t) - 1 = \E\left[e^{it\tilde{X}_{n,i}} - 1 - it\tilde{X}_{n,i}\right]$. Then
+	\begin{align*}
+		\sum_i (\phi_{n,i}(t)-1) = \sum_i \E\left[e^{it\tilde{X}_{n,i}} - 1 - it\tilde{X}_{n,i} + \frac{t^2\tilde{X}_{n,i}^2}{2}\right] - \frac{t^2}{2}.
+	\end{align*}
+	Since $\sum_i (\phi_{n,i}(t)-1) \to -t^2/2$, taking real parts and using $\operatorname{Re}(e^{ix}-1-ix+x^2/2) = \cos(x) - 1 + x^2/2$ yields \[
+		\sum_i \E\left[1 - \cos(t\tilde{X}_{n,i})\right] = \frac{t^2}{2} + o(1).
+	\]
+
+	\textbf{Step 2.} \emph{Conclude $L_n(\epsilon) \to 0$.}
+
+	Fix $\epsilon > 0$. Split the expectation at $\epsilon$:
+	\begin{align*}
+		\frac{t^2}{2} + o(1)
+		&= \sum_i \E\left[(1-\cos(t\tilde{X}_{n,i}))\mathds{1}_{|\tilde{X}_{n,i}|\le\epsilon}\right]
+		+ \sum_i \E\left[(1-\cos(t\tilde{X}_{n,i}))\mathds{1}_{|\tilde{X}_{n,i}|>\epsilon}\right].
+	\end{align*}
+	For the first sum, we use $1-\cos(u) \le u^2/2$:
+	\[
+		\sum_i \E\left[(1-\cos(t\tilde{X}_{n,i}))\mathds{1}_{|\tilde{X}_{n,i}|\le\epsilon}\right] \le \frac{t^2}{2}\sum_i \E\left[\tilde{X}_{n,i}^2\mathds{1}_{|\tilde{X}_{n,i}|\le\epsilon}\right] = \frac{t^2}{2}(1-L_n(\epsilon)).
+	\]
+	For the second sum, we use $1 - \cos(u) \le 2$ and Markov's inequality:
+	\[
+		\sum_i \E\left[(1-\cos(t\tilde{X}_{n,i}))\mathds{1}_{|\tilde{X}_{n,i}|>\epsilon}\right] \le 2\sum_i \P\left(|\tilde{X}_{n,i}|>\epsilon\right) \le \frac{2}{\epsilon^2}\sum_i \E\left[\tilde{X}_{n,i}^2\mathds{1}_{|\tilde{X}_{n,i}|>\epsilon}\right] = \frac{2L_n(\epsilon)}{\epsilon^2}.
+	\]
+	Combining,
+	\[
+		\frac{t^2}{2} + o(1) \le \frac{t^2}{2}(1-L_n(\epsilon)) + \frac{2L_n(\epsilon)}{\epsilon^2} = \frac{t^2}{2} - L_n(\epsilon)\left(\frac{t^2}{2} - \frac{2}{\epsilon^2}\right).
+	\]
+	Rearranging,
+	\[
+		L_n(\epsilon)\left(\frac{t^2}{2} - \frac{2}{\epsilon^2}\right) \le o(1).
+	\]
+	Choosing $t > 2/\epsilon$ makes the prefactor $\frac{t^2}{2} - \frac{2}{\epsilon^2} > 0$, so $L_n(\epsilon) \to 0$.
+\end{proof}
+
+\section{Stein's Method}
+
+This proof technique provides an alternative to characteristic functions and Lindeberg swapping.
+
+\begin{lemma}[Stein's identity]
+	Suppose $Z \sim N(0,1)$. If $f$ is absolutely continuous such that \[
+		\E\left[f(Z)\right] < \infty, \quad \E\left[Z f(Z)\right] < \infty
+	,\] we have\boxednote{This identity is the defining identity of $N(0,1)$.} \[
+		\E\left[f'(Z)\right] = \E\left[Z f(Z)\right] 
+	.\] 
+\end{lemma}
+\begin{proof}
+	Let $\phi(t) = \frac{1}{\sqrt{2\pi}}e^{-t^2/2}$ denote the standard normal density, so $\E[g(Z)] = \int_{-\infty}^\infty g(t)\phi(t)\,dt$ for any measurable $g$. We begin with
+	\begin{align*}
+		\E\left[f'(Z)\right]
+		&= \int_{-\infty}^{\infty} f'(t)\phi(t)\,dt \\
+		\intertext{Since $\phi(-\infty) = 0$, the FTC gives $\phi(t) = \int_{-\infty}^{t} \phi'(x)\,dx$. Substituting:}
+		&= \int_{-\infty}^{\infty} f'(t) \int_{-\infty}^{t} \phi'(x)\,dx\,dt \\
+		\intertext{Apply Fubini on the region $\{(x,t) : x < t\}$:}
+		&= \int_{-\infty}^{\infty} \phi'(x)\int_{x}^{\infty} f'(t)\,dt\, dx.
+	\end{align*}
+	We would like to apply the FTC to the inner integral: $\int_x^{\infty} f'(t)\,dt = f(\infty) - f(x)$. However, $f(\infty)$ may not be finite, so this fails.
+
+	The fix is to split at $t = 0$ and use a \emph{different} representation of $\phi$ on each piece, chosen so that after Fubini the FTC only runs over a finite interval. For $t < 0$, anchor at $-\infty$: $\phi(t) = \int_{-\infty}^t \phi'(x)\,dx$. For $t > 0$, anchor at $+\infty$: since $\phi(+\infty) = 0$, the FTC gives $\phi(t) = -\int_t^{\infty}\phi'(x)\,dx$. In each case, after Fubini the inner integral only reaches $0$.
+	\begin{align*}
+		\E\left[f'(Z)\right]
+		&= \int_{-\infty}^{0} f'(t) \phi(t)\,dt + \int_{0}^{\infty} f'(t)\phi(t)\,dt \\
+		\intertext{Substitute the appropriate representation of $\phi(t)$ on each piece:}
+		&= \int_{-\infty}^{0} f'(t)\int_{-\infty}^{t}\phi'(x)\,dx\,dt + \int_{0}^{\infty} f'(t)\int_{t}^{\infty} -\phi'(x)\,dx\,dt \\
+		\intertext{Apply Fubini to each piece. For the left piece the region $\{-\infty < x < t < 0\}$ becomes $\{-\infty < x < 0,\; x < t < 0\}$; for the right piece the region $\{0 < t < x < \infty\}$ becomes $\{0 < x < \infty,\; 0 < t < x\}$:}
+		&= \int_{-\infty}^{0} \phi'(x) \int_{x}^{0} f'(t)\,dt\, dx + \int_{0}^{\infty} (-\phi'(x)) \int_{0}^{x} f'(t)\,dt\, dx \\
+		\intertext{Apply the FTC (valid since $f$ is absolutely continuous) to the inner integrals:}
+		&= \int_{-\infty}^{0} \phi'(x) \left( f(0) - f(x) \right)dx - \int_{0}^{\infty} \phi'(x) \left( f(x) - f(0) \right) dx \\
+		&= f(0) \left( \int_{-\infty}^{0} \phi'(x)dx + \int_{0}^{\infty} \phi'(x)dx   \right) \\
+		&\quad - \int_{-\infty}^{0} \phi'(x)f(x)dx - \int_{0}^{\infty} \phi'(x)f(x)dx \\
+		\intertext{Since $\phi'(x) = -x\phi(x)$ and $\E[Z] = 0$, the first term vanishes:}
+		&= f(0) \int_{-\infty}^{\infty} -x \phi(x)\,dx + \int_{-\infty}^{\infty} x \phi(x)f(x)\,dx \\
+		&= \int_{-\infty}^{\infty} x \phi(x)f(x)\,dx \\
+		&= \E\left[Z f(Z)\right].\qedhere
+	\end{align*}
+\end{proof}
+
+\begin{aside}
+	Alternatively, we can derive Stein's identity via integration by parts if we don't see the clever representation trick. Recall $\phi'(t) = -t \phi(t)$. Then
+	\begin{align*}
+		\E\left[Zf(Z)\right]
+		&= \int_{}^{} t f(t)\phi(t)\,dt \\
+		&= - \int f(t) \phi'(t)\,dt \quad \text{since } t\phi(t) = -\phi'(t) \\
+		&= - \left( \left. f(t)\phi(t) \right|_{-\infty}^{\infty} - \int f'(t)\phi(t)\,dt \right) \quad \text{(integration by parts)}\\
+		&= \E\left[f'(Z)\right],
+	\end{align*}
+	where the boundary term vanishes because $\phi(t) \to 0$ exponentially fast and $\E\left[f(Z)\right] < \infty$ ensures $f(t)\phi(t) \to 0$ as $t \to \pm\infty$. 
+\end{aside}
+\boxednote{This proof technique generalizes integration by parts: the key step is multiplying by the integrating factor $e^{-w^2/2}$ to convert Stein's ODE into an exact derivative.}
+\begin{proposition}[Converse of Stein's identity]
+	Suppose $W$ is a random variable such that for every absolutely continuous $f$ with \[
+		\E\left[f(W)\right] < \infty, \quad \E\left[\left| Wf(W)\right|\right] < \infty
+	\] and \[
+		\E\left[f'(W)\right] = \E\left[Wf(W)\right],
+	\] we have $W \sim N\left(0,1 \right)$.
+\end{proposition}
+\begin{proof}
+	Consider \emph{Stein's equation}: \[
+		f'(w) - w f(w) = \mathds{1}_{w \le t} - \Phi(t)
+	.\] If this differential equation has a solution for each $t$, then $W \sim N(0,1)$. To see why, note that for $W \sim P$, we can take an expectation of Stein's equation and get
+	\begin{align*}
+		\E\left[f'(W) - W f(W)\right] &= P\left[W \le t\right]  - \Phi(t)
+	,\end{align*}
+	so if $\E\left[f'(W)\right] = \E\left[Wf(W)\right] $ (our hypotheses), we have \[
+		P\left[W \le t\right] = \Phi(t)
+	,\] so $W \sim N(0,1)$. (Since agreement on the half-intervals $(-\infty,t]$, which generate $\mathscr{B}(\R)$, implies agreement on all of $\mathscr{B}(\R)$.)
+
+	Using the integrating factor $e^{-\frac{w^2}{2}}$, we can indeed solve the differential equation:
+	\begin{align*}
+		e^{-\frac{w^2}{2}} f'(w) - w e^{-\frac{w^2}{2}}f(w) &= e^{-\frac{w^2}{2}}\left( \mathds{1}_{w \le t} - \Phi(t) \right) \\
+		\frac{d}{dw} \left( e^{-\frac{w^2}{2}} f(w) \right) &= e^{-\frac{w^2}{2}} \left( \mathds{1}_{w \le t} - \Phi(t) \right) \\
+		\implies e^{-\frac{w^2}{2}}f(w) &= \int_{-\infty}^{w} e^{-\frac{x^2}{2}}\left( \mathds{1}_{x\le t} - \Phi(t) \right)dx + C  \\
+		f(w) &= e^{\frac{w^2}{2}} \int_{-\infty}^{w} e^{-\frac{x^2}{2}} \left( \mathds{1}_{x \le t} - \Phi(t) \right)dx + C e^{\frac{w^2}{2}}
+	.\end{align*}
+	Taking $C=0$ gives the standard admissible solution used in Stein's method.
+\end{proof}
+
+\begin{remark}
+	In our proof, where did we use that $\Phi$ was the Gaussian CDF? Couldn't we have replaced $\Phi$ by a different CDF $G$, then gotten that $W \sim G$?
+
+	No. A Gaussian RV is the only one that will satisfy $\E\left[f'(Z)\right] = \E\left[Z f(Z)\right]$ for all admissible $f$.
+	After setting $C=0$, we require
+	\begin{align*}
+		\infty 
+		&> \E\left[Z f(Z)\right]  \\
+		&= \int_{-\infty}^{\infty} w \frac{1}{\sqrt{2\pi} } e^{-\frac{w^2}{2}}f(w)dw \\
+		&= \int_{-\infty}^{\infty}  w \frac{1}{\sqrt{2\pi} } \int_{-\infty}^{w} e^{-\frac{x^2}{2}} \left( \mathds{1}_{x \le t} - G(t) \right) dx\, dw
+	.\end{align*}
+	This necessitates that $\lim\limits_{w \to \infty} \int_{-\infty}^{w} e^{-\frac{x^2}{2}}\left( \mathds{1}_{x \le t}- G(t) \right)dx = 0$. (Otherwise, we would have linear growth coming from the $w$ term in the outer integral.)
+
+	Therefore, \[
+		G(t) = \frac{\int_{-\infty}^{\infty} \mathds{1}_{x \le t} e^{-\frac{x^2}{2}}dx }{\int_{-\infty}^{\infty} e^{-\frac{x^2}{2}}dx } = \Phi(t)
+	.\] 
+\end{remark}
+
+\begin{aside}
+	The converse implies that we can use discrepancy in Stein's equality as a criterion for convergence to $N(0,1)$: a random variable $W$ is standard normal if and only if $\E\left[f'(W)\right] - \E\left[Wf(W)\right] = 0$ for all admissible $f$. So to show $W_n = \frac{1}{\sqrt{n}}\sum X_i \leadsto N(0,1)$, it suffices to show this discrepancy vanishes as $n \to \infty$.
+
+	This gives a different strategy from Lindeberg swapping. In Lindeberg swapping, we bounded the direct distance between distributions:
+	\[
+		\left| \E\left[f\left( \sum\limits_{i}^{} \frac{X_i}{\sqrt{n} } \right)\right] - \E\left[f\left( N(0,1) \right)\right]  \right|
+	.\] With Stein's method, we instead show $W_n$ satisfies the Gaussian characterization by bounding \[
+		\left|\E\left[f'(W_n)\right] - \E\left[W_n f(W_n)\right]\right|
+	.\]
+
+\end{aside}
+
+For Theorem (\ref{2-19-1}), we require the following lemma and definition.
+
+\begin{lemma}
+	We have that $\left\|f_h\right\|_{\infty}$, $\left\|f_h'\right\|_{\infty}$, $\left\|f_h''\right\|_{\infty} \le 2 \left\|h'\right\|_{\infty}$.
+\end{lemma}
+
+\begin{proof}
+	We just prove that $\left\|f_h\right\|_\infty \le 2 \operatorname{Lip}(h)$; the derivative bounds are standard and follow by differentiating Stein's equation and using the same Gaussian-tail estimates.
+	Recall \[
+		f_h(w) = e^{\frac{w^2}{2}} \int_{-\infty}^{w} e^{-\frac{x^2}{2}} \left( h(x) - Nh \right)dx 
+	.\] When $w > 0$, the identity
+	\[
+		\int_{-\infty}^{\infty} e^{-\frac{x^2}{2}} \left( h(x) - Nh \right)dx = 0
+	\]
+	lets us rewrite
+	\[
+		f_h(w) = - e^{\frac{w^2}{2}} \int_{w}^{\infty}  e^{-\frac{x^2}{2}} \left( h(x) - Nh \right)dx.
+	\]
+	Hence
+	\begin{align*}
+		\left| f_h(w) \right|
+		&\le e^{\frac{w^2}{2}} \int_{w}^{\infty} e^{-\frac{x^2}{2}}\left| h(x) - h(0) \right|dx + e^{\frac{w^2}{2}} \left| h(0) - Nh \right| \int_{w}^{\infty} e^{-\frac{x^2}{2}}dx \\
+		&\le \operatorname{Lip}(h) e^{\frac{w^2}{2}}\int_{w}^{\infty} x e^{-\frac{x^2}{2}}dx + \operatorname{Lip}(h) \E\left[\left| Z \right|\right] e^{\frac{w^2}{2}} \int_{w}^{\infty} e^{-\frac{x^2}{2}}dx.
+	\end{align*}
+	Using
+	\[
+		\int_{w}^{\infty} x e^{-\frac{x^2}{2}}dx = e^{-\frac{w^2}{2}}
+	\]
+	and the standard Gaussian-tail bound
+	\[
+		e^{\frac{w^2}{2}} \int_{w}^{\infty} e^{-\frac{x^2}{2}}dx \le \sqrt{\frac{\pi}{2}},
+	\]
+	we obtain
+	\[
+		\left| f_h(w) \right| \le \operatorname{Lip}(h) \left( 1 + \sqrt{\frac{\pi}{2}} \E\left[\left| Z \right|\right] \right) = 2 \operatorname{Lip}(h).
+	\]
+	By symmetry, the same bound holds for $w < 0$, hence $\left\|f_h\right\|_\infty \le 2 \operatorname{Lip}(h)$.
+\end{proof}
+
+\begin{definition}[Wasserstein distance]
+	Suppose we have two distributions $W \sim P$ and $Z \sim Q$. The Wasserstein distance is defined between distributions (but often notated as the distance between random variables) and is \begin{align*}
+		\left( \mathscr{W}(W,Z) = \right) \mathscr{W}(P,Q) &:= \sup_{\operatorname{Lip}(h) \le 1} \left| \E\left[h(W)\right] - \E\left[h(Z)\right]  \right|
+	.\end{align*} 
+
+	We see that convergence in Wasserstein distance implies weak convergence.
+\end{definition}
+
+We can prove the CLT with Stein's method instead of Lindeberg swapping. The key step is obtaining an explicit bound on the Wasserstein distance $\mathscr{W}(W_n, N(0,1))$ where $W_n = (X_1+\cdots+X_n)/\sqrt{n}$; the CLT then follows by a triangular array argument.
+
+\begin{theorem}[Wasserstein distance bound; Wasserstein CLT] \label{2-19-1}
+	Suppose $X_1,\ldots,X_n$ are independent with $\E\left[X_i \right] = 0$ and $\E\left[X_i^2\right] = 1$. Then \[
+		\mathscr{W}\left( \frac{X_1+ \cdots + X_n}{\sqrt{n}}, N(0,1) \right) \le \frac{3}{\sqrt{n} } \frac{1}{n} \sum\limits_{i=1}^{n} \E\left[\left| X_i \right|^3\right] 
+	.\] 
+
+	In particular, if $\frac{1}{n^{\frac{3}{2}}} \sum_{i=1}^{n} \E\left[\left| X_i \right|^3\right] \to 0$, then \[
+		\frac{\sum_{i=1}^{n} X_i}{\sqrt{n}} \leadsto N(0,1)
+	.\] 
+\end{theorem}
+
+\begin{proof}
+	Consider the more general form of Stein's equation, where we replace the indicator with some function $h(\cdot )$ of $w$:
+	\[
+		f'(w) - wf(w) = h(w) - Nh
+		,\] where $Nh := \E\left[h(Z)\right] $ for $Z \sim N(0,1)$.
+
+	We can follow the previous derivation to get a solution (dependent on $h$) as \begin{align*}
+		f_h(w) &= e^{\frac{w^2}{2}} \int_{-\infty}^{w} e^{-\frac{x^2}{2}} \left( h(x) - Nh \right)dx
+	.\end{align*}
+	The definition of Wasserstein distance between $W$ and $Z$ is
+	\begin{align*}
+		\mathscr{W}(W,Z)
+		&= \sup_{\operatorname{Lip}(h) \le 1} \left| \E\left[h(W)\right] - \E\left[h(Z)\right]  \right|
+	.\end{align*}
+	Since Stein's equation $f_h'(w) - wf_h(w) = h(w) - Nh$ holds pointwise for every $w$, we may take expectations to get
+	\[
+		\E\left[f_h'(W) - Wf_h(W)\right] = \E\left[h(W) - Nh\right] = \E\left[h(W)\right] - \E\left[h(Z)\right].
+	\]
+	Therefore
+	\begin{align*}
+		\mathscr{W}(W,Z)
+		&= \sup_{\operatorname{Lip}(h) \le 1} \left| \E\left[f_h'(W) - W f_h(W)\right]  \right| \\
+		&\le \sup_{\substack{\left\|f\right\|_{\infty} \le 2 \\ \left\|f'\right\|_{\infty} \le 2 \\ \left\|f''\right\|_{\infty}\le 2}} \left| \E\left[f'(W)\right] - \E\left[W f(W)\right]  \right|
+	.\end{align*}
+
+	Suppose $X_1,\ldots,X_n$ are independent\footnote{Notably, not necessarily identically distributed.} with $\E\left[X_i\right] =0$, $\operatorname{Var}\left(X_i\right) = 1$, and $\E\left[\left| X_i \right|^3\right] < \infty$. Define \[
+		W = \frac{X_1 + \cdots + X_n}{\sqrt{n} }, \quad W_i = W - \frac{X_i}{\sqrt{n} }	
+	,\] 
+	which gives $X_i \ind W_i$.
+
+	Then 
+	\begin{align*}
+		\E\left[W f(W)\right] 
+		&= \frac{1}{\sqrt{n} } \sum\limits_{i=1}^{n}  \E\left[X_i f(W)\right] \\
+		\E\left[X_i f(W)\right]
+		&= \E\left[X_i \left( f(W) - f(W_i) \right)\right] + \underbrace{\E\left[X_i f(W_i)\right] }_{= \E\left[X_i\right] f(W_i) = 0}\\
+		&= \E\left[X_i \left( f(W) - f(W_i) \right)\right] \\
+		&= \E\left[X_i \left( f(W) - f(W_i) - f'(W_i)(W-W_i) \right)\right] + \E\left[X_i f'(W_i) (W-W_i)\right] \\
+		&= \frac{1}{2} \E\left[X_i f''(\xi_i) \left( W - W_i \right)^2\right] + \frac{1}{\sqrt{n} } \E\left[X_i^2 f'(W_i)\right] \\
+		&= \frac{1}{2n} \E\left[X_i^3 f''(\xi_i)\right] + \frac{1}{\sqrt{n}} \E\left[f'(W_i)\right] 
+	\end{align*}
+	by independence of $X_i$ and $W_i$ and $(W-W_i) = X_i$.
+
+	Put
+	\[
+		A_n = \frac{1}{2n\sqrt{n}} \sum\limits_{i=1}^{n} \E\left[X_i^3 f''(\xi_i)\right],
+		\qquad
+		B_n = \frac{1}{n} \sum\limits_{i=1}^{n} \E\left[f'(W_i)\right].
+	\]
+	Then
+	\[
+		\E\left[Wf(W)\right] = A_n + B_n.
+	\]
+
+	Putting
+	\[
+		m_1 = \frac{1}{n} \sum\limits_{i=1}^{n} \E\left[\left| X_i \right|\right],
+		\qquad
+		m_3 = \frac{1}{n} \sum\limits_{i=1}^{n} \E\left[\left| X_i \right|^3\right],
+	\]
+	we bound $A_n$ and $\E[f'(W)] - B_n$ separately. For $A_n$, using $\left\| f'' \right\|_\infty \le 2$:
+	\[
+		\left| A_n \right|
+		\le \frac{\left\| f'' \right\|_\infty}{2n\sqrt{n}} \sum\limits_{i=1}^{n} \E\left[\left| X_i \right|^3\right]
+		\le \frac{m_3}{\sqrt{n}}.
+	\]
+	For $\E[f'(W)] - B_n$, the mean value theorem and $W - W_i = X_i/\sqrt{n}$ give $\left| f'(W) - f'(W_i) \right| \le \left\| f'' \right\|_\infty \left| W - W_i \right| = 2\left| X_i \right|/\sqrt{n}$, so
+	\[
+		\left| \E\left[f'(W)\right] - B_n \right|
+		\le \frac{1}{n} \sum\limits_{i=1}^{n} \E\left| f'(W) - f'(W_i) \right|
+		\le \frac{2}{n\sqrt{n}} \sum\limits_{i=1}^{n} \E\left| X_i \right|
+		= \frac{2m_1}{\sqrt{n}}.
+	\]
+	Combining via the triangle inequality:
+	\[
+		\left| \E\left[f'(W)\right] - \E\left[Wf(W)\right] \right|
+		\le \frac{1}{\sqrt{n}}\left(2m_1 + m_3\right)
+		\le \frac{3m_3}{\sqrt{n}}.
+	\]
+
+	Note that in bounding the first moment by the third moment of $X_i$, we use
+	\[
+		\E\left[\left| X_i \right|\right] \le \left( \E\left[\left| X_i \right|^3\right] \right)^{\frac{1}{3}}
+	,\]
+	which follows by Jensen's inequality, since $t \mapsto t^3$ is convex on $[0,\infty)$.
+	By assumption,
+	\[
+		\E[X_i^2] = 1 \le \left(\E\left[\left|X_i\right|^3\right]\right)^{2/3}
+	,\]
+	so $\E\left[\left| X_i \right|^3\right] \ge 1$; plugging this back into the previous equation shows $\E\left[\left| X_i \right|\right] \le \E\left[\left| X_i \right|^3\right] $.
+
+	Substituting $m_3$ into the bound on the distance, \[
+		\mathscr{W}\left( \frac{X_1 + \cdots + X_n}{\sqrt{n} }, N(0,1) \right) \le \frac{3}{\sqrt{n} } \cdot \frac{1}{n} \sum\limits_{i=1}^{n} \E\left[\left| X_i \right|^3\right]
+	.\]
+	This bound holds for every fixed $n$ and is non-asymptotic.
+
+	To deduce the CLT, put the problem into triangular-array notation: for each $n$, let $X_{n,1},\ldots,X_{n,n}$ be independent with $\E[X_{n,i}]=0$, $\E[X_{n,i}^2]=1$, and set $W_n = n^{-1/2}\sum_{i=1}^n X_{n,i}$. Note that \[
+		S_n = \sqrt{\sum\limits_{i=1}^{n} \E\left[X_{n,i}^2\right] } = \sqrt{\sum\limits_{i=1}^{n} 1} = \sqrt{n} 
+	,\] so for $\delta = 1$, \[
+		\frac{1}{S_n^{2+ \delta}} \sum\limits_{i=1}^{n} \E\left[\left| X_{n,i} \right|^{2+\delta}\right] = \frac{1}{n^{\frac{3}{2}}} \sum\limits_{i=1}^{k} \E\left[\left| X_{n,i} \right|^3\right]
+	.\] If this expression goes to $0$ as $n\to \infty$, then the Wassterstein bound gives \[
+		\mathscr{W}\left( W_n ,N(0,1) \right) \to 0
+	,\] \footnote{The Lyapunov condition with $\delta=1$ is satisfied. We only presented this as a Lyapunov condition to relate this way of proving the CLT to a way that we already know. The convergence condition required for the Wasserstein bound to go to $0$ is the same as a Lyapunov convergence condition.}and since Wasserstein convergence implies weak convergence, $W_n \xrightarrow{d} N(0,1)$.
+
+	In the classical i.i.d.\ case with $X_1,X_2,\ldots$ i.i.d., $\E[X_i]=0$, $\E[X_i^2]=1$, $\E[|X_i|^3]<\infty$: set $X_{n,i}=X_i$ for all $n$, so $L_n = \E[|X_1|^3]/\sqrt{n} \to 0$, giving $\mathscr{W}(W_n, N(0,1)) \le 3\E[|X_1|^3]/\sqrt{n} \to 0$.
+\end{proof}
+
+\begin{definition}[Kolmogorov-Smirnov distance]
+	Suppose $W \sim P$ and $Z \sim Q$. Then we define the KS distance as
+	\[
+		\begin{aligned}
+			\operatorname{KS}(P,Q)
+			&:= \sup_t \left| P (-\infty,t] - Q(-\infty,t] \right| \\
+			&= \sup_t \left| \P\left[W \le t\right]  - \P\left[Z \le t\right]  \right|
+		\end{aligned}
+	.\] 
+\end{definition}
+
+\begin{proposition}
+	Suppose $Z \sim N(0,1)$. Then for every $\alpha > 0$,
+	\[
+		\operatorname{KS}\left( W, Z \right) = \sup_t \left| \P\left[W \le t\right] - \P\left[Z \le t\right]  \right| \le \frac{1}{\alpha} \mathscr{W}\left( W,Z \right) + \alpha
+	.\]
+
+	Hence, \[
+		\operatorname{KS}\left( W, Z \right) \le 2 \sqrt{\mathscr{W}(W,Z)} 
+	.\] 
+	
+	The KS distance can be bounded by twice the square root of the Wasserstein distance. (Details to follow in next lecture.)
+\end{proposition}
+
+\begin{proof}
+	Fix $t \in \R$, and define $h_{t,\alpha}$ by
+	\[
+		h_{t,\alpha}(w) =
+		\begin{cases}
+			1, & w \le t \\
+			1 - \frac{w-t}{\alpha}, & t < w < t+\alpha \\
+			0, & w \ge t+\alpha
+		\end{cases}
+	.\]
+	Then $\operatorname{Lip}(h_{t,\alpha}) = \frac{1}{\alpha}$ and
+	\begin{align*}
+		\mathds{1}_{w \le t} &\le h_{t,\alpha}(w) \le \mathds{1}_{w \le t+\alpha}.
+	\end{align*}
+	Hence
+	\begin{align*}
+		\P\left[W \le t\right] - \P\left[Z \le t\right] 
+					&\le \E\left[h_{t,\alpha}(W)\right] - \E\left[h_{t,\alpha}(Z)\right] + \P\left[t < Z \le t+\alpha\right] \\
+					&\le \frac{1}{\alpha}\mathscr{W}\left( W,Z \right) + \alpha
+	.\end{align*}
+	Since the same bound holds with $W$ and $Z$ interchanged, taking absolute values and then the supremum over $t$ yields the first claim. The second follows by choosing $\alpha = \sqrt{\mathscr{W}(W,Z)}$.
+\end{proof}
+
+\boxednote{The Berry--Esseen bound is uniform across all $t$. Furthermore, the existence of third moment is necessary for this uniform convergence instead of just weak convergence, which does not require existence of the third moment.}
+\begin{corollary}
+	Under the same setting, \[
+		\operatorname{KS}\left( \frac{X_1+\cdots+X_n}{\sqrt{n} }, N(0,1) \right) \le 2 \sqrt{\frac{3}{\sqrt{n} } \frac{1}{n} \sum\limits_{i=1}^{n} \E\left[\left| X_i \right|^3\right] } 
+	.\] 
+\end{corollary}
+
+We can get a sharper bound on the KS distance instead of the previous bound, which used Stein's method.
+
+\begin{proposition}[Berry--Esseen]
+	We have \[
+		\operatorname{KS}\left( \frac{X_1+\cdots+X_n}{\sqrt{n} },N(0,1) \right) \le \frac{C}{\sqrt{n} } \frac{1}{n} \sum\limits_{i=1}^{n} \E\left[\left| X_i \right|^3\right] 
+	.\] 
+\end{proposition}

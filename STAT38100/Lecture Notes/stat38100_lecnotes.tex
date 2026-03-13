@@ -1,0 +1,33 @@
+% \def\notescheatsheettoggle{1}
+\input{~/Documents/UChicago/dotfiles/notes_preamble.tex}
+
+\renewcommand{\notesauthor}{Marcus Kuo}
+\renewcommand{\notesyear}{Winter 2026}
+
+\usepackage{soul}
+\usepackage{mathrsfs}
+
+\DeclareMathOperator{\TV}{TV}
+\DeclareMathOperator{\KS}{KS}
+\DeclareMathOperator{\BL}{BL}
+\renewcommand{\ind}{\perp\!\!\!\!\perp}
+
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{1}
+
+\begin{document}
+
+\makelectitle{STAT 38100 \\ \vspace{0.2em} Measure-Theoretic \\ \vspace{0.1em} Probability I}{Winter 2026}{Marcus Kuo \\ \small{Lectures by Chao Gao}}
+
+\tableofcontents
+\clearpage
+
+\input{chapters/1_measure_spaces}
+\input{chapters/2_measurable_functions}
+\input{chapters/3_independence}
+\input{chapters/4_law_of_large_numbers}
+\input{chapters/5_central_limit_theorem}
+\input{chapters/6_poisson_limit_theorem}
+\input{chapters/7_conditional_expectation}
+
+\end{document}

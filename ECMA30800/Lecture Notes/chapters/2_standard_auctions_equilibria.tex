@@ -1,0 +1,98 @@
+\styledchapter{The Standard Auctions and Their Equilibria}
+
+To get a solution, we need to impose symmetry on the bidders; i.e., we assume there is one distribution $f$ from which values are drawn.
+
+We standardize to $v_i \in [0,1]$ and assume each bidder's bid depends on her value. So, a \emph{bidding strategy} is a mapping from values to bids. Because all bidders are ex ante symmetric, we assume that they are using the same bidding function.
+
+\section{First-Price Auction Equilibrium}
+
+Suppose that there is a common distribution of values, so $\forall\ i, f_i = f$.
+
+\begin{definition}[Bid according to a bidding function]
+	We say that a bidder bids according to a bidding function $b: [0,1] \to [0,\infty)$ if for any value $v \in [0,1]$, they bid $b(v)$ when their value is $v$.
+\end{definition}
+
+\begin{definition}[(Symmetric) Equilibrium]
+	A (bidding) function $\hat{b}: [0,1] \to [0,\infty)$ is a (symmetric) equilibrium of the first-price auction (with symmetric bidders) if each bidder can do no better than to bid according to $\hat{b}$ given everyone else bids according to $\hat{b}$.
+\end{definition}
+
+\begin{notation}	For any bidder $i$ and $r,v \in [0,1]$, let $u_i(r,v)$ be bidder $i$'s expected utility when her value is $v$ and her bid is $\hat{b}(r)$ given that all others bid according to $\hat{b}$.
+
+	Note that we restrict bids under consideration to those in the range of $\hat{b}$.
+\end{notation}
+
+Let's assume for now that $\hat{b}$ is strictly increasing in $v$.
+Then since player $i$ wins iff $\hat{b}(r) > \hat{b}(v_j)$ for every $j \ne i$ and $\hat{b}$ being strictly increasing implies this happens iff $r > v_j$,
+
+\begin{align*}
+	u_i(r,v) &= \P\left[\text{win}\mid \hat{b}(r)\right](v-\hat{b}(r)) + 0 \\
+			 &= F^{N-1}(r) \left( v- \hat{b}(r) \right) \\
+			 &\le F^{N-1}(v) \left(v- \hat{b}(v)\right),\ \forall\ r \in [0,1]
+,\end{align*}
+where the third equality arises if we assume $\hat{b}$ is an equilibrium.
+
+By this maximization,
+\begin{align*}
+	0 &= \left. (N-1)F^{N-2}(r) f(r) \left( v - \hat{b}(r) \right) - F^{N-1}(r) \hat{b}'(r) \right|_{r = v}  \\
+		\frac{d F^{N-1}(v) \hat{b}(v)}{dv} &= (N-1) F^{N-2}(v) f(v) v, \quad \forall\ v \in [0,1]
+.\end{align*}
+We can integrate to get \[
+	F^{N-1}(v) \hat{b}(v) = \int_{0}^{v} (N-1)F^{N-2}(x)f(x)x dx + C
+.\] Plugging in $v=0$, we see $C = 0$. So, \[
+	\hat{b}(v) = \frac{N-1}{F^{N-1}(v)} \int_{0}^{v} x F^{N-2}(x)f(x)dx
+.\]
+\boxednote{Exercise: Suppose $f$ is uniform on $[0,1]$ and find what $\hat{b}$ is.} Along this derivation, we assumed that $\hat{b}$ was strictly increasing (Exercise: show it is). We assumed that $\hat{b}$ was an equilibrium; thus, we have only shown uniqueness among strictly increasing bidding functions. It is left as an exercise to show that $\hat{b}$ is indeed an equilibrium. It is left as another exercise to show that uniqueness holds for bidding functions that are not strictly increasing.
+
+\section{Dutch Auction Equilibrium}
+
+Dutch auctions are strategically equivalent to first-price auctions; the only relevant consideration to the player in a Dutch auction is at which price she will raise her hand. This is equivalent to a first-price sealed-bid auction because there is no new information gained by nobody having made a bid at a certain point.
+
+The equilibrium is to raise your hand at price $p = \hat{b}(v)$ when your value is $v$.
+
+\section{Second-Price Auction}
+Here, we allow $f_i \ne f_j$ for $i \ne j$.
+
+Bidding your true value is a weakly dominant strategy\boxednote{By weakly dominant strategy, we mean that no matter how others bid, you cannot do any better than to bid your true value.}. To see why, fix bidder $i$ and let $B$ denote the highest bid of the others. Player $i$ wants to win when $v_i > B$ and wants to lose when $v_i < B$. This is guaranteed by bidding $v_i$. Choosing a different bid makes the player weakly worse off (strictly when the high bid is near $v_i$).
+
+\begin{remark}	All bids are higher in the second-price auction than the first-price auction --- this makes it possible for second-price auctions to raise more revenue.
+\end{remark}
+
+\section{English Auction}
+
+The English (ascending-price) auction is behaviorally equivalent to the second-price auction.
+
+\begin{remark}	In all four auctions we have considered (under the symmetry assumption for the first-price and Dutch auctions), the person with the highest value wins.
+\end{remark}
+
+\section{Benchmark Model}
+Consider $N \ge 2$ bidders with one indivisible object, risk-neutral bidders, private values $v_i \overset{iid}{\sim} F$. We are interested in symmetric equilibria. 
+
+Let $Y_1 = \max \{v_j : j \ne i\}$ be the highest opponent value. 
+
+In the \emph{first-price} auction, we have the following general characterization.
+
+\begin{proposition}[Equilibrium bidding function, first-price auction]
+	For general $F$, \[
+		b(v) = \E\left[Y_1 \mid Y_1 < v\right] 	.\]
+\end{proposition}
+
+This holds for nonsymmetric value distributions.
+The bid is equal to the expected highest opponent value, conditional on winning.
+
+\section{Deriving Closed-Form Solutions}
+
+Assume $v_i \sim \operatorname{Unif}[0,1]$. Then by the above proposition, we see that in the first-price sealed-bid auction (and Dutch auction):
+\begin{align*}
+	\P\left[Y_1 \le y\right] &= y^{N-1}.
+\end{align*}
+
+In particular, with value $v$, $\P\left[Y_1 < v\right]  = v^{N-1}$.
+Putting $g$ as the density of $Y_1$,
+\begin{align*}
+	g(y) &= (N-1) y ^{N-2} \\
+	g(y \mid Y_1 < v) &= \frac{g(y)}{\P[Y_1 < v]} = \frac{(N-1) y^{N-2}}{v^{N-1}} \\
+	b(v) &= \int_{0}^{v} y g(y \mid Y_1 < v) dy   \\
+	&= \frac{N-1}{N}v
+.\end{align*}
+
+The bidding function is increasing in $v$. As $N$ grows, players must bid closer to their values.

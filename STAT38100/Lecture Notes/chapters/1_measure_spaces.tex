@@ -1,0 +1,663 @@
+\styledchapter{Measure Spaces}
+\section{Introduction}
+
+
+\begin{example}[Non-measurable event]
+	Consider a uniform probability measure (measure of $1$) on $[0,2\pi)$. For example, \[
+		\P\left[[0,1]\right] = \frac{1}{2\pi}, \quad \P\left[[0,1] \cup [2,3]\right] = \frac{1}{\pi}
+	.\] 
+
+	Define the function $T$ by \[
+		T(x) = \begin{cases}
+			x+1, \quad x+1 < 2\pi \\
+			x+1 - 2\pi, \quad x+1 \ge 2\pi
+		\end{cases}
+	.\] 
+	Thinking of a circle, the operator moves the point by one unit. With this operator, we can define an equivalence relation: we will say $x \sim y$ iff $T(x) = T(y)$ or $T(y) = T(x)$.
+
+	The equivalence relation leads to a partition $(A_\lambda:\lambda)$; i.e., \[
+		A_\lambda \cap A_\lambda' = \O, \ \lambda \ne \lambda', \quad \cup_\lambda A_\lambda = [0,2\pi)
+	\] such that $x,y \in A_\lambda \iff x \sim y$.
+
+	For every $\lambda$, select an element $x_\lambda \in A_\lambda$ and collect them in $X = \{x_\lambda : \lambda\}$\boxednote{$X$ can be called a representative set.}.\boxednote{Here we use the Axiom of Choice.} Define the translation \[
+		X+i = \{x_\lambda + i : \lambda\}
+	.\] 
+
+	Note that $\{X+i \operatorname{mod} 2\pi: i \in \Z\}$ is a partition of $[0,2\pi)$. 
+
+	We know that
+	\begin{align*}
+		1 = \P\left[[0,2\pi)\right] &= \sum\limits_{i \in \Z}^{} \P\left[(X+i)\right]  \\
+									&= \sum\limits_{i \in \Z}^{} \P\left[X\right]
+	.\end{align*}
+	Then what is $\P\left[X\right]$? It is not well-defined; $X$ is not a measurable event.
+\end{example}
+
+We need to restrict ourselves to measurable subsets to have our notion of probability be well-defined; hence measure theory is necessary.
+
+\begin{definition}[$\sigma$-algebra]
+	Let $\Omega$ denote the sample space and $2^{\Omega} := \{\text{subsets of } \Omega\}$.
+
+	Given $\Omega$, $\mathscr{F} \subseteq 2^{\Omega}$ is a $\sigma$-field ($\sigma$-algebra) if
+	\begin{enumerate}[label=(\roman*)]
+		\item $\O \in \mathscr{F}$
+		\item If $A \in \mathscr{F}$, then $A^{c} \in \mathscr{F}$
+		\item If $A_n \in \mathscr{F}$, then $\cup_n A_n \in \mathscr{F}$ (countable union).
+	\end{enumerate}
+\end{definition}
+
+Trivial examples include $2^{\Omega}$ and $\{\O,\Omega\}$. 
+
+\begin{definition}[Generated $\sigma$-field]
+	Given $\mathscr{E} \subseteq 2^{\Omega}$, define $\sigma(\mathscr{E})$ to be the smallest $\sigma$-field containing $\mathscr{E}$. In other words, for any $\sigma$-field $\mathscr{F} \supseteq \mathscr{E}$, then $\sigma(\mathscr{E}) \subseteq \mathscr{F}$.
+
+	Note that $\sigma(\mathscr{E})$ is well-defined, because we can put \[
+		\sigma(\mathscr{E}) = \bigcap \{\mathscr{F} \subseteq 2^{\Omega}: \mathscr{F} \text{ is a } \sigma\text{-field and } \mathscr{F} \supseteq \mathscr{E}\}
+	.\] We use the following lemma, whose proof is immediate.
+\end{definition}
+
+\begin{lemma}
+	If $\mathscr{F}_\lambda$ is a $\sigma$-field for each $\lambda$, then $\cap_\lambda \mathscr{F}_\lambda$ is a $\sigma$-field.
+\end{lemma}
+
+\begin{definition}[Monotone sequences of sets and their limits]
+	We say that $A_n$ is an increasing sequence ($A_n \uparrow$) if \[
+		A_1 \subseteq A_2 \subseteq \ldots
+	\] and similarly for decreasing sequences of sets.
+
+	If $A_n \uparrow$, define $\lim\limits_{n \to \infty} A_n := \cup_n A_n$, and if $A_n \downarrow$, define $\lim\limits_{n \to \infty} A_n := \cap_n A_n$.
+\end{definition}
+
+We can define the limit of an arbitrary, non-monotone sequence.
+
+\begin{definition}[$\liminf$ and $\limsup$ of sequences]
+	For arbitrary $A_n$, define \[
+		\liminf\limits_{n \to \infty} A_n = \cup_k \cap_{n \ge k} A_n, \quad \limsup\limits_{n \to \infty} A_n = \cap_k \cup_{n \ge k} A_n
+	.\] If $\liminf\limits_{n \to \infty} A_n = \limsup\limits_{n \to \infty} A_n$, then the limit exists and is the common value.
+\end{definition}
+
+\begin{remark}
+	Thinking hard, these definitions make sense. Alternatively, 
+	\begin{align*}
+		x \in \liminf\limits_{n \to \infty} A_n &\iff \exists\ k \text{ s.t. } \forall\ n \ge k ,\  x\in A_n \\
+												&\iff x \text{ belongs to all but finitely many } A_n \\
+		x \in \limsup_{n \to \infty} A_n &\iff \forall\ k, \exists\ n \ge k \text{ s.t. } x \in A_n \\
+										 &\iff x \text{ belongs to infinitely many } A_n
+	.\end{align*}
+	Furthermore, $\liminf\limits_{n \to \infty} A_n \subseteq \limsup\limits_{n \to \infty} A_n$.
+\end{remark}
+
+\begin{definition}[$\pi$-system, monotone class, $\lambda$-system, field]
+	We say that $\mathscr{P}$ is a $\pi$-system if it is closed under intersection; i.e., for any $A,B \in \mathscr{P}$, $A \cap B \in \mathscr{P}$.
+
+	We say that $\mathscr{M}$ is a monotone class if for any monotone sequence $(A_n)$, $\lim\limits_{n \to \infty} A_n \in \mathscr{M}$. Monotone classes are closed under the limit operation.
+
+	We say that $\mathscr{L}$ is a $\lambda$-system if 
+	\begin{enumerate}[label=(\roman*)]
+		\item $\Omega \in \mathscr{L} $,
+		\item If $A, B \in \mathscr{L}$ such that $A \supseteq B$, then $A \setminus B \in \mathscr{L}$, and 
+		\item If $(A_n)$ is increasing sequence in $\mathscr{L}$, then $\lim\limits_{n \to \infty} A_n \in \mathscr{L}$.\boxednote{This assumption is weaker than the one in the definition of a $\sigma$-field.} $\mathscr{L}$ is closed under countable unions, but only for increasing sequences.
+	\end{enumerate}
+
+	$\mathscr{A}$ is a field (algebra) if 
+	\begin{enumerate}[label=(\roman*)]
+		\item $\O \in \mathscr{A}$,
+		\item $\forall\  A \in \mathscr{A}$, $A^{c}\in \mathscr{A}$, and 
+		\item $\forall\  A, B \in \mathscr{A}$, $A \cup B \in \mathscr{A}$.
+	\end{enumerate}
+\end{definition}
+
+The first and fourth definitions deal with finite operations; the second and third include limits.
+
+\begin{theorem}
+	(Monotone class.)\boxednote{$m(\mathscr{A})$ is defined to be the smallest monotone class containing $\mathscr{A}$.} If $\mathscr{A}$ is a field, then $m(\mathscr{A}) = \sigma(\mathscr{A})$.
+\end{theorem}
+
+\begin{proof}
+	The inclusion $m(\mathscr{A}) \subseteq \sigma(\mathscr{A})$ is straightforward.
+	By definition, $\sigma(\mathscr{A})$ contains $\mathscr{A}$.
+	Also, $\sigma(\mathscr{A})$ is a monotone class.
+	Since $m(\mathscr{A})$ is the smallest monotone class containing $\mathscr{A}$, we get
+	$m(\mathscr{A}) \subseteq \sigma(\mathscr{A})$.
+
+	For the reverse inclusion, it suffices to show that $m(\mathscr{A})$ is a $\sigma$-field
+	containing $\mathscr{A}$. It contains $\mathscr{A}$ by definition.
+
+	(i) Since $\mathscr{A}$ is a field, $\O \in \mathscr{A} \subseteq m(\mathscr{A})$.
+
+	(ii) (Closure under complements.) Define
+	\[
+		M_0 := \{A \in m(\mathscr{A}) : A^{c} \in m(\mathscr{A})\}.
+	\]
+	We claim $M_0$ is a monotone class containing $\mathscr{A}$.
+
+	\emph{(a) $\mathscr{A} \subseteq M_0$.}
+	If $A \in \mathscr{A}$, then $A^c \in \mathscr{A} \subseteq m(\mathscr{A})$, hence $A \in M_0$.
+
+	\emph{(b) $M_0$ is a monotone class.}
+	Suppose $A_n \uparrow A$ with each $A_n \in M_0$.
+	Then $A_n^c \downarrow A^c$, and since each $A_n^c \in m(\mathscr{A})$ and $m(\mathscr{A})$
+	is a monotone class, we have $A^c \in m(\mathscr{A})$. Also $A \in m(\mathscr{A})$ because
+	$A_n \uparrow A$. Hence $A \in M_0$.
+	The argument for $A_n \downarrow A$ is identical (then $A_n^c \uparrow A^c$).
+
+	Thus $M_0$ is a monotone class containing $\mathscr{A}$, so by minimality
+	$m(\mathscr{A}) \subseteq M_0$. In particular, $m(\mathscr{A})$ is closed under complements.
+
+	(iii) (Closure under countable unions.) First we show closure under finite unions.
+
+	Define
+	\[
+		M_1 := \{A \in m(\mathscr{A}) : \forall\,B \in \mathscr{A},\; A \cup B \in m(\mathscr{A})\}.
+	\]
+	Clearly $M_1 \subseteq m(\mathscr{A})$. We check that $M_1$ is a monotone class containing
+	$\mathscr{A}$.
+
+	\emph{(a) $\mathscr{A} \subseteq M_1$.}
+	If $A \in \mathscr{A}$ and $B \in \mathscr{A}$, then $A \cup B \in \mathscr{A} \subseteq m(\mathscr{A})$
+	(since $\mathscr{A}$ is a field). Hence $A \in M_1$, so $\mathscr{A} \subseteq M_1$.
+
+	\emph{(b) $M_1$ is a monotone class.}
+	Suppose $A_n \uparrow A$ with $A_n \in M_1$ and fix a $B \in \mathscr{A}$.
+	Then $A_n \cup B \uparrow A \cup B$. Since each $A_n \cup B \in m(\mathscr{A})$ and $m(\mathscr{A})$ is
+	a monotone class, $A \cup B \in m(\mathscr{A})$. $B$ was arbitrary in $\mathscr{A}$, so $A \in M_1$.
+	The decreasing case is the same.
+
+	Therefore $M_1$ is a monotone class containing $\mathscr{A}$, hence $m(\mathscr{A}) \subseteq M_1$.
+	Equivalently,
+	\[
+		\forall\,A \in m(\mathscr{A}),\ \forall\,B \in \mathscr{A},\qquad A \cup B \in m(\mathscr{A}).
+	\]
+
+	Now define
+	\[
+		M_2 := \{A \in m(\mathscr{A}) : \forall\,B \in m(\mathscr{A}),\; A \cup B \in m(\mathscr{A})\}.
+	\]
+	Again $M_2 \subseteq m(\mathscr{A})$. We show $M_2$ is a monotone class containing $\mathscr{A}$.
+
+	\emph{(a) $\mathscr{A} \subseteq M_2$.}
+	Fix $A \in \mathscr{A}$ and $B \in m(\mathscr{A})$. From the conclusion about $M_1$ (with roles swapped),
+	$B \cup A \in m(\mathscr{A})$, hence $A \cup B \in m(\mathscr{A})$. Thus $A \in M_2$.
+
+	\emph{(b) $M_2$ is a monotone class.}
+	If $A_n \uparrow A$ with $A_n \in M_2$ and $B \in m(\mathscr{A})$, then
+	$A_n \cup B \uparrow A \cup B$. Since each $A_n \cup B \in m(\mathscr{A})$ and $m(\mathscr{A})$
+	is a monotone class, $A \cup B \in m(\mathscr{A})$, so $A \in M_2$.
+	The decreasing case is identical.
+
+	Thus $M_2$ is a monotone class containing $\mathscr{A}$, so $m(\mathscr{A}) \subseteq M_2$.
+	In particular, $m(\mathscr{A})$ is closed under finite unions.
+
+	Finally, let $(A_n)_{n\ge1} \subseteq m(\mathscr{A})$ and set $U_m := \bigcup_{n=1}^m A_n$.
+	By finite-union closure, $U_m \in m(\mathscr{A})$ for each $m$, and $U_m \uparrow \bigcup_{n=1}^\infty A_n$.
+	Since $m(\mathscr{A})$ is a monotone class, $\bigcup_{n=1}^\infty A_n \in m(\mathscr{A})$.
+
+	We have shown $m(\mathscr{A})$ is a $\sigma$-field containing $\mathscr{A}$, hence
+	$\sigma(\mathscr{A}) \subseteq m(\mathscr{A})$. Combined with the first inclusion,
+	$m(\mathscr{A}) = \sigma(\mathscr{A})$.
+\end{proof}
+\boxednote{This and the previous theorem give us two different ways to generate a $\sigma$-field. We can start with something more complicated (field) or less complicated (a $\pi$-system). In this course, the monotone class theorem will be more commonly used. The choice comes down to convenience.}
+\begin{theorem}
+	($\pi$-$\lambda$.) If $\mathscr{P}$ is a $\pi$-system, then \[
+		l(\mathscr{P}) = \sigma(\mathscr{P})
+	.\] 
+\end{theorem}
+
+\section{$\sigma$-fields}
+
+
+\begin{definition}[Topology]
+	Let $\Omega$ be a set. A \emph{topology} on $\Omega$ is a collection $\mathcal{T}\subseteq 2^\Omega$ such that:
+	\begin{enumerate}[label=(\roman*)]
+		\item $\emptyset\in\mathcal{T}$ and $\Omega\in\mathcal{T}$,
+		\item if $U,V\in\mathcal{T}$, then $U\cap V\in\mathcal{T}$,
+		\item if $\{U_i\}_{i\in I}\subseteq\mathcal{T}$, then $\bigcup_{i\in I}U_i\in\mathcal{T}$.
+	\end{enumerate}
+	The sets in $\mathcal{T}$ are called \emph{open sets}, and $(\Omega,\mathcal{T})$ is a \emph{topological space}.
+\end{definition}
+
+\begin{definition}[Measurable space]
+	A \emph{measurable space}\boxednote{A measure space is a measurable space equipped with a measure.} is a pair $(\Omega,\mathscr{F})$ where $\Omega$ is a set and $\mathscr{F}\subseteq 2^\Omega$ is a $\sigma$-algebra on $\Omega$, i.e.:
+	\begin{enumerate}[label=(\roman*)]
+		\item $\Omega\in\mathscr{F}$,
+		\item if $A\in\mathscr{F}$ then $A^c\in\mathscr{F}$,
+		\item if $A_1,A_2,\ldots\in\mathscr{F}$ then $\bigcup_{n=1}^\infty A_n\in\mathscr{F}$.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}[Borel $\sigma$-algebra]
+	If $(\Omega,\mathcal{T})$ is a topological space, the \emph{Borel $\sigma$-algebra} on $\Omega$ is
+	\[
+	\mathscr{B}(\Omega) \coloneqq \sigma(\mathcal{T}),
+	\]
+	the smallest $\sigma$-algebra containing all open sets.
+	In particular, for $\R$ with its usual topology,
+	\[
+	\mathscr{B}_{\R} \coloneqq \mathscr{B}(\R)=\sigma\big(\{U\subseteq \R : U \text{ is open}\}\big)
+	=\sigma\big(\{[a,\infty): a \in \R\}\big).
+	\]
+\end{definition}
+
+\begin{definition}[Measure]
+	Suppose $\mathscr{E}$ is a set collection such that $\O \in \mathscr{E} \subseteq  2^{\Omega}$. We say $\mu: \mathscr{E}\to [0,\infty]$ is a measure if:
+	\begin{enumerate}[label=(\roman*)]
+		\item $\mu(\O) = 0$ 
+		\item For disjoint $A_n \in \mathscr{E}$ such that $\cup_n A_n \in \mathscr{E}$, \[
+			\mu(\cup_n A_n) = \sum_n \mu(A_n)
+		.\] 
+	\end{enumerate}
+	In particular, if $\mu(\Omega) < \infty$, $\mu$ is called a finite measure. If $\mu(\Omega) = 1$, then it is a probability measure. If for any event $A \in \mathscr{E}$, there exists $A_n \in \mathscr{E}$ such that $\cup_n A_n \supseteq A$ and $\mu(A_n) < \infty$ for each $n$, we call $\mu$ is a $\sigma$-finite measure. Any set in a $\sigma$-finite measure is the countable union of sets each of finite measure.
+\end{definition}
+
+\begin{definition}[Probability space]
+	We call $(\Omega, \mathscr{F}, \mu)$ a probability space if $\mu(\Omega) = 1$.
+\end{definition}
+
+\begin{remark}[Properties of measure]
+	Suppose $\mu$ is a measure on a $\sigma$-field $\mathscr{E}$.\footnote{Note now $\mu$ is not a premeasure on an arbitrary set collection; it is defined on a $\sigma$-field for these properties.} Then
+	\begin{enumerate}[label=(\roman*)]
+		\item (Monotonicity.) If $A \subseteq B$, then $\mu(A) \le \mu(B)$.
+		\item (Continuity from below.) If $(A_n)$ is an increasing sequence ($A_n \subseteq A_{n+1}$), then
+		\[
+			\lim_{n \to \infty} \mu(A_n) = \mu\!\left( \lim_{n \to \infty} A_n \right)
+			\qquad\text{where }\ \lim_{n\to\infty}A_n:=\bigcup_{n=1}^\infty A_n .
+		\]
+		\item (Continuity from above.) If $(A_n)$ is a decreasing sequence ($A_{n+1} \subseteq A_n$) and $\mu(A_1) < \infty$, then
+		\[
+			\mu\!\left( \lim_{n \to \infty} A_n \right)= \lim_{n \to \infty} \mu(A_n)
+			\qquad\text{where }\ \lim_{n\to\infty}A_n:=\bigcap_{n=1}^\infty A_n .
+		\]
+	\end{enumerate}
+\end{remark}
+
+\begin{proof}
+	\begin{enumerate}[label=(\roman*)]
+		\item If $A\subseteq B$, then $B = A \amalg (B \setminus A)$, so
+		\[
+			\mu(B) = \mu(A) + \mu(B \setminus A) \ge \mu(A)
+		\]
+		by nonnegativity.
+		
+		\item Assume $A_n \uparrow$ and set $A:=\bigcup_{n=1}^\infty A_n$. Define
+		\[
+			D_1 := A_1,\qquad D_m := A_m \setminus A_{m-1}\ \ (m\ge 2),
+		\]
+		(with the convention $A_0:=\varnothing$). Then the $D_m$ are pairwise disjoint and for each $n$,
+		\[
+			A_n = \amalg_{m=1}^n D_m,
+			\qquad\text{and}\qquad
+			A=\amalg_{m=1}^\infty D_m .
+		\]
+		By countable additivity,
+		\[
+			\mu(A)=\sum_{m=1}^\infty \mu(D_m).
+		\]
+		On the other hand, for each $n$,
+		\[
+			\mu(A_n)=\mu\!\left(\amalg_{m=1}^n D_m\right)=\sum_{m=1}^n \mu(D_m),
+		\]
+		so taking $n\to\infty$ gives
+		\[
+			\lim_{n\to\infty}\mu(A_n)=\lim_{n\to\infty}\sum_{m=1}^n \mu(D_m)=\sum_{m=1}^\infty \mu(D_m)=\mu(A)
+			= \mu\!\left(\bigcup_{n=1}^\infty A_n\right).
+		\]
+		
+		\item Assume $A_n \downarrow$ and $\mu(A_1)<\infty$. Consider $B_n := A_1 \setminus A_n$.
+		Then $(B_n)$ is increasing, so by (ii),
+		\[
+			\mu\!\left(\bigcup_{n=1}^\infty B_n\right)=\lim_{n\to\infty}\mu(B_n).
+		\]
+		But
+		\[
+			\bigcup_{n=1}^\infty B_n
+			= \bigcup_{n=1}^\infty (A_1\setminus A_n)
+			= A_1 \cap \bigcup_{n=1}^\infty A_n^c
+			= A_1 \cap \left(\bigcap_{n=1}^\infty A_n\right)^c
+			= A_1 \setminus \bigcap_{n=1}^\infty A_n .
+		\]
+		Also, since $A_n\subseteq A_1$ and $\mu(A_1)<\infty$,
+		\[
+			\mu(B_n)=\mu(A_1\setminus A_n)=\mu(A_1)-\mu(A_n).
+		\]
+		Therefore,
+		\[
+			\mu\!\left(A_1 \setminus \bigcap_{n=1}^\infty A_n\right)
+			= \lim_{n\to\infty}\bigl(\mu(A_1)-\mu(A_n)\bigr)
+			= \mu(A_1)-\lim_{n\to\infty}\mu(A_n).
+		\]
+		Finally, since
+		\[
+			\mu\!\left(A_1 \setminus \bigcap_{n=1}^\infty A_n\right)=\mu(A_1)-\mu\!\left(\bigcap_{n=1}^\infty A_n\right),
+		\]
+		again using $\mu(A_1)<\infty$, we conclude
+		\[
+			\mu\!\left(\bigcap_{n=1}^\infty A_n\right)=\lim_{n\to\infty}\mu(A_n).
+		\]
+	\end{enumerate}
+\end{proof}
+
+\section{Constructing the Uniform Measure}
+
+
+Given a premeasure\footnote{For example, a finitely/countably additive set function like one involving volumes of rectangles.} on a small family of sets (a finite algebra/field), how can we get an extension to a useful $\sigma$-field?
+
+We will first construct a measure $\mu$ on a field $\mathscr{A}$.
+Then we will extend $\mu$ from $\mathscr{A}$ to $2^{\Omega}$ through outer measure as an approximation of $\mu$.
+Finally, we will restrict the domain to $\mathscr{F}_\tau \subseteq 2^{\Omega}$ so that $\mathscr{F}_\tau$ is a $\sigma$-field and $\mu$ is a measure on that field.
+
+Ultimately, we want to construct the uniform measure on $\left( [0,1], \mathscr{B}_{[0,1]} \right)$.
+
+\begin{example}
+	With $\Omega = [0,1]$, put $\mathscr{A} = \{\text{finite unions of intervals}\}$. It is easy to construct a measure on $\mathscr{A}$ by considering lengths of disjoint intervals in its elements.
+\end{example}
+
+How do we extend the measure from $\mathscr{A}$ to $\sigma(\mathscr{A})$? If we are able to do so, it is unique? We first answer the second question.
+
+\begin{theorem}
+	Suppose $\mathscr{A}$ is a field and $\mu$ and $\nu$ are two finite measures on $\sigma(\mathscr{A})$ such that for every $A \in \mathscr{A}$, $\mu(A) = \nu(A)$. Then for every $B \in \sigma(\mathscr{A})$, \[
+		\mu(B) = \nu(B)
+	.\] 
+\end{theorem}
+
+\begin{proof}
+	Define \[
+		\mathscr{H} = \{A \in \sigma(\mathscr{A}): \mu(A) = \nu(A)\}
+	.\] We know that $\mathscr{A} \subseteq  \mathscr{H} \subseteq \sigma(\mathscr{A})$.
+	Suppose we can show that $\mathscr{H}$ is a monotone class. Then it must contain the monotone class generated by $\mathscr{A}$, which is $\sigma(\mathscr{A})$ by the monotone class theorem. This would show equality. Let's prove it!
+
+	Suppose we have a monotone sequence $A_n$ in $\mathscr{H}$. Then by definition of $\mathscr{H}$,\boxednote{Note the existence of $\lim\limits_{n \to \infty} \mu(A_n), \nu(A_n)$ is guaranteed in $[0,\infty]$ by the sequence being monotone.}
+	\begin{align*}
+		\mu(A_n) &= \nu(A_n) \\
+		\implies \lim\limits_{n \to \infty} \mu(A_n) &= \lim\limits_{n \to \infty} \nu(A_n) \\
+		\mu( \lim\limits_{n \to \infty} A_n) &= \nu \left( \lim\limits_{n \to \infty} A_n \right) \\
+		\implies \lim\limits_{n \to \infty} A_n &\in \mathscr{H}
+	,\end{align*}
+	so $\mathscr{H}$ is a monotone class.
+\end{proof}
+
+\begin{definition}[Outer measure]
+	We\boxednote{The definition of outer measure differs from that of measure in three ways: (i) outer measure is defined on $2^{\Omega}$ instead of a subset; (ii) outer measure must explicitly be monotone, while measure does not; (iii) outer measure is only required to be countably \emph{sub}additive.} say that $\tau: 2^{\Omega} \to [0,\infty]$ is an outer measure if:
+	\begin{enumerate}[label=(\roman*)]
+		\item $\tau(\O) = 0$,
+		\item If $A \subseteq B$, then $\tau(A) \le \tau(B)$, and
+		\item $\tau\left( \cup_n A_n \right) \le \sum_n \tau(A_n)$.
+	\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Construction of outer measure]\boxednote{Think of $\mathscr{E}$ as a field, even though the theorem does not require this. For instance, $\mathscr{E}$ might be all finite unions of rectangles.} 
+	Suppose $\O \in \mathscr{E} \subseteq 2^{\Omega}$ and $\mu: \mathscr{E}\to [0,\infty]$ is such that $\mu(\O) = 0$. For every $A \in 2^{\Omega}$, define \[
+		\tau(A) = \inf \{\sum_n \mu(A_n) : A_n \in \mathscr{E},\ A \subseteq \cup_n A_n\}
+	.\] 
+	\boxednote{If there does not exist a countable covering of $A$, convention is to put $\tau(A) = \infty$.}Then $\tau$ is an outer measure.
+\end{theorem}
+
+\begin{proof}
+	\begin{enumerate}[label=(\roman*)]
+		\item Since $m(\O) = 0$ and $\O \subseteq \O \cup \O \cup \ldots$, \[
+			\tau(\O) \le \sum\limits_{n=1}^{\infty}  m(\O) = 0
+			.\] $\tau$ is an $\inf$ over nonnegative numbers, so $\tau(\O) = 0$.
+		\item Any covering of $B$ is also a covering of $A$. 
+			\item For any $\epsilon > 0$ and $A_n$, there exists $\{B_{n,k}\}_{k}$ such that $B_{n,k} \in \mathscr{E}$, $\cup_k B_{n,k} \supseteq A_n$, and
+			\[
+				\tau(A_n) + \frac{\epsilon}{2^{n}} \ge \sum_k \mu(B_{n,k}).
+			\]
+
+		We know \[
+			\bigcup\limits_{n}^{} A_n \subseteq \bigcup\limits_{n}^{} \bigcup\limits_{k}^{} B_{n,k}
+		,\] so \[
+			\tau\left( \bigcup\limits_{n}^{} A_n \right) \le \sum\limits_{n}^{} \sum\limits_{k}^{} \mu(B_{n,k}) \le \sum\limits_{n}^{} \tau(A_n) + \epsilon 
+		.\] We can send $\epsilon \to 0$ to conclude.
+	\end{enumerate}
+
+\end{proof}
+
+Now that we have an outer measure on $2^{\Omega}$, how do we restrict the domain to where we have countable additivity of disjoint sets?
+
+\begin{theorem}[Restriction to Carath\'eodory-measurable sets]
+	Let $\tau$ be an outer measure. Define \[
+		\mathscr{F}_\tau := \{A \subseteq \Omega: \forall\ B \subseteq  \Omega, \tau(B) = \tau(B \cap A) + \tau(B \cap A^{c})\}
+	.\]
+
+	Then $\left( \Omega, \mathscr{F}_\tau, \tau \right)$ is a measure space.
+\end{theorem}
+
+Thinking of $A$ as a knife that splits any set $B$ into $A\cap B$ and $A^{c} \cap B$, we may think that $A$ is a good knife if it divides all sets in $\Omega$ well.
+
+\begin{proof}
+	Step I ($\mathscr{F}_\tau$ is a $\sigma$-field). We see that $\O \in \mathscr{F}_\tau$, as for any $B \supseteq \Omega$, \[
+		\tau(B) = \underbrace{\tau(B \cap \O)}_{= \tau(\O) = 0} + \underbrace{\tau(B \cap \O^{c})}_{=\tau(B)}
+	.\] Furthermore, because if $\tau(B) = \tau(A \cap B) + \tau(A^{c} \cap B) = \tau(A^{c} \cap B) + \tau(A \cap B)$, $\mathscr{F}_\tau$ is closed under complementation.
+
+	We will now show that if $A_1,A_2 \in \mathscr{F}_\tau$, $A_1 \cap A_2 \in \mathscr{F}_\tau$.\boxednote{There is no good reason for proving closure under intersection instead of union. The proof for showing closure under finite union is analogous, so it might be a good idea to do it as an exercise.} For any $B \in \Omega$, 
+	\begin{align*}
+		\tau(B) &= \tau(B \cap A_1) + \tau(B \cap A_1^{c}) \\
+				&= \tau(B\cap A_1 \cap A_2) + \underbrace{\tau(B\cap A_1 \cap A_2^{c}) + \tau(B \cap A_1^{c} \cap A_2) + \tau(B \cap A_1^{c} \cap A_2^{c})}_{\text{goal: make into } B \cap \left( A_1\cap A_2 \right)^{c}}
+	.\end{align*}
+	Showing the union of these three terms is equal to $B \cap \left( A_1 \cap A_2 \right)^{c}$ is a bit difficult, so let's try decomposing the single set. 
+	\begin{align*}
+		\tau\left(B \cap \left( A_1 \cap A_2 \right)^{c}\right) &= \tau \left( B \cap \left( A_1^{c} \cup A_2^{c} \right) \right) \\
+																&= \underbrace{\tau \left( B \cap (A_2^{c} \cap A_1 )\right)}_{\text{one of goal terms}} + \tau \left( B \cap \left( A_1^{c} \right) \right) \\
+		&= \tau\left(B \cap \left( A_2^{c} \cap A_1 \right)\right) + \tau (B \cap A_1^{c} \cap A_2) + \tau (B \cap A_1^{c} \cap A_2^{c})
+	,\end{align*}
+	where we cut with $A_1$ for the second equality and by $A_2$ for the third.
+
+	Thus $\mathscr{F}_\tau$ is closed under finite intersection. Because we already showed it is closed under complementation, it is closed under finite union as well.
+
+	It just remains to show that $\mathscr{F}_\tau$ is closed under countable union. Suppose $A_n \in \mathscr{F}_\tau$. WLOG, we can assume that $\{A_n\}$ is pairwise disjoint. We know from $\mathscr{F}_\tau$ being closed under finite union that for any $m$, $\cup_{n=1}^{m} A_n \in \mathscr{F}_\tau$. For any $B \subseteq \Omega$, 
+	\begin{align*}
+		\tau(B) &= \tau \left( B \cap \left( \bigcup\limits_{n=1}^{m} A_n \right) \right) + \tau \left( B \cap \left( \bigcup\limits_{n=1}^{m} A_n \right)^{c} \right)\\
+		&= \tau(B\cap A_1) + \tau\left( B \cap \left( \bigcup\limits_{n=2}^{m} A_n \right) \right) + \tau \left( B \cap \left( \bigcup\limits_{n=1}^{m} A_n  \right)^{c} \right)
+	,\end{align*}
+	since we can cut the first term by $A_1$ and the $A_n$s are disjoint. Iterate on this. Then by monotonicity of outer measure,
+	\begin{align*}
+		\tau(B) &= \sum\limits_{n=1}^{m} \tau(B \cap A_n) + \tau\left( B \cap \left( \bigcup\limits_{n=1}^{m} A_n \right)^{c} \right) \\
+				&\ge \sum\limits_{n=1}^{m} \tau(B \cap A_n) + \tau \left( B \cap \underbrace{\left( \bigcup\limits_{n=1}^{\infty} A_n \right)^{c}}_{\text{now smaller}} \right) \\
+				&\ge \sum\limits_{n=1}^{\infty} \tau(B \cap A_n) + \tau \left( B \cap \left( \bigcup\limits_{n=1}^{\infty} A_n \right)^{c} \right)	\\
+				&\ge \tau\left(B \cap \left( \bigcup\limits_{n=1}^{\infty} A_n \right)\right) + \tau \left( B \cap \left( \bigcup\limits_{n=1}^{\infty} A_n \right)^{c}  \right)
+	,\end{align*}
+	where the last inequality follows from countable subadditivity of $\tau$. However, also by countable (in this case, finite) subadditivity, \[
+		\tau(B) \le \tau\left(B \cap \left( \bigcup\limits_{n=1}^{\infty} A_n \right)^{c}\right) + \tau \left( B \cap \left( \bigcup\limits_{n=1}^{\infty} A_n \right)^{c} \right)
+	,\] 
+	so $\cup_{n=1}^{\infty}A_n$ cuts arbitrary $B \subseteq \Omega$ well, so $\cup_{n=1}^{\infty}A_n \in \mathscr{F}_\tau$ and $\mathscr{F}_\tau$ is closed under countable union.
+
+	Step II ($\tau$ is a measure on $\mathscr{F}_\tau$). We check $\tau(\O) = 0$ because it is an outer measure.	The only other condition for $\tau$ being a measure is countable additivity on disjoint sets.
+
+	Again by $\tau$ as an outer measure, for disjoint $\{A_n\}$, \[
+		\tau\left( \cup_n A_n \right) \le \sum_n \tau(A_n)
+	.\] For the other direction, take $B = \cup_n A_n$, so
+	\begin{align*}
+		\tau(B) = \tau(\cup_n A_n) &\le \sum\limits_{n=1}^{\infty} \tau(A_n) \\
+								   &= \sum\limits_{n=1}^{\infty} \tau(A_n \cap B)  + \tau\left( A_n \cap B^{c} \right) \\
+								   &\le \sum\limits_{n=1}^{\infty} \tau(A_n) + \tau(0) \\
+								   &= \sum\limits_{n=1}^{\infty} \tau(A_n)
+	.\end{align*}
+
+	$\mathscr{F}_\tau$ being a $\sigma$-field on $\Omega$ and $\tau$ being a valid measure on $\mathscr{F}_\tau$ satisfies the definition of $(\Omega, \mathscr{F}_\tau, \tau)$ being a measure space, so we are done.
+\end{proof}
+
+\begin{theorem}[Unique extension of measure]
+	Suppose $\mu$ is a finite measure on a field $\mathscr{A}$. Then there exists a unique extension of $\mu$ from $\mathscr{A}$ to $\sigma(\mathscr{A})$.
+\end{theorem}
+
+\begin{proof}
+	For every $A \subseteq \Omega$, define \[
+		\tau(A) = \inf \{\sum_n \mu(B_n): B_n \in \mathscr{A},\ \cup_n B_n \supseteq A\}
+	.\] By our earlier theorem, $\tau$ is an outer measure.
+
+	Defining $\mathscr{F}_\tau$ according to the Caratheodory criterion, we know $(\Omega, \mathscr{F}_\tau, \tau)$ is a measure space.
+
+	Since we already showed that a measure on a field is unique on a $\sigma$-algebra generated by that field, we just need to show that $\tau$ is actually an extension of $\mu$ to $\sigma(\mathscr{A})$\boxednote{This is why we need $\mu$ to be a measure on a \emph{field}.}. This entails showing that for any $A \in \mathscr{A}$, $\mu(A) = \tau(A)$ and that $\mathscr{F}_\tau \supseteq  \sigma(\mathscr{A})$.
+
+	Fix $A \in \mathscr{A}$. Since $A \subseteq A \cup \O \cup \O \cup \ldots$, \[
+		\tau(A) \le \mu(A) + \O + \O + \cdots = \mu\left(A \right)
+	.\] For the other direction of the inequality, note that for any covering $B_n$ of $A$, 
+	\begin{align*}
+		\mu(A) &= \mu\left( \cup_n \left( A \cap B_n \right) \right) \\
+			   &\le \sum_n \mu(A \cap B_n) \\
+			   &\le \sum_n \mu(B_n)
+	,\end{align*}
+	where the second inequality follows from monotonicity of $\mu$.
+	Taking an $\inf$ yields \[
+		\mu(A) \le \tau(A)
+	.\] 
+
+	Since $\mathscr{F}_\tau$ is a $\sigma$-field, in order to show that $\mathscr{F}_\tau \supseteq \sigma(\mathscr{A})$, we just need to prove that $A \subseteq \mathscr{F}_\tau$. Hence, we want to show for every $A \in \mathscr{A}$ and every $B \subseteq \Omega$, $\tau(B) = \tau(B \cap A) + \tau(B \cap A^{c})$. The $\le$ direction is given by the subadditivity of $\tau$ with $\left( B \cap A \right) \cup \left( B \cap A^{c} \right)$
+
+	Fix $\epsilon > 0$. There exists $B_n \in \mathscr{A}$ such that $\cup_n B_n \supseteq B$ and \[
+		\tau(B) + \epsilon \ge \sum_n \mu(B_n)
+	.\] 
+		Then\boxednote{The last two inequalities use only outer-measure properties. At this point we do not yet know, for example, that $B \cap A \in \mathscr{F}_\tau$.}
+	\begin{align*}
+		\tau(B) + \epsilon &\ge \sum\limits_{n}^{} \mu(B_n) \\
+				&= \sum_n \left[ \mu(B_n \cap A) + \mu(B_n \cap A^{c}) \right] \text{ by additivity of measure} \\
+						   &= \sum_n \left[ \tau(B_n \cap A) + \tau(B_n \cap A^{c}) \right]  \text{ since $B_n, A, A^{c} \in \mathscr{A}$, where $\mu,\tau$ agree} \\
+						   &\ge \tau\left( \left( \cup_n B_n \right)\cap A \right) + \tau\left( \left( \cup_n B_n\right)\cap A^{c} \right) \text{ by subadditivity of outer measure} \\
+						   &\ge \tau\left( B\cap A \right) + \tau(B \cap A^{c}) \text{ by monotonicity of outer measure}
+	.\end{align*}
+	Sending $\epsilon \to 0$, \[
+		\tau(B) \ge \tau(B \cap A) + \tau\left( B \cap A^{c} \right)
+	,\] so we have shown \[
+		\tau(B) = \tau(B \cap A) + \tau(B \cap A^{c})
+	\] for arbitrary $A \in \mathscr{A}$ and $B \subseteq \Omega$, so $\mathscr{A} \subseteq \mathscr{F}_\tau$, and hence $\sigma(\mathscr{A}) \subseteq \mathscr{F}_\tau$.
+\end{proof}
+
+Now we finally consider $\left( [0,1], \mathscr{B}_{[0,1]} \right)$ and $\mathscr{A}$ as the set of finite unions of intervals and $\mu$ the length of an interval. By the theorem, we can extend $\mu$ to be a measure on $\mathscr{F} \supseteq \sigma(\mathscr{A}) = \mathscr{B}_{[0,1]}$.
+
+\begin{definition}[Complete measure space]
+	A measure space $(\Omega, \mathscr{F},\mu)$ is complete if \[
+		A \in \mathscr{F} \text{ and } \mu(A) = 0 \implies \forall\ B \subseteq A, B \in \mathscr{F},
+	.\] i.e. if the $\sigma$-field contains all subsets of measure zero sets.
+\end{definition}
+
+\begin{theorem}
+	Given an outer measure $\tau$, the measure space $(\Omega, \mathscr{F}_\tau, \tau)$ constructed from the Caratheodory criterion is a complete measure space.
+\end{theorem}
+
+\begin{proof}
+	We already showed that $(\Omega, \mathscr{F}_\tau, \tau)$ is a measure space. Suppose $\tau(A) = 0$. For any $B \in \Omega$, \[
+		\tau(B) \le \tau(B \cap A) + \tau(B \cap A^{c})
+	\] is true by subadditivity.
+
+		By monotonicity of outer measure,
+		\[
+			\tau(B \cap A^{c}) \le \tau(B)
+		.\]
+		Also, $\tau(B \cap A) \le \tau(A) = 0$, so
+		\[
+			\tau(B) \ge \tau(B \cap A) + \tau(B \cap A^{c})
+		.\] 
+
+	Thus $\tau(B) = \tau(B \cap A) + \tau(B \cap A^{c})$, for every $B \in \Omega$, so $A \in \mathscr{F}_\tau$.
+\end{proof}
+
+We receive the fact that $\left| \mathscr{B}_{[0,1]} \right| = \left| [0,1] \right|$, which allows us to claim that $\left( [0,1], \mathscr{B}_{[0,1]}, \mu \right)$, where $\mu$ is the uniform measure, is not a complete measure space.\footnote{This implies that the measure space we constructed via Caratheodory is strictly larger than this Borel measure space.}
+
+\begin{definition}[Cantor set]
+	Define $C_0 = [0,1]$, $C_1 = [0,\frac{1}{3}] \cup [\frac{2}{3},1]$, and recursively $C_n = \frac{C_{n-1}}{3} \cup \left( \frac{2}{3} + \frac{C_{n-1}}{3} \right)$. Then define the Cantor set $C = \cap_{n=0}^{\infty}C_n$. 
+\end{definition}
+
+Immediately, $C \in \mathscr{B}_{[0,1]}$, and $\mu(C) = \lim\limits_{n \to \infty} \left( \frac{2}{3} \right)^{n} = 0$. However, $\left| C \right| = \left| [0,1] \right|$ because $C$ bijects with binary expansions of numbers in $[0,1]$. Thus\boxednote{The inequality is because for any set $S$, $\left| 2^{S} \right| > \left| S \right|$.} \[\left| 2^C \right| = \left| 2^{[0,1]} \right| > \left| [0,1] \right| = \left| \mathscr{B}_{[0,1]} \right|.\] Because this inequality is strict, there exists $A \in 2^C$ such that $A \not\in \mathscr{B}_{[0,1]}$.
+
+What is the connection between the result $\mathscr{F}_\tau$ of Caratheodory extension and $\mathscr{B}_{[0,1]}$?
+
+\begin{theorem}[Completion]
+	Let $\left( \Omega, \mathscr{F},\mu \right)$ be a measure space. Define \[
+		\tilde{\mathscr{F}} = \{A \cup N : A \in \mathscr{F} \text{ and } \exists\  B \in \mathscr{F} \text{ s.t. } \mu(B) = 0 \text{ and } B \supseteq N\}
+	.\] 
+	$\mathscr{F}$ is a $\sigma$-field. For any \boxednote{$\tilde{\mathscr{F}}$ just adds all subsets of sets in $\mathscr{F}$ with measure $0$.}$A \cup N \in \tilde{\mathscr{F}}$, defining \[
+		\tilde{\mu}(A \cup N ) = \mu(A)
+	,\] $\left( \Omega, \tilde{\mathscr{F}}, \tilde{\mu} \right)$ is a complete and well-defined measure space. Moreover, for any $A \in \mathscr{F}$, $\tilde{\mu}(A) = \mu(A)$; the complete measure space is an extension of the original measure space.
+
+	We call $\tilde{\mathscr{F}}$ the \emph{completion} of $\mathscr{F}$.\boxednote{$\tilde{\mathscr{F}}$ is the smallest completion of $\mathscr{F}$.}
+\end{theorem}
+
+\begin{proof}
+	We need to check that $\tilde{\mathscr{F}}$ is a $\sigma$-field.
+	\begin{enumerate}[label=(\roman*)]
+		\item Since $\O = \O \cup \O$, where $\O \in \mathscr{F}$ and $\O \subseteq \O$, $\O \in \tilde{\mathscr{F}}$
+		\item Suppose $A \in \mathscr{F}$ and $N \subseteq B \in \mathscr{F}$ such that $m(B)=  0$.\footnote{With this sentence, we are supposing $A \cup N \in \tilde{\mathscr{F}}$.} We need to show $\left( A \cup N \right)^{c} \in \tilde{F}$. WE want to write $\left( A \cup N \right)^{c}$ as the union of something in $\mathscr{F}$ and a subset of a set of measure $0$.
+
+			We can write\footnote{draw} \[
+				\left( A \cup N \right)^{c} = \left( A \cup B \right)^{c} \cup \left( B \setminus \left( A \cup N \right) \right)
+			.\] Since $A,B \in \mathscr{F} \implies \left( A \cup B \right)^{c} \in \mathscr{F}$ and $B \setminus \left( A \cup N \right) \subseteq B$ with $\mu(B) = 0$, we are done.
+		\item Suppose $A_n \in \mathscr{F}$, $N_n \subseteq B_n \in \mathscr{F}$, and $\mu(B_n) = 0$. We want to show $\cup_n \left( A_n \cup N_n \right) \in \tilde{\mathscr{F}}$.
+
+			Writing \[
+				\cup_n \left( A_n \cup N_n \right) = \left( \cup_n A_n \right)\cup \left( \cup_n N_n \right)
+			,\] since $\cup_n N_n \subseteq \cup_n B_n$ and $\mu(\cup_n B_n) = 0$, we are done.
+	\end{enumerate}
+
+	We want to show $\tilde{\mu}$ is well-defined. Suppose $A_1,A_2 \in \mathscr{F}$, $N_1 \subseteq B_1 \in \mathscr{F}$, $N_2 \subseteq B_2 \in \mathscr{F}$, $\mu(B_1) = \mu(B_2) = 0$, and $A_1 \cup N_1 = A_2 \cup N_2$. Can we show $\tilde{\mu}(A_1 \cup N_1) = \tilde{\mu}(A_2 \cup N_2)$?
+
+	By definition,\boxednote{Adding in $B_1$ comes from: (i) monotonicity giving $\mu(A_1) \le \mu(A_1 \cup B_1)$ and (ii) subadditivity giving the other direction.}
+	\begin{align*}
+		\tilde{\mu}(A_1 \cup B_1) &= \mu(A_1) \\
+		&= \mu(A_1 \cup B_1) \text{ because we can union with measure zero set} \\
+		&\ge \mu(A_2) = \tilde{\mu}(A_2 \cup N_2)
+	.\end{align*} By symmetry, the other direction is true, so $\tilde{\mu}$ is well-defined.
+
+	Now we show $\tilde{\mu}$ is a measure on $\tilde{\mathscr{F}}$. 
+	\begin{enumerate}[label=(\roman*)]
+		\item $\tilde{\mu}(\O) = \tilde{\mu}\left( \O \cup \O \right) = \mu(\O) = 0$
+		\item Suppose $A_n \in \mathscr{F}$, $N_n \subseteq B_n \in \mathscr{F}$, $\mu(B_n) = 0$, and $A_n \cup N_n$ are pairwise disjoint.
+
+			Then 
+			\begin{align*}
+				\tilde{\mu}\left( \cup_n \left( A_n \cup N_n \right) \right) &= \tilde{\mu}\left( \left( \cup_n A_n \right)\cup \left( \cup_n N_{n} \right) \right) \\
+																			 &= \mu\left( \cup_n A_n \right) \\
+																			 &= \sum_n \mu(A_n) \text{ by disjointness} \\
+																			 &= \sum_n \tilde{\mu}(A_n \cup N_n)
+			,\end{align*}
+	\end{enumerate}
+	so $\tilde{\mu}$ is a measure.
+
+	Since $\tilde{\mu}(A) = \tilde{\mu}\left( A \cup \O \right) = \mu(A)$, $\tilde{\mu}$ is an extension of $\mu$.
+\end{proof}
+
+\begin{theorem}
+	Suppose\boxednote{One example is taking $\mathscr{A}$ as all finite unions of intervals in the unit interval and $\mathscr{F}_\tau$ as the \emph{completion} of the Borel $\sigma$-field.} $\mu$ is a finite measure on a field $\mathscr{A}$ of subsets of $\Omega$ and that $\tau$ is the outer measure constructed by $\mu$. With $\mathscr{F}_\tau$ as the set of $\tau$-measurable subsets of $\Omega$ according to the Caratheodory criterion, $(\Omega, \mathscr{F}_\tau, \tau)$ is the completion of $\left( \Omega, \sigma(\mathscr{A}), \tau \right)$.
+\end{theorem}
+
+We require the following lemma.
+
+\begin{lemma}
+	Under the same setting (finite measure $\mu$ with induced outer measure $\tau$), for any $A \in \mathscr{F}_\tau$, there exists $B \in \sigma(\mathscr{A})$ such that $B \supseteq A$ and $\tau(B) = \tau(A)$. Elements in $\mathscr{F}_\tau$ can be approximated above by elements in $\sigma(\mathscr{A})$.
+\end{lemma}
+
+\begin{proof}
+	By definition of outer measure induced by a premeasure, \[
+		\tau(A) = \inf \{\sum_n \mu(B_n) : B_n \in \mathscr{A}, \cup_n B_n \subseteq A\}
+	.\] For every $m \in \N$, there exists a sequence $\{B_{m,n}\}_n \subseteq \mathscr{A}$ such that $\cup_n B_{m,n} \supseteq A$ and \[
+		\tau(A) + \frac{1}{n} \ge \sum_n \mu(B_{m,n})
+	.\] 
+
+	Write \[
+		B = \cap_m \cup_n B_{m,n} \supseteq A
+	.\] Then $B \in \sigma(\mathscr{A})$ because each $B_{m,n} \in \mathscr{A}$.
+	We see
+	\begin{align*}
+		\tau(A) + \frac{1}{m} &\ge \sum_n \mu(B_{m,n}) \\
+							  &= \sum_n \tau(B_{m,n}) \\
+							  & \ge \tau \left( \cup_n B_{m,n} \right) \\
+							  &\ge \tau(B)			
+	.\end{align*}
+	Sending $m \to \infty$, $\tau(A) \ge \tau(B)$. Since $A \subseteq B$, $\tau(A) \le \tau(B)$.
+\end{proof}
+
+\begin{proof}
+	(Of the theorem.) Write $\mathscr{F} = \sigma(\mathscr{A})$. We want to show that $\tilde{\mathscr{F}} = \mathscr{F}_\tau$, where \[
+		\tilde{\mathscr{F}} = \{A \cup N : A \in \mathscr{F}, \exists\  B \in \mathscr{F} \text{ s.t. } B \supseteq  N, \mu(B) = 0\}
+	.\] We know $\tilde{\mathscr{F}} \subseteq \mathscr{F}_\tau$ since $\tilde{\mathscr{F}}$ is the smallest completion of $\mathscr{F}$ and $\mathscr{F}_\tau$ is a completion of $\mathscr{F}$.
+
+	For $\mathscr{F}_\tau \subseteq \tilde{\mathscr{F}}$, fix $A \in \mathscr{F}_\tau$. We want to write $A$ as the union of something in $\mathscr{F}$ and a subset of a measure zero set.
+
+	By the lemma, there exists $B \in \mathscr{F}$ such that $B \supseteq A$ and $\tau(B) = \tau(A)$. By finiteness of $\tau$, this implies $\tau(B \setminus A) = 0$.
+
+	Apply the lemma again to $B \setminus A$: there exists $C \in \mathscr{F}$ such that $C \subseteq B \setminus A$ and $\tau(C) = \tau(B \setminus A) = 0$.
+
+	Draw, then write \[
+		A = \left( A \cap C^{c} \right) \cup \left( A\cap C \right)
+	.\] We don't know that $A \cap C^{c} \in \mathscr{F}$, because we just know $A \in \mathscr{F}_\tau$. However, we can write \[
+		A = (B \cap C^{c}) \cup (A \cap C)
+	.\] $B, C \in \mathscr{F}$, so $B \cap C^{c} \in \mathscr{F}$. Furthermore, $A \cap C \subseteq C$, where $\tau(C) = 0$, so we are done.
+\end{proof}

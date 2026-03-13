@@ -1,0 +1,51 @@
+\styledchapter{Collusion}
+
+We briefly discuss collusion in the context of strong cartels, which allow for transfer payments between members of the bidding ring.
+
+\section{Strong Cartels}
+
+We consider an independent private values model with symmetric values $v_i \sim f(v_i)$ and $v_i \in [0,1]$ and all $N$ members participating in the bidding ring. Suppose the seller uses a first-price auction with reserve price $\rho$.\boxednote{We make no restriction on how $\rho$ is determined.}
+
+The best the bidding ring can do win the good when $\max \left\{v_1,\ldots,v_N\right\} \ge \rho$, in which case they pay the seller $\rho$.
+The bidders do this by running a ``knockout'' auction among themselves.
+
+\begin{definition}[Knockout auction]
+	In a knockout auction, the $N$ bidders in the bidding ring submit a sealed bid $b_i \in [0,\infty)$. The highest bid wins and the corresponding bidder earns the right to bid $\rho$ in the real auction, where all others must bid less than $\rho$ in the real auction. The high bidder keeps the good, and pays each of the other bidders the side payment $\frac{b-\rho}{N-1}$.
+\end{definition}
+
+The total payment made by a winner of the knockout auction (and the main auction) is $\rho + (N-1) \frac{b-\rho}{N-1} = b$. We see that this format is equivalent to a first price auction, except that losers get a side payment.
+
+Suppose $\tilde{b}(\cdot )$ is a symmetric equilibrium bidding function for the knockout auction. Assume that $\tilde{b}$ is strictly increasing, with $\tilde{b}(v) = 0$ for $v < \rho$ and $\tilde{b}(\rho) = \rho$. We want to determine what $\tilde{b}$ is above $\rho$. Let $u(r,v)$ be a bidder's utility when her value is $v$ and she bids $\tilde{b}(r)$ and all others bid according to $\tilde{b}(\cdot )$.
+We write down
+\begin{align}
+	u(r,v)
+	&= F^{N-1}(r)\left( v - \tilde{b}(r) \right) \\
+	&\quad + \int_{r}^{1}
+		\underbrace{\left(\frac{\tilde{b}(s) - \rho}{N-1}\right)}_{\text{side payment}}
+		\overbrace{\left( N-1 \right)F^{N-2}(s)f(s)}^{\mathclap{\text{density of highest bid among others}}}\,ds
+.\end{align}
+
+Maximizing as we have done, for $v \ge \rho$,
+\begin{align*}
+	\frac{du}{dr}
+	= (N-1) F^{N-2}(r) f(r) \left( v- \tilde{b}(r) \right) &- F^{N-1}(r) \tilde{b}'(r) - \left( \tilde{b}(r) - \rho \right)F^{N-1}(r) f(r)
+.\end{align*}
+The equilibrium condition $\left.\frac{du}{dr}\right|_{r= v} = 0$ yields a linear ODE for $\tilde{b}$.
+Multiplying by $F(v)$ and collecting terms gives \[
+	G(v) = F^{N}(v) \left( \tilde{b}(v) - \rho \right)
+.\]
+Then \[
+	G'(v) = (N-1) F^{N-1}(v) f(v) (v-\rho)
+.\]
+Integrating from $\rho$ to $v$ yields \[
+	F^N(v) \left( \tilde{b}(v) - \rho \right)
+	= \int_{\rho}^{v} (N-1)F^{N-1}(x) f(x) (x-\rho)dx
+.\]
+Since $\tilde{b}(\rho)=\rho$, this simplifies to \[
+	\tilde{b}(v) - \rho = \frac{N-1}{N} m(v)
+.\]
+where \[
+	m(v) = \E\left[X_{(1)} - \rho \mid X_{(1)} < v\right]
+.\]
+
+We can verify this $\tilde{b}$ is indeed increasing in $v$ and constitutes an equilibrium (by examining the sign of $\frac{du}{dr}$).

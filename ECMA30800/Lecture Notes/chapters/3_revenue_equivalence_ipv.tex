@@ -1,0 +1,235 @@
+\styledchapter{Revenue Equivalence with Independent Private Values}
+\section{Direct Comparisons}
+
+It's apparent that a first-price and Dutch auction raise the same revenue, and that the second-price and English auctions raise the same revenue.\footnote{Here, we really refer to \emph{expected} revenue.}
+So, we just want to compare the revenue from FPA and SPA.
+
+In a FPA, bidders bid according to \[
+	\hat{b}(v) = \frac{N-1}{F^{N-1}(v)} \int_{0}^{v} x F^{N-2}(x)f(x)dx 
+.\] Let $R_\FPA$ be the revenue in a first-price auction and similarly for $R_\SPA$.
+
+Let $g_{i,N}(v)$ be the density of the $i$th highest value $v$ among $N$ values drawn iid from $f$. Then
+\begin{align*}
+	R_\FPA &= \int_{0}^{1} \hat{b}(v)g_{1,N}(v)dv  \\
+		   &= \int_{0}^{1} \left[\frac{N-1}{F^{N-1}(v)} \int_{0}^{v} x F^{N-2}(x) f(x)dx  \right] N f(v) F^{N-1}(v)dv\\ 
+		   &= N(N-1) \int_{0}^{1} \left[ \int_{0}^{v} xf(x)F^{N-2}(x)dx \right]f(v)dv \\
+		   &= N(N-1) \int_{0}^{1} \int_{0}^{v} f(v) xf(x) F^{N-2}(x)dxdv \\
+		   &= N(N-1) \int_{0}^{1} \int_{x}^{1} f(V) xf(x) F^{N-2}(x) dvdx \text{ because Fubini is dead}\\
+		   &= N(N-1) \int_{0}^{1} x f(x) F^{N-2}(x) \int_{x}^{1} f(v)dv dx \\
+		   &= N(N-1) \int_{0}^{1} xf(x) F^{N-2}(x) (1-F(x)) dx \\
+	R_\SPA &= \int_{0}^{1} v g_{2,N}(v) dv \\
+		   &= \int_{0}^{1} v N (N-1) f(v) (1-F(v)) F^{N-2}(v) dv \\
+		   &= N(N-1) \int_{0}^{1} v f(v) F^{N-2}(v) (1-F(v))dv 
+.\end{align*}
+First-price and second-price auctions are revenue equivalent, so all four standard auctions raise the same expected revenue (at least when $\forall\ i, F_i = F$).
+
+\begin{proposition}	We \boxednote{We condition on $v = v_{(1)}$ since you only win the auction if your bid is highest.}can interpret \[
+		\hat{b}(v_i)= \E\left[\max v_{-i} \mid v = v_{(1)}\right] 
+	.\] 
+\end{proposition}
+\begin{proof}
+	We see
+	\begin{align*}
+		\E\left[\max v_{-i}\mid v = v_{(1)}\right] &= \E\left[\max v_{-i} \mid v_{-i} \le v, v = v_{(1)}\right]  \\
+											   &= \E\left[\max v_{-i} \mid v_{-i} \le v\right] \text{ by independence}
+	.\end{align*}
+	The density of the highest value of others is \[
+		g_{1,N-1}(x) = (N-1) f(x) F^{N-2}(x)
+	.\] Thus the conditional density given $x \le v$ is $\frac{g_{1,N-1}(x)}{F^{N-1}(v)}$.
+	Now compute
+	\begin{align*}
+		\E\left[\max v_{-i} \mid v = v_{(1)}\right] &= \frac{1}{F^{N-1}(v)} \int_{0}^{v} x (
+		N-1) f(x) F^{N-2}(x)dx \\
+		&= \frac{N-1}{F^{N-1}(v)} \int_{0}^{v} xf(x) F^{N-2}(x)dx  \\
+		&= \hat{b}(v)
+	.\end{align*}
+\end{proof}
+
+\begin{corollary}
+	We have shown that in a first-price auction, a player's bid $\hat{b(v)}$ given their value $v$ is the expected second-highest value\footnote{Importantly, not bid.} given that she has the highest value. By symmetry, this is the expected second-highest bid given the highest value is $v$. This is $R_\SPA \left.\right|_{v_{(1)} = v}$.
+
+	Clearly, $R_{\FPA}\left.\right|_{v_{(1)} = v} = \hat{b}(v) = R_\SPA \left.\right|_{v(1) = v}$. Computing an expectation provides another way of showing revenue equivalence.
+\end{corollary}
+
+\section{Direct Selling Mechanisms, Revenue Equivalence}
+\begin{definition}[Direct selling mechanism]
+	A DSM is a collection of probability assignment functions $p_i(v_1,\ldots,v_N)$ and cost functions $c_i(v_1,..,v_N)$ such that the following are true.\boxednote{Note that this definition encompasses a very large set of rules for how an ``auction'' can be run.}
+
+	For each bidder $i$ and vector of values $v_1,\ldots,v_N$, $p_i(v_1,\ldots,v_N) \in [0,1]$ denotes the probability that bidder $i$ receives the good for sale and $c_i(v_1,\ldots,v_N)$ denotes the cost she pays to the seller.\footnote{$c_i$ is paid regardless if player $i$ wins; $c_i$ can be $0$.} Furthermore, $\sum_i p_i \le 1$.\footnote{The seller may keep the good.}
+\end{definition}
+
+A DSM works as following. Bidders privately report values $r_1,\ldots,r_N$, which may be false to the seller, who allocates the good according to $p_1, \ldots,p_N$\footnote{A DSM does \emph{not} compute if player $i$ gets the good with probability $p_i$ and also independently allows player $j$ to get the good with probability $p_j$. Only one player may get the object.} and the bidders pay their cots $c_1,\ldots.c_N$. 
+
+While this is a very general framework, we first restrict our consideration to mechanisms where truth-telling is an equilibrium.
+
+\begin{definition}[Incentive-compatible direct selling mechanisms]
+	Fix a direct selling mechanism $(p,c)_i$. For each $i$ and each $r_i, v_i \in [0,1]$, define\footnote{Alternatively, derive.} player $i$'s expected utility when everyone reports their true values $v_{-i}$ and player $i$ reports a value $r_i$ as
+	\[
+		u_i(r_i,v_i)
+		= \int \left[ p_i(r_i,v_{-i})v_i - c_i(r_i, v_{-i}) \right] f_{-i}(v_{-i})\, dv_{-i}
+	.\]
+
+	Define\footnote{Again, derive.} \begin{align*}
+		\overline{p}_i (r_i) &= \int_{0}^{1} \cdots \int_{0}^{1} p_i(r_i, v_{-i}) f_{-i}(v_{-i}) dv_{-i} \\
+			\overline{c}_i(r_i) &= \int_{0}^{1}  \cdots \int_{0}^{1} c_i (r_i, v_{-i}) f_{-i}(v_{-i}) dv_{-i}
+		\end{align*} as player $i$'s expected probability\footnote{Expectation from her perspective.} of winning and cost when she reports a value $r_i$ and the others report their true values $v_{-i}$.
+	Then \[
+		u_i(r_i,v_i) = \overline{p}_i(r_i)v_i - \overline{c}_i (r_i)
+	.\] 
+
+	A DSM is incentive-compatible if every bidder $i$ can do no better than to report truthfully given that all other bidders always report truthfully, i.e. \[
+		v_i = \argmax_{r_i \in [0,1]} u_i(r_i,v_i) = \argmax_{r_i \in [0,1]} \overline{p}_i(r_i)v_i - \overline{c}_i (r_i)
+	.\]  Truthful reporting is an equilibrium in an incentive-compatible DSM.
+\end{definition}
+
+\begin{proposition}	Each of the four standard auctions can be implemented with a direct selling mechanism.
+\end{proposition}
+
+\begin{proof}
+	Disregarding the natural ordering, begin with a second-price auction. We need to construct $\left( p_{\SPA}, c_\SPA \right)$. Ignoring ties, define \[
+		p_i^{\SPA} (v_1,\ldots,v_N) = \begin{cases}
+			1, \quad &v_i = \max \{v_j\}_{j} \\
+			0, \quad &v < \max \{v_j\}_j
+		\end{cases}
+	\] and\boxednote{We define $c_i^{\SPA}$ as $v_{(2)}$; by the key property of a SPA, this coincides with $\hat{b}(v_{(2)})$. Importantly, we do \emph{not} use $\hat{b}$ in a definition of $c$.} \[
+		c_i^{\SPA} = \begin{cases}
+			v_{(2)}, \quad&v_i = \max \{v_j\}_j \\
+			0,\quad &v_i < \max\{v_j\}_j
+		\end{cases}
+	.\]
+	We see that $\left( p^\SPA, c^\SPA \right)$ is incentive-compatible and implements the outcome of the SPA. 
+	Done!
+
+		Now consider the English auction. Put
+		\[
+			\left( p_i^{\operatorname{EA}}, c_i^{\operatorname{EA}} \right) = \left( p_i^\SPA, c_i^\SPA \right).
+		\]
+		Mr.~Auctioneer can tell the bidders that he will implement their optimal strategies if they tell him their values.
+		Reporting truthfully is a dominant strategy.
+
+	For the first-price auction, assume $f_i = f$ for all $i$. Mr. Auctioneer can tell the bidders the same thing he did as in the English auction with the $\hat{b}$ we derived. Getting scarily close to a proof by tautology, it appears that we can have an auctioneer tell bidders that he will run a certain auction to show that the auction is compatible with a DSM.\footnote{This suffices as a proof for any auction (including the SPA) with an equilibrium [of reporting truthfully] being implementable as a [IC]DSM.} If all bidders other than $i$ report truthfully, then they all bid according to $\hat{b}$. Thus by our previous derivation player $i$'s dominant strategy is to bid according to $\hat{b}$; i.e. report $v_i$.
+	
+	Formally, define
+	\begin{align*}
+		p_i^\FPA(v_1,\ldots,v_N) &= \begin{cases}
+			1, \quad v_i = v_{(1)} \\
+			0, \quad v_i < v_{(1)}
+		\end{cases} \\
+		c_i^\FPA(v_1,\ldots,v_N) &= \begin{cases}
+					\hat{b}(v_{(i)}), \quad v_i = v_{(1)} \\
+					0,\ \quad\qquad v_i < v_{(1)}
+				\end{cases}
+	.\end{align*}
+	This yields an ICDSM. 
+
+	Consider the Dutch auction. We are done.
+\end{proof}
+
+We have shown the following.
+
+\begin{theorem}[Special Revelation Principle]
+	For each of the four standard auctions and their equilibria, we can define a DSM $(p,c)$ in which 
+	\begin{itemize}
+		\item Truth-telling in as equiibrium; i.e., $(p,c)$ is incentive-compatible.
+		\item In the truth-telling equilibrium of $(p,c)$, for all $i$ and $(v_1,\ldots,v_N)$, $i's$ winning probability $p_i$ and cost $c_i$ are exactly the same as in the equilibrium of the given standard auction.
+	\end{itemize}
+	Hence, all bidders and the seller are indifferent between the auction and the DSM.
+\end{theorem}
+
+We have not shown the following, which justifies restricting attention to ICDSM when characterizing \emph{equilibrium outcomes} (allocations and payments)
+that are implementable by some selling mechanism.
+
+\begin{theorem}[(General) Revelation Principle]
+	For any selling mechanism and any of its equilibria, we can define a DSM in which
+	\begin{itemize}
+		\item Truth-telling is an equilibrium; i.e., $(p,c)$ is incentive-compatible.
+		\item In the truth-telling equilibrium of $(p,c)$, for all $i$ and $(v_1,\ldots,v_N)$, $i's$ winning probability $p_i$ and cost $c_i$ are exactly the same as in the equilibrium of the selling mechanism.
+	\end{itemize}
+	Hence, all bidders and the seller are indifferent between the selling mechanism and the ICDSM.
+\end{theorem}
+
+\begin{theorem}[Characterizing incentive compatibility] \label{1-20-1}
+	A DSM $(p,c)$ is incentive-compatible iff for every $i$,
+	\begin{enumerate}[label=(\roman*)]
+		\item $\overline{p}_i$ is weakly increasing in $v_i$ on $[0,1]$ and
+		\item $\overline{c}_i(v_i) = \overline{c}_i (0) + \overline{p}_i (v_i)v_i - \int_{0}^{v_i} \overline{p}_i(x)dx, \quad \forall\ v_i \in [0,1] $\boxednote{Note that (ii) is a strong result; one's expected cost depends entirely on the probability assignment functions, up to a constant (the cost at value $0$).}
+	\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+	Assume as much differentiability as needed.\footnote{Which is actually none.}
+
+	($\implies$) Recall
+	\begin{align*}
+		u_i(r_i,v_i) &= \overline{p}_i(r_i)v_i - \overline{c}_i(r_i) \\
+		\text{IC } \implies 0 = \partial_{r_i} u_i(r_i,v_i)\left.\right|_{r_i = v_i} &= \overline{p}'_i(v_i)v_i - \overline{c}'_i(v_i), \quad \forall\ v_i \\
+			\overline{c}_i(v_i) - \overline{c}_i(v_0) &= \int_{0}^{v_i} \overline{p}_i'(x)xdx \\ 
+			\overline{c}_i(v_i) &= \overline{c}_i(0) + \int_{0}^{v_i} \overline{p}_i'(x)xdx 	 \\
+								&= \overline{c}_i(0) + \overline{p}_i(v_i)v_i - \int_{0}^{v_i} \overline{p}_i(x)dx 
+	,\end{align*}
+	where the last equality followed from integrating by parts. We have shown IC $\implies$ (ii).
+	
+	For a maximum at $r_i = v_i$, we require $\frac{d^2}{dr_i^2} u_i(r_i,v_i)\left.\right|_{r_i = v_i} \le 0$. Hence, we require \[
+		\overline{p}_i''(r_i)v_i - \overline{c}_i(r_i) \left.\right|_{r_i = v_i} = \overline{p}_i''(v_i) v_i - \overline{c}_i ''(v_i) \le 0
+		\] for every $v_i \in [0,1]$.
+		Differentiating both sides of the FOC from above gives \[
+			\overline{p}_i ''(v_i) v_i + \overline{p}_i'(v_i) = \overline{c}_i''(v_i)
+		.\] Substituting, we see that for a maximum, we require, \[
+			\overline{p}''_i(v_i)v_i - \left( \overline{p}_i''(v_i)v_i + \overline{p}_i'(v_i) \right) \le 0
+		,\] so $\overline{p}_i(v_i) \ge 0$ for all $v_i \in [0,1]$; we have shown that incentive-compatibility implies $\overline{p}_i$ is nondecreasing.
+
+		($\impliedby$) Recall $\frac{d}{dr_i} u_i(r_i,v_i) = \overline{p}_i'(r_i)v_i - \overline{c}_i'(r_i)$. We can differentiate $c_i$ to get \[
+			c_i'(v_i) = \overline{p}_i(v_i)v_i
+		\] for every $v_i \in [0,1]$, so
+		\[
+			\frac{d}{dr_i} u_i(r_i,v_i) = \overline{p}_i'(r_i) (v_i - r_i)
+		\]
+		which is
+		\[
+			\begin{cases}
+				\ge 0, & r_i \le v_i, \\
+				\le 0, & r_i \ge v_i.
+			\end{cases}
+		\]
+	\end{proof}
+
+\begin{theorem}[Revenue equivalence]
+	If two ICDSMs have the same probability assignment functions and every bidder with value zero is indifferent between the two mechanisms, then they each raise the same expected revenue.
+\end{theorem}
+
+\begin{proof}
+	Let $(p,c)$ $(p,c')$ be two ICDSMs with the same probability assignment functions. Let $R^k$ be the (expected) revenue from mechanism $k \in \{0,1\}$.\boxednote{Through this proof, we see that indifference at value $0$ can be replaced by indifference at any $v \in [0,1]$.} Note
+	\begin{align*}
+		R^k &= \sum\limits_{i=1}^{n} \int_{0}^{1} \overline{c}^{k}_i(v_i) f_i(v_i)dv_i   \\
+		&= \sum\limits_{i=1}^{N} \int_{0}^{1} \left[ \overline{c}_i^{k}(0) + \overline{p}_i(v_i) v_i - \int_{0}^{1} \overline{p}_i(x)dx  \right] f_i(v_i)dv_i
+	,\end{align*} where the second equality follows from (ii) from Theorem (\ref{1-20-1}).	Because indifference at value $0$ implies \[
+		\overline{p}_i(0) \cdot 0 - \overline{c}_i^{0}(0) = \overline{p}_i(0) \cdot ) - \overline{c}_i^{1}(0) \implies \overline{c}_i^{0}(0) = \overline{c}_i^{1}(0)
+	,\] we see the right hand side is actually independent of $k$, so $R^0 = R^1$. 
+\end{proof}
+
+\begin{remark}	We can use the Revenue Equivalence Theorem to solve for $\hat{b}(v)$ in the first-price auction. Suppose $\hat{b}(v)$ is a symmetric equilibrium of a FPA. Then player $i$'s expected cost is $\overline{c}_i(v_i) = F^{N-1}(v) \hat{b}(v)$. By incentive-compatibility, we can plug this into our characterization of ICDSMs and get \[
+		F^{N-1}(v) \hat{b}(v) = 0 + F^{N-1}(v)v - \int_{0}^{v} F^{N-1}(x)dx 
+	,\] so \[
+		\hat{b}(v) = v- \int_{0}^{v} \left( \frac{F(x)}{F(v)} \right)^{N-1}dx
+	.\] 
+\end{remark}
+
+\begin{definition}[Individual rationality]
+	A DSM $(p,c)$ is individually rational (IR) if for every $i$ and $v_i \in [0,1]$, \[
+		\overline{p}_i(v_i)v_i - \overline{c}_i \ge 0
+	.\] 
+\end{definition}
+
+\begin{proposition}	If $(p,c)$ is incentive-compatible, then $(p,c)$ is individually rational iff for all $i$, $\overline{c}_i(0) \le 0$.
+\end{proposition}
+
+\begin{proof}
+	($\implies$) Suppose $(p,c)$ is IC and IR. IR gives us $\overline{p}_i(0) \cdot ) - \overline{c}_i(0) \ge 0$ for all $i$, so $\overline{c}_i(0) \le 0$; incentive computability is not necessary.
+
+	($\impliedby$) Suppose $(p,c)$ is IC and $\overline{c}_i(0) \le 0$ for all $i$. Then IC gives us the first inequality in
+	\begin{align*}
+		\overline{p}_i(v_i)v_i - \overline{c}_i(v_i) &\ge \overline{p}_i (v_i) &\ge \overline{p}_i(0) v_i - \overline{c}_i \left( 0 \right) \\
+													 &\ge -\overline{c}_i(0) \ge 0
+	,\end{align*}
+	which holds for all $i$ and $v_i$.
+\end{proof}
