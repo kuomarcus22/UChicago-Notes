@@ -1,0 +1,307 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cleese Assignment
+% Structure Specification File
+% Version 1.0 (27/5/2018)
+%
+% This template originates from:
+% http://www.LaTeXTemplates.com
+%
+% Author:
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{lastpage} % Required to determine the last page number for the footer
+
+\usepackage{enumerate}
+
+\usepackage{amssymb}
+
+\usepackage{verbatim}
+
+\usepackage{mathrsfs}
+
+\usepackage{graphicx} % Required to insert images
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+\usepackage[most]{tcolorbox} % Required for boxes that split across pages
+
+\usepackage{booktabs} % Required for better horizontal rules in tables
+
+\usepackage{colortbl} % Required for \cellcolor in tables
+
+\usepackage{listings} % Required for insertion of code
+
+\usepackage{etoolbox} % Required for if statements
+
+\usepackage{mathrsfs}
+
+\usepackage{amssymb}
+
+\usepackage{needspace}
+
+\usepackage{capt-of}
+
+\usepackage{soul}
+
+\usepackage{pdfpages}
+
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+
+\usepackage{dsfont}
+
+\usepackage{mathtools}
+
+\usepackage{comment}
+
+%----------------------------------------------------------------------------------------
+%	MARGINS
+%----------------------------------------------------------------------------------------
+\synctex=1
+\usepackage{geometry} % Required for adjusting page dimensions and margins
+
+\geometry{
+	paper=letterpaper, % Change to letterpaper for US letter
+	top=1.2in, % Top margin
+	bottom=1.2in, % Bottom margin
+	left=1in, % Left margin
+	right=1in, % Right margin
+	headheight=14pt, % Header height
+	footskip=1.4cm, % Space from the bottom margin to the baseline of the footer
+	headsep=1.2cm, % Space from the top margin to the baseline of the header
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+%----------------------------------------------------------------------------------------
+%	FONT
+%----------------------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+
+
+%----------------------------------------------------------------------------------------
+%	HEADERS AND FOOTERS
+%----------------------------------------------------------------------------------------
+
+\usepackage{fancyhdr} % Required for customising headers and footers
+
+\pagestyle{fancy} % Enable custom headers and footers
+
+\lhead{\small\assignmentClass\ifdef{\assignmentClassInstructor}{\ (\assignmentClassInstructor):}{}\ \assignmentTitle} % Left header; output the instructor in brackets if one was set
+\chead{} % Centre header
+\rhead{\small\ifdef{\assignmentAuthorName}{\assignmentAuthorName}{\ifdef{\assignmentDueDate}{Due\ \assignmentDueDate}{}}} % Right header; output the author name if one was set, otherwise the due date if that was set
+
+\lfoot{} % Left footer
+\cfoot{\small Page\ \thepage\ of\ \pageref{LastPage}} % Centre footer
+\rfoot{} % Right footer
+
+\renewcommand\headrulewidth{0.5pt} % Thickness of the header rule
+\providecommand{\subqnumbering}{\arabic} % Default style: 1,2,3,...
+\providecommand{\subsubqnumbering}{\alph}
+\renewcommand{\thefootnote}{\arabic{footnote}}
+
+%----------------------------------------------------------------------------------------
+%	MODIFY SECTION STYLES
+%----------------------------------------------------------------------------------------
+
+\usepackage{titlesec} % Required for modifying sections
+
+%------------------------------------------------
+% Section
+
+\titleformat
+{\section} % Section type being modified
+[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+{\Large\bfseries} % Format of the whole section
+{\assignmentQuestionName~\thesection} % Format of the section label
+{6pt} % Space between the title and label
+{} % Code before the label
+
+\titlespacing{\section}{0pt}{0.5\baselineskip}{0.5\baselineskip} % Spacing around section titles, the order is: left, before and after
+
+%------------------------------------------------
+% Subsection
+
+\titleformat
+{\subsection} % Section type being modified
+[block] % Shape type, can be: hang, block, display, runin, leftmargin, rightmargin, drop, wrap, frame
+{\itshape} % Format of the whole section
+{(\subqnumbering{subsection})} % Format of the section label
+{4pt} % Space between the title and label
+{} % Code before the label
+
+\titlespacing{\subsection}{0pt}{0.5\baselineskip}{0.5\baselineskip} % Spacing around section titles, the order is: left, before and after
+
+\renewcommand\thesubsection{(\subqnumbering{subsection})}
+
+
+% Subsubsection
+
+\titleformat
+{\subsubsection} % Section type being modified
+[block] % Shape type
+{\itshape} % Format of the whole section
+{(\subsubqnumbering{subsubsection})} % Format of the section label
+{4pt} % Space between the title and label
+{} % Code before the label
+
+\titlespacing{\subsubsection}{0pt}{0.5\baselineskip}{0.5\baselineskip}
+
+\renewcommand\thesubsubsection{(\subsubqnumbering{subsubsection})}
+
+
+%----------------------------------------------------------------------------------------
+%	CUSTOM QUESTION COMMANDS/ENVIRONMENTS
+%----------------------------------------------------------------------------------------
+% In your preamble, define a counter for numbered questions:
+\newcounter{question}
+\newcounter{subquestion}
+
+% Environment for numbered questions:
+\newenvironment{question}{
+  \renewcommand{\thefootnote}{\arabic{footnote}}
+  \needspace{7\baselineskip}
+  \setcounter{subsection}{0} % Reset subquestion counter for each new question
+  \refstepcounter{question} % Increment the question counter
+  \vspace{0.5\baselineskip} % Whitespace before the question
+  \section*{\assignmentQuestionName\ \thequestion} % Use a starred section to avoid the section counter interfering
+  \lfoot{} % Optional: adjust footer if necessary
+}{
+  \lfoot{}
+}
+
+% Environment for unnumbered questions:
+\newenvironment{unnumberedquestion}{
+  \renewcommand{\thefootnote}{\arabic{footnote}}
+  \needspace{7\baselineskip}
+  \vspace{0.5\baselineskip} % Whitespace before the question
+  \setcounter{subsection}{0} % Reset subquestion counter for each new question
+  \lfoot{}
+}{
+  \lfoot{}
+}
+
+%------------------------------------------------
+
+% Environment for subquestions, takes 1 argument - the name of the section
+\newenvironment{subquestion}[1]{
+	\renewcommand{\thefootnote}{\arabic{footnote}}
+    \needspace{7\baselineskip}
+	\subsection{#1}
+}{
+}
+
+%------------------------------------------------
+
+% Environment for subsubquestions
+\newenvironment{subsubquestion}[1]{
+    \renewcommand{\thefootnote}{\arabic{footnote}}
+    \needspace{5\baselineskip}
+    \subsubsection{#1}
+}{
+}
+%------------------------------------------------
+
+% Command to print a question sentence
+\newcommand{\questiontext}[1]{
+	\renewcommand{\thefootnote}{\arabic{footnote}}
+	#1
+	\ifnum\lastnodetype=3 % Check if last node was display math
+        \vspace{-2\baselineskip} % Reduce the extra space
+    \fi
+}
+
+%------------------------------------------------
+
+% Command to print a box that breaks across pages with the question answer
+\newcommand{\answer}[1]{
+	\renewcommand{\thefootnote}{\arabic{footnote}}
+	\begin{tcolorbox}[
+        breakable, 
+        enhanced,
+        parbox=false,
+		before upper={\setlength{\parskip}{0.5\baselineskip}},
+		after skip=1.0\baselineskip
+    ]
+		\renewcommand{\thefootnote}{\arabic{footnote}}
+        #1
+    \end{tcolorbox}
+}
+
+%------------------------------------------------
+
+% Command to print a box that breaks across pages with the space for a student to answer
+\newcommand{\answerbox}[1]{
+	\begin{tcolorbox}[breakable, enhanced]
+		\renewcommand{\thefootnote}{\arabic{footnote}}
+		\vphantom{L}\vspace{\numexpr #1-1\relax\baselineskip} % \vphantom{L} to provide a typesetting strut with a height for the line, \numexpr to subtract user input by 1 to make it 0-based as this command is
+	\end{tcolorbox}
+}
+
+%------------------------------------------------
+
+% Command to print an assignment section title to split an assignment into major parts
+\newcommand{\assignmentSection}[1]{
+	{
+		\centering % Centre the section title
+		\vspace{2\baselineskip} % Whitespace before the entire section title
+		
+		
+		\Large{\textbf{#1}} % Section title, forced to be uppercase
+		
+		
+		\vspace{\baselineskip} % Whitespace after the entire section title
+
+	}
+}
+
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\author{\textbf{\assignmentAuthorName}} % Set the default title page author field
+\date{} % Don't use the default title page date field
+
+\title{
+	\thispagestyle{empty} % Suppress headers and footers
+	\vspace{0.2\textheight} % Whitespace before the title
+	\textbf{\assignmentClass:\ \assignmentTitle}\\[-4pt]
+	\ifdef{\assignmentDueDate}{{\small Due\ on\ \assignmentDueDate}\\}{} % If a due date is supplied, output it
+	\ifdef{\assignmentClassInstructor}{{\large \textit{\assignmentClassInstructor}}}{} % If an instructor is supplied, output it
+	\vspace{0.32\textheight} % Whitespace before the author name
+}
+
+
+\newcommand{\ind}{\perp\!\!\!\perp} 
+\newcommand*\N{\mathbb{N}}
+\newcommand*\R{\mathbb{R}}
+\newcommand*\Q{\mathbb{Q}}
+\newcommand*\Z{\mathbb{Z}}
+\newcommand*\E{\mathbb{E}}
+\newcommand*\oldP{\P}
+\renewcommand*\P{\mathbb{P}}
+\let\O\varnothing
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\DeclareMathOperator*{\argmax}{arg\,max} % thin space, limits underneath in displays
+\DeclareMathOperator*{\argmin}{arg\,min} % thin space, limits underneath in displays
+\DeclareMathOperator*{\MSE}{MSE}
+\DeclareMathOperator*{\Var}{Var}
+\DeclareMathOperator*{\Cov}{Cov}
+\DeclareMathOperator*{\Bias}{Bias}
+\DeclareMathOperator*{\Corr}{Corr}
+\DeclareMathOperator*{\plim}{plim}
+
