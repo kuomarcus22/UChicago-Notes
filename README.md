@@ -12,7 +12,7 @@ Selected lecture notes of varying degrees of polish.
 
 [STAT 38100](https://github.com/kuomarcus22/UChicago-Notes/tree/main/STAT38100/Lecture%20Notes): Measure-Theoretic Probability I
 
-STAT 37400: Nonparametric Inference
+[STAT 37400](https://github.com/kuomarcus22/UChicago-Notes/tree/main/STAT37400/Lecture%20Notes): Nonparametric Inference
 
 **Autumn 2025** (worse quality than Winter 2026):
 
