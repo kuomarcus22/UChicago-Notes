@@ -1,0 +1,605 @@
+\styledchapter{Linear Smoothers}
+
+\section{Introduction}
+
+
+
+Recall LLR solves
+\[
+(\hat{\alpha},\hat{\beta})
+= \argmin_{(\alpha,\beta)\in\R^2} \sum\limits_{i=1}^{n} w_i \left( Y_i - \alpha - \beta(X_i-x_0) \right)^2,
+\qquad
+w_i := K\left(\frac{X_i-x_0}{h}\right).
+\]
+
+Define
+\[
+\begin{aligned}
+	W &:= \operatorname{diag}(w_1,\ldots,w_n), \\
+	\tilde{X} &:=
+	\begin{pmatrix}
+		1 & X_1-x_0 \\
+		\vdots & \vdots \\
+		1 & X_n-x_0
+	\end{pmatrix}, \\
+	Y &:=
+	\begin{pmatrix}
+		Y_1\\ \vdots\\ Y_n
+	\end{pmatrix},
+	\qquad
+	\theta :=
+	\begin{pmatrix}
+		\alpha\\ \beta
+	\end{pmatrix}.
+\end{aligned}
+\]
+Then the vector of residuals is
+\[
+r(\theta) := Y - \tilde{X}\theta,
+\]
+and the minimand can be written as the quadratic form
+\[
+Q(\theta)
+:= \sum\limits_{i=1}^{n} w_i \left( Y_i - \alpha - \beta(X_i-x_0) \right)^2
+= r(\theta)'W r(\theta)
+= (Y-\tilde{X}\theta)'W(Y-\tilde{X}\theta).
+\]
+(If additionally $w_i\ge 0$ for all $i$ so that $W\succeq 0$, then $Q(\theta)=\left\|W^{1/2}(Y-\tilde{X}\theta)\right\|_2^2$.)
+
+Finding the minimizer:
+\begin{align*}
+Q(\theta)
+&= (Y-\tilde{X}\theta)'W(Y-\tilde{X}\theta) \\
+&= Y'WY - 2\theta'\tilde{X}'WY + \theta'\tilde{X}'W\tilde{X}\,\theta,
+\end{align*}
+so
+\[
+\nabla_{\theta} Q(\theta)
+= -2\tilde{X}'WY + 2\tilde{X}'W\tilde{X}\,\theta.
+\]
+Setting the gradient to zero gives the normal equations
+\[
+\tilde{X}'W\tilde{X}\,\hat{\theta} = \tilde{X}'WY.
+\]
+When $\tilde{X}'W\tilde{X}$ is invertible,
+\[
+\hat{\theta}
+=
+\begin{pmatrix}
+\hat{\alpha}\\ \hat{\beta}
+\end{pmatrix}
+= (\tilde{X}'W\tilde{X})^{-1}\tilde{X}'WY.
+\]
+
+Define $\hat{m}(x_0):=\hat{\alpha}$. Let $e_1 := (1,0)'$. Then
+\[
+\hat{m}(x_0)
+= e_1'\hat{\theta}
+= e_1'(\tilde{X}'W\tilde{X})^{-1}\tilde{X}'WY
+= \gamma' Y,
+\]
+where the weight vector (a function of $X_{1:n},x_0,h$) is
+\[
+\gamma'
+:= e_1'(\tilde{X}'W\tilde{X})^{-1}\tilde{X}'W,
+\qquad\text{so that}\qquad
+\hat{m}(x_0)=\sum\limits_{i=1}^{n}\gamma_i Y_i.
+\]
+
+Equivalently, writing $S_k := \sum\limits_{j=1}^{n} w_j (X_j-x_0)^k$ for $k=0,1,2$,
+the denominator
+\[
+D := S_0S_2 - S_1^2
+\]
+satisfies $\tilde{X}'W\tilde{X}$ invertible $\iff D\ne 0$, and in that case
+\[
+\gamma_i = \frac{w_i\left(S_2 - (X_i-x_0)S_1\right)}{D}.
+\]
+
+We call an estimator of this form (in which the weights do not depend on the outcome variable) a \emph{linear smoother}. Nadaraya-Watson is another linear smoother; we have $\gamma_i = \frac{K\left( \frac{X_i-x_0}{h} \right)}{\sum_{i=1}^{n} K\left( \frac{X_i-x_0}{h} \right)}$. Another linear smoother is $k$-NN, where $\gamma_i = \frac{1}{k} \mathds{1}_{X_i \text{ is a neighbor of $x_0$}}$. The regressogram is also a linear smoother with weights $\gamma_i = \frac{1}{N_j} \mathds{1}_{X_i \in I_j}$.
+
+One example of an estimator that is not a linear smoother is a regressogram whose bins depend on the values of the $Y_i$s.
+
+\begin{proposition}	We have the following properties of the weights in LLR:
+	\begin{enumerate}[label=(\roman*)]
+		\item $\sum_i \gamma_i = 1$
+		\item $\sum_{i=1}^{n} \gamma_i \left( X_i - x_0 \right) = 0$
+	\end{enumerate}
+\end{proposition}
+
+
+\begin{proof}
+	These could be proved from the direct computation in the formula that characterizes $\gamma_i$. However, we will do the proofs in a more clever way, using the definition of a linear smoother.
+
+	With \[\left( \hat{\alpha}, \hat{\beta} \right) = \argmin_{(\alpha,\beta)} \sum\limits_{i=1}^{n} K\left( \frac{X_i-x_0}{h} \right) \left( \tilde{Y}_i - \alpha - \beta(X_i-x_0) \right)^2,\] 
+	we have that for any $\tilde{Y}_i$, $\hat{\alpha}(\tilde{Y}_1,\ldots,\tilde{Y}_n) = \sum_{i=1}^{n} \gamma_i \tilde{Y}_i$.
+	We want to pick $\tilde{Y}_i$ in a convenient way and are allowed to do this because of the definition of $\gamma_i$ does not depend on $Y_i$; if we can show these properties hold for some vector of outcomes $Y$ and arbitrary regressors, then it must hold for all possible outcomes.
+
+	For (i), we use $\tilde{Y}_i = 1$, so the minimization leads to $(\hat{\alpha},\hat{\beta}) = (1,0)$. Thus \[
+		1= \hat{\alpha} = \sum_{i=1}^{n} \gamma_i \cdot 1 
+	.\] 
+	For (ii), we use $\tilde{Y}_i = X_i - x_0$ to yield
+	\begin{align*}
+		\sum_{i=1}^{n} \gamma_i (X_i-x_0) &=  \hat{\alpha}\left( X_1-x_0,\ldots,X_n - x_0 \right) \\
+		\overset{\text{minimization}}{\implies} (\hat{\alpha},\hat{\beta}) &= (0,1) \\
+		\implies \sum_{i=1}^{n} \gamma_i (X_i - x_0) &= 0
+	.\end{align*}
+
+\end{proof}
+
+\begin{corollary}	By property (ii), we get invariance to subtracting a term linear in deviations from $x_0$.
+\end{corollary}
+\begin{proof}
+	Formally, define $\tilde{Y}_i := Y_i - m'(x_0)(X_i-x_0)$, and let $m(x) := \E\left[Y_i \mid X_i = x\right]$ and $\tilde{m}(x) := \E\left[\tilde{Y}_i \mid X_i = x\right]$. Then 
+	\begin{align*}
+		\tilde{m}(x) &= m(x) - m'(x_0)(x-x_0) \\
+		\tilde{m}'(x_0) &= m'(x_0) - m'(x_0) = 0
+	.\end{align*} If we fit local linear regression to $Y_i$ to get $\hat{m}(x_0)$ and to $\tilde{Y}_i$ to get $\tilde{\hat{m}}(x_0)$, then 
+	\begin{align*}
+		\tilde{\hat{m}}(x_0) &= \sum_{i=1}^{n} \gamma_i \tilde{Y}_i \\
+							 &= \sum_{i=1}^{n} \gamma_i Y_i - m'(x_0) \sum_{i=1}^{n} \gamma_i (X_i-x_0) \\
+							 &= \sum_{i=1}^{n} \gamma_i Y_i = \hat{m}(x_0)
+	,\end{align*}
+	where the second-to-last equality follows from property (ii).
+
+	This makes sense, because this transformation of $Y_i$ to $\tilde{Y}_i$ should affect the estimation of $\beta$, not $\alpha$.
+\end{proof}
+
+\begin{remark}	The weights can be negative (this is the analog of kernel carpentry in Nadaraya-Watson).
+
+	Suppose we are in a one-sided design situation: for all $i$ with $w_i \ne 0$ we have $X_i-x_0 \ge 0$, and at least one such $i$ has $X_i-x_0>0$.
+	If all $\gamma_i \ge 0$, then using (i),
+	\[
+	\sum\limits_{i=1}^n \gamma_i (X_i-x_0) \ge 0,
+	\]
+	and it is strictly $>0$ because at least one $(X_i-x_0)$ is positive and has positive weight in the average. This contradicts (ii). Therefore at least one $\gamma_i$ must be negative.
+\end{remark}
+
+Recall that with Nadaraya-Watson, we said that we could change the kernel near and at the boundary. Given a linear smoother $\hat{m}(x_0)=\sum\limits_{i=1}^{n} \gamma_i Y_i$ with $\sum\limits_{i=1}^{n}\gamma_i=1$, we can always write it in Nadaraya-Watson form by defining data-dependent weights $\tilde{K}_i := \gamma_i$:
+\[
+	\hat{m}(x_0)=\frac{\sum\limits_{i=1}^{n} \tilde{K}_i Y_i}{\sum\limits_{i=1}^{n} \tilde{K}_i}
+.\]
+For LLR, one convenient choice is $\tilde{K}_i = w_i\left(S_2-(X_i-x_0)S_1\right)$.
+
+\section{Variations: Local Polynomial Regression}
+
+
+
+Now consider the $l$th order polynomial \[
+\left( \hat{\alpha}_0,\ldots,\hat{\alpha}_l \right)'
+= \argmin_{(\alpha_0,\ldots,\alpha_l)\in\R^{l+1}}
+\sum\limits_{i=1}^{n} K\left( \frac{X_i-x_0}{h} \right)
+\left( Y_i - \sum\limits_{j=0}^{l} \alpha_j \frac{\left( X_i-x_0 \right)^{j}}{j!} \right)^2
+,\]
+where $l \in \N_0$ and $\hat{m}(x_0) = \hat{\alpha}_0$.
+
+\begin{example}	If $l=0$, we have NW. If $l=1$, then we have local linear regression.
+\end{example}
+
+The intuition for why we would want to do local polynomial regression is because we may want to fit Taylor polynomials of higher order. With optimal tuning, if we fit an $l$th degree local polynomial regression and the $\beta := l+1$ derivative of $m(\cdot )$ is bounded and continuous, then the conditional MSE is bounded by a familiar expression: \[
+	\MSE\left( \hat{m}(x_0) \mid X_{1:n} \right) \lesssim n^{- \frac{2\beta}{2\beta + 1}}
+.\] As $\beta \to \infty$, the rate approaches $\frac{1}{n}$ from below. Hence, increasing $l$ and our assumption on smoothness gives us faster rates.
+
+So far, we have just looked at the first coefficient $\hat{\alpha}_0$, which represents the point estimate. With a local polynomial regression, we can estimate derivatives. If we want to estimate the $\nu$th derivative, we can set $\hat{m}^{(\nu)}(x_0) = \hat{\alpha}_\nu$, if $\nu \le l$.
+
+\begin{remark}	The minimax rate for estimating the derivative is $n^{ - \frac{2(\beta-\nu)}{2\beta + 1}}$, which is slower than the rate for the point estimate. This implies that estimating derivatives is harder the higher the order of the derivative is.
+
+	As a rule of thumb, to estimate the $\nu$th derivative,\footnote{With the goal of getting an accurate estimate without making too many assumptions on the derivatives of $m(\cdot )$.} we can use a local polynomial of degree $l = \nu + 1$. For example, for a point estimate, we would want to use LLR (and not NW), and if we wanted to estimate a derivative, we would use a quadratic. This rule of thumb was actually rigorously considered.
+\end{remark}
+
+\section{Local Polynomial Regression for Density Estimation}
+
+
+
+Recall that we have done density estimation using the histogram estimator and KDE. KDE gave boundary bias when we did not change the kernel depending on $x_0$. But, if we allow $K(u) < 0$ for some $u$,\footnote{For $\int_{0}^{1} K(u)du =0$ to hold so we can get rid of the extra bias at the boundary, we need $K(u) <0$ somewhere.} then it could be the case that \[
+	\hat{f}(x_0) = \frac{1}{nh} \sum\limits_{i=1}^{n} K\left( \frac{X_i-x_0}{h} \right) < 0
+.\] The solution to this problem is to clip $\hat{f}(x_0)$ to be in $[0,\infty)$ and rescaling so it integrates to $1$.
+
+Can we use an analog of local polynomial regression for density estimation? The conceptual difficulty is that in a density estimation problem, we don't have $Y_i$. 
+
+Classical Idea:
+\begin{enumerate}[label=(\roman*)]
+	\item Use KDE or a histogram estimator with a very small $h$ and put $Y_i = \hat{f}(X_i)$ (an estimate of density that is heavily undersmoothed.)
+	\item Then do local polynomial regression with ``optimal'' $h$.
+\end{enumerate}
+This works because undersmoothing makes the first-stage bias negligible: for fixed $x$, $\E\left[\hat{f}(x)\right] \approx f(x)$, and taking $\tilde{h}$ small keeps that bias small compared to the second-stage error.
+
+However, this approach presents a difficulty of needing to choose two bandwidths. 
+
+We have a better approach through the ECDF: while we don't know any estimator of the density that does not require a bandwidth, we have seen the ECDF as an estimator of the distribution function that does not rely on a bandwidth. We can use local polynomial regression on $(Y_i, X_i)$ given by \[
+	Y_i = \hat{F}(X_i) = \frac{1}{n} \sum\limits_{j=1}^{n} \mathds{1}_{X_j \le X_i}
+\] to find the derivative (which would be the density!).
+
+\section{Choosing Hyperparameters}
+
+
+
+So far, we have been choosing $h$ to equalize the orders of $n$ of the variance and square bias in the MSE.
+
+In the interior, we have the MSE of the Nadaraya-Watson estimator is bounded with
+\begin{align*}
+	\MSE(\hat{m}(x_0) \mid X_{1:n})
+	&= \frac{1}{nh} \frac{\sigma^2(x_0)}{f(x_0)} \int_{-1}^{1} K^2(u)du \\
+	&\quad + h^4 \left( m'(x_0) \frac{f'(x_0)}{f(x_0)} + \frac{m''(x_0)}{2}  \right)^2 \left( \int_{-1}^{1} u^2 K(u)du \right)^2 \\
+	&\quad + o_\P\left( \frac{1}{nh} + h^4 \right)
+.\end{align*}
+Taking a derivative with respect to $h$ to retain the constants, this yields an optimal bandwidth of \[
+	h^* = \left( \frac{1}{n}
+		\frac{\frac{\sigma^2(x_0)}{f(x_0)} \int_{-1}^{1} K^2(u)du}
+		{\left( m'(x_0) \frac{f'(x_0)}{f(x_0)} + \frac{m''(x_0)}{2} \right)^2 \left( \int_{-1}^{1} u^2K(u)du  \right)^2}
+	\right)^{\frac{1}{5}}			
+.\] For theory, we would say $h^* \asymp n^{-\frac{1}{5}}$, but in practice, the constant is (more) important.
+
+\medskip
+
+Plugging in $h^*$ yields $MSE \asymp n^{-\frac{4}{5}}$. But how should we choose the kernel? The MSE depends on the quantity $(*) \frac{\int_{-1}^{1}K^2(u)du  }{\left( \int_{-1}^{1} u^2K(u)du  \right)^2}$; we can minimize again over all kernels that satisfy some requirements, which may include:
+\begin{itemize}
+	\item symmetry
+	\item nonnegativity
+	\item continuity
+	\item $\int_{-1}^{1} K(u)du = 1$.
+\end{itemize}
+With this expansion/bound on the MSE, we can show the Epanechnikov kernel is optimal. However, in practice, the choice of kernel is not that important.\boxednote{\texthl{Does this mean that (*) is relatively constant across different standard kernels?}}
+
+Looking at our expression for $h^*$, we don't actually know $\sigma^2(x_0)$, $f(x_0)$, nor $m''(x_0)$. So, we should replace these with estimated versions $\hat{\sigma}^2(x_0), \hat{f}(x_0), \hat{m}''(x_0)$. However, to get $\hat{h}$ to estimate $m(x_0)$, we need an estimate of $m''(x_0)$, which is \emph{more} difficult to estimate.
+
+The argument in favor of this says that it's not catastrophic if we estimate $m''(x_0)$ poorly. We would pick some initial bandwidth to estimate $\hat{m}''(x_0)$ by a heuristic, then get $\hat{h}^*$, so we can get $\hat{m}(x_0)$. This is called the ``plug-in'' bandwidth selection. Despite the several estimation steps, this still turns out to usually be better than saying the constant in the expression for $h^*$ is $1$.
+
+Minimax Plug-In: 
+Suppose that we have estimates $\hat{f}(x_0)$ and $\hat{\sigma}^2(x_0)$. The minimax approach is to bound the worst-case MSE over $\P$ when $m \in \mathscr{G}(2,C)$, where
+\[
+\mathscr{G}(2,C) := \left\{m: \sup_{x\in[0,1]} \left| m''(x) \right| \le C\right\}
+.\]
+Heuristically,\footnote{Why is the proof not immediate?} we should have the bound
+\[
+	\begin{aligned}
+		\sup_{m \in \mathscr{G}(2,C)} \MSE\left( \hat{m}(x_0) \mid X_{1:n} \right)
+		&\le \frac{1}{nh} \frac{\sigma^2(x_0)}{f(x_0)} \int_{-1}^{1} K^2(u)du \\
+		&\quad + h^4 \left( m'(x_0) \frac{f'(x_0)}{f(x_0)} + \frac{C}{2} \right)^2 \left( \int_{-1}^{1} u^2 K(u)du \right)^2
+	\end{aligned}
+,\]
+\boxednote{To make this a genuine bound, one typically also controls the $m'(x_0)\frac{f'(x_0)}{f(x_0)}$ term, e.g. by assuming a uniform design or an additional bound on $m'$.}
+so the optimal $h^*$ is
+\[
+	h^* = \left(
+		\frac{1}{n}
+		\frac{\frac{\sigma^2(x_0)}{f(x_0)} \int_{-1}^{1} K^2(u)du}{\left( m'(x_0) \frac{f'(x_0)}{f(x_0)} + \frac{C}{2} \right)^2 \left( \int_{-1}^{1} u^2K(u)du  \right)^2}
+	\right)^{\frac{1}{5}}
+.\]
+and it might be better to overestimate $m''(x_0)$ (when our metric is the maximum risk).
+
+But how would we actually pick $C$?
+
+\begin{enumerate}[label=(\roman*)]
+	\item In the genuine minimax approach, some domain analysis would let you pick $C$.
+	\item Sensitivity analysis might specify plausible upper bounds $C_1,\ldots,C_n$, and conduct analysis separately for each $C_i$. Then we could see how the assumptions affect our bandwidth (and thus, once we get to inference, the width of our confidence intervals).
+	\item (Armstrong-Kolesat; Heuristics) We could globally fit a polynomial $\hat{p}$ of some degree (say, $l=4$) and put $C = \sup_{x \in [0,1]} \left| p''(x_0) \right|$.
+\end{enumerate}
+
+Thus, creating an upper bound on $m''(x_0)$ might be better than actually trying to estimate $m''(x_0)$.
+\texthl{Improvements of this method include}:
+\begin{itemize}
+	\item We won't need an estimate of $f(x_0)$
+	\item Works for any linear smoother
+	\item Works for any convex class $\mathscr{M}$.
+\end{itemize}
+Consider a linear smoother $\hat{m}(x_0) = \sum_{i}^{} \gamma_i Y_i$, where $\gamma_i = \gamma_i(h)$. 
+Assume the following:
+\begin{enumerate}[label=(\roman*)]
+	\item $\operatorname{Var}\left(Y_i \mid X_i\right) \le \sigma^2$
+	\item $m(\cdot ) \in \mathscr{M}$, where $\mathscr{M}$ is some class like $\mathscr{G}(2,C)$.
+\end{enumerate}
+
+We can write
+\begin{align*}
+	\MSE\left( \hat{m}(x_0) \mid X_{1:n} \right) &= \operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right) + \operatorname{Bias}^2\left(\hat{m}(x_0) \mid X_{1:n}\right) \\
+	\operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right) &= \sum\limits_{i=1}^{n} \gamma_i^2 \operatorname{Var}\left(Y_i \mid X_i\right) \le \sigma^2 \sum\limits_{i=1}^{n} \gamma_i^2 \\
+	\operatorname{Bias}\left(\hat{m}(x_0) \mid X_{1:n}\right) &= \E\left[\hat{m}(x_0) \mid X_{1:n}\right] - m(x_0) \\
+	\text{since $\gamma_i$ is a function of $X_{1:n}$, } &= \sum\limits_{i=1}^{n} \gamma_i m(X_i) - m(x_0) \\
+	\sup_{m \in \mathscr{M}} \MSE\left( \hat{m}(x_0) \mid X_{1:n} \right) &\le \sigma^2 \sum\limits_{i=1}^{n} \gamma_i^2 + \sup_{m \in \mathscr{M}} \left( \sum\limits_{i=1}^{n} \gamma_i m(X_i) - m(x_0) \right)^2
+,\end{align*}
+with equality if we have homoskedasticity ($\operatorname{Var}\left(Y_i \mid X_i\right) = \sigma^2, \forall\ i$.
+
+Note that we have no more dependency on $m$ because of our assumption $m \in \mathscr{M}$ and the sup. Furthermore, the mapping $h \mapsto \gamma_i(h)$ is known \texthl{by running LLR with bandwidth $h$}.
+Hence, with $\gamma_i = \gamma_i(h)$, we can minimize the RHS over $h$ to get $\hat{h}$ as an estimate of $h^*$.
+
+The difficult part of minimizing the RHS is computing the sup over all $m \in \mathscr{M}$. Sometimes we can do this analytically (for instance, the $SY$ class), but this is rare. Instead, we can use tools from convex optimization to solve/compute $\sup_{m \in \mathscr{M}} \left( \sum\limits_{i=1}^{n} \gamma_i(h) m(X_i) - m(x_0) \right)$.
+
+This task is not easy, so we explore it in the next section.
+
+\section{Computing the Minimax-Optimal Bandwidth}
+
+
+
+Supposing for now that we want to pick $h^*$ from the set $\left\{h_1,\ldots,h_N\right\}$. 
+Considering \[
+	\phi(h) = \sigma^2 \sum\limits_{i=1}^{n} \gamma_i(h)^2 + \sup_{m \in \mathscr{M}} \left| \sum\limits_{i=1}^{n} \gamma_i(h) m(X_i) - m(x_0) \right|^2
+,\] 
+how can we compute \[
+	\sup_{m \in \mathscr{M}} \left| \sum\limits_{i=1}^{n} \gamma_i(h) m(X_i) - m(x_0) \right|
+?\] 
+\begin{enumerate}[label=(\roman*)]
+	\item The classical approach is to do this analytically --- which is not impossible with classes like $SY_{x_0}(\beta, L)$.
+	\item We can also use optimization, which is particularly convenient when $\mathscr{M}$ is convex.
+\end{enumerate}
+\begin{definition}[Convex set of functions]
+	$\mathscr{M}$ is convex if for any $m_1,m_2 \in \mathscr{M}$ and $\lambda \in [0,1]$, \[
+		\lambda m_1 + (1-\lambda)m_2 \in \mathscr{M}
+	.\] 
+\end{definition}
+Examples include the class of all polynomials up to degree $K$ (too small for our use), continuous functions (too large), and $L$-Lipschitz functions.
+
+Splitting up our problem, we can compute \begin{equation} \label{2-11-1}
+	\max \left\{\sup_{m \in \mathscr{M}} \sum\limits_{i=1}^{n} \gamma_i(h)m(X_i) - m(x_0), \sup_{m \in \mathscr{M}}m(x_0) - \sum\limits_{i=1}^{n} \gamma_i(h)m(X_i)\right\}
+.\end{equation} 
+
+This is actually a finite-dimensional optimization problem. Defining \[
+	\tilde{\mathscr{M}} = \left\{\begin{pmatrix}
+	m(X_1) \\
+	\vdots \\ m(X_n) \\ m(x_0)
+	\end{pmatrix} : m \in \mathscr{M}\right\} \subseteq \R^{n+1}
+,\] 
+we can check that $\mathscr{M}$ being convex implies $\tilde{\mathscr{M}}$ is convex, so it suffices to solve \[
+	\max \sum\limits_{i=1}^{n} \gamma_i(h) m(X_i) - m(x_0)
+\] such that \[
+	\tilde{m} =  \begin{pmatrix}
+	m(X_1) \\
+	\vdots \\ m(X_n) \\ m(x_0)
+	\end{pmatrix} \in \tilde{\mathscr{M}}	
+.\] 
+
+The maximand is linear in $\tilde{m}$ and the constraint is a convex constraint on $\tilde{m}$.
+
+A convex optimization problem is one in which we are minimizing a (weakly?) convex function subject to a constraint defined by a convex set. Software like CVXR can help us determine if these problems are solvable and solve them.
+
+With the more modern approach that uses computation, we can get exact values instead of the usual upper bound provided by analytical methods.
+
+To minimize $\psi(h)$ over $\left\{h_1,\ldots,h_J\right\}$,\footnote{Note the optimal bandwidth is chosen by computing the MSE, not just the worst-case bias.} we need to solve $2J$ optimization problems.
+If the two terms in the problems (\ref{2-11-1}) are equal, we just need to solve $J$ optimization problems. In particular, this happens when $\mathscr{M}$ is closed under negation.
+
+By taking an outer min over some classes, we don't have to limit ourselves to linear smoothers of one type. For instance, we could optimally tune $k$-NN and LLR, then optimize over these estimator classes.
+But why not take the outer min over $\gamma \in \R^n$, instead of just the weights corresponding to the particular estimators we know?
+Computing \[
+	\min_{\gamma \in \R^n} \sup_{m \in \mathscr{M}} \psi(\gamma, m)
+\] is a formidable task, since we have nested optimization in this min-max problem.
+
+If we can't solve the inner sup analytically, we can sometimes use Lagrangian duality in a single convex optimization problem, or a more powerful framework inspired from Donoho (1994) that reduces the problem to a sequence of convex optimization problems.
+
+While outside the scope of this class, we recognize that this computational approach exists.
+
+\textbf{Implications for Choice of Linear Smoothers.}
+
+If we are minimizing the objective over all $\gamma \in \R^n$, then do the weights satisfy properties of LLR and NW we saw earlier (like summing to $1$)? 
+
+\begin{example}	If $\sum_i \gamma_i \ne 1$, then considering $\mathscr{M} = \Sigma(1,L)$, then the risk $\psi(\gamma,m)$ is unbounded by considering $m(\cdot ) = c$ and sending $c \to \infty$. Thus, the optimization forces $\sum_i \gamma_i = 1$.
+
+	Similarly, if $\mathscr{M} = \Sigma(2,L)$, then we get \[
+		\sum_i \gamma_i(X_i-x_0) = 0
+	,\] as the case was with LLR.
+\end{example}
+
+\textbf{Implications for Inference.} Recall that in nonparametrics, bias is nonnegligible compared to standard errors. We saw that undersmoothing (increasing variance, lowering bias), bias correction, and ignoring bias were ways of addressing this.
+We now discuss bias-aware inference.
+
+To focus only on bias, we assume that $Y_i \mid X_i \sim N(m(X_i), \sigma_i^2)$ for known $\sigma_i^2$ and consider \[
+	\hat{m}(x_0) = \sum\limits_{i=1}^{n} \gamma_i Y_i
+.\] Then \[
+	\hat{m}(x_0) \mid X_{1:n} \sim N\left( \sum\limits_{i=1}^{n} \gamma_i m(X_i), \sum\limits_{i=1}^{n} \gamma_i^2\sigma_i^2 \right)
+,\] 
+so \[
+	\hat{m}(x_0) - m(x_0) \mid X_{1:n} \sim N\left( \operatorname{Bias}\left(\hat{m}(x_0) \mid X_{1:n}\right), \operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right) \right)
+.\] 
+In the usual case where $\frac{\operatorname{Bias}\left(\hat{m}(x_0) \mid X_{1:n}\right)}{\operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right) }\approx 0$, \[
+	\hat{m}(x_0) - m(x_0) \mid X_{1:n} \sim N\left( 0, \operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right) \right)
+\] yields the confidence interval \[
+	I = \left[ \hat{m}(x_0) \pm z_{1-\frac{\alpha}{2}} \operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right)  \right]
+\] 
+and probabilistic statement \[
+	\P\left[m(x_0) \in I \mid X_{1:n}\right] = 1-\alpha
+.\] 
+
+But since we don't have
+\[
+	\frac{\operatorname{Bias}\left(\hat{m}(x_0) \mid X_{1:n}\right)}{\operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right)} \approx 0
+,\]
+we instead use a bias bound. For $m \in \mathscr{M}$,
+\[
+	\begin{aligned}
+		\left|\operatorname{Bias}\left(\hat{m}(x_0) \mid X_{1:n}\right)\right|
+		&= \left|\sum\limits_{i=1}^{n} \gamma_i m(X_i) - m(x_0)\right| \\
+		&\le B(x_0) := \sup_{m \in \mathscr{M}} \left|\sum\limits_{i=1}^{n} \gamma_i m(X_i) - m(x_0)\right|
+	\end{aligned}
+.\]
+Hence, a conservative two-sided interval is
+\[
+	I_{\mathrm{naive}}
+	= \left[\hat{m}(x_0) \pm \left( z_{1-\frac{\alpha}{2}} \operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right) + B(x_0) \right)\right]
+,\]
+which satisfies $\P\left[m(x_0) \in I_{\mathrm{naive}} \mid X_{1:n}\right] \ge 1-\alpha$.
+In a one-sided test, the analogous upper interval is
+\[
+	I_{\mathrm{naive}}^{+}
+	= \left(-\infty,\, \hat{m}(x_0) + z_{1-\alpha}\operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right) + B(x_0)\right]
+.\]
+This approach can be conservative (often strictly) when $B(x_0) > 0$.
+
+For two-sided inference, one can replace the additive $+B(x_0)$ inflation by a bias-aware critical value. Let $Z \sim N(0,1)$,
+\[
+	\tilde{b} := \frac{B(x_0)}{\operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right)}
+	\quad\text{and}\quad
+	\chi(\tilde{b}) := \inf\left\{t: \inf_{|b|\le \tilde{b}} \P\left[\left|Z+b\right|\le t\right] \ge 1-\alpha\right\}
+.\]
+Then
+\[
+	I = \left[\hat{m}(x_0) \pm \chi(\tilde{b})\,\operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right)\right]
+\]
+satisfies $\inf_{m \in \mathscr{M}} \P\left[m(x_0) \in I \mid X_{1:n}\right] \ge 1-\alpha$ and has a shorter half-length than the naive interval:
+\[
+	\chi(\tilde{b})\,\operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right)
+	\le z_{1-\frac{\alpha}{2}}\,\operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right) + B(x_0)
+.\]
+Moreover, $\chi(0)=z_{1-\frac{\alpha}{2}}$ and $\chi(\tilde{b})\approx \tilde{b}+z_{1-\alpha}$ for large $\tilde{b}$.
+Relaxing the normality assumption. 
+Recall we assumed that $Y_i \mid X_i \sim N(m(X_i), \sigma_i^2$
+What happens if we relax this normality assumption? Suppose $(Z_i)_{i=1}^{n}$ is a sequence of $i.i.d.$ variables and put $U = \sum_{i=1}^{n} Z_i$.
+Define
+\[
+	\mu_i := \E\left[Z_i\right], \quad \tau_i^2 := \operatorname{Var}\left(Z_i\right), \quad \rho_i := \E\left[\left|Z_i-\mu_i\right|^3\right]
+.\] 
+We know \[
+	\E\left[U\right]  = \sum\limits_{i=1}^{n} \mu_i, \quad \operatorname{Var}\left(U\right) = \sum\limits_{i=1}^{n} \tau_i^2, \quad \frac{U-\E\left[U\right] }{\sqrt{\operatorname{Var}\left(U\right)} } \approx N(0,1)
+.\] 
+\begin{theorem}[Berry-Esseen]
+	For $\Phi(t)$ the standard normal CDF, we have \[
+		\sup_{t\in \R} \left| \P\left[\frac{U-\E\left[U\right] }{\sqrt{\operatorname{Var}\left(U\right)} } \le t\right] - \Phi(t)\right| \le C \frac{\sum\limits_{i=1}^{n} \rho_i}{\left( \operatorname{Var}\left(U\right) \right)^{\frac{3}{2}}}
+	\] for some universal constant $C$.
+
+	In particular, if the upper bound goes to $0$, then the asymptotic distribution is approximately $N(0,1)$.
+\end{theorem}
+\begin{example}Consider the case where $Z_i$ are i.i.d. with $\rho:=\E\left[\left|Z_1-\E\left[Z_1\right]\right|^3\right]$ and $\tau^2 := \operatorname{Var}\left(Z_1\right)$. Then the bound becomes
+\[
+	\sup_{t \in \R}\left|\P\left[\frac{U-\E\left[U\right]}{\sqrt{\operatorname{Var}\left(U\right)}}\le t\right]-\Phi(t)\right|
+	\le C\frac{n\rho}{\left(n\tau^2\right)^{3/2}}
+	= C\frac{\rho}{\sqrt{n}\tau^3}
+.\]
+\end{example}
+We can apply this to linear smoothers by taking, conditional on $X_{1:n}$,
+\[
+	Z_i := \gamma_i\left(Y_i - m(X_i)\right),
+	\quad \mu_i = 0,
+	\quad
+	\begin{aligned}
+		\tau_i^2 &= \gamma_i^2 \operatorname{Var}\left(Y_i \mid X_i\right), \\
+		\rho_i &= \left|\gamma_i\right|^3 \E\left[\left|Y_i-m(X_i)\right|^3 \mid X_i\right]
+	\end{aligned}
+.\]
+along with the following sufficient assumptions:
+\begin{enumerate}[label=(\roman*)]
+	\item $\sigma_i^2 = \operatorname{Var}\left(Y_i \mid X_i\right) \ge c > 0$ for all $i$,
+	\item $\E\left[\left| Y_i - m(X_i) \right|^3 \mid X_i\right]  \le C < \infty$ for all $i$, and 
+	\item $\frac{\max_i \gamma_i^2}{\sum_{i=1}^{n} \gamma_i^2} \xrightarrow{n\to \infty}0$ almost surely
+\end{enumerate}
+to get that \[
+	\sup_{t \in \R}\left|\P\left[\frac{\hat{m}(x_0)-\E\left[\hat{m}(x_0) \mid X_{1:n}\right]}{\sqrt{\operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right)}} \le t \mid X_{1:n}\right]-\Phi(t)\right| \xrightarrow{n\to\infty} 0
+.\]
+ 
+
+Before, with conditional normality of $Y_i \mid X_i$, we had the exact conditional distribution
+\[
+	\hat{m}(x_0) \mid X_{1:n} \sim N\left(\E\left[\hat{m}(x_0) \mid X_{1:n}\right],\, \operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right)\right)
+.\]
+Under the Berry-Esseen conditions above, we instead have the asymptotic approximation
+\[
+	\frac{\hat{m}(x_0)-\E\left[\hat{m}(x_0) \mid X_{1:n}\right]}{\sqrt{\operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right)}} \approx N(0,1)
+.\]
+Relaxing the variance assumption. We used our assumption of known $\sigma_i^2$ in two places:
+\begin{itemize}
+	\item Choosing the bandwidth from \[
+		\sum\limits_{i=1}^{n} \sigma_i^2 \gamma_i^2 + \sup_{m \in \mathscr{M}} \left| \sum\limits_{i=1}^{n} \gamma_i m(X_i) - m(x_0) \right|^2
+	.\] 
+	\item Computing the CI in \[
+		\hat{m}(x_0) \pm \tilde{\chi} \operatorname{se}\left( \hat{m}(x_0) \mid X_{1:n} \right)
+	,\] as we need knowledge of \[
+		\operatorname{se}\left( \hat{m}(x_0) \mid X_{1:n} \right)^2 = \sum\limits_{i=1}^{n} \gamma_i^2 \sigma_i^2
+	.\] 
+\end{itemize}
+Plugging in a rough guess into the first could still give a linear smoother, while a rough guess for $\sigma_i$ in the second could result in incorrect coverage.\boxednote{Consider $\tilde{\sigma}_i^2 = \frac{\sigma^2}{2}$. Then square bias is weighted twice as much in the bias-variance tradeoff, but coverage is much less than $1-\alpha$.}
+
+So what should we do if we don't know $\sigma_i^2$? To avoid undercoverage, it might be okay to upper bound $\sigma_i^2$ and inflate the CI by even more.
+We can estimate $\sigma_i^2 = \operatorname{Var}\left(Y_i \mid X_i\right)$ with $\hat{\sigma}_i^2$ as the sample variance to get \[
+	\widehat{\operatorname{Var}}\left( \hat{m}(x_0) \mid X_{1:n} \right) = \sum\limits_{i=1}^{n} \gamma_i^2 \hat{\sigma}_i^2
+.\] 
+We want $\hat{\sigma}_i^2$ to satisfy:
+\begin{enumerate}[label=(\roman*)]
+	\item Consistency (universal, in particular), so \[
+			\max_i \left| \frac{\hat{\sigma}_i^2}{\sigma_i^2} - 1 \right| \xrightarrow{\P} 0
+	\] yields \[
+		\frac{\widehat{\operatorname{Var}}\left(\hat{m}(x_0) \mid X_{1:n}\right)}{\operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right)} \xrightarrow{\P} 1
+	.\] 
+\end{enumerate}
+
+For a consistent estimator of $\sigma_i^2$, consider
+\begin{enumerate}[label=(\roman*)]
+	\item $\hat{\epsilon}_i = Y_i - m(X_i)$, run $k$-NN on $\hat{\epsilon}_i$, and put $\hat{\sigma}_i^2$ as the estimator of $\hat{\epsilon}_i^2$.
+	\item Write \[
+		\operatorname{Var}\left(Y_i \mid X_i\right) = \E\left[Y_i^2 \mid X_i\right]  - m(X_i)^2
+	\] as the difference of nonparametric regressions of $Y_i^2$ and $Y_i$ on $X_i$.
+\end{enumerate}
+
+But actually, we don't need consistency. Estimating $\operatorname{Var}\left(Y_i \mid X_i\right)$ is harder than estimating $m(X_i)$ (our original goal was to estimate $m(x_0)$, so we would like to avoid estimating variance in the process), so we can estimate \[
+	\hat{\operatorname{Var}}\left(\hat{m}(x_0) \mid X_{1:n}\right) = \sum\limits_{i=1}^{n} \gamma_i^2 \hat{\sigma}_i^2
+,\] 
+where $\hat{\sigma}_i^2$ is not necessarily consistent for $\sigma_i^2$ but is nearly unbiased. By a LLN argument, we would have that this variance estimator is consistent.
+
+This is analogous to the idea of Eicker-Huber-White, or heteroskedasticity-robust standard errors in linear regression.
+
+\begin{example}	We can implement this with \[
+		\hat{\sigma}_i^2 = \left( Y_i - \hat{m}(X_i) \right)^2
+	\]  and $\hat{m}$ consistent.
+
+	But we don't even need consistency of $\hat{m}$, following the $k$-NN estimator of Abadie and Imbens (2005). Fixing $J$ (e.g. $J=3$), we define \[
+		N_J(X_i) = \left\{J \text{ nearest neighbors of $X_i$ excluding itself}\right\}
+	\] and estimate \[
+		\hat{\sigma}_i^2 = \left( Y_i - \frac{1}{J} \sum\limits_{j\in N_J(x_i)}^{} Y_j \right)^2
+	.\] We see by centering on $m(X_i)$, if there are $J$ ties, where $X_j = X_i$ for $J$ $j$s,
+	\begin{align*}
+		\E\left[\hat{\sigma}_i^2 \mid X_{1:n}\right]
+		&= \operatorname{Var}\left(Y_i \mid X_i\right) + \operatorname{Var}\left(\frac{1}{J} \sum\limits_{j \in N_J(X_i)}^{} Y_j \mid X_{1:n}\right)\\
+		&= \sigma_i^2 \left( 1 + \frac{1}{J} \right) \\
+		&= \sigma_i^2 \frac{J+1}{J}
+	,\end{align*}
+	so we should actually estimate \[
+		\hat{\sigma}_i^2 = \frac{J}{J+1} \left( Y_i - \frac{1}{J} \sum\limits_{j\in N_J(x_i)}^{} Y_j \right)^2
+	.\] 
+	Note that the individual estimates are themselves not consistent, but their lack of bias gives us consistency after averaging with weights $\gamma_i^2$.
+
+
+	Finally, we can fit some global linear regression 
+	\begin{align*}
+		Y_i &= \beta_0 + \beta_1 X_i \\
+		\hat{\epsilon}_i &= Y_i - \hat{\beta}_0 + \hat{\beta}_1X_i
+	,\end{align*}
+	with $\hat{\sigma}_i^2 = \hat{\epsilon}_i^2$, so \[
+		\E\left[\hat{\sigma}_i^2 \mid X_{1:n}\right] - \sigma_i^2 \ge 0
+	\] for large $n$ and we have \emph{at least} the coverage we intended to have. (This comes at the expense of conservative inference.)
+\end{example}
+
+What properties of the confidence interval \[
+	\left( -\infty, \hat{m}(x_0) + z_{1-\alpha} \sqrt{\widehat{\operatorname{Var}}(\hat{m}(x_0))} + B(x_0)  \right)
+\] leads to appropriate asymptotic coverage of \[
+	\lim\limits_{n \to \infty} \P\left[m(x_0) \in I\right]  \ge 1-\alpha
+?\]
+We need \[
+	\frac{\widehat{\operatorname{Var}}(\hat{m}(x_0) \mid X_{1:n})}{\operatorname{Var}\left(m(x_0)\mid X_{1:n}\right)} \ge 1
+\] 
+and asymptotic normality of $\hat{m}(x_0) \mid X_{1:n}$.
+
+This may work even if $\hat{m}(x_0)$ is not consistent for $m(x_0)$ and $\operatorname{Var}\left(\hat{m}(x_0)\mid X_{1:n}\right)$ because we are inflating the CI by $B(x_0)$, which for each $n$, acts as an upper bound on the bias.\boxednote{Consider the deterministic estimator $\tilde{m}(x_0)$. Since $\left| m(x_0) - \tilde{m}(x_0) \right| \le B(x_0)$, we have that $m(x_0) \in \left[ \tilde{m}(x_0) \pm B(x_0) \right]$.}
+While this seems like a trivial result, this is important in problems that are partially identified: problems in which even with $n=\infty$, it is impossible to be consistent (since most other approaches to inference would fail).
+
+\begin{example}[Partial identification]
+	Suppose all $X_i \ge 1$ but we want to estimate $m(0)$.
+	We could make the following assumptions to be consistent in estimation $m\left(0 \right)$:
+	\begin{itemize}
+		\item $m\left( 0 \right) = m(1)$, and we can estimate $m(1)$.
+		\item Impose a functional form: suppose $m(\cdot )$ is linear or a polynomial.
+	\end{itemize}
+	These are very strong assumptions (at least in nonparametrics). 
+
+	More reasonably assuming something like $1$-Lipschitz continuity, we could never be consistent for $m(0)$ but we can get an informative bound: asymptotically, we would think $m(0) \in \left[ m(1) \pm 1 \right]$,\footnote{This interval is called a population partial identification interval.}
+	which we could estimate with $\hat{m}(1)$ and hence report $m(0) \in \left[ \hat{m}(1) \pm t \right]$, where $t$ is determined by a bias-aware approach.
+\end{example}
+
+\begin{remark}	Recall that we had \[
+		\lim\limits_{n \to \infty} \P\left[m(x_0) \in I\right] \ge 1-\alpha
+	.\] In fact, the actual guarantee for bias-aware inference is \[
+		\liminf\limits_{n \to \infty} \inf_{m \in \mathscr{M}} \P\left[m(x_0) \in I \mid X_{1:n}\right] \ge 1-\alpha
+	,\] which is called a distribution-uniform bound/coverage.
+
+	However, considering \[
+		\inf_{m \in \mathscr{M}} \liminf\limits_{n \to \infty} \P\left[m(x_0) \in I \mid X_{1:n}\right] \ge 1-\alpha
+	,\] 
+	the first bound is stronger (and implies) the second, as the first one is a \emph{uniform} lower bound across $\mathscr{M}$ on $\P\left[m(x_0) \in I\right] $, while the second is a \emph{pointwise} notion.
+
+	The second bound arises from bias-correction methods, which does not force us to pick $\mathscr{M}$.\footnote{Bias-correction methods give us larger CIs, I think.}
+\end{remark}

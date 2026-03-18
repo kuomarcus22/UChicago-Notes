@@ -76,6 +76,25 @@ snippet hw_template "Homework template" b
 \end{document}
 endsnippet
 
+snippet paper_template "Research paper template" b
+\input{~/Documents/UChicago/shared/latex/paper_preamble.tex}
+
+\title{${1:Paper Title}}
+\author{Marcus Kuo}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+$0
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
+endsnippet
+
 snippet beg "begin{} / end{}" bA
 \\begin{$1}
 	$0

@@ -1,0 +1,263 @@
+\styledchapter{Miscellany}
+
+\section{Global Linear Regression and Splines}
+
+Consider \[
+		\min_{m \in \mathscr{M}_n} \frac{1}{n} \sum\limits_{i=1}^{n} \left( Y_i - m(X_i) \right)^2
+.\] 
+This is the usual least squares objective, but we restrict $m$ to lie in some model class $\mathscr{M}_n$.
+This is often called a \emph{series estimator}: we choose a finite-dimensional family of functions and then fit that family by least squares.
+The simplest example would be\boxednote{Typically $d_n \xrightarrow{n\to \infty} \infty$ slowly.} \[
+		\mathscr{M}_n := \left\{\text{Polynomials of degree at most }d_n\right\}
+,\] so we are considering \[
+		\min_{\left\{\alpha_j\right\}}\frac{1}{n} \sum\limits_{i=1}^{n} \left( Y_i - \sum\limits_{j=0}^{d_n} \alpha_j X_i^{j} \right)^2
+.\] 
+Equivalently, $m(x)$ is parameterized as a polynomial in $x$, and we fit the coefficients by least squares. For fixed $d_n$, this is just an ordinary linear regression with regressors $1,X_i,\ldots,X_i^{d_n}$.
+
+By Stone--Weierstrass, we can approximate a $C\left( [0,1] \right)$ function by a polynomial $P$ within any $\epsilon$ error:
+\[
+	\sup_{x \in [0,1]} \left| m(x) - P(x) \right| < \epsilon
+.\]
+So if $d_n$ is allowed to grow with $n$, the approximation bias can shrink. The tradeoff is that larger $d_n$ means more coefficients to estimate, hence more variance. The usual heuristic is:
+\begin{itemize}
+	\item $d_n \to \infty$ so the model class becomes rich enough to approximate the truth.
+	\item $d_n/n \to 0$ so we are not estimating too many coefficients relative to the sample size.
+\end{itemize}
+Under this balance, we expect consistency in
+\[
+	\frac{1}{n} \sum_{i=1}^{n} \left( m(X_i) - \hat{p}_n(X_i) \right)^2
+	\xrightarrow[n\to\infty]{} 0.
+\]
+Here the conditions $d_n \to \infty$ and $d_n/n \to 0$ say that the approximation error goes to $0$ while the estimation error does not blow up.
+
+This estimator is a linear smoother. The reason is simpler than the local-polynomial analogy: for any fixed basis $h(x)$, least squares gives
+\[
+	\hat{m}(x_0) = h(x_0)^T \left( X^T X \right)^{-1} X^T Y = \sum_{i=1}^{n} \gamma_i(x_0) Y_i,
+\]
+so the fitted value at $x_0$ is linear in the responses.
+
+This estimator is a bad idea if we're doing regression discontinuity design (Imbens and Gelman, 2019).\footnote{Perhaps don't predoc with Greenstone.} The issue is that a global polynomial uses observations far from the cutoff to determine the fit near the cutoff, so the local causal estimand can be dominated by global shape assumptions.
+
+What is a better choice for $\mathscr{M}_n$? A natural choice would be a class of splines.\boxednote{See Elements of Statistical Learning, Chapter 5.}
+Roughly, a \emph{spline} is a function formed by gluing together low-degree polynomials on adjacent intervals, usually with continuity conditions imposed at the join points. Those join points are called \emph{knots}. For us, the main examples are piecewise linear and piecewise cubic splines.
+Splines are still global least-squares estimators, but they allow the slope or curvature to change at a prescribed set of knots. This gives more local flexibility than a single polynomial.
+
+Oftentimes, $\mathscr{M}_n$ is a vector space, so it suffices to define a basis.
+For example, for a piecewise constant function with discontinuities at $\xi_1,\xi_2$, we could define the basis \[
+	h(x) = \begin{pmatrix}
+	\mathds{1}_{x < \xi_1} \\
+	\mathds{1}_{x \in [\xi_1,\xi_2)} \\
+	\mathds{1}_{x \ge \xi_2}
+	\end{pmatrix} 
+.\] If we wanted to take $\mathscr{M}_n$ as the class of piecewise linear functions with the same discontinuity points, we could take \[
+	h(x) = \begin{pmatrix}
+	\mathds{1}_{x < \xi_1} \\
+	\mathds{1}_{x \in [\xi_1,\xi_2)} \\
+	\mathds{1}_{x \ge \xi_2} \\
+
+	x\mathds{1}_{x < \xi_1} \\
+	x\mathds{1}_{x \in [\xi_1,\xi_2)} \\
+	x\mathds{1}_{x \ge \xi_2}
+	\end{pmatrix} 
+.\] 
+For a continuous piecewise linear function with two knots (kinks), we have that the basis is of dimension $4$, as we can write\boxednote{The first argument controls a global intercept, the second a global slope, and the third and fourth control changes in the slope in the two remaining segments.} \[
+		h(x) = 
+		\begin{pmatrix}
+		1 \\
+		x \\
+		\left( x-\xi_1 \right)_{+} \\
+		\left( x-\xi_2 \right)_+
+		\end{pmatrix} 
+	.\] 
+\boxednote{Recall $(t)_+ = \max\{t,0\}$, so $(x-\xi)_+$ only affects the fit to the right of the knot $\xi$.}
+The point of this truncated-power basis is that each new basis function only changes the fit after its knot, so knots localize the flexibility.
+
+Piecewise cubic polynomials are most used in practice. If we allow for discontinuity, we have $12$ parameters. Continuity reduces to $10$, $C^1$ has $8$, and $C^2$ forces just $6$ parameters. $C^2$ piecewise cubic polynomials are called cubic splines and are the most common choice. Cubics are flexible enough to bend, but the $C^2$ constraint prevents the fit from changing too abruptly from one segment to the next.
+
+A \emph{B-spline basis} is another basis for the same spline space. Unlike the truncated-power basis above, each B-spline basis function is nonzero only on a small interval around a few adjacent knots, so B-splines are more local and numerically more stable. \boxednote{An example of a B-spline basis is a basis consisting of Gaussian densities with different means.}The important point is that B-splines do not define a different class of functions; they are just a different basis for writing splines.
+
+Lastly, natural splines enforce linearity before the first knot and after the last knot. This removes the most unstable tail behavior of ordinary cubic splines. If we count the two boundary knots together with the interior knots, then a natural spline with $n$ total knots has dimension $n$; equivalently, with $K$ interior knots, the dimension is $K+2$.
+
+For computational use in R, \texttt{bs()} constructs a B-spline basis and \texttt{ns()} constructs a natural spline basis.
+
+Consider the regression spline\boxednote{A regression spline is not necessarily limited to a natural spline.} $\texttt{lm}(y \sim ns(x,\ldots))$.\boxednote{Regression splines work well and are very easy to implement once we determine the basis (which can be done with software)} Is this a linear smoother? 
+With the problem \[
+		\min_{\alpha_1,\ldots,\alpha_d} \frac{1}{n} \sum\limits_{i=1}^{n} \left( Y_i - \sum\limits_{j=1}^{d} \alpha_j h_j(X_i) \right)^2
+,\] 
+the key point is that we are minimizing a quadratic objective over coefficients, so the fitted values will be linear in $Y$.
+We write the design matrix \[
+		X =
+		\begin{pmatrix}
+		h_1(X_1) & \cdots & h_d(X_1) \\
+		\vdots & \ddots & \vdots \\
+		h_1(X_n) & \cdots & h_d(X_n)
+	\end{pmatrix} 
+,\] and put \[
+	\hat{\alpha} = \left( X^T X \right)^{-1} X^T Y
+	\] to get \[
+		\hat{m}(x) = \sum\limits_{j=1}^{d} \hat{\alpha}_j h_j(x) = \sum\limits_{i=1}^{n} \gamma_i(x) Y_i
+.\] 
+\boxednote{More explicitly, $\hat{m}(x) = h(x)^T (X^T X)^{-1} X^T Y$, so the weights $\gamma_i$ depend on $x$ and the $X_i$, but not on $Y_i$.}
+
+The main challenge with regression splines is that the knot locations are somewhat arbitrary. By default, R typically fixes the dimension and then places the knots at quantiles of the observed $X_i$. This is a reasonable generic choice, but ideally we would want more knots where the regression function changes quickly and fewer where it is nearly linear.
+
+\section{Penalized Least Squares}
+
+Consider penalized least squares, where we solve \begin{equation} \label{3-2-1}
+	\min_{m} \frac{1}{n} \sum\limits_{i=1}^{n} \left( Y_i - m(X_i) \right)^2 + \lambda \operatorname{Pen}(m)
+,\end{equation} where the minimum is taken over all functions $m$. 
+The philosophy is: instead of choosing a small model class by hand, we allow a very large class of functions and penalize rough ones.
+
+A smoothing spline uses the penalty $\lambda \int_{0}^{1} \left( m''(x) \right)^2 dx $, where the penalty is $+\infty$ if the second derivative does not exist on a nonnull set. This penalty charges curvature: the more the function bends, the larger the penalty. As $\lambda \to \infty$, we heavily penalize curvature, so $\hat{m}$ is forced toward a linear function and minimizes $\frac{1}{n} \sum_{i=1}^{n} \left( Y_i - \alpha - \beta X_i \right)^2$, despite the minimization being over all functions. As $\lambda \to 0$, we fit the data more aggressively.
+
+\begin{theorem}[Representer]
+	The minimization (\ref{3-2-1}) has a solution that is a natural spline with knots at the observed data points $X_i$. In other words, we do not have to choose the knots in advance: the representer theorem says the optimizer can be written using the sample points themselves as knots.
+	Computation is on the order of $O(n)$, which is very quick with R functions like \texttt{smooth.spline}.
+\end{theorem}
+This theorem is the key computational fact: even though we wrote down an infinite-dimensional optimization problem, the optimizer lives in a finite-dimensional spline space. By Silverman (1984), there is an exact expression for the equivalent kernel of the smoothing spline, so smoothing splines can also be viewed through the linear-smoother lens.
+
+Considering the class  \[
+		\mathscr{S}(2,C) = \left\{m : m \in C^2, \ \int \left( m''(x) \right)^2 dx \le C^2\right\}
+	,\] the smoothing spline achieves the minimax risk for integrated MSE for $X \sim \P_X$:\boxednote{This is the same one-dimensional nonparametric rate for two derivatives ($s=2$) we have seen before: $n^{-2s/(2s+1)} = n^{-4/5}$.} \[
+		\E\left[\left(\hat{m}(X) - m(X)\right)^2\right] = n^{-\frac{4}{5}}
+.\] 
+\begin{example}
+	If there are no interior knots, then a natural cubic spline is just a line, so a basis is $h(x) = (1,\ x)'$. With one interior knot $\xi$, we add one truncated-cubic term to capture the extra bend after $\xi$. In practice, software builds this basis for us, so the main conceptual point is that ``more knots'' means ``more local flexibility.''
+\end{example}
+
+\section{Not Linear Smoothers}
+
+Everything we've seen so far is a linear smoother. Is there any loss in restricting study to linear smoothers?
+
+Let $\text{LR}$ be the minimax optimal rate among linear smoothers, and let $\text{MR}$ be the minimax optimal rate among all possible estimators. The question is whether allowing nonlinear estimators can improve the rate.
+ 
+Considering the class $\sup_{x \in [0,1]} \left| m''(x) \right| \le C$, the minimax rate is
+\[
+	\text{MR} = n^{-\frac{4}{5}} = \text{LR}.
+\]
+With the broader class $\mathscr{S}(2,C)$, we still have
+\[
+	\text{MR} = n^{-\frac{4}{5}} = \text{LR},
+\]
+where the smoothing spline achieves the optimal rate.
+
+However, with the even broader class $\operatorname{TV}(2,C) = \left\{m: \int \left| m''(x) \right|dx \le C\right\}$, Donoho--Johnstone (1998) showed $\text{MR} = n^{-\frac{4}{5}} < n^{-\frac{3}{4}} = \text{LR}$. The total variation class allows functions whose curvature is concentrated in a few places, and linear smoothers cannot adapt sharply enough to that kind of spatial inhomogeneity.
+
+Which estimator achieves the $n^{-\frac{4}{5}}$ rate? While the smoothing spline resulted from solving \[
+	\min_m \left\{\frac{1}{n} \sum\limits_{i=1}^{n} \left( Y_i - m(X_i) \right)^2 + \lambda \int_{0}^{1} \left( m''(x)\right)^2 dx \right\}
+,\] we can put the locally adaptive spline as  \[
+	\min_m \left\{\frac{1}{n} \sum\limits_{i=1}^{n} \left( Y_i - m(X_i) \right)^2 + \lambda \int_{0}^{1} \left| m''(x) \right| dx \right\}
+,\] 
+which is not a linear smoother.\footnote{This fact is given to us. The locally adaptive spline is like the lasso regression and the smoothing spline like the ridge regression.} Replacing the squared penalty by an absolute-value penalty makes the estimator adaptive: it can spend its curvature budget in a few difficult regions instead of spreading it evenly everywhere. There is no representer theorem nor linear computational time, so the locally adaptive spline is harder to compute and not as widely used.
+\boxednote{Heuristic: the $\int |m''|$ penalty encourages $m''$ to be sparse, i.e. a small number of ``kinks'' in the second derivative.}
+
+If we sort the covariates so that $X_1 \le \cdots \le X_n$, a computable approximation replaces the integral penalty by a discrete second-difference penalty. By Boyd et al. (2010) and more importantly Ryan, Tibshirani (2014), people have considered the approximation to the locally adaptive spline of \[
+	\min_m \left\{\frac{1}{n }\sum\limits_{i=1}^{n} \left( Y_i - m(X_i) \right)^2 + \lambda \sum\limits_{i=1}^{n-2} \left| m(X_i) - 2m(X_{i+1}) + m(X_{i+2}) \right|\right\}
+,\] 
+which just depends on $m(X_1),\ldots,m(X_n)$ and is a finite-dimensional optimization problem. Under some conditions, this is asymptotically equivalent to locally adaptive splines.
+
+\section{Classification and Regression Trees (CART)}
+
+In step 1 of the CART algorithm, we find a cutoff $c$ and fit a piecewise constant function on
+\[
+	I_L = \{x: x \le c\}, \quad I_R = \{x: x > c\}
+,\]
+putting $\hat{m}(x)$ equal to the average of the $Y_i$ in the region containing $x$. The cutoff $c$ is chosen to minimize the residual sum of squares after the split.
+In step 2, we iterate on this and further divide the subregions. So CART is a greedy recursive partitioning method: keep splitting the feature space into rectangles (or intervals in one dimension), then average within the terminal leaves.
+
+CART is in fact not a linear smoother. While we can write \[
+	\hat{m}(x) = \sum\limits_{i=1}^{n} \gamma_i(x) Y_i, \quad \gamma_i(x) = \begin{cases}
+		\frac{1}{\# \left\{j : X_j \in I(x)\right\}} & X_i \in I(x) \\
+		0 & X_i \notin I(x)
+	\end{cases}
+\]
+for $I(x)$ the terminal leaf that $x$ falls into, $I(x)$ really depends on all the $Y_i$s, which is not allowed for a linear smoother.
+
+Honest trees are variants that are linear smoothers.
+\begin{definition}[Honest trees, Athey and Imbens (2016)]
+	Suppose we have observations $\left( Y_i,X_i \right)_{1:n}$. We split the observations into two folds $F_1,F_2$, learn on the first fold $F_1$, and use $F_2$ to make predictions for the leaves.
+\end{definition}
+Conditioning on $F_1$, the tree structure is fixed, so $\hat{m}$ is a linear smoother conditional on $F_1$. The sample split is what separates ``choosing the weights'' from ``averaging the responses with those weights.''
+
+\begin{remark}
+	Some disadvantages of CART include:
+	\begin{itemize}
+		\item Different leaves can have very different sample sizes, so variance can vary a lot across leaves.
+		\item It produces a very unstable estimator: changing one data point can lead to a very different tree.
+		\item Because it is piecewise constant, it can miss smooth trends and often predicts worse than smoother methods.
+		\item Since CART is analogous to a regressogram, there is boundary bias.
+		\item The estimator is not smooth.
+	\end{itemize}
+
+	On the other hand, without too many splits, the tree is quite interpretable.
+\end{remark}
+
+\begin{definition}[Random forests, Breiman (2001)]
+	Random forests fit a lot of trees $T^1,\ldots,T^B$ on subsamples of all observations. We introduce additional randomness:
+	\begin{itemize}
+		\item For each tree, we first resample with replacement the subsample observations. (A single data point can appear multiple times.)
+		\item For each split, randomly pick only a subset of features and consider only those as candidates to split.
+	\end{itemize}
+	The final $\hat{m}(\cdot )$ is the average of all tree predictions.
+\end{definition}
+
+Random forests address the shortcomings of CART by averaging many unstable trees, which substantially reduces variance and usually improves prediction accuracy. While there are honest random forests that use many honest trees, the usual random forest is still not a linear smoother because the leaves themselves depend on the observed responses.
+
+Let's proceed as if a random forest were a linear smoother to gain intuition: for \[
+	\hat{m}(x) = \frac{1}{B} \sum\limits_{t=1}^{B} \hat{m}_t (x) = \frac{1}{B} \sum\limits_{t=1}^{B} \frac{1}{\left| I_t(x) \right|} \sum\limits_{i=1}^{n} \mathds{1}_{i \in I_t(x)}Y_i = \sum\limits_{i=1}^{n} \left(\underbrace{ \frac{1}{B }\sum\limits_{t=1}^{B} \frac{\mathds{1}_{i \in I_t(x)}}{\left| I_t(x) \right|} }_{\gamma_i(x)}\right)Y_i
+, \] where $I_t(x)$ is the leaf of tree $t$ that contains $x$. This suggests viewing a forest as a \emph{data-adaptive kernel}: points that frequently land in the same leaves as $x$ receive large weight.
+
+What if we tried to do random forests using locally linear regression, using a kernel coming from the random forest? That is the basic motivation behind local linear forests.
+
+\section{More on Meta-Learners: Using Regression in Other Applications}
+Regression ideas show up in other problems too. Suppose $C_i \sim \operatorname{Bernoulli}(\frac{1}{2})$, and the feature distribution depends on the class:
+\begin{align*}
+	&X_i \mid C_i = 1 \sim r(\cdot ) \text{ (Density 1)} \\
+	&X_i \mid C_i = 0 \sim q(\cdot ) \text{ (Density 2)}
+.\end{align*}
+Our goal is to estimate the density ratio $r(x) / q(x)$.
+
+We have some options:
+\begin{enumerate}[label=(\roman*)]
+	\item (T-learner, ish) We can estimate $\hat{r}(x)$ based on $\left\{X_i : C_i = 1\right\}$ and $\hat{q}(x)$ based on $\left\{X_i : C_i = 0\right\}$, then put our estimate as $\hat{r}(x) / \hat{q}(x)$.
+\end{enumerate}
+What if their ratio is simpler than the two densities separately? Then it can be better to reduce the problem to a regression or classification problem.
+\begin{enumerate}[label=(\roman*), resume]
+		\item \begin{align*}
+				\P\left[C_i = 1 \mid X_i \right]
+				&\overset{\text{Bayes}}{=} \frac{\P\left[X_i \mid C_i = 1\right] \P\left[C_i = 1\right] }{\P\left[X_i\right] } \\
+				&= \frac{\frac{1}{2} r(X_i)}{\frac{1}{2}\left( r(X_i) + q(X_i) \right)} \\
+				&= \frac{r(X_i)}{r(X_i) + q(X_i)} \\
+				1- \P\left[C_i = 1 \mid X_i\right]
+				&= \frac{q(X_i)}{r(X_i) + q(X_i)} \\
+				\frac{\P\left[C_i =1 \mid X_i\right] }{1 - \P\left[C_i = 1 \mid X_i\right] }
+				&= \frac{r(X_i)}{q(X_i)}
+		.\end{align*} 
+	Since $\P\left[C_i = 1 \mid X_i\right] = \E\left[C_i \mid X_i\right] $,  if we have a way of estimating $\hat{m}$ from $C_i \sim X_i$, then we can put \[
+		\widehat{\left( \frac{r(x)}{q(x)} \right)} = \frac{\hat{m}(x)}{1-\hat{m}(x)}
+	.\]
+\end{enumerate}
+So density-ratio estimation can be converted into conditional-mean estimation, which may be easier to attack with the regression tools from the course.
+
+Now we pivot to consider $X_i \sim f$ and want to estimate the score \[
+	s(x) = \frac{\partial}{\partial x} \ln{\left(f(x)\right)} = \frac{f'(x)}{f(x)}
+.\] Again, we could separately estimate $f'$ and $f$, but that is often unstable. A better and more modern approach is to add Gaussian noise: let $\epsilon_i \sim N(0,\tau^2)$ and define $Z_i = X_i + \epsilon_i$. If $K$ is the Gaussian kernel, then the density of $Z_i$ is
+\[
+	f_Z(z) = \E\left[\frac{1}{\tau} K \left( \frac{X_i - z}{\tau} \right)\right] \overset{\tau \text{ small}}{\approx} f(z)
+,\]
+for\boxednote{Alternatively, this is the expected KDE with Gaussian kernel bandwidth $\tau$, or equivalently the density of the convolution of $\epsilon_i$ and $X_i$.} $K$ the Gaussian kernel.
+
+Heuristically, if $\tau$ is small, then $Z$ is just a slightly blurred version of $X$, so the score of $f_Z$ should be close to the score of $f$.
+
+\begin{proposition}[Tweedie's formula, Eddington (1926)]
+	We have that \[
+		\E\left[X_i \mid Z_i = z\right]  = z + \tau^2 \frac{\partial}{\partial z} \ln{\left(f_Z(z)\right)}
+	.\] 
+\end{proposition}
+
+With this, we can estimate the score of the noisy density by regressing $X_i$ on $Z_i$ to get $\hat{m}$, and then put \[
+	\hat{s}_Z(z) = \frac{\hat{m}(z) - z}{\tau^2}
+.\] 
+When $\tau$ is small, this provides an approximation to the score of the original density $f$.
+
+This is called \emph{denoising score matching}, which underlies score-based diffusion models.

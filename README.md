@@ -10,7 +10,7 @@ Selected lecture notes of varying degrees of polish.
 
 [ECMA 30800](https://github.com/kuomarcus22/UChicago-Notes/tree/main/ECMA30800/Lecture%20Notes): Theory of Auctions
 
-[STAT 38100](https://github.com/kuomarcus22/UChicago-Notes/tree/main/STAT38100/Lecture%20Notes): Measure--Theoretic Probability I
+[STAT 38100](https://github.com/kuomarcus22/UChicago-Notes/tree/main/STAT38100/Lecture%20Notes): Measure-Theoretic Probability I
 
 STAT 37400: Nonparametric Inference
 

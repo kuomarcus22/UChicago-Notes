@@ -1,0 +1,406 @@
+\styledchapter{Introduction to Nonparametric Regression}
+
+\section{Framework}
+
+
+
+\begin{notation}	Let $Z_i := (X_i,Y_i)$ with $Z_i \overset{\text{iid}}{\sim} P$ on $\R^d\times \R$.
+	Write $X_i\in \R^d$ and $Y_i\in \R$.
+	Given covariates $X$, we want to predict $Y$.
+\end{notation}
+
+\begin{definition}[Squared-error (prediction) risk]
+	For any measurable regression function $m:\R^d\to \R$, define its (population) squared-error risk
+	\[
+		R_P(m) := \E_P\big[(Y - m(X))^2\big].
+	\]
+\end{definition}
+
+\begin{definition}[Regression function / CEF]
+	The \emph{regression function} (a.k.a.\ the \emph{conditional expectation function} (CEF)) is
+	\[
+		m^*(x) := \E_P[Y \mid X=x].
+	\]
+\end{definition}
+
+Suppose we get a fresh draw $(X,Y)$ and only observe $Y$. How should we choose $h(x)$ as an estimator of $m^*(x)$?
+
+\begin{proposition}[Optimality of the regression function]
+	For any measurable $m:\R^d\to \R$,
+	\[
+		R_P(m) = R_P(m^*) + \E_P\big[(m^*(X)-m(X))^2\big]
+		\;\;\ge\;\;
+		R_P(m^*).
+	\]
+	In particular, $m^*$ minimizes the squared error risk $R_P(m)$ over all measurable $m$.
+\end{proposition}
+
+
+\begin{proof}
+	Step 1 (add--subtract $m^*(X)$).
+	Write
+	\[
+		Y-m(X) = \bigl(Y-m^*(X)\bigr) + \bigl(m^*(X)-m(X)\bigr).
+	\]
+	Squaring and taking $\E_P$ gives
+	\begin{align*}
+		\E_P\big[(Y-m(X))^2\big]
+		&= \E_P\big[(Y-m^*(X))^2\big]
+		+ \E_P\big[(m^*(X)-m(X))^2\big] \\
+		&\qquad
+		+ 2\,\E_P\big[(Y-m^*(X))(m^*(X)-m(X))\big].
+	\end{align*}
+
+	Step 2 (the cross term is $0$).
+	Using iterated expectations,
+	\[
+		\E_P\big[(Y-m^*(X))(m^*(X)-m(X))\big] = 0,
+	\]
+	because $\E_P\big[Y-m^*(X)\mid X\big] = 0$.
+
+	Step 3 (conclude).
+	Substituting the vanishing cross term yields
+	\[
+		R_P(m)=R_P(m^*)+\E_P\big[(m^*(X)-m(X))^2\big]\ge R_P(m^*),
+	\]
+	as claimed.
+\end{proof}
+
+\begin{remark}	The identity
+	\[
+		R_P(m)-R_P(m^*)=\E_P\big[(m(X)-m^*(X))^2\big]
+	\]
+	is a Pythagorean decomposition in $L^2(P)$: $m^*$ is the $L^2$ projection of $Y$ onto
+	measurable functions of $X$.
+\end{remark}
+
+\begin{definition}[Excess risk]
+	Given an estimator $\hat m$ constructed from data, a natural target is the \emph{excess risk} (or $L^2(P_X)$ error)
+	\[
+		\E_P\big[(\hat m(X)-m^*(X))^2\big],
+	\]
+	often interpreted as mean-squared prediction error with respect to the marginal distribution of $X$.
+\end{definition}
+
+Given a finite training set $D_{\text{train}} = \{(X_i,Y_i)\}$, how do we estimate the true function that governs $y = h(x)$?
+
+One approach is to use a regressogram: a piecewise constant function that is analogous to a histogram. Alternatively, we can make explicit modeling assumptions, such as only considering \boxednote{These are parametric models.}\[
+	m(x) = \sum\limits_{j=1}^{K} \beta_j \psi_j(x), \text{ or } m(X) = m(x_j,\beta)
+.\] 
+We can also use supervised learning like deep learning, trees, random forests, and boosting. 
+
+Nonparametric regression is thus a problem we're very good at solving. One reason is that we can see how well we are doing, but not really \emph{why} we are good. One topic in nonparametric regression today is repurposing existing black boxes for new statistical tasks.
+
+\begin{remark}	Suppose $X_i \in \{1,\ldots,K\}$ is a categorical random variable. We might estimate by \[
+		\hat{m}(k) = \frac{1}{\# \{X_i = K\}} \sum\limits_{i: X_i = k}^{} Y_i
+	.\] This estimator is only defined when every bin (category) is attained by some observation in the training data. If there is $k'$ where no $X_i = k'$, we might put $\hat{m}$ as $0$ or as the global average of $Y$.
+
+	We would expect $\operatorname{Bias}\left(\hat{m}(k)\right) \approx 0$ and $\operatorname{Var}\left(\hat{m}(k)\right) \approx \frac{\sigma^2}{\# \{X_i = k\}}$. 
+	The first approximation is because if $\#\{X_i = k\} = 0$, we put $\hat{m}(k) = 0$, which introduces bias if $m(k) \ne 0$. The second approximation is because $\operatorname{Var}\left(Y_i \mid X= x\right) \le \sigma^2$ and $\#\{X_i = k\}$ itself is random.\footnote{Recall the law of total expectation; we have that $\E\left[\operatorname{Var}\left(\hat{m}(k)\right)\right] \approx \frac{\sigma^2}{\# \{X_i = k\}}$, but $\operatorname{Var}\left(\E\left[\hat{m}(k)\right] \right) > 0$.}
+
+	One resolution to the second approximation is a conditional bias-variance decomposition.
+	So far, we have been examining
+	\[
+		\E\left[\left( \hat{m}(x_0) - m(x_0) \right)^2\right]
+		= \text{Bias}^2 + \text{Var}
+	.\]
+	Instead, we could study the conditional decomposition
+	\[
+		\E\left[\left( \hat{m}(x_0) - m(x_0) \right)^2 \mid X_{1:n}\right]
+		= \operatorname{Var}\left(\hat{m}(x_0)\mid X_{1:n}\right)
+		+ \left(\E\left[\hat{m}(x_0)\mid X_{1:n}\right]-m(x_0)\right)^2
+	.\]
+
+	We have two difference goals.
+	There are two distinct targets one might mean by ``the regression function'' once we discretize $X$ by creating bins.
+
+	\begin{enumerate}[label=(\arabic*)]
+		\item \textbf{Discrete-design goal (exact categories).}
+		Suppose $X$ is actually discrete and we want
+		\[
+			m(k) := \E\left[Y\mid X=k\right].
+		\]
+		With the cell-mean estimator
+		\[
+			\hat{m}(k) := \frac{1}{N_k}\sum\limits_{i: X_i=k}^{} Y_i,
+			\qquad
+			N_k := \#\{i: X_i=k\},
+		\]
+		we have, whenever $N_k>0$,
+		\[
+			\E\left[\hat{m}(k)\mid X_{1:n}\right]
+			= \frac{1}{N_k}\sum\limits_{i:X_i=k}^{}\E\left[Y_i\mid X_{1:n}\right]
+			= \frac{1}{N_k}\sum\limits_{i:X_i=k}^{} m(k)
+			= m(k),
+		\]
+		so the conditional bias relative to the target $m(k)$ is $0$. In this setting, the only issue is what to do when $N_k=0$. We might define $\hat{m}(k) := 0$ in this case, so the bias would be $m(k)$.
+
+		\item \textbf{Regressogram goal (binning a continuous regressor).}
+		Now take $X$ continuous and partition the support into bins $(I_j)_j$. For $x_0\in I_j$, define the regressogram
+		\[
+			\hat{m}(x_0) := \frac{1}{N_j}\sum\limits_{i: X_i\in I_j}^{} Y_i,
+			\qquad
+			N_j := \#\{i: X_i\in I_j\}.
+		\]
+		Even if $N_j>0$,
+		\[
+			\E\left[\hat{m}(x_0)\mid X_{1:n}\right]
+			= \frac{1}{N_j}\sum\limits_{i:X_i\in I_j}^{} \E\left[Y_i\mid X_{1:n}\right]
+			= \frac{1}{N_j}\sum\limits_{i:X_i\in I_j}^{} m(X_i),
+		\]
+		so the conditional bias relative to the \emph{pointwise} target $m(x_0)$ is
+		\[
+			\E\left[\hat{m}(x_0)\mid X_{1:n}\right]-m(x_0)
+			= \frac{1}{N_j}\sum\limits_{i:X_i\in I_j}^{} \left(m(X_i)-m(x_0)\right),
+		\]
+		which is generally nonzero unless $m(\cdot)$ is constant on $I_j$ or all $X_i = x_0$.
+
+		A natural alternative target is the \emph{bin mean}
+		\[
+			m_j := \E\left[Y\mid X\in I_j\right] = \E\left[m(X)\mid X\in I_j\right],
+		\]
+		for which the regressogram is (conditionally) unbiased when $N_j>0$. But if the goal is $m(x_0)$, then there is an unavoidable discretization/smoothing bias.
+
+		This is why we assume $m(\cdot)$ is $L$-Lipschitz: if $x_0\in I_j$ and the bin half-width is $h$, then for $X_i\in I_j$,
+		\[
+			\left|m(X_i)-m(x_0)\right|\le L\left|X_i-x_0\right|\le Lh,
+		\]
+		hence
+		\[
+			\left|\E\left[\hat{m}(x_0)\mid X_{1:n}\right]-m(x_0)\right|\le Lh.
+		\]
+	\end{enumerate}
+
+	We can then recover the unconditional MSE decomposition:
+	\begin{align*}
+		\E\left[\left( \hat{m}(x_0) - m(x_0) \right)^2\right] &= \E\left[\E\left[\left( \hat{m}(x_0) - m(x_0) \right)^2 \mid X_{1:n}\right]  \right] \\
+															  &= \E\left[\operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right)\right] + \E\left[\operatorname{Bias}^2\left(\hat{m}(x_0) \mid X_{1:n}\right)\right] 
+	.\end{align*}
+\end{remark}
+
+\section{k-Nearest Neighbors Estimator}
+
+
+
+Suppose we want to estimate $m(x_0)$.
+
+\begin{definition}[$k$-nearest neighbors of a point]
+	\boxednote{If there are ties in distances, this is not well-defined. For simplicity, we will assume there are no ties.} The $k$-nearest neighbors of a point $x_0$ are \[
+	N_k(x_0) = \{i \in \{1,\ldots,\} : \|X_i - x_0\| \text{ is among the $k$ smallest}\}
+.\] 
+\end{definition}
+
+\begin{definition}[$k$-nearest neighbors estimator]
+	Define the kNN estimator as \[
+		\hat{m}(x_0) = \frac{1}{k} \sum_{i \in N_k(x_0)} Y_i
+	.\] 
+\end{definition}
+
+Consider the $1$-nearest neighbor estimator. We have $\hat{m}(X_i) = Y_i$, and the MSE is $\sum \left( Y_i - \hat{m}(X_i) \right)^2 = 0$\boxednote{Note the MSE here is being evaluated at points where we actually have an observation $x_i$.}. The traditional view is that this is major overfitting and thus bad, but the modern view is that it is not necessarily bad.
+
+We may have \emph{boundary bias}, which is important in something like regression discontinuity design. This arises because our $k$ neighbors at the boundary are evenly distributed around the estimated point, which causes a problem if we have a trend near the boundary.
+
+Bias increases as $k$ increases, while variance is decreasing in $k$. We will now formalize this.
+
+
+\begin{proposition}[Rate of MSE of \textit{k}-NN estimator]
+	Assuming the following:
+	\begin{enumerate}[label=(\roman*)]
+		\item $\operatorname{Var}\left(Y_i \mid X= x\right) \le \sigma^2$ for all $x$
+		\item $m(\cdot ) $ is $L$-Lipschitz
+		\item $X_i \sim U\left[ 0,1 \right]^{d}$,
+	\end{enumerate}
+	the rate of MSE decay of the $k$-nearest neighbors estimator as a function of $n$ with optimal\footnote{In the minmax sense with these minimal assumptions.} $k^* \asymp n^{\frac{2}{2+d}}$ is given by \[
+		\E\left[\left( \hat{m}_{k^*}(x_0) - m(x_0) \right)^2\right]  \lesssim n^{-\frac{2}{2+d}}
+	.\] For arbitrary $k$, \[
+			\E\left[\left( \hat{m}_{k}(x_0) - m(x_0) \right)^2\right] \lesssim_{\sigma^2,L} \frac{\sigma^2}{k} + L^2\left( \frac{k}{n} \right)^{\frac{2}{d}}
+	.\] 
+\end{proposition}
+
+
+\begin{proof}
+	We will use the conditional MSE.\boxednote{There is randomness due to the \emph{design} (location of $X_i$s) and randomness of $Y_i$ once we fix $X_i$. Starting by conditioning on $X_i$ helps us treat these sources one at a time.} Start with 
+	\begin{align*}
+		\left|\operatorname{Bias}\left(\hat{m}(x_0) \mid X_{1:n}\right)\right| &= \left|\E\left[\hat{m}(x_0) \mid X_{1:n}\right] - m(x_0)\right| \\
+		&= \left| \E\left[\frac{1}{k} \sum_{i \in N_k(x_0)} Y_i \mid X_{1:n}\right] - m(x_0) \right| \\
+		&= \frac{1}{k} \left| \sum_{i \in N_k(x)} \underbrace{\E\left[Y_i \mid X_{1:n}\right]}_{= \E\left[Y_i \mid X_i\right] = m(X_i)}  - m(x_0) \right|\\
+																  &= \frac{1}{k} \left| \sum\limits_{i \in N_k(x_0)}^{} m(X_i) - m(x_0)\right| \\
+																  &\le \frac{1}{k} \sum_{i \in N_k(x_0)} \left| m(X_i) - m(x_0) \right| \\
+																  &\le L \| X_i - x_0 \| \\ 
+																  &\le L \| X_{(k)}(x_0) - x_0 \|
+	.\end{align*}
+	\begin{align*}
+		\operatorname{Var}\left(\hat{m}(x_0) \mid X_{1:n}\right) &= \operatorname{Var}\left(\frac{1}{k} \sum_{i \in N_k(x_0)} Y_i \mid X_{1:n}\right) \\
+		&= \frac{1}{k^2} \sum_{i \in N_k(x_0)} \operatorname{Var}\left(Y_i \mid X_i\right) \\
+		&= \frac{\sigma^2}{k}
+	.\end{align*}
+	Hence the MSE is bounded by
+	\begin{align}
+		\MSE &= \E\left[\left( \hat{m}(x_0) - m(x_0) \right)^2\right]  \\
+			&\le \frac{\sigma^2}{k} + L^2 \E\left[\|X_{(k)}(x_0) - x_0\|^2\right] \label{1-12-1}
+	.\end{align} 
+	Note that the bound on unconditional bias is random because the bound on conditional bias depends on the covariates --- we must take an expectation.
+
+	Now using assumption (iii) with $d=1$, we expect \[
+		\E\left[\|X_{(k)}(x_0) - x_0\|^2\right] \approx \left( \frac{k}{n} \right)^2
+	.\] 
+	In $d$ dimensions, this is less interpretable\footnote{We provide the proof for this distance bound after this proof concludes.}\boxednote{As dimension grows, the $k$ nearest neighbor will be much further away. We run into the curse of dimensionality again.}: \[
+		\E\left[\|X_{(k)}(x_0) - x_0\|^2\right] \approx \left( \frac{k}{n} \right)^{\frac{2}{d}}
+	.\] 
+
+	We substitute this into our MSE bound to get \[
+		\MSE \lesssim_{L ,\sigma^2} \frac{\sigma^2}{k} + L^2 \left( \frac{k}{n} \right)^{\frac{2}{d}}
+	.\] 
+
+	Refer to the lecture slides for some plots for different $k$. \boxednote{Another way to actually pick the optimal $k$ without making an assumption on the actual form of $m$ is called cross-validation; we will learn about this later in the course!}How do we actually pick the best choice of $k$? We find this by equating the variance and square bias, up to the removal of constants (because we just want to derive a $O(\cdot )$ bound):
+	\begin{align*}
+		\frac{1}{k} &= \left( \frac{k}{n} \right)^{\frac{2}{d}} \\
+		k^{\frac{2+d}{d}} &=  n^{\frac{2}{d}} \\
+		k^* &= n^{\frac{2}{2+d}}
+	.\end{align*}
+
+	For $d=1$, we see $k^* = n^{\frac{2}{3}}$ and for $d=2$, we get $k^* = n^{\frac{1}{2}}$. As the dimenion grows, the number of neighbors we select shrinks due to the bias blowing up.
+
+	Plugging\boxednote{For $d=1$, \[
+		\MSE \lesssim n^{-\frac{2}{3}}
+	.\] Recall that for a Lipschitz density, the minimax MSE was also \[
+		\inf_{m(\cdot ) \text{ L-}Lipschitz} \gtrsim n^{-\frac{2}{2+d}}
+	.\] } this $k^*$ into our bound on the MSE, we get that the rate of MSE growth as a function of $n$ is given by \[
+		\MSE \lesssim n^{-\frac{2}{2+d}}
+	.\]
+\end{proof}
+
+\begin{proof}
+	(Of $d$-dimension distance bound.) Fix $x_0 \in [0,1]$. We know the bound that for any $\epsilon$, there exists some $c_d$ such\boxednote{This constant exists because of our assumption that $X_i \sim \operatorname{Unif}[0,1]^{d}$.} that \[
+		\P\left[\|X_{(i)} - x_0\| \le \epsilon\right] \ge c_d \epsilon^{d}
+	.\] 
+	We can write (being lax with constants changing)
+	\begin{align*}
+		\E\left[\|X_{(1)}(x_0) - x_0\|^2\right] &= \int_{0}^{\infty} \P\left[\|X_{(1)}(x_0) - x_0\|^2 \ge \epsilon\right] d\epsilon \\ 
+		&= \int_{0}^{\infty} \P\left[\cap_i \{\|X_i - x_0\| \ge \sqrt{\epsilon} \}\right] d\epsilon  \\
+		&= \int_{0}^{\infty}  \prod_{i=1}^{n} \P\left[\|X_i - x_0\|\ge \sqrt{\epsilon} \right]d\epsilon \\
+		&\le \int_{0}^{\infty} \left( 1 - c_d \epsilon^{\frac{d}{2}} \right)^{n} d\epsilon \\
+		&\le \int_{0}^{\infty}  \operatorname{exp}\left(-n c_d \epsilon^{\frac{d}{2}}\right) d\epsilon \\
+		&= \int_{0}^{\infty} n^{-\frac{2}{d}} c_d ^{-\frac{2}{d}} \operatorname{exp}\left(-u^{\frac{d}{2}}\right)du \\
+		&\le c\left( \frac{1}{n} \right)^{\frac{2}{d}}
+	.\end{align*}
+	
+	Now we upgrade from $1$-NN to $K$-NN. Suppose $n$ is a multiple of $2K$ and partition $\{1,\ldots,n\}$ into $2K$ equal blocks $I_1,\ldots,I_{2K}$.
+
+	\begin{comment}
+	Write $X_{(k)}(x_0; I)$ to denote the $k$th nearest neighbor of $x_0$ in $I$.
+	Note that \[
+		\|X_{(k)}(x_0, \{1,\ldots,n\}) - x_0\|^2 \le \frac{1}{k} \sum\limits_{j=1}^{2K} \|X_{(1)} (x_0,I_j) - x_0\|^2
+	\] because $X_{(1)}(x_0; I_j) \ge X_{(k)}(x_0;\{1,\ldots, n\})$ in at least $K$ blocks.
+
+	Now we see
+	\begin{align*}
+		\E\left[\|X_{(k)}(x_0 ) - x_0\|^2\right] &\le \sum\limits_{j=1}^{2K} \E\left[\|X_{(n)}(x_0, I_j) - x_0\|^2\right] \\
+												 &\lesssim \frac{1}{K} \sum\limits_{j=1}^{2K} \left( \frac{2K}{N} \right)^{\frac{2}{d}} \\
+												 &\lesssim \left( \frac{k}{n} \right)^{\frac{2}{d}}
+	.\end{align*}
+	\end{comment}
+	Write $X_{(k)}(x_0;I)$ for the $k$th nearest neighbor of $x_0$ among $\{X_i:i\in I\}$, and set
+	\[
+		R_k := \left\|X_{(k)}(x_0;\{1,\ldots,n\})-x_0\right\|, 
+		\qquad 
+		R_{1,j} := \left\|X_{(1)}(x_0;I_j)-x_0\right\|
+	\]
+	for blocks $I_1,\ldots,I_{2k}$ forming a partition of $\{1,\ldots,n\}$ (so $\lvert I_j\rvert \approx n/(2k)$).
+	We claim $R_{1,j} \ge R_k$ for at least $k$ blocks $j\in\{1,\ldots,2k\}$.
+	If $R_{1,j} < R_k$ held in $k$ distinct blocks, then in each such block one could pick an index
+	$i_j\in I_j$ with $\|X_{i_j}-x_0\| < R_k$. These $k$ indices are distinct (because the blocks are disjoint),
+	so there would be at least $k$ sample points strictly closer than $R_k$ to $x_0$, contradicting the
+	definition of $R_k$ as the $k$th order statistic of the distances $\{\|X_i-x_0\|\}_{i=1}^n$.
+
+	Consequently, at least $k$ terms in the sum $\sum_{j=1}^{2k} R_{1,j}^2$ are $\ge R_k^2$, so
+	\[
+		\sum_{j=1}^{2k} R_{1,j}^2 \ge k R_k^2,
+		\qquad\text{and hence}\qquad
+		R_k^2 \le \frac{1}{k}\sum_{j=1}^{2k} R_{1,j}^2.
+	\]
+	Taking expectations and using linearity,
+	\begin{align*}
+		\E\left[R_k^2\right]
+		&\le \frac{1}{k}\sum_{j=1}^{2k} \E\left[R_{1,j}^2\right] \\
+		&= \frac{2k}{k}\,\E\left[R_{1,1}^2\right]
+		\qquad\text{(each block has the same distribution).}
+	\end{align*}
+	\noindent\textbf{Plug in the $1$-NN bound at the block size.}
+	Let $m := \lvert I_1\rvert$ (so $m \asymp n/(2k)$). We can use the $1$-NN bound at this block size to get
+	\[
+		\E\left[R_{1,1}^2\right] \le C\, m^{-2/d}.
+	\]
+	Therefore,
+	\[
+		\E\left[R_k^2\right]
+		\le 2C\, m^{-2/d}
+		\le 2C\left(\frac{2k}{n}\right)^{2/d}
+		\le C'\left(\frac{k}{n}\right)^{2/d},
+	\]
+
+\end{proof}
+
+\begin{remark}	Suppose we have $n$ observations with a given MSE $m$, written as $(n,m)$. What $n'$ do we need for a new MSE $m' = \frac{m}{2}$? If the rate is $\frac{1}{n}$, then we require $n' = 2n$. If the rate is instead $\frac{1}{\sqrt{n} }$, we require $n' = 4n$.
+\end{remark}
+
+What are other assumptions we could make to give faster convergence than in (\ref{1-12-1})? 
+In order, we will explore:
+\begin{enumerate}[label=(\roman*)]
+	\item Additional smoothness assumptions (H\"older classes)
+	\item Structural assumption
+\end{enumerate}
+
+
+\begin{definition}[H\"older class]
+	The $\Sigma (\beta, L)$ H\"older class for $\beta > 0$ is defined such that $m \in \Sigma(\beta,L)$ if it is $l$ times differentiable and \[
+		\left| m^{(l)}(x) - m^{(l)}(x') \right| \le L \left| x-x' \right|^{\beta-l}
+	,\] 
+	where $l := \left\lfloor \beta \right\rfloor$ is the largest integer strictly less than $\beta.$ In particular, if $\beta \in \N$ then $l = \left\lfloor \beta \right\rfloor = \beta-1$.
+\end{definition}
+
+\begin{remark}	$\Sigma(1,L)$ is the class of $L$-Lipschitz functions and $\Sigma(2,L)$ are those with $L$-Lipschitz continuous derivatives.
+\end{remark}
+\begin{remark}	Minimax rates are roughly $n^{- \frac{2\beta}{2\beta + d}}$. As we have larger $\beta$, we get a faster rate of convergence, as we can write $n^{- \frac{2s}{2s + 1}}$ for $s = \frac{\beta}{d}$. As $s \to \infty$, the rate converges to $\frac{1}{n}$. However, in general, $k$-NN does not achieve this rate.
+\end{remark}
+
+Now we consider structural assumptions.
+We can suppose an additive model, where \[
+	m(x) = \sum\limits_{j=1}^{d} m_j(x_j)
+\] for $L$-Lipschitz $m_j$. We can also assume $m(\cdot )$ looks like a neural network. 
+
+Imposing shape contrails like monotonicity, convexity, log-concavity. These are usually analyzed for losses such as \[
+	\E\left[\left( \hat{m}(X) - m(X) \right)^2\right] = \int_{}^{} \E\left[\left( \hat{m}(x_0) - m(x_0) \right)^2\right] f(x_0)dx_0 
+,\] where $X \sim \P$.
+
+This is sometimes called the integrated MSE or the expected test error. In $1$-D, we can achieve the same rate of $n^{-\frac{2}{3}}$ if we replace the smoothness assumption with a monotonicity assumption on $m$.
+
+\begin{definition}[Manifold hypothesis]
+	Suppose in $d$ dimensions, our data has ``effective dimension''\footnote{Think of a curve in $R^2$, which has effective dimension $1$.} $s < d$. Kpotufe (2011) showed that $k$-NN with a Lipschitz assumption achieves the rate $n^{-\frac{2}{2+s}}$.
+\end{definition}
+
+What if we relax assumption (iii) in that we now just assume $X_i$ has a density $f$ such that $f(x) \ge \delta > 0$ for all $x \in [0,1]^{d}$? In our bound on the $d$-dimension distance, we must use \[
+	\P\left[\|X_i - x_0\| \le \epsilon\right] \ge c_d \delta \epsilon^{d}		
+.\] For a fixed $\delta$, the rate is still the same. However, the MSE depends on $\delta$.
+
+If we relax assumption (iii) by even allow $\inf_{x_0}f(x_0) = 0$? We cannot port this into the analysis we have already done; we evaluate integrated MSE. 
+
+\begin{aside}[Integrated MSE]
+		Examining
+		\[
+			\E\left[\left( \hat{m}(X) - m(X) \right)^2\right]
+			= \int_{}^{} \E\left[\left( \hat{m}(x_0) - m(x_0) \right)^2\right] f(x_0)dx_0
+		,\]
+		we justified that low density means few nearby neighbors and potentially large local MSE.
+		High density means the same local MSE may be smaller.
+
+	We have the following theorem:\boxednote{This is the same result as before, except now we do not assume $X \sim U[0,1]^{d}$.} \newline Suppose $X_i \in [0,1]^{d}$ \boxednote{We have no assumption on $X$'s density.}, $\operatorname{Var}\left(Y_i \mid X_i = x\right) \le \sigma^2$ for all $x$, and $m(\cdot)$ is $L$-Lipschitz. For optimally tuned $k$-NN, we have the bound \[
+		\E\left[\left( \hat{m}(X) - m(X) \right)^2\right] \lesssim_{\sigma^2,L} n^{-\frac{2}{2+d}}
+	\] for $d \ge 3$.
+\end{aside}
+
+\begin{theorem}[Universal consistency of $k$-NN estimator]
+	Suppose\boxednote{This result is notable because there is no smoothness assumption on the true function $m$. The price we pay for this is no guaranteed rate of convergence.} $(X_i,Y_i) \overset{iid}{\sim} \P$, $\E\left[Y_i^2\right] < \infty$, and $k$ is such that $\frac{k}{n} \to 0$ as $k \to \infty$. Then for the $k$-NN estimator $\hat{m}_k$, \[
+		\E\left[\left( \hat{m}_k(X) - m(X) \right)^2\right] \to_{n\to \infty} 0
+	.\] 
+\end{theorem}

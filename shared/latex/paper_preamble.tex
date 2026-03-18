@@ -1,0 +1,248 @@
+\documentclass[11pt]{article}
+
+% Generic paper layout: 1in margins are a conventional baseline for drafts,
+% class papers, and many ad hoc submissions, while still using the page better
+% than LaTeX's default article text block.
+\usepackage[
+    paper=letterpaper,
+    margin=1in,
+    includeheadfoot,
+    headheight=14pt,
+    headsep=0.22in,
+    footskip=0.35in
+]{geometry}
+
+% Typography.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{textcomp}
+\usepackage{setspace}
+\setstretch{1.08}
+\raggedbottom
+
+% Core math support.
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{mathrsfs}
+\usepackage{dsfont}
+\numberwithin{equation}{section}
+\allowdisplaybreaks
+
+% Tables, figures, and layout helpers.
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+\graphicspath{{images/}{figures/}}
+
+\tcbset{
+  lecrcodeboxstyle/.style={
+    colback=gray!8,
+    colframe=black!65,
+    boxrule=0.45pt,
+    arc=2.4mm,
+    left=6pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt
+  }
+}
+
+\lstdefinelanguage{Rnote}{
+  language=R,
+  morekeywords={
+    mutate,summarise,summarize,filter,group_by,ungroup,across,
+    case_when,if_else,coalesce,replace_na,left_join,inner_join,
+    full_join,semi_join,anti_join,pivot_longer,pivot_wider,
+    ggplot,aes,labs,facet_wrap
+  }
+}
+\lstdefinestyle{notescode}{
+  language=Rnote,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!75!black},
+  commentstyle=\itshape\color{teal!55!black},
+  stringstyle=\color{red!70!black},
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  breaklines=true,
+  breakatwhitespace=false,
+  aboveskip=0pt,
+  belowskip=0pt,
+  frame=none
+}
+\newtcblisting{rcodebox}{
+  enhanced,
+  breakable,
+  listing only,
+  lecrcodeboxstyle,
+  listing options={style=notescode}
+}
+
+% Citations and links.
+\usepackage[authoryear, round]{natbib}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black
+}
+\usepackage[nameinlink, noabbrev]{cleveref}
+
+% Title and section styling.
+\usepackage{titling}
+\usepackage{titlesec}
+\setlength{\droptitle}{-0.6in}
+\pretitle{\begin{center}\LARGE\bfseries}
+\posttitle{\par\end{center}\vspace{0.4em}}
+\preauthor{\begin{center}\normalsize}
+\postauthor{\par\end{center}\vspace{0.15em}}
+\predate{\begin{center}\small}
+\postdate{\par\end{center}\vspace{1.0em}}
+
+\titleformat{\section}
+  {\normalfont\large\bfseries}
+  {\thesection}
+  {0.75em}
+  {}
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsection}
+  {0.7em}
+  {}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\itshape}
+  {\thesubsubsection}
+  {0.65em}
+  {}
+\titlespacing*{\section}{0pt}{1.4\baselineskip}{0.6\baselineskip}
+\titlespacing*{\subsection}{0pt}{1.0\baselineskip}{0.45\baselineskip}
+\titlespacing*{\subsubsection}{0pt}{0.8\baselineskip}{0.35\baselineskip}
+
+\captionsetup{
+    font=small,
+    labelfont=bf,
+    textfont=normalfont,
+    justification=centering,
+    singlelinecheck=false,
+    skip=6pt
+}
+\setlist{
+    itemsep=0.25em,
+    topsep=0.45em
+}
+
+% Line-break penalties: prevent mid-expression line breaks.
+\relpenalty=10000
+\binoppenalty=10000
+
+% =====================================================================
+% MATH SHORTHAND MACROS
+% =====================================================================
+\newcommand*\N{\mathbb{N}}
+\newcommand*\R{\mathbb{R}}
+\newcommand*\Q{\mathbb{Q}}
+\newcommand*\Z{\mathbb{Z}}
+\newcommand*\E{\mathbb{E}}
+\let\oldP\P
+\renewcommand*\P{\mathbb{P}}
+\let\O\varnothing
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+\newcommand{\ind}{\perp\!\!\!\perp}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\plim}{plim}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\Bias}{Bias}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\supp}{supp}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Expect}{\mathbb{E}}
+\newcommand{\wh}{\widehat}
+\newcommand{\wt}{\widetilde}
+\newcommand{\hf}{{1/2}}
+\newcommand{\lnorm}[2]{\left\lVert #1 \right\rVert_{#2}}
+\newcommand{\Norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\Fnorm}[1]{\lnorm{#1}{\mathrm{F}}}
+\newcommand{\fnorm}[1]{\left\lVert #1 \right\rVert_{\mathrm{F}}}
+\newcommand{\opnorm}[1]{\left\lVert #1 \right\rVert_{\mathrm{op}}}
+\newcommand{\nnorm}[1]{\left\lVert #1 \right\rVert_{*}}
+\newcommand{\iprod}[2]{\left\langle #1, #2 \right\rangle}
+\newcommand{\pth}[1]{\left( #1 \right)}
+\newcommand{\qth}[1]{\left[ #1 \right]}
+\newcommand{\sth}[1]{\left\{ #1 \right\}}
+\newcommand{\indc}[1]{\mathds{1}_{\left\{ #1 \right\}}}
+\newcommand{\calL}{\mathcal{L}}
+
+% =====================================================================
+% THEOREM ENVIRONMENTS
+% =====================================================================
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{claim}[theorem]{Claim}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{notation}[theorem]{Notation}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\crefname{section}{section}{sections}
+\Crefname{section}{Section}{Sections}
+\crefname{subsection}{subsection}{subsections}
+\Crefname{subsection}{Subsection}{Subsections}
+\crefname{equation}{equation}{equations}
+\Crefname{equation}{Equation}{Equations}
+\crefname{theorem}{theorem}{theorems}
+\Crefname{theorem}{Theorem}{Theorems}
+\crefname{lemma}{lemma}{lemmas}
+\Crefname{lemma}{Lemma}{Lemmas}
+\crefname{proposition}{proposition}{propositions}
+\Crefname{proposition}{Proposition}{Propositions}
+\crefname{corollary}{corollary}{corollaries}
+\Crefname{corollary}{Corollary}{Corollaries}
+\crefname{assumption}{assumption}{assumptions}
+\Crefname{assumption}{Assumption}{Assumptions}
+\crefname{claim}{claim}{claims}
+\Crefname{claim}{Claim}{Claims}
+\crefname{definition}{definition}{definitions}
+\Crefname{definition}{Definition}{Definitions}
+\crefname{example}{example}{examples}
+\Crefname{example}{Example}{Examples}
+\crefname{remark}{remark}{remarks}
+\Crefname{remark}{Remark}{Remarks}
+
+% Notes under tables/figures.
+\newcommand{\fignote}[1]{\par\vspace{0.25em}{\footnotesize\textit{Notes:} #1\par}}
+\newcommand{\tabnote}[1]{\par\vspace{0.25em}{\footnotesize\textit{Notes:} #1\par}}

@@ -1,0 +1,478 @@
+\styledchapter{Foundations and Histogram Estimation}
+
+\section{Setup and Decision Theory}
+
+
+\begin{notation}
+	There is an unknown data-generating distribution $P$. We observe i.i.d.\ data
+	\[
+		Z_1,\dots,Z_n \overset{\mathrm{iid}}{\sim} P.
+	\]
+	We have two common regimes:
+	\begin{enumerate}
+		\item \emph{Unsupervised:} $Z_i = X_i$ with $X_i \in \R^p$.
+		\item \emph{Supervised (regression):} $Z_i=(X_i,Y_i)$ with $X_i\in \R^p$ and $Y_i\in \R$.
+	\end{enumerate}
+\end{notation}
+
+A generic nonparametric workflow is the following:
+\begin{enumerate}
+	\item Decide what property of $P$ you care about (a \emph{functional} $\theta(P)$).
+	\item Decide how to measure performance (statistical decision theory: loss/risk).
+	\item Ask for the best possible performance under assumptions (information-theoretic lower bounds).
+	\item Propose an estimator and check whether it achieves the benchmark.
+\end{enumerate}
+
+\begin{definition}[Statistical functional / parameter]
+	A \emph{parameter} is a map $\theta:\mathscr P \to \Theta$ that assigns to each distribution $P$ a quantity
+	$\theta(P)$ (a number, vector, or function) we want to learn from data.
+\end{definition}
+
+\begin{example}[Common functionals (one-dimensional $Y$)]
+	Suppose $Z_i=Y_i\in \R$ i.i.d.\ $\sim P$.
+	\begin{enumerate}
+		\item Mean: $\theta(P)=\E_P[Y_i]$ (assuming $\E_P[|Y_i|]<\infty$).
+		\item Variance: $\theta(P)=\E_P[(Y_i-\E_P[Y_i])^2]$ (assuming $\E_P[Y_i^2]<\infty$).
+		\item Median:
+		\[
+			\theta(P)=\inf\{y\in\R:\ \P_P(Y_i\le y)\ge 1/2\}.
+		\]
+		\item CDF at a point $y$ (or as a whole function $y\mapsto F(y)$):
+		\[
+			\theta(P)=F(y):=\P_P(Y_i\le y)=\E_P[\mathbf 1\{Y_i\le y\}].
+		\]
+		\item Tail conditional (extreme values): for fixed $y,t$,
+		\[
+			\theta(P)=\P_P(Y_i\ge y \mid Y_i\ge t).
+		\]
+		\item Density: if $P$ has density $f$, then one may want $\theta(P)=f$ (a function),
+		or a pointwise target $\theta(P)=f(y_0)$ for fixed $y_0\in\R$.
+	\end{enumerate}
+\end{example}
+
+\begin{definition}[Estimator]
+	An estimator of $\theta(P)$ is any measurable function of the data,
+	\[
+		\hat\theta=\hat\theta(Z_1,\dots,Z_n).
+	\]
+\end{definition}
+
+\begin{definition}[Squared-error risk / MSE]
+	For real-valued $\theta(P)$ and $\hat\theta$, define the (mean squared) risk under $P$ as
+	\[
+		R_P(\hat\theta,\theta):=\E_P\big[(\hat\theta-\theta(P))^2\big],
+	\]
+	assuming $\E_P[\hat\theta^2]<\infty$.
+\end{definition}
+
+\begin{lemma}[Bias--variance decomposition]
+	Let $\theta\in\R$ and $\hat\theta$ be any real-valued random variable with $\E[\hat\theta^2]<\infty$.
+	Then
+	\[
+		\E\big[(\hat\theta-\theta)^2\big]
+		=
+		\operatorname{Var}(\hat\theta)+\big(\E[\hat\theta]-\theta\big)^2.
+	\]
+\end{lemma}
+
+
+\begin{proof}
+	Write $\hat\theta-\theta=(\hat\theta-\E\hat\theta)+(\E\hat\theta-\theta)$ and expand the square; the cross term is
+	$2\,\E\left[\hat\theta-\E[\hat\theta]\right]\cdot(\E[\hat\theta]-\theta)=0$.
+\end{proof}
+
+\begin{remark}	In many nonparametric problems, you \emph{cannot} make both variance and bias small at the same time.
+	The tuning parameter is chosen to balance $\Var(\hat\theta)$ against $\mathrm{Bias}(\hat\theta)^2$.
+\end{remark}
+
+\begin{example}[Sample mean]
+	Let $\theta(P)=\E_P[Y_i]$ and consider $\hat\theta=\bar Y:=\frac1n\sum_{i=1}^n Y_i$.
+	Then $\E_P[\bar Y]=\theta(P)$ (unbiased), and if $\Var_P(Y_i)=\sigma^2<\infty$,
+	\[
+		R_P(\bar Y,\theta)
+		=
+		\Var_P(\bar Y)
+		=
+		\frac{\sigma^2}{n}.
+	\]
+	This is the canonical $1/n$ MSE rate.
+\end{example}
+
+\begin{definition}[Worst-case and minimax risk]
+	Fix a class $\mathscr P$ of distributions. The \emph{worst-case risk} of $\hat\theta$ over $\mathscr P$ is
+	\[
+		\sup_{P\in\mathscr P} R_P(\hat\theta,\theta)
+		=
+		\sup_{P\in\mathscr P}\E_P\big[(\hat\theta-\theta(P))^2\big].
+	\]
+	The \emph{minimax risk} over $\mathscr P$ is
+	\[
+		\inf_{\hat\theta}\ \sup_{P\in\mathscr P}\E_P\big[(\hat\theta-\theta(P))^2\big],
+	\]
+	where the infimum ranges over all estimators based on $(Z_1,\dots,Z_n)$.
+\end{definition}
+
+We can think of minimax risk in the context of a game: the statistician chooses $\hat\theta$; nature chooses $P\in\mathscr P$.
+The minimax value is the best achievable worst-case performance.
+
+\begin{example}
+	If $\mathscr P=\{P:\Var_P(Y_i)<\infty\}$, then for $\hat\theta=\bar Y$,
+	\[
+		\sup_{P\in\mathscr P} R_P(\bar Y,\theta)
+		=
+		\sup_{P\in\mathscr P}\frac{\Var_P(Y_i)}{n}
+		= \infty,
+	\]
+	so this ``model class'' is too broad to yield a meaningful worst-case guarantee.
+
+	We can restrict this class of distributions to ones with bounded variance. Fix $M<\infty$ and now let $\mathscr P_M=\{P:\Var_P(Y_i)\le M\}$. Then
+	\[
+		\sup_{P\in\mathscr P_M} R_P(\bar Y,\theta)
+		=
+		\frac{M}{n}.
+	\]
+	Moreover (nontrivial fact): $\bar Y$ is minimax optimal on $\mathscr P_M$, i.e.
+	\[
+		\inf_{\hat\theta}\ \sup_{P\in\mathscr P_M}\E_P\big[(\hat\theta-\E_P Y_i)^2\big]
+		=
+		\frac{M}{n}.
+	\]
+\end{example}
+
+\section{Empirical Methods}
+
+\begin{example}
+	Fix $y\in\R$ and the target $\theta(P)=F(y)=\P_P(Y_i\le y)$.
+	Define
+	\[
+		\hat F_n(y):=\frac{1}{n}\sum_{i=1}^n \mathds{1}_{Y_i\le y}.
+	\]
+	Then $\E_P[\hat F_n(y)]=F(y)$ (unbiased), and since $\mathbf 1\{Y_i\le y\}\sim \mathrm{Bernoulli}(F(y))$,
+	\[
+		\Var_P(\hat F_n(y))
+		=
+		\frac{F(y)\big(1-F(y)\big)}{n}
+		\le \frac{1}{4n}.
+	\]
+	In particular, even if $\mathscr P$ is the class of \emph{all} distributions, the worst-case MSE is at most $ 1/(4n)$.
+\end{example}
+
+In many parametric problems, allowing a small bias does not change the canonical rate: if
+	$n\cdot \mathrm{Bias}(\hat\theta)^2 \to 0$, then bias is negligible relative to variance at the usual $1/n$ scale.
+	In harder (typically nonparametric) problems, bias often dominates unless handled carefully.
+
+A common strategy is to start with a family $\{\hat\theta_\lambda:\lambda\in\Lambda\}$ and choose the indexing tuning parameter $\lambda$
+to balance
+\[
+	\E_P[(\hat\theta_\lambda-\theta(P))^2]
+	=
+	\Var_P(\hat\theta_\lambda)+\mathrm{Bias}_P(\hat\theta_\lambda)^2.
+\]
+
+\begin{example}[Histogram estimator at a point]
+	Suppose $Y_i\in[0,1]$ and $P$ has density $f$. Fix $y_0\in[0,1]$ and the target $\theta(P)=f(y_0)$.
+	Partition $[0,1]$ into $K$ bins $I_1,\dots,I_K$ of equal length $h$ (so $h=1/K$), and let $I_j$ be the bin
+	containing $y_0$. Define the histogram estimator
+	\[
+		\hat f_h(y_0)
+		:=
+		\frac{\#\{i:\ Y_i\in I_j\}}{nh}
+		=
+		\frac{1}{nh}\sum_{i=1}^n \mathbf 1\{Y_i\in I_j\}.
+	\]
+	Here the tuning parameter is $\lambda=h$.
+\end{example}
+
+\begin{remark}[Variance increases as $h$ decreases]
+	Let $p_j:=\P_P(Y_i\in I_j)$. Since $\mathbf 1\{Y_i\in I_j\}\sim \mathrm{Bernoulli}(p_j)$,
+	\[
+		\Var_P\!\big(\hat f_h(y_0)\big)
+		=
+		\frac{1}{n h^2}\,p_j(1-p_j)
+		\le
+		\frac{1}{n h^2}\,p_j.
+	\]
+	If we assume a uniform bound $f(y)\le M<\infty$ for all $y$, then
+	\[
+		p_j=\int_{I_j} f(y)\,dy \le M|I_j|=Mh,
+	\]
+	so
+	\[
+		\Var_P\!\big(\hat f_h(y_0)\big)\le \frac{M}{nh}.
+	\]
+\end{remark}
+
+\begin{remark}[A typical bias bound and the implied rate (heuristic)]
+	Suppose (under additional smoothness assumptions on $f$) that the histogram bias satisfies
+	\[
+		\left|\mathrm{Bias}_P(\hat f_h(y_0))\right|
+		=
+		\left|\E_P\left[\hat f_h(y_0)]-f(y_0)\right]\right|
+		\le C h
+	\]
+	for some constant $C$. Then
+	\[
+		\E_P\big[(\hat f_h(y_0)-f(y_0))^2\big]
+		\le
+		\frac{M}{nh}+C^2h^2.
+	\]
+	Minimizing the RHS over $h$ suggests $h^* \asymp n^{-1/3}$ and an MSE rate $\asymp n^{-2/3}$,
+	which is slower than the $1/n$ rate seen in simpler problems (e.g.\ mean/CDF-at-a-point).
+\end{remark}
+
+\begin{aside}	The specific bias bound $O(h)$ is \emph{not automatic}; it encodes smoothness of $f$ near $y_0$.
+	The point of the example is the mechanism: shrinking $h$ reduces bias but inflates variance, and the optimal
+	choice balances the two.
+\end{aside}
+
+
+\section{Histogram Analysis}
+
+Assume $Y_i\in[0,1]$ and $P$ admits a density $f$ (with respect to Lebesgue measure).
+Fix $y_0\in[0,1]$ and target the pointwise value $\theta(P)=f(y_0)$.
+
+\begin{definition}[Histogram estimator at $y_0$]
+	Partition $[0,1]$ into $K$ intervals (bins) $I_1,\dots,I_K$ of equal length $h:=1/K$.
+	Let $I_j$ be the unique bin containing $y_0$. Define
+	\[
+		\hat f_h(y_0)
+		:=
+		\frac{\#\{i:\ Y_i\in I_j\}}{nh}
+		=
+		\frac{1}{nh}\sum_{i=1}^n \mathbf 1\{Y_i\in I_j\}.
+	\]
+	The tuning parameter is the bin width $h$.
+\end{definition}
+
+\begin{assumption}[Uniform boundedness]\label{ass:bounded}
+	We assume there exists $M<\infty$ such that $f(y)\le M$ for all $y\in[0,1]$.
+\end{assumption}
+
+\begin{lemma}[Variance bound]\label{lem:var_hist}
+	Under assumption~\ref{ass:bounded},
+	\[
+		\Var_P\big(\hat f_h(y_0)\big)\le \frac{M}{nh}.
+	\]
+\end{lemma}
+
+\begin{proof}
+	Let $p_j:=\P_P(Y_i\in I_j)=\int_{I_j} f(y)\,dy\le Mh$. Since $\mathbf 1\{Y_i\in I_j\}\sim\mathrm{Bernoulli}(p_j)$,
+	\[
+		\Var_P(\hat f_h(y_0))
+		=
+		\Var_P\!\Big(\frac{1}{nh}\sum_{i=1}^n \mathbf 1\{Y_i\in I_j\}\Big)
+		=
+		\frac{1}{n h^2}\,p_j(1-p_j)
+		\le
+		\frac{1}{n h^2}\,p_j
+		\le
+		\frac{M}{nh}.
+	\]
+\end{proof}
+
+Recall that the distribution $P$ does not change if we modify $f$ at a single point. In particular, $f(y_0)$ is not identified
+from $P$ unless we restrict the class of densities (e.g.\ by continuity). This motivates smoothness assumptions.
+
+\begin{definition}[$L$-Lipschitz continuity]
+	A function $f:[0,1]\to\R$ is \emph{$L$-Lipschitz} if
+	\[
+		|f(y)-f(y')|\le L|y-y'|
+		\qquad
+		\text{for all } y,y'\in[0,1].
+	\]
+\end{definition}
+
+\begin{assumption}[Lipschitz smoothness]\label{ass:lipschitz}
+	We assume the density $f$ is $L$-Lipschitz on $[0,1]$.
+\end{assumption}
+
+\begin{lemma}[Bias expression]\label{lem:bias_expr}
+	Let $I_j=(a_j,b_j]$ be the bin containing $y_0$, so $b_j-a_j=h$.
+	Then
+	\[
+		\E_P[\hat f_h(y_0)]
+		=
+		\frac{1}{h}\P_P(Y_i\in I_j)
+		=
+		\frac{F(b_j)-F(a_j)}{h}.
+	\]
+	In particular, under assumption~\ref{ass:lipschitz},
+	\[
+		\big|\E_P[\hat f_h(y_0)]-f(y_0)\big|\le Lh.
+	\]
+\end{lemma}
+
+\begin{proof}
+	We see $\E_P[\hat f_h(y_0)]=(F(b_j)-F(a_j))/(b_j-a_j)$ is the slope of $F$ over $(a_j,b_j)$.
+	By the mean value theorem (since $F' = f$ wherever differentiable), there exists $\xi\in(a_j,b_j)$ such that
+	\[
+		\frac{F(b_j)-F(a_j)}{b_j-a_j}=f(\xi).
+	\]
+	Therefore
+	\[
+		\big|\E_P[\hat f_h(y_0)]-f(y_0)\big|
+		=
+		|f(\xi)-f(y_0)|
+		\le
+		L|\xi-y_0|
+		\le
+		Lh.
+	\]
+\end{proof}
+
+Now, let $\mathscr P(L,M)$ be the class of distributions on $[0,1]$ with densities $f$ satisfying assumptions~\ref{ass:bounded} and~\ref{ass:lipschitz}.
+
+\begin{proposition}[Worst-case MSE upper bound]\label{prop:mse_hist}
+	For every $h\in(0,1)$,
+	\[
+		\sup_{P\in\mathscr P(L,M)} \mathrm{MSE}_P\big(\hat f_h(y_0)\big)
+		\le
+		\frac{M}{nh}+L^2h^2.
+	\]
+\end{proposition}
+
+\begin{proof}
+	Combine Lemma~\ref{lem:var_hist} with Lemma~\ref{lem:bias_expr} and the bias--variance decomposition.
+\end{proof}
+
+\begin{remark}[Consistency conditions]
+	From Proposition~\ref{prop:mse_hist}, it is enough that $h\to 0$ and $nh\to\infty$ to force both terms to $0$.
+\end{remark}
+
+Ignoring constants, the upper bound in Proposition~\ref{prop:mse_hist} is minimized by choosing
+\[
+	h \asymp n^{-1/3},
+\]
+which yields the \emph{minimax optimal rate under the Lipschitz assumption}
+\[
+	\sup_{P\in\mathscr P(L,M)} \mathrm{MSE}_P\big(\hat f_h(y_0)\big)\lesssim n^{-2/3}.
+\]
+
+\begin{remark}	This is a canonical nonparametric phenomenon: the pointwise density problem is harder than estimating $F(y_0)$,
+	and $n^{-2/3}$ is slower than $1/n$.
+\end{remark}
+
+\begin{theorem}[Minimax rate for pointwise density estimation]\label{thm:minimax_pointwise}
+	There exist constants $c(L,M),C(L,M)>0$ such that for all $n$,
+	\[
+		c(L,M)\,n^{-2/3}
+		\le
+		\inf_{\tilde f(y_0)}\ \sup_{P\in\mathscr P(L,M)} \E_P\big[(\tilde f(y_0)-f(y_0))^2\big]
+		\le
+		C(L,M)\,n^{-2/3},
+	\]
+	where the infimum ranges over all estimators $\tilde f(y_0)$ based on $(Y_1,\dots,Y_n)$.
+\end{theorem}
+
+\section{Global Estimation and Inference}
+
+\begin{remark}	Formally, $f = F'$. One might try to estimate $f(y_0)$ by differentiating the empirical CDF
+	\[
+		\hat F_n(y):=\frac1n\sum_{i=1}^n \mathbf 1\{Y_i\le y\}.
+	\]
+	But $\hat F_n$ is a step function with jumps at the order statistics; it is not differentiable in the usual sense,
+	and its derivative is $0$ wherever it exists. This is why we introduce smoothing (histograms/kernels/local polynomials).
+\end{remark}
+
+\begin{definition}[Integrated squared error / integrated MSE]
+	For an estimator $\hat f$ of the entire density $f$ on $[0,1]$, define the (weighted) integrated risk
+	\[
+		\mathscr R(\hat f,f)
+		:=
+		\E\Big[\int_0^1 \big(\hat f(y)-f(y)\big)^2 w(y)\,dy\Big],
+	\]
+	often with $w(y)\equiv 1$.
+\end{definition}
+
+\begin{remark}	If the pointwise bound in Proposition~\ref{prop:mse_hist} holds uniformly in $y_0$ (as it does here), minimizing over $h$ (which entails equating the bias and variance) 
+	then integrating yields the same rate:
+	\[
+		\E\Big[\int_0^1 \big(\hat f_h(y)-f(y)\big)^2\,dy\Big]
+		=
+		\int_0^1 \E\big[(\hat f_h(y)-f(y))^2\big]\,dy
+		\lesssim
+		n^{-2/3}.
+	\]
+\end{remark}
+
+\begin{definition}[Confidence interval]
+	A $(1-\alpha)$ confidence interval for $f(y_0)$ is a random interval $I(Y_1,\dots,Y_n)=[\ell,r]$ such that
+	\[
+		\P\big(f(y_0)\in I\big)\ge 1-\alpha
+		\qquad
+		\text{for all } P\in\mathscr P(L,M).
+	\]
+\end{definition}
+
+\begin{remark}[Classical normal-approximation heuristic]
+	A familiar recipe is
+	\[
+		I \approx \hat\theta \pm z_{1-\alpha/2}\,\mathrm{se}(\hat\theta),
+		\qquad
+		\mathrm{se}(\hat\theta):=\sqrt{\Var(\hat\theta)},
+	\]
+	justified by the heuristic
+	\[
+		\frac{\hat\theta-\theta}{\mathrm{se}(\hat\theta)}\approx N(0,1).
+	\]
+	In nonparametric problems this can fail because the bias is often not negligible at the ``MSE-optimal'' tuning.
+\end{remark}
+
+\begin{remark}
+	When we write
+	\[
+		\frac{\hat\theta-\theta}{\mathrm{se}(\hat\theta)}
+		=
+		\frac{\hat\theta-\E[\hat\theta]}{\mathrm{se}(\hat\theta)}
+		+
+		\frac{\E[\hat\theta]-\theta}{\mathrm{se}(\hat\theta)},
+	\]
+	the first term is the variance term (often $\approx N(0,1)$ after normalization), while 
+	the second term is the bias divided by standard error.
+	In\boxednote{In other words, in parametric estimation, the estimator is often consistent (at least unbiased asymptotically), so the second term is zero and the statistic is indeed normally distributed. But we sometimes give up this quality in nonparametric estimation to reduce variance.} many classical settings this second term is $o(1)$; in nonparametrics it can be order $1$ if $h$ is chosen
+	to balance bias and variance.
+\end{remark}
+
+
+\begin{remark}[Approach 1: undersmoothing]
+	Choose $h$ smaller than the MSE-optimal order so that bias is negligible relative to standard error.
+	For the histogram, $\mathrm{se}(\hat f_h(y_0)) \asymp (nh)^{-1/2}$ and $\mathrm{Bias}(\hat f_h(y_0))\lesssim h$,
+	so a sufficient condition is
+	\[
+		\frac{h}{(nh)^{-1/2}}=\sqrt{n}\,h^{3/2}\to 0,
+		\qquad\text{i.e.}\qquad
+		h=o(n^{-1/3}).
+	\]
+	This makes the CI wider (more variance) but improves coverage by killing the bias term.
+\end{remark}
+
+\begin{remark}[Approach 2: bias correction]
+	Estimate the bias and subtract it from the point estimator, then account for the increased variability.
+	A modern ``robust bias correction'' viewpoint emphasizes that bias estimation inflates variance and the standard error
+	must reflect that. (In RD, see Calonico--Cattaneo--Titiunik (2014) for a canonical development.)
+\end{remark}
+
+\begin{remark}[Approach 3: inference on a smoothed target]
+	A different way to obtain valid inference is to change \emph{what} we are doing inference for.
+	Instead of targeting the point value $f(y_0)$, interpret the estimand as the \emph{smoothed} (bin-averaged) quantity
+	associated with the chosen resolution $h$.
+	Indeed, for the histogram estimator one has
+	\[
+		\E[\hat f_h(y_0)]
+		=
+		\frac{1}{h}\P(Y\in I_j)
+		=
+		\frac{1}{h}\int_{I_j} f(y)\,dy,
+	\]
+	the average value of the density over the bin containing $y_0$ (hence a piecewise-constant approximation to $f$).
+
+	Viewed this way, $\hat f_h(y_0)$ is \emph{unbiased} for the target $\frac{1}{h}\P(Y\in I_j)$, and standard large-sample
+	(or binomial) arguments yield confidence intervals with correct coverage for this smoothed functional.
+	The key point is conceptual: we are not claiming to learn $f(y_0)$ itself at the same level of certainty.
+	Rather, we report uncertainty for a quantity that is directly identified by the data at the fixed smoothing level,
+	so ``coverage of the target'' does not depend on controlling the smoothing bias relative to $f(y_0)$.
+\end{remark}
+
+\begin{aside}	A related (and more ``honest'') variant is: upper bound the bias using smoothness (e.g.\ Lipschitz) and inflate the CI
+	by that bound. This produces valid coverage at the cost of wider intervals.
+\end{aside}

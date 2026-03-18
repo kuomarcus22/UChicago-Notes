@@ -544,7 +544,7 @@ Economists don't care too much about $R^2$ because it's a measure of prediction 
 	We also have that for $i\ne j$,
 	\[
 		\E\left[u_iu_j\mid x_i,x_j\right]=\E\left[u_i\E\left[u_j\mid u_i,x_i,x_j\right]\mid x_i,x_j\right]=\E\left[u_i\E\left[u_j\mid x_j\right]\mid x_i,x_j\right]=0.
-	\] The off diagonal elements are $0$ because of MLR.2,\footnote{MK: and because of MLR.4, I think.} \emph{not} because of MLR.5.
+		\] The off diagonal elements are $0$ because of MLR.2 and MLR.4,\footnote{MLR.2 gives independence across observations, so conditional on $x_i,x_j$ we can separate the two errors; MLR.4 then gives $\E[u_j\mid x_j]=0$. MLR.5 only determines the conditional variance on the diagonal.} \emph{not} because of MLR.5.
 
 	Under heteroskedasticity, the off diagonal elements are still $0$ but\[\E[u_i^2\mid x_i]=f(x_i),\]so
 	\[
