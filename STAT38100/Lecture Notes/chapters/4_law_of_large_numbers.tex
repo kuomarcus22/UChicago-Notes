@@ -301,22 +301,20 @@ We also need the following lemma.
 
 \section{Proof Techniques}
 
-When proving almost sure convergence for averages of partial sums, it helps to decide early which obstruction is preventing a direct Borel--Cantelli argument.
+When proving almost sure convergence for averages of partial sums, it helps to decide early which obstruction is preventing a direct Borel--Cantelli argument.\boxednote{This section was not done in lecture; I wrote it after to organize the different techinques we learned, since they were all unfamiliar.}
 
 \begin{enumerate}
-	\item \textbf{Can I sum the tail probabilities directly?} If you can show
+	\item If
 	\[
 		\sum\limits_{n=1}^{\infty} \P\left[\left| S_n \right| > \epsilon a_n\right] < \infty
 	\]
 	for every $\epsilon > 0$, then Borel--Cantelli already gives $\frac{S_n}{a_n} \to 0$ almost surely.
 
-	\item \textbf{Do I only have good estimates at selected times?} If the direct sum diverges but a sparse subsequence is manageable, choose block endpoints $n_k$ and try to prove
+	\item If the direct sum diverges but a subsequence could be manageable, choose block endpoints $n_k$ and try to prove
 	\[
 		\sum\limits_{k=1}^{\infty} \P\left[\left| S_{n_k} \right| > \epsilon a_{n_k}\right] < \infty.
 	\]
-	Geometric choices such as $n_k = 2^k$ are common because they often turn borderline series into summable ones.
-
-	\item \textbf{Do I need control between block endpoints?} If estimates at the endpoints are not enough, pass to block maxima. For
+	Geometric choices such as $n_k = 2^k$ work well, as we can then block maxima with the maximal inequality. For
 	\[
 		B_k = \{n_{k-1} < n \le n_k\},
 	\]
@@ -324,14 +322,13 @@ When proving almost sure convergence for averages of partial sums, it helps to d
 	\[
 		\P\left[\max_{n \in B_k} \frac{\left| S_n \right|}{a_n} > \epsilon\right].
 	\]
-	When $a_n = n$, blocking is especially natural because
+	When $a_n = n$, blocking is especially good because
 	\[
 		\max_{n \in B_k} \frac{\left| S_n \right|}{n}
 		\le \frac{1}{n_{k-1}} \max_{n \in B_k} \left| S_n \right|.
 	\]
-	This is the standard signal that a maximal inequality should be used.
 
-	\item \textbf{Are large jumps ruining the moment estimates?} If the original variables do not have enough finite moments, truncate:
+	\item If the original variables do not have enough finite moments, truncate:
 	\[
 		Y_i = X_i \mathds{1}_{\left| X_i \right| \le b_i}.
 	\]
@@ -344,20 +341,13 @@ When proving almost sure convergence for averages of partial sums, it helps to d
 	\]
 	The first term handles rare large jumps, the second is the centered ``good'' part, and the third is the bias introduced by truncation.
 
-	\item \textbf{Does the centered truncated part fit Kolmogorov's LLN?} After truncation, set
+	\item After truncation, set
 	\[
 		Z_i = Y_i - \E[Y_i].
 	\]
-	If you can verify
+	If
 	\[
 		\sum\limits_{i=1}^{\infty} \frac{\E\left[Z_i^2\right]}{i^2} < \infty,
 	\]
-	then Kolmogorov's LLN applies to $\frac{1}{n}\sum_{i=1}^{n} Z_i$. This is often the reason for choosing the truncation threshold $b_i$ to depend on $i$.
-	
-	\item \textbf{When should I expect blocking and maximal inequalities together?} If the theorem concerns all $n$, but your estimates naturally control either $S_N$ or a sparse subsequence, then the usual upgrade is:
-	\[
-		\text{endpoint estimate } \Longrightarrow \text{ block maximum } \Longrightarrow \text{ maximal inequality } \Longrightarrow \text{all } n.
-	\]
+	then Kolmogorov's LLN applies to $\frac{1}{n}\sum_{i=1}^{n} Z_i$. The truncation threshold $b_i$ can depend on $i$.
 \end{enumerate}
-
-As a quick rule of thumb: use truncation when moments are too weak, use Kolmogorov's LLN for the centered truncated variables, and use blocking plus a maximal inequality when you need to pass from control at selected times to control for every $n$.
