@@ -10,7 +10,7 @@ Selected lecture notes of varying degrees of polish.
 
 [ECMA 30800](https://github.com/kuomarcus22/UChicago-Notes/tree/main/ECMA30800/Lecture%20Notes): Theory of Auctions
 
-[STAT 38100](https://github.com/kuomarcus22/UChicago-Notes/tree/main/STAT38100/Lecture%20Notes): Measure-Theoretic Probability I
+[STAT 38100](https://github.com/kuomarcus22/UChicago-Notes/tree/main/STAT38100/Lecture%20Notes): Measure-Theoretic Probability I (the most refined notes set)
 
 [STAT 37400](https://github.com/kuomarcus22/UChicago-Notes/tree/main/STAT37400/Lecture%20Notes): Nonparametric Inference
 
@@ -32,5 +32,7 @@ These notes are typeset in real time during lectures and minimally cleaned up af
 
 I use Neovim with VimTeX, Skim, and UltiSnips. Snippets are what allow me to LiveTeX.
 
-The snippets started from Gilles Castel's [guide](https://castel.dev/post/lecture-notes-1/) on LiveTeXing, which seems to have helped many people. 
+The snippets started from Gilles Castel's [guide](https://castel.dev/post/lecture-notes-1/) on LiveTeXing, which seems to have helped many people.[^1] 
 The full snippet file is at `shared/snippets/tex.snippets`. It's a bit messy and idiosyncratic; I would recommend starting with Castel's snippets and building your own as you see fit.
+
+[^1]: If you follow his guide, you will notice he uses Zathura as a PDF viewer. If you're on a Mac, save yourself the failed troubleshooting I went through and use a different viewer like Skim. (Skim is particularly nice because it's quick and auto-refreshes PDFs when they are rewritten.)
