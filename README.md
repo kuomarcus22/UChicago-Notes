@@ -4,6 +4,16 @@ Selected lecture notes of varying degrees of polish.
 
 ## Courses
 
+**Spring 2026**:
+
+ECMA 30760: Introduction to Economic Design
+
+ECMA 31150: Econometric Methods for Macroeconomics
+
+ECON 21031: Econometrics II -- Honors
+
+ECON 24050: Labor Economics and Public Policy
+
 **Winter 2026**:
 
 [ECON 21030](https://github.com/kuomarcus22/UChicago-Notes/tree/main/ECON21030/Lecture%20Notes): Econometrics -- Honors
