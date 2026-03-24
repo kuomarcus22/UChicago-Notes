@@ -1111,18 +1111,20 @@ snippet lecnotes_template "lecnotes template"
 \input{../../shared/latex/notes_preamble.tex}
 
 \renewcommand{\notesauthor}{Marcus Kuo}
-\renewcommand{\notesyear}{${1:Quarter}}
+\renewcommand{\notesyear}{${3:Quarter}}
 
 \setcounter{secnumdepth}{2}
 \setcounter{tocdepth}{1}
 
 \begin{document}
 
-\makelectitle{${2:Course Number} \\ \vspace{0.2em} ${3:Course Name}}{${1: Quarter}}{Marcus Kuo \\ \small{Lectures by ${4: Instructor}}}
+\makelectitle{${1:Course Number} \\ \vspace{0.2em} ${2:Course Name}}{${3: Quarter}}{Marcus Kuo \\ \small{Lectures by ${4: Instructor}}}
 \tableofcontents
 \clearpage
 
-\input{chapters/${4:first_chapter}}
+\input{chapters/${5:first_chapter}}
+
+\end{document}
 endsnippet
 
 snippet ntt "newthought" bA
