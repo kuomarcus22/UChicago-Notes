@@ -123,27 +123,6 @@ snippet ... "ldots" iA
 \ldots
 endsnippet
 
-snippet bimage "image for math, caption below" b
-\begin{center}
-	\includegraphics[width=0.9\textwidth]{images/$1}
-	\captionof{figure}{$0}
-\end{center}
-endsnippet
-
-snippet b2image "two images side by side" b
-\begin{center}
-  \begin{minipage}{0.49\textwidth}
-    \includegraphics[width=\textwidth]{images/$1}
-    \captionof{figure}{$2}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.49\textwidth}
-    \includegraphics[width=\textwidth]{images/$3}
-    \captionof{figure}{$4}
-  \end{minipage}
-\end{center}
-endsnippet
-
 snippet pdf "insert pdf" b
 \begin{unnumberedquestion}
 	\includepdf[pages = {-}]{$1}
@@ -385,6 +364,10 @@ snippet tbb "bold" iwA
 \textbf{$1}$0
 endsnippet
 
+snippet mbf "math bf" iwA
+\mathbf{$1}$0
+endsnippet
+
 snippet tii "italic" iwA
 \textit{$1}$0
 endsnippet
@@ -567,12 +550,12 @@ endsnippet
 
 context "math()"
 snippet EE "exists" iA
-\exists\\ 
+\exists
 endsnippet
 
 context "math()"
 snippet AA "forall" iA
-\forall\\ 
+\forall
 endsnippet
 
 context "math()"
@@ -747,7 +730,7 @@ endsnippet
 
 
 context "math()"
-snippet cc "subset" i
+snippet cc "subset" w
 \subset 
 endsnippet
 
@@ -756,8 +739,9 @@ snippet cceq "subseteq" iA
 \subseteq 
 endsnippet
 
+priority 10
 context "math()"
-snippet ss "supset" i
+snippet ss "supset" w
 \supset 
 endsnippet
 
@@ -766,13 +750,14 @@ snippet sseq "supseteq" iA
 \supseteq 
 endsnippet
 
+priority 100
 context "math()"
 snippet sss "succeeds sim" i
 \succsim
 endsnippet
 
 context "math()"
-snippet ssc "succeeds" i
+snippet ssc "succeeds" iA 
 \succ
 endsnippet
 
@@ -1143,8 +1128,14 @@ snippet fnn "footnote" iA
 \footnote{$1}$0
 endsnippet
 
+priority 10
 snippet bnn "boxed note" iA
 \boxednote{$1}$0
+endsnippet
+
+priority 100
+snippet [bnn "boxed note with spacing" iA
+\boxednote[$1]{$2}$0
 endsnippet
 
 context "math()"
@@ -1299,13 +1290,56 @@ snippet notefootnote "footnote" b
 \footnote{$1}$0
 endsnippet
 
-snippet image "note image" b
-\begin{figure}[${1:htpb}]
+snippet bimage "note image, no caption etc" b
+\begin{figure}[htpb]
 \centering
-\caption{${2:Caption}}
+\includegraphics[width=0.78\textwidth]{images/${1:filename}}
+\end{figure}
+$0
+endsnippet
+
+snippet himage "homework image with caption and label, no float" b
+\par
+\begin{center}
+\includegraphics[width=0.78\linewidth]{images/${1:filename}}
+\captionof{figure}{${2:Caption}}
 \label{fig:${3:label}}
-\includegraphics[width=0.78\textwidth]{images/${4:filename}}
-\fignote{${5:Notes.}}
+\end{center}
+\par
+$0
+endsnippet
+
+snippet 2himage "two homework figures side by side, captions and labels, no float" b
+\par
+\noindent\hfill
+\begin{minipage}{0.99\linewidth}
+\begin{minipage}{0.49\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{images/${1:file1}}
+  \captionof{figure}{${2:Caption 1}}
+  \label{fig:${3:label1}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+  \centering
+  \includegraphics[width=\textwidth]{images/${4:file2}}
+  \captionof{figure}{${5:Caption 2}}
+  \label{fig:${6:label2}}
+\end{minipage}
+\end{minipage}
+\hfill\mbox{}
+\par
+\par
+$0
+endsnippet
+
+snippet image "note image" b
+\begin{figure}[htpb]
+\centering
+\caption{${1:Caption}}
+\label{fig:${2:label}}
+\includegraphics[width=0.78\textwidth]{images/${3:filename}}
+\fignote{${4:Notes.}}
 \end{figure}
 $0
 endsnippet
@@ -1362,15 +1396,15 @@ $0
 endsnippet
 
 snippet defn "definition environment" b
-\begin{definition}[${2:Title}]
-	$1
+\begin{definition}[${1:Title}]
+	$2
 \end{definition}
 $0
 endsnippet
 
 snippet ex "example environment" b
-\begin{example}[${2:Title}]
-	$1
+\begin{example}[${1:Title}]
+	$2
 \end{example}
 $0
 endsnippet

@@ -1,4 +1,4 @@
-\documentclass[11pt,oneside]{book}
+\documentclass[10pt,oneside]{book}
 
 % Cheat-sheet compile toggle.
 % Uncomment the next line for compact cheat-sheet styling.
@@ -52,8 +52,24 @@
 \ifnotescheatsheet
 \setstretch{1.0}
 \else
-\setstretch{1.06}
+\setstretch{1.0}
 \fi
+\makeatletter
+\ifnotescheatsheet
+\else
+\renewcommand\normalsize{%
+   \@setfontsize\normalsize{10.5}{12.6}%
+   \abovedisplayskip 10\p@ \@plus2\p@ \@minus5\p@
+   \abovedisplayshortskip \z@ \@plus3\p@
+   \belowdisplayshortskip 6\p@ \@plus3\p@ \@minus3\p@
+   \belowdisplayskip \abovedisplayskip
+   \let\@listi\@listI}
+\normalsize
+\ifx\MakeRobust\@undefined \else
+    \MakeRobust\normalsize
+\fi
+\fi
+\makeatother
 \raggedbottom
 
 % Core math and theorem support.
@@ -65,18 +81,30 @@
 \DeclareFontShape{U}{rsfs}{m}{n}{<-6> rsfs5 <6-8> rsfs7 <8-> rsfs10}{}
 
 % Tables, figures, colors, and graphics.
+\usepackage{float}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{threeparttable}
 \usepackage{array}
 \usepackage{tabularx}
+\usepackage{tabularray}
 \usepackage{caption}
+\usepackage{siunitx}
+\usepackage{codehigh}
+\usepackage[normalem]{ulem}
+\usepackage{cancel}
+\usepackage{fontawesome5}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{calc}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepackage{soul}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\providecommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\providecommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
 
 % Boxes and marginalia.
 \usepackage[most]{tcolorbox}
@@ -118,6 +146,7 @@
   }
 }
 \newcommand{\lecnotefont}{\tiny}
+\newcommand{\lecboxednotefootnotefont}{\fontsize{4.5}{6}\selectfont}
 \else
 \tcbset{
   lecrcodeboxstyle/.style={
@@ -154,7 +183,8 @@
     bottom=8pt
   }
 }
-\newcommand{\lecnotefont}{\footnotesize}
+\newcommand{\lecnotefont}{\scriptsize}
+\newcommand{\lecboxednotefootnotefont}{\tiny}
 \fi
 \usepackage{varwidth}
 \usepackage{marginnote}
@@ -190,7 +220,7 @@
 \newcommand{\notesyear}{2026}
 
 \makeatletter
-\renewcommand{\chaptermark}[1]{\markboth{Section \thechapter: #1}{}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
 \makeatother
 
 \fancypagestyle{notesbody}{%
@@ -286,6 +316,7 @@
 }
 
 % Margin note box.
+\makeatletter
 \NewDocumentCommand{\lecnotebox}{ +m }{%
   \begin{tcolorbox}[
     enhanced,
@@ -295,9 +326,29 @@
     before skip=0pt,
     after skip=0pt
   ]
-  {\lecnotefont #1}
+  {%
+    \begingroup
+    \setstretch{1.0}%
+    \let\lec@orig@footnotetext\@footnotetext
+    \long\def\@footnotetext##1{%
+      \begingroup
+      \let\footnotesize\lecboxednotefootnotefont
+      \lec@orig@footnotetext{##1}%
+      \endgroup
+    }%
+    \let\lec@orig@mpfootnotetext\@mpfootnotetext
+    \long\def\@mpfootnotetext##1{%
+      \begingroup
+      \let\footnotesize\lecboxednotefootnotefont
+      \lec@orig@mpfootnotetext{##1}%
+      \endgroup
+    }%
+    \lecnotefont #1\par
+    \endgroup
+  }
   \end{tcolorbox}%
 }
+\makeatother
 
 % Boxed-note backends. Normal mode uses \marginpar so marginfix can prevent
 % overlap and bottom-margin spillover. Notes with an explicit offset fall back
@@ -396,8 +447,10 @@
 \newcommand*\Q{\mathbb{Q}}
 \newcommand*\Z{\mathbb{Z}}
 \newcommand*\E{\mathbb{E}}
+\let\oldL\L
 \let\oldP\P
 \renewcommand*\P{\mathbb{P}}
+\renewcommand*\L{\mathbb{L}}
 \let\O\varnothing
 \let\oldemptyset\emptyset
 \let\emptyset\varnothing
@@ -464,7 +517,14 @@
 
 % Proof-end symbol mechanism.
 \newcommand{\currentproofmark}{\ensuremath{\square}}
-\newcommand{\setproofmark}[1]{\renewcommand{\currentproofmark}{#1}}
+\newcommand{\setproofmark}[1]{\gdef\currentproofmark{#1}}
+\DeclareRobustCommand{\leciconqed}[1]{%
+  \ifmmode
+    \text{\raisebox{-0.1ex}{#1}}%
+  \else
+    \raisebox{-0.1ex}{#1}%
+  \fi
+}
 
 % Default proof label (auto-updated by theorem-like environments).
 \newcommand{\lecproofname}{Proof}
@@ -541,7 +601,8 @@
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lectheorem}{Theorem}{
   thmbluestyle,
   before upper={
-    \setproofmark{\ensuremath{\square}}
+    % theorem, proposition, corollary: faKiwiBird # the kiwibird emoji is cute
+    \setproofmark{\leciconqed{\faKiwiBird}}
     \setlecproofname{Proof of Theorem~\thethmcounter}
   },
 }{thm}
@@ -549,7 +610,8 @@
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecproposition}{Proposition}{
   thmbluestyle,
   before upper={
-    \setproofmark{\ensuremath{\square}}
+    % theorem, proposition, corollary: faKiwiBird # the kiwibird emoji is cute
+    \setproofmark{\leciconqed{\faKiwiBird}}
     \setlecproofname{Proof of Proposition~\thethmcounter}
   },
 }{thm}
@@ -557,7 +619,8 @@
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{leclemma}{Lemma}{
   thmbgstyle,
   before upper={
-    \setproofmark{\ensuremath{\blacksquare}}
+    % lemma: faLockOpen # lemma and lightbulb start with L, and lemma proofs unlock tools for later use.
+    \setproofmark{\leciconqed{\faLockOpen}}
     \setlecproofname{Proof of Lemma~\thethmcounter}
   },
 }{thm}
@@ -565,7 +628,8 @@
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{leccorollary}{Corollary}{
   thmbgstyle,
   before upper={
-    \setproofmark{\ensuremath{\circlearrowright}}
+    % theorem, proposition, corollary: faKiwiBird # the kiwibird emoji is cute
+    \setproofmark{\leciconqed{\faKiwiBird}}
     \setlecproofname{Proof of Corollary~\thethmcounter}
   },
 }{thm}
@@ -576,7 +640,10 @@
 
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecexample}{Example}{
   thmpinkstyle,
-  before upper={\setproofmark{\ensuremath{\triangle}} },
+  before upper={
+    % example: faFrog
+    \setproofmark{\leciconqed{\faFrog}}
+  },
 }{thm}
 
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecassumption}{Assumption}{
@@ -811,7 +878,7 @@
   \setcounter{section}{0}%
   \setcounter{subsection}{0}%
   \setcounter{equation}{0}%
-  \markboth{Section \thechapter: #1}{}%
+  \markboth{#1}{}%
   \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
   \chapteropening{#1}%
 }

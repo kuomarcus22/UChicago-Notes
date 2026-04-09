@@ -31,20 +31,29 @@
 
 % Tables, figures, and layout helpers.
 \usepackage{comment}
+\usepackage{float}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{threeparttable}
 \usepackage{array}
 \usepackage{tabularx}
+\usepackage{tabularray}
 \usepackage{subcaption}
 \usepackage{caption}
 \usepackage{siunitx}
+\usepackage{codehigh}
+\usepackage[normalem]{ulem}
+\usepackage{cancel}
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage[most]{tcolorbox}
 \usepackage{listings}
 \graphicspath{{images/}{figures/}}
-
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\providecommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\providecommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
 \tcbset{
   lecrcodeboxstyle/.style={
     colback=gray!8,
@@ -156,6 +165,8 @@
 \newcommand*\Q{\mathbb{Q}}
 \newcommand*\Z{\mathbb{Z}}
 \newcommand*\E{\mathbb{E}}
+\let\oldL\L
+\renewcommand*\L{\mathbb{L}}
 \let\oldP\P
 \renewcommand*\P{\mathbb{P}}
 \let\O\varnothing
