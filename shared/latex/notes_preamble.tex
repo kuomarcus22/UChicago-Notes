@@ -644,6 +644,9 @@
     % example: faFrog
     \setproofmark{\leciconqed{\faFrog}}
   },
+  overlay unbroken and last={
+    \node[anchor=south east, inner sep=6pt] at (frame.south east) {\leciconqed{\faFrog}};
+  },
 }{thm}
 
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecassumption}{Assumption}{
