@@ -57,7 +57,7 @@ To give credit: the format of the notes from Winter 2026 and on was heavily insp
 
 Some nice features of my notes I would like you to notice:
 
-- Oftentimes, a theorem is presented, a necessary lemma is introduced, and the lemma is proved before the theorem. This provides a challenge to my proof system, which searches back for the immediately preceeding counter to use in "Proof of Theorem A.B.C." To get around this without changing the theorem--lemma--lemma--theorem sandwich (sandwiches have the bread on the outside for a reason), I am able to manually override the "name" of proofs.
+- Often in class, a theorem is presented, then a necessary lemma is introduced and proved before returning to the theorem. This provides a challenge to my automatic proof numbering system, which searches back for the immediately preceding counter to use in "Proof of Theorem A.B.C." To get around this without changing the theorem--lemma--lemma--theorem sandwich (good sandwiches have the bread on the outside for a reason), I am able to manually override the "name" of proofs.
 
 - The QED symbols (from the fontawesome5 package) differ based on what is being proved. Proofs of *lemmas* end with an unlocked lock, as *lemma* and *lock* start with the letter L, and *lemmas* un*lock* a tool for later use. Theorem, proposition, and corollary proofs end with a Kiwi bird symbol. Examples (note: not example proofs!) end with a frog symbol because there were no good fontawesome5 symbols that started with the letter E.
 
