@@ -15,7 +15,7 @@ The full snippet file is at `shared/snippets/tex.snippets`. It's a bit messy and
 
 To give credit: the format of the notes from Winter 2026 and on was heavily inspired by a set of course notes by Alexander Torgovitsky.
 
-![Theorem and lemma screenshot](/Users/marcuskuo/Documents/UChicago/STAT38100/Lecture Notes/thm-lemma-readme.png)
+![Theorem and lemma screenshot](assets/thm-lemma-readme.png)
 
 Some nice features of my notes I would like you to notice:
 
