@@ -518,6 +518,7 @@
 % Proof-end symbol mechanism.
 \newcommand{\currentproofmark}{\ensuremath{\square}}
 \newcommand{\setproofmark}[1]{\gdef\currentproofmark{#1}}
+\newcommand{\resetproofmark}{\setproofmark{\ensuremath{\square}}}
 \DeclareRobustCommand{\leciconqed}[1]{%
   \ifmmode
     \text{\raisebox{-0.1ex}{#1}}%
@@ -535,6 +536,11 @@
   \endgroup
 }
 \newcommand{\resetlecproofname}{\setlecproofname{Proof}}
+\newcommand{\theoremproofstyle}{\setproofmark{\leciconqed{\faKiwiBird}}}
+\newcommand{\propositionproofstyle}{\setproofmark{\leciconqed{\faKiwiBird}}}
+\newcommand{\lemmaproofstyle}{\setproofmark{\leciconqed{\faLockOpen}}}
+\newcommand{\corollaryproofstyle}{\setproofmark{\leciconqed{\faKiwiBird}}}
+\newcommand{\exampleproofstyle}{\setproofmark{\leciconqed{\faFrog}}}
 
 % Base tcolorbox style for theorem environments.
 \tcbset{
@@ -602,7 +608,7 @@
   thmbluestyle,
   before upper={
     % theorem, proposition, corollary: faKiwiBird # the kiwibird emoji is cute
-    \setproofmark{\leciconqed{\faKiwiBird}}
+    \theoremproofstyle
     \setlecproofname{Proof of Theorem~\thethmcounter}
   },
 }{thm}
@@ -611,7 +617,7 @@
   thmbluestyle,
   before upper={
     % theorem, proposition, corollary: faKiwiBird # the kiwibird emoji is cute
-    \setproofmark{\leciconqed{\faKiwiBird}}
+    \propositionproofstyle
     \setlecproofname{Proof of Proposition~\thethmcounter}
   },
 }{thm}
@@ -620,7 +626,7 @@
   thmbgstyle,
   before upper={
     % lemma: faLockOpen # lemma and lightbulb start with L, and lemma proofs unlock tools for later use.
-    \setproofmark{\leciconqed{\faLockOpen}}
+    \lemmaproofstyle
     \setlecproofname{Proof of Lemma~\thethmcounter}
   },
 }{thm}
@@ -629,7 +635,7 @@
   thmbgstyle,
   before upper={
     % theorem, proposition, corollary: faKiwiBird # the kiwibird emoji is cute
-    \setproofmark{\leciconqed{\faKiwiBird}}
+    \corollaryproofstyle
     \setlecproofname{Proof of Corollary~\thethmcounter}
   },
 }{thm}
@@ -642,7 +648,7 @@
   thmpinkstyle,
   before upper={
     % example: faFrog
-    \setproofmark{\leciconqed{\faFrog}}
+    \exampleproofstyle
   },
   overlay unbroken and last={
     \node[anchor=south east, inner sep=6pt] at (frame.south east) {\leciconqed{\faFrog}};
@@ -772,6 +778,7 @@
 }{%
   \popQED\endtrivlist\@endpefalse
   \resetlecproofname
+  \resetproofmark
 }
 \makeatother
 \renewcommand{\qedsymbol}{\currentproofmark}
