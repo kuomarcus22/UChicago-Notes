@@ -55,7 +55,7 @@ Worse quality than Winter 2026.
 
 To give credit: the format of the notes from Winter 2026 and on was heavily inspired by a set of course notes by Alexander Torgovitsky.
 
-Some nice features of my notes I would like you to notice:
+Some nice features of my notes I would like you to notice, all four of which are displayed below:
 
 - Often in class, a theorem is presented, then a necessary lemma is introduced and proved before returning to the theorem. This provides a challenge to my automatic proof numbering system, which searches back for the immediately preceding counter to use in "Proof of Theorem A.B.C." To get around this without changing the theorem--lemma--lemma--theorem sandwich (good sandwiches have the bread on the outside for a reason), I am able to manually override the "name" of proofs.
 
