@@ -13,6 +13,9 @@ Selected lecture notes of varying degrees of polish.
 
 ## Courses
 
+<details>
+<summary>Show courses</summary>
+
 ### Spring 2026
 
 ECMA 30760: Introduction to Economic Design
@@ -44,6 +47,8 @@ Worse quality than Winter 2026.
 [MATH 27300](https://github.com/kuomarcus22/UChicago-Notes/tree/main/MATH27300/Lecture%20Notes): Basic Theory of Ordinary Differential Equations
 
 [STAT 24410](https://github.com/kuomarcus22/UChicago-Notes/tree/main/STAT24410/Lecture%20Notes): Statistical Theory and Methods 1a
+
+</details>
 
 
 ## Features of Notes
