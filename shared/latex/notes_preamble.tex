@@ -459,6 +459,7 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\plim}{plim}
+\DeclareMathOperator{\opvec}{vec}
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Cov}{Cov}
 \DeclareMathOperator{\Corr}{Corr}
@@ -860,7 +861,7 @@
       anchor=west,
       font=\fontsize{19}{21}\selectfont\bfseries,
       inner sep=0pt,
-      text width=0.78\chaptextwid,
+      text width=\dimexpr\chaptextwid-0.62in\relax,
       align=left
     ] at (0,\chapcontenty) {#1};
     \node[anchor=east,font=\fontsize{30}{30}\selectfont\bfseries] at (\rr,\chapcontenty) {\thechapter};

@@ -155,13 +155,14 @@ snippet enum "Enumerate" bA
 \end{enumerate}
 endsnippet
 
-snippet mbb "math blackboard" A
+context "math()"
+snippet mbb "math blackboard" iwA
 \mathbb{$1}$0
 endsnippet
 
 snippet equ "equation environemnt" b
 \begin{equation}
-	$1 \label{eq:$2}
+	$1 \label{$2}
 .$3\end{equation}
 $0
 endsnippet
@@ -364,6 +365,18 @@ snippet tbb "bold" iwA
 \textbf{$1}$0
 endsnippet
 
+priority 200
+context "math()"
+snippet "(?<![A-Za-z\\])([A-Za-z])mbf\b" "math bf for single letter" riA
+\mathbf{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+priority 200
+context "math()"
+snippet "(\\[A-Za-z]+?)mbf\b" "math bf for control sequence" riA
+\boldsymbol{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
 snippet mbf "math bf" iwA
 \mathbf{$1}$0
 endsnippet
@@ -550,12 +563,12 @@ endsnippet
 
 context "math()"
 snippet EE "exists" iA
-\exists
+\exists 
 endsnippet
 
 context "math()"
 snippet AA "forall" iA
-\forall
+\forall 
 endsnippet
 
 context "math()"
@@ -870,6 +883,11 @@ snippet cvec "column vector" iA
 \begin{pmatrix} ${1:x}_${2:1}\\\\ \vdots\\\\ $1_${2:n} \end{pmatrix}
 endsnippet
 
+context "math()"
+snippet vec "vec" i
+\opvec\left($1\right) $0
+endsnippet
+
 priority 100
 context "math()"
 snippet "((?:\\(?!text)[A-Za-z]{2,}?)|(?<![A-Za-z\\])[A-Za-z])bar\b" "bar (attach to preceding symbol)" rA
@@ -892,6 +910,12 @@ priority 100
 context "math()"
 snippet "((?:\\[A-Za-z]+?)|(?<![A-Za-z])[A-Za-z])(?<!wide)hat\b" "hat (attach to preceding symbol)" rA
 \hat{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+priority 10
+context "math()"
+snippet "(?<!\\)(?<![A-Za-z])hat\b" "hat" r
+\hat{$1}$0
 endsnippet
 
 priority 10
