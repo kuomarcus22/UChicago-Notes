@@ -542,6 +542,7 @@
 \newcommand{\lemmaproofstyle}{\setproofmark{\leciconqed{\faLockOpen}}}
 \newcommand{\corollaryproofstyle}{\setproofmark{\leciconqed{\faKiwiBird}}}
 \newcommand{\exampleproofstyle}{\setproofmark{\leciconqed{\faFrog}}}
+\newcommand{\remarkproofstyle}{\setproofmark{\leciconqed{\faReadme}}}
 
 % Base tcolorbox style for theorem environments.
 \tcbset{
@@ -768,6 +769,17 @@
 \newtheorem{remark}[thmcounter]{Remark}
 \newtheorem{aside}[thmcounter]{Aside}
 \newtheorem{conj}[thmcounter]{Conjecture}
+\let\lecoriginalremark\remark
+\let\endlecoriginalremark\endremark
+\RenewDocumentEnvironment{remark}{ o }{%
+  \remarkproofstyle
+  \pushQED{\qed}%
+  \IfNoValueTF{#1}{\lecoriginalremark}{\lecoriginalremark[#1]}%
+}{%
+  \popQED
+  \endlecoriginalremark
+  \resetproofmark
+}
 
 % Override proof environment to use \currentproofmark as QED symbol.
 \makeatletter

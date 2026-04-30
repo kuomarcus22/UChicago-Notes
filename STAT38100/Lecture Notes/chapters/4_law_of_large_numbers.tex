@@ -280,7 +280,7 @@ We also need the following lemma.
 	\]
 	almost surely.
 
-	Examining (II), we want to use Kolmogorov's Law of Large Numbers. Note that $Y_i^2 = \left( Y_i - \mu_i + \mu_i \right)^2 = (Y_i-\mu_i)^2 + \mu_i^2 + 2(Y_i-\mu_i)(\mu_i)$. The third term vanishes in expectation. This gives us the Kolmogorov condition: \boxednote{The second inequality holds since $\sum_{i=j}^{\infty} \frac{1}{i^2} \le C \frac{1}{j}$ for some absolute constant $C$.}
+	Examining (II), we want to use Kolmogorov's Law of Large Numbers. Note that $Y_i^2 = \left( Y_i - \mu_i + \mu_i \right)^2 = (Y_i-\mu_i)^2 + \mu_i^2 + 2(Y_i-\mu_i)(\mu_i)$. The third term vanishes in expectation. This gives us the Kolmogorov condition:\footnote{The second inequality in this chain holds since $\sum_{i=j}^{\infty} \frac{1}{i^2} \le C \frac{1}{j}$ for some absolute constant $C$.}
 	\begin{align*}
 		\sum\limits_{i=1}^{\infty} \frac{\E\left[(Y_i-\mu_i)^2\right] }{i^2} 
 		&= \sum\limits_{k=1}^{\infty} \frac{\E\left[Y_i^2\right] }{i^2} - \frac{\E\left[\mu_i^2\right] }{i^2} \\
