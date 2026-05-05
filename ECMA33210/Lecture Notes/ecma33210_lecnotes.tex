@@ -28,6 +28,7 @@
 \setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
 \graphicspath{{}} % set of paths to search for images
 \usepackage{amsmath}  % extended mathematics
+\usepackage{mathtools}
 \usepackage{booktabs} % book-quality tables
 \usepackage{units}    % non-stacked fractions and better unit spacing
 \usepackage{multicol} % multiple column layout facilities
@@ -135,7 +136,7 @@ This implies $\delta_J \le 0$ for all feasible $\delta_u$ iff
 	u^*(t) = \argmax_{u \in U} \left[ f(t,x^*(t).u) + \lambda(t) g(t,x^*(t),u) \right] \quad \text{for all } t \label{eq:9-30-1}
 \end{equation}
 
-The regular FOC/CS conditions hold. The necessary conditions for $\{x^*, u^*\}$ to be an optimum are that the constraint, law of motion, initial condition, and maximization in \ref{eq:9-20-1} hold, where $\lambda$ is as defined.
+The regular FOC/CS conditions hold. The necessary conditions for $\{x^*, u^*\}$ to be an optimum are that the constraint, law of motion, initial condition, and maximization in \ref{eq:9-30-1} hold, where $\lambda$ is as defined.
 
 \begin{defn}[Hamiltonian]
 	Define the present value Hamiltonian\footnote{$\lambda\cdot g$ is a dot product} 
@@ -711,7 +712,7 @@ Differentiating, $\mu'(k) = u'' \left[ f(k)- \delta k \right] \left[ f'(k) - \de
 .\end{align*}
 
 \subsection{Cass-Koopmans: Linear Approximation}
-Linearize around the ODES (\ref{odelambda}, \ref{odek}) to get
+Linearize around the ODES (\ref{eq:odelambda}, \ref{eq:odek}) to get
 \begin{align*}
 	\dot{k}(t) &\approx \left( f' -\delta \right)(k-k^{ss}) - \gamma'(\lambda-\lambda^{ss}) \\
 	\dot{\lambda}(t) &\approx -f''\lambda^{ss}(k-k^{s}) + \left( \delta + \rho - f' \right)(\lambda - ambda^{ss})

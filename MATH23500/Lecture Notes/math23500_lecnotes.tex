@@ -2960,7 +2960,7 @@ Harmonic functions solve the heat equation, as we just put $f(\overline{x},t) \c
 	In complex analysis, for $f: \mathbb{C}\to \mathbb{C}$ holomorphic, the real and imaginary parts of $f$ are harmonic functions. This hints at a connection between $2$-dimensional Brownian motion and complex analysis.
 \end{rmk}
 
-\begin{thm} \label{thm:matbm}
+\begin{thm} \label{thm:martbm}
 	Let $f: \R^d \times [0,\infty) \to \R$\marginnote{Think of $f$ as a function of space and time.} be $C^2$. Assume that for all $t > 0$, there exists $c_t > 0$ such that \[
 		\left| f(\overline{x},t) \right| \le c_t e^{c_t \left| \overline{x} \right|}
 	\] for all $\overline{x} \in \R^d$. Impose the same restriction on growth on all first and second order partial derivatives of $f$ in $\overline{x}$.
@@ -2998,12 +2998,12 @@ Harmonic functions solve the heat equation, as we just put $f(\overline{x},t) \c
 	\begin{align*}
 		\partial_t \E\left[f(\overline{B}_t + \overline{x}_0 , t)\right] &= \partial_t \int_{\R^d}^{} f(\overline{x}+\overline{x}_0, t) p_t(\overline{x})dx_1\cdots dx_d  \\
 				 &= \partial_t \int_{\R^d}^{} f(\overline{x},t) p_t(\overline{x}-\overline{x}_0) dx_1\cdots dx_d \text{ by change of variables} \\
-				 &= \int_{\R^d}^{} \partial_t p_t(\overline{x}-\overline{x}_0) f(\overline{x},t) + p_t(\overline{x},\overline{x}_0) \parital_t f(\overline{x}, t)dx_1\cdots dx_d \\
-				 &= \int_{\R^d}^{} \frac{1}{2} \Delta p_t(\overline{x}-x_0) f(\overline{x},t) + p_t(\overline{x}-\overline{x}_0) \parital_t f(\overline{x}, t) dx_1 \cdots dx_d
+				 &= \int_{\R^d}^{} \partial_t p_t(\overline{x}-\overline{x}_0) f(\overline{x},t) + p_t(\overline{x},\overline{x}_0) \partial_t f(\overline{x}, t)dx_1\cdots dx_d \\
+				 &= \int_{\R^d}^{} \frac{1}{2} \Delta p_t(\overline{x}-x_0) f(\overline{x},t) + p_t(\overline{x}-\overline{x}_0) \partial_t f(\overline{x}, t) dx_1 \cdots dx_d
 	.\end{align*}
 	We can integrate the first term by parts so the extra terms decay very quickly according to our assumption on $f$.
 	\begin{align*}
-		\partial_t \E\left[f(\overline{B}_t + \overline{x}_0 , t)\right] &= \int_{\R^d}^{} p_t (\overline{x} - \overline{x}_0) \left( \frac{1}{2}\Delta f(\overline{x},t)  + \parital_t f(\overline{x},t) \right)dx_1\cdots dx_d = 0	
+		\partial_t \E\left[f(\overline{B}_t + \overline{x}_0 , t)\right] &= \int_{\R^d}^{} p_t (\overline{x} - \overline{x}_0) \left( \frac{1}{2}\Delta f(\overline{x},t)  + \partial_t f(\overline{x},t) \right)dx_1\cdots dx_d = 0	
 	,\end{align*}
 	where the last equality follows from $f$ saitsfying the heat equation.
 	By this result, we know that \[
