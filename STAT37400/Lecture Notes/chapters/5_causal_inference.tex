@@ -70,7 +70,7 @@ Can we estimate the average treatment effect $\E\left[Y_i(1) - Y_i(0)\right] $? 
 The causal estimand is the ATE at the cutoff: \[
 	\theta = \E\left[Y_i(1) - Y_i(0) \mid X_i = c\right] 
 .\] 
-We will use nonparametrics to estimate the conditional response functions $\mu_{(1)}(x) := \E\left[Y_i(1) \mid X_i = x\right] $ and $\mu_{\left(0 \right)}(x) := \E\left[Y_i(0) \mid X_i = x\right] $ near the cutoff $c$. We can assume that both $\mu_{(1)}, \mu_{(2)}$ are continuous at $c$,\boxednote{This continuity assumption of $\mu$ at $c$ can be upgraded to something like H\"older continuity.} and as a result, write 
+We will use nonparametrics to estimate the conditional response functions $\mu_{(1)}(x) \coloneqq \E\left[Y_i(1) \mid X_i = x\right] $ and $\mu_{\left(0 \right)}(x) \coloneqq \E\left[Y_i(0) \mid X_i = x\right] $ near the cutoff $c$. We can assume that both $\mu_{(1)}, \mu_{(2)}$ are continuous at $c$,\boxednote{This continuity assumption of $\mu$ at $c$ can be upgraded to something like H\"older continuity.} and as a result, write 
 \begin{align*}
 	\theta 
 	&= \E\left[Y_i(1) - Y_i(0) \mid X_{i} = c\right] \\
@@ -98,7 +98,7 @@ Suppose a medication affects one cohort in the population differently than anoth
 We would rather estimate the conditional average treatment effect:\boxednote{By the LIE, we can recover the ATE from the CATEs: \[
 	ATE = \E\left[CATE(X_i)\right] 
 .\] } \[
-	\tau(x) = CATE(x) := \E\left[Y_i(1) - Y_i(0) \mid X_i = x\right]  = \mu_{(1)}(x) - \mu_{(0)}(x)
+	\tau(x) = CATE(x) \coloneqq \E\left[Y_i(1) - Y_i(0) \mid X_i = x\right]  = \mu_{(1)}(x) - \mu_{(0)}(x)
 .\] 
 \begin{definition}[$t$-learner]
 		For some generic nonparametric method $\mathscr{M}$, we can estimate $\tau(x)$ by\boxednote{The regression method $\mathscr{M}$ may differ between the treatment and control groups, for example if their sample sizes differ sharply.} estimating \[
@@ -207,7 +207,7 @@ Let's move from RCTs to observational studies, so we do not randomly assignment 
 
 \begin{notation}	We will now notate
 	\[
-		e := p = \P\left[W_i = 1\right]  \in (0,1)
+		e \coloneqq p = \P\left[W_i = 1\right]  \in (0,1)
 	.\] 
 \end{notation}
 
@@ -222,7 +222,7 @@ Let's move from RCTs to observational studies, so we do not randomly assignment 
 \end{definition}
 \begin{definition}[Propensity score]
 	Define the propensity score \[
-		e(x) := \P\left[W_i = 1 \mid X_i=x\right] 
+		e(x) \coloneqq \P\left[W_i = 1 \mid X_i=x\right] 
 	.\] In a non-RCT setting, $e(x)$ is generally unknown.
 
 		We say that there is overlap in the study if $e(x) \in (0,1)$ for every $x$.\boxednote{RDD typically does not satisfy overlap, since treatment is determined by whether the running variable crosses the cutoff.}
@@ -249,15 +249,15 @@ We introduce the Doubly Robust learner.
 
 \begin{remark}	For intuition,
 	think of $\tilde{m}_0(\cdot ), \tilde{m}_1(\cdot ), \tilde{e}(\cdot )$ as fixed functions. Then analogously to as in the $t$-learner (with the new addition of debiasing terms), consider \[
-		\tilde{Y}_i(\tilde{m}_1, \tilde{m}_0, \tilde{e}) := \tilde{m}_1\left( X_i \right) - \tilde{m}_0(X_i) + \frac{W_i \left( Y_i - \tilde{m}_1(X_i) \right)}{\tilde{e}(X_i)} - \frac{(1-W_i)(Y_i  - \tilde{m}_0(X_i)}{1-\tilde{e}(X_i)}
+		\tilde{Y}_i(\tilde{m}_1, \tilde{m}_0, \tilde{e}) \coloneqq \tilde{m}_1\left( X_i \right) - \tilde{m}_0(X_i) + \frac{W_i \left( Y_i - \tilde{m}_1(X_i) \right)}{\tilde{e}(X_i)} - \frac{(1-W_i)(Y_i  - \tilde{m}_0(X_i)}{1-\tilde{e}(X_i)}
 	.\] 
 	The first two terms resemble the $t$-learner, while the second two terms resemble the $F$-learner, but centered around the regression functions.
 
 	Suppose $\tilde{m}_1 = m_1, \tilde{m}_0 = m_0$, but $\tilde{e}$ is arbitrary. Then
 		\[
-			A_i := m_1(X_i) + \frac{W_i (Y_i - m_1(X_i))}{\tilde{e}(X_i)},
+			A_i \coloneqq m_1(X_i) + \frac{W_i (Y_i - m_1(X_i))}{\tilde{e}(X_i)},
 			\qquad
-			B_i := m_0(X_i) + \frac{(1-W_i)(Y_i - m_0(X_i))}{1- \tilde{e}(X_i)}.
+			B_i \coloneqq m_0(X_i) + \frac{(1-W_i)(Y_i - m_0(X_i))}{1- \tilde{e}(X_i)}.
 		\]
 		A short conditional-expectation calculation gives
 		\[
@@ -270,9 +270,9 @@ We introduce the Doubly Robust learner.
 	Now suppose $\tilde{m}_1, \tilde{m}_0$ are arbitrary but the propensity is true in $\tilde{e}= e$.
 	Then 
 		\[
-			\tilde{A}_i := \tilde{m}_1(X_i) + \frac{W_i (Y_i - \tilde{m}_1(X_i))}{e(X_i)},
+			\tilde{A}_i \coloneqq \tilde{m}_1(X_i) + \frac{W_i (Y_i - \tilde{m}_1(X_i))}{e(X_i)},
 			\qquad
-			\tilde{B}_i := \tilde{m}_0(X_i) + \frac{(1-W_i)(Y_i - \tilde{m}_0(X_i))}{1- e(X_i)}.
+			\tilde{B}_i \coloneqq \tilde{m}_0(X_i) + \frac{(1-W_i)(Y_i - \tilde{m}_0(X_i))}{1- e(X_i)}.
 		\]
 		Again, conditioning on $X_i$ gives
 		\[

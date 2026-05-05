@@ -9,25 +9,25 @@ Recall LLR solves
 (\hat{\alpha},\hat{\beta})
 = \argmin_{(\alpha,\beta)\in\R^2} \sum\limits_{i=1}^{n} w_i \left( Y_i - \alpha - \beta(X_i-x_0) \right)^2,
 \qquad
-w_i := K\left(\frac{X_i-x_0}{h}\right).
+w_i \coloneqq K\left(\frac{X_i-x_0}{h}\right).
 \]
 
 Define
 \[
 \begin{aligned}
-	W &:= \operatorname{diag}(w_1,\ldots,w_n), \\
-	\tilde{X} &:=
+	W &\coloneqq \operatorname{diag}(w_1,\ldots,w_n), \\
+	\tilde{X} &\coloneqq
 	\begin{pmatrix}
 		1 & X_1-x_0 \\
 		\vdots & \vdots \\
 		1 & X_n-x_0
 	\end{pmatrix}, \\
-	Y &:=
+	Y &\coloneqq
 	\begin{pmatrix}
 		Y_1\\ \vdots\\ Y_n
 	\end{pmatrix},
 	\qquad
-	\theta :=
+	\theta \coloneqq
 	\begin{pmatrix}
 		\alpha\\ \beta
 	\end{pmatrix}.
@@ -35,12 +35,12 @@ Define
 \]
 Then the vector of residuals is
 \[
-r(\theta) := Y - \tilde{X}\theta,
+r(\theta) \coloneqq Y - \tilde{X}\theta,
 \]
 and the minimand can be written as the quadratic form
 \[
 Q(\theta)
-:= \sum\limits_{i=1}^{n} w_i \left( Y_i - \alpha - \beta(X_i-x_0) \right)^2
+\coloneqq \sum\limits_{i=1}^{n} w_i \left( Y_i - \alpha - \beta(X_i-x_0) \right)^2
 = r(\theta)'W r(\theta)
 = (Y-\tilde{X}\theta)'W(Y-\tilde{X}\theta).
 \]
@@ -71,7 +71,7 @@ When $\tilde{X}'W\tilde{X}$ is invertible,
 = (\tilde{X}'W\tilde{X})^{-1}\tilde{X}'WY.
 \]
 
-Define $\hat{m}(x_0):=\hat{\alpha}$. Let $e_1 := (1,0)'$. Then
+Define $\hat{m}(x_0)\coloneqq\hat{\alpha}$. Let $e_1 \coloneqq (1,0)'$. Then
 \[
 \hat{m}(x_0)
 = e_1'\hat{\theta}
@@ -81,15 +81,15 @@ Define $\hat{m}(x_0):=\hat{\alpha}$. Let $e_1 := (1,0)'$. Then
 where the weight vector (a function of $X_{1:n},x_0,h$) is
 \[
 \gamma'
-:= e_1'(\tilde{X}'W\tilde{X})^{-1}\tilde{X}'W,
+\coloneqq e_1'(\tilde{X}'W\tilde{X})^{-1}\tilde{X}'W,
 \qquad\text{so that}\qquad
 \hat{m}(x_0)=\sum\limits_{i=1}^{n}\gamma_i Y_i.
 \]
 
-Equivalently, writing $S_k := \sum\limits_{j=1}^{n} w_j (X_j-x_0)^k$ for $k=0,1,2$,
+Equivalently, writing $S_k \coloneqq \sum\limits_{j=1}^{n} w_j (X_j-x_0)^k$ for $k=0,1,2$,
 the denominator
 \[
-D := S_0S_2 - S_1^2
+D \coloneqq S_0S_2 - S_1^2
 \]
 satisfies $\tilde{X}'W\tilde{X}$ invertible $\iff D\ne 0$, and in that case
 \[
@@ -130,7 +130,7 @@ One example of an estimator that is not a linear smoother is a regressogram whos
 \begin{corollary}	By property (ii), we get invariance to subtracting a term linear in deviations from $x_0$.
 \end{corollary}
 \begin{proof}
-	Formally, define $\tilde{Y}_i := Y_i - m'(x_0)(X_i-x_0)$, and let $m(x) := \E\left[Y_i \mid X_i = x\right]$ and $\tilde{m}(x) := \E\left[\tilde{Y}_i \mid X_i = x\right]$. Then 
+	Formally, define $\tilde{Y}_i \coloneqq Y_i - m'(x_0)(X_i-x_0)$, and let $m(x) \coloneqq \E\left[Y_i \mid X_i = x\right]$ and $\tilde{m}(x) \coloneqq \E\left[\tilde{Y}_i \mid X_i = x\right]$. Then 
 	\begin{align*}
 		\tilde{m}(x) &= m(x) - m'(x_0)(x-x_0) \\
 		\tilde{m}'(x_0) &= m'(x_0) - m'(x_0) = 0
@@ -155,7 +155,7 @@ One example of an estimator that is not a linear smoother is a regressogram whos
 	and it is strictly $>0$ because at least one $(X_i-x_0)$ is positive and has positive weight in the average. This contradicts (ii). Therefore at least one $\gamma_i$ must be negative.
 \end{remark}
 
-Recall that with Nadaraya-Watson, we said that we could change the kernel near and at the boundary. Given a linear smoother $\hat{m}(x_0)=\sum\limits_{i=1}^{n} \gamma_i Y_i$ with $\sum\limits_{i=1}^{n}\gamma_i=1$, we can always write it in Nadaraya-Watson form by defining data-dependent weights $\tilde{K}_i := \gamma_i$:
+Recall that with Nadaraya-Watson, we said that we could change the kernel near and at the boundary. Given a linear smoother $\hat{m}(x_0)=\sum\limits_{i=1}^{n} \gamma_i Y_i$ with $\sum\limits_{i=1}^{n}\gamma_i=1$, we can always write it in Nadaraya-Watson form by defining data-dependent weights $\tilde{K}_i \coloneqq \gamma_i$:
 \[
 	\hat{m}(x_0)=\frac{\sum\limits_{i=1}^{n} \tilde{K}_i Y_i}{\sum\limits_{i=1}^{n} \tilde{K}_i}
 .\]
@@ -176,7 +176,7 @@ where $l \in \N_0$ and $\hat{m}(x_0) = \hat{\alpha}_0$.
 \begin{example}	If $l=0$, we have NW. If $l=1$, then we have local linear regression.
 \end{example}
 
-The intuition for why we would want to do local polynomial regression is because we may want to fit Taylor polynomials of higher order. With optimal tuning, if we fit an $l$th degree local polynomial regression and the $\beta := l+1$ derivative of $m(\cdot )$ is bounded and continuous, then the conditional MSE is bounded by a familiar expression: \[
+The intuition for why we would want to do local polynomial regression is because we may want to fit Taylor polynomials of higher order. With optimal tuning, if we fit an $l$th degree local polynomial regression and the $\beta \coloneqq l+1$ derivative of $m(\cdot )$ is bounded and continuous, then the conditional MSE is bounded by a familiar expression: \[
 	\MSE\left( \hat{m}(x_0) \mid X_{1:n} \right) \lesssim n^{- \frac{2\beta}{2\beta + 1}}
 .\] As $\beta \to \infty$, the rate approaches $\frac{1}{n}$ from below. Hence, increasing $l$ and our assumption on smoothness gives us faster rates.
 
@@ -248,7 +248,7 @@ The argument in favor of this says that it's not catastrophic if we estimate $m'
 Minimax Plug-In: 
 Suppose that we have estimates $\hat{f}(x_0)$ and $\hat{\sigma}^2(x_0)$. The minimax approach is to bound the worst-case MSE over $\P$ when $m \in \mathscr{G}(2,C)$, where
 \[
-\mathscr{G}(2,C) := \left\{m: \sup_{x\in[0,1]} \left| m''(x) \right| \le C\right\}
+\mathscr{G}(2,C) \coloneqq \left\{m: \sup_{x\in[0,1]} \left| m''(x) \right| \le C\right\}
 .\]
 Heuristically,\footnote{Why is the proof not immediate?} we should have the bound
 \[
@@ -407,7 +407,7 @@ we instead use a bias bound. For $m \in \mathscr{M}$,
 	\begin{aligned}
 		\left|\operatorname{Bias}\left(\hat{m}(x_0) \mid X_{1:n}\right)\right|
 		&= \left|\sum\limits_{i=1}^{n} \gamma_i m(X_i) - m(x_0)\right| \\
-		&\le B(x_0) := \sup_{m \in \mathscr{M}} \left|\sum\limits_{i=1}^{n} \gamma_i m(X_i) - m(x_0)\right|
+		&\le B(x_0) \coloneqq \sup_{m \in \mathscr{M}} \left|\sum\limits_{i=1}^{n} \gamma_i m(X_i) - m(x_0)\right|
 	\end{aligned}
 .\]
 Hence, a conservative two-sided interval is
@@ -425,9 +425,9 @@ This approach can be conservative (often strictly) when $B(x_0) > 0$.
 
 For two-sided inference, one can replace the additive $+B(x_0)$ inflation by a bias-aware critical value. Let $Z \sim N(0,1)$,
 \[
-	\tilde{b} := \frac{B(x_0)}{\operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right)}
+	\tilde{b} \coloneqq \frac{B(x_0)}{\operatorname{se}\left(\hat{m}(x_0) \mid X_{1:n}\right)}
 	\quad\text{and}\quad
-	\chi(\tilde{b}) := \inf\left\{t: \inf_{|b|\le \tilde{b}} \P\left[\left|Z+b\right|\le t\right] \ge 1-\alpha\right\}
+	\chi(\tilde{b}) \coloneqq \inf\left\{t: \inf_{|b|\le \tilde{b}} \P\left[\left|Z+b\right|\le t\right] \ge 1-\alpha\right\}
 .\]
 Then
 \[
@@ -444,7 +444,7 @@ Recall we assumed that $Y_i \mid X_i \sim N(m(X_i), \sigma_i^2$
 What happens if we relax this normality assumption? Suppose $(Z_i)_{i=1}^{n}$ is a sequence of $i.i.d.$ variables and put $U = \sum_{i=1}^{n} Z_i$.
 Define
 \[
-	\mu_i := \E\left[Z_i\right], \quad \tau_i^2 := \operatorname{Var}\left(Z_i\right), \quad \rho_i := \E\left[\left|Z_i-\mu_i\right|^3\right]
+	\mu_i \coloneqq \E\left[Z_i\right], \quad \tau_i^2 \coloneqq \operatorname{Var}\left(Z_i\right), \quad \rho_i \coloneqq \E\left[\left|Z_i-\mu_i\right|^3\right]
 .\] 
 We know \[
 	\E\left[U\right]  = \sum\limits_{i=1}^{n} \mu_i, \quad \operatorname{Var}\left(U\right) = \sum\limits_{i=1}^{n} \tau_i^2, \quad \frac{U-\E\left[U\right] }{\sqrt{\operatorname{Var}\left(U\right)} } \approx N(0,1)
@@ -456,7 +456,7 @@ We know \[
 
 	In particular, if the upper bound goes to $0$, then the asymptotic distribution is approximately $N(0,1)$.
 \end{theorem}
-\begin{example}Consider the case where $Z_i$ are i.i.d. with $\rho:=\E\left[\left|Z_1-\E\left[Z_1\right]\right|^3\right]$ and $\tau^2 := \operatorname{Var}\left(Z_1\right)$. Then the bound becomes
+\begin{example}Consider the case where $Z_i$ are i.i.d. with $\rho\coloneqq\E\left[\left|Z_1-\E\left[Z_1\right]\right|^3\right]$ and $\tau^2 \coloneqq \operatorname{Var}\left(Z_1\right)$. Then the bound becomes
 \[
 	\sup_{t \in \R}\left|\P\left[\frac{U-\E\left[U\right]}{\sqrt{\operatorname{Var}\left(U\right)}}\le t\right]-\Phi(t)\right|
 	\le C\frac{n\rho}{\left(n\tau^2\right)^{3/2}}
@@ -465,7 +465,7 @@ We know \[
 \end{example}
 We can apply this to linear smoothers by taking, conditional on $X_{1:n}$,
 \[
-	Z_i := \gamma_i\left(Y_i - m(X_i)\right),
+	Z_i \coloneqq \gamma_i\left(Y_i - m(X_i)\right),
 	\quad \mu_i = 0,
 	\quad
 	\begin{aligned}

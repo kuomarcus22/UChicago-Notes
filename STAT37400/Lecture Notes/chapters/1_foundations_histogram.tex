@@ -39,7 +39,7 @@ A generic nonparametric workflow is the following:
 		\]
 		\item CDF at a point $y$ (or as a whole function $y\mapsto F(y)$):
 		\[
-			\theta(P)=F(y):=\P_P(Y_i\le y)=\E_P[\mathbf 1\{Y_i\le y\}].
+			\theta(P)=F(y)\coloneqq\P_P(Y_i\le y)=\E_P[\mathbf 1\{Y_i\le y\}].
 		\]
 		\item Tail conditional (extreme values): for fixed $y,t$,
 		\[
@@ -60,7 +60,7 @@ A generic nonparametric workflow is the following:
 \begin{definition}[Squared-error risk / MSE]
 	For real-valued $\theta(P)$ and $\hat\theta$, define the (mean squared) risk under $P$ as
 	\[
-		R_P(\hat\theta,\theta):=\E_P\big[(\hat\theta-\theta(P))^2\big],
+		R_P(\hat\theta,\theta)\coloneqq\E_P\big[(\hat\theta-\theta(P))^2\big],
 	\]
 	assuming $\E_P[\hat\theta^2]<\infty$.
 \end{definition}
@@ -86,7 +86,7 @@ A generic nonparametric workflow is the following:
 \end{remark}
 
 \begin{example}[Sample mean]
-	Let $\theta(P)=\E_P[Y_i]$ and consider $\hat\theta=\bar Y:=\frac1n\sum_{i=1}^n Y_i$.
+	Let $\theta(P)=\E_P[Y_i]$ and consider $\hat\theta=\bar Y\coloneqq\frac1n\sum_{i=1}^n Y_i$.
 	Then $\E_P[\bar Y]=\theta(P)$ (unbiased), and if $\Var_P(Y_i)=\sigma^2<\infty$,
 	\[
 		R_P(\bar Y,\theta)
@@ -145,7 +145,7 @@ The minimax value is the best achievable worst-case performance.
 	Fix $y\in\R$ and the target $\theta(P)=F(y)=\P_P(Y_i\le y)$.
 	Define
 	\[
-		\hat F_n(y):=\frac{1}{n}\sum_{i=1}^n \mathds{1}_{Y_i\le y}.
+		\hat F_n(y)\coloneqq\frac{1}{n}\sum_{i=1}^n \mathds{1}_{Y_i\le y}.
 	\]
 	Then $\E_P[\hat F_n(y)]=F(y)$ (unbiased), and since $\mathbf 1\{Y_i\le y\}\sim \mathrm{Bernoulli}(F(y))$,
 	\[
@@ -175,7 +175,7 @@ to balance
 	containing $y_0$. Define the histogram estimator
 	\[
 		\hat f_h(y_0)
-		:=
+		\coloneqq
 		\frac{\#\{i:\ Y_i\in I_j\}}{nh}
 		=
 		\frac{1}{nh}\sum_{i=1}^n \mathbf 1\{Y_i\in I_j\}.
@@ -184,7 +184,7 @@ to balance
 \end{example}
 
 \begin{remark}[Variance increases as $h$ decreases]
-	Let $p_j:=\P_P(Y_i\in I_j)$. Since $\mathbf 1\{Y_i\in I_j\}\sim \mathrm{Bernoulli}(p_j)$,
+	Let $p_j\coloneqq\P_P(Y_i\in I_j)$. Since $\mathbf 1\{Y_i\in I_j\}\sim \mathrm{Bernoulli}(p_j)$,
 	\[
 		\Var_P\!\big(\hat f_h(y_0)\big)
 		=
@@ -232,11 +232,11 @@ Assume $Y_i\in[0,1]$ and $P$ admits a density $f$ (with respect to Lebesgue meas
 Fix $y_0\in[0,1]$ and target the pointwise value $\theta(P)=f(y_0)$.
 
 \begin{definition}[Histogram estimator at $y_0$]
-	Partition $[0,1]$ into $K$ intervals (bins) $I_1,\dots,I_K$ of equal length $h:=1/K$.
+	Partition $[0,1]$ into $K$ intervals (bins) $I_1,\dots,I_K$ of equal length $h\coloneqq1/K$.
 	Let $I_j$ be the unique bin containing $y_0$. Define
 	\[
 		\hat f_h(y_0)
-		:=
+		\coloneqq
 		\frac{\#\{i:\ Y_i\in I_j\}}{nh}
 		=
 		\frac{1}{nh}\sum_{i=1}^n \mathbf 1\{Y_i\in I_j\}.
@@ -256,7 +256,7 @@ Fix $y_0\in[0,1]$ and target the pointwise value $\theta(P)=f(y_0)$.
 \end{lemma}
 
 \begin{proof}
-	Let $p_j:=\P_P(Y_i\in I_j)=\int_{I_j} f(y)\,dy\le Mh$. Since $\mathbf 1\{Y_i\in I_j\}\sim\mathrm{Bernoulli}(p_j)$,
+	Let $p_j\coloneqq\P_P(Y_i\in I_j)=\int_{I_j} f(y)\,dy\le Mh$. Since $\mathbf 1\{Y_i\in I_j\}\sim\mathrm{Bernoulli}(p_j)$,
 	\[
 		\Var_P(\hat f_h(y_0))
 		=
@@ -368,7 +368,7 @@ which yields the \emph{minimax optimal rate under the Lipschitz assumption}
 
 \begin{remark}	Formally, $f = F'$. One might try to estimate $f(y_0)$ by differentiating the empirical CDF
 	\[
-		\hat F_n(y):=\frac1n\sum_{i=1}^n \mathbf 1\{Y_i\le y\}.
+		\hat F_n(y)\coloneqq\frac1n\sum_{i=1}^n \mathbf 1\{Y_i\le y\}.
 	\]
 	But $\hat F_n$ is a step function with jumps at the order statistics; it is not differentiable in the usual sense,
 	and its derivative is $0$ wherever it exists. This is why we introduce smoothing (histograms/kernels/local polynomials).
@@ -378,7 +378,7 @@ which yields the \emph{minimax optimal rate under the Lipschitz assumption}
 	For an estimator $\hat f$ of the entire density $f$ on $[0,1]$, define the (weighted) integrated risk
 	\[
 		\mathscr R(\hat f,f)
-		:=
+		\coloneqq
 		\E\Big[\int_0^1 \big(\hat f(y)-f(y)\big)^2 w(y)\,dy\Big],
 	\]
 	often with $w(y)\equiv 1$.
@@ -409,7 +409,7 @@ which yields the \emph{minimax optimal rate under the Lipschitz assumption}
 	\[
 		I \approx \hat\theta \pm z_{1-\alpha/2}\,\mathrm{se}(\hat\theta),
 		\qquad
-		\mathrm{se}(\hat\theta):=\sqrt{\Var(\hat\theta)},
+		\mathrm{se}(\hat\theta)\coloneqq\sqrt{\Var(\hat\theta)},
 	\]
 	justified by the heuristic
 	\[

@@ -171,7 +171,7 @@ For $h=1$ and $K$ the Gaussian kernel, we see $\hat{f}(\cdot ) = \frac{1}{n} \su
 
 To sample from a KDE, recall the KDE with bandwidth $h>0$,
 \[
-	\hat{f}_h(x) := \frac{1}{nh}\sum\limits_{i=1}^{n} K\left(\frac{X_i-x_0}{h}\right).
+	\hat{f}_h(x) \coloneqq \frac{1}{nh}\sum\limits_{i=1}^{n} K\left(\frac{X_i-x_0}{h}\right).
 \]
 This is a finite mixture of the $n$ kernel components centered at the sample points. In particular, let
 \[
@@ -180,7 +180,7 @@ This is a finite mixture of the $n$ kernel components centered at the sample poi
 \]
 be independent, and define
 \[
-	X := X_I + h\epsilon.
+	X \coloneqq X_I + h\epsilon.
 \]
 Then, conditional on $I=i$, $X$ has density
 \[
@@ -216,7 +216,7 @@ Recall that the Nadaraya-Watson estimator is defined as \[
 We have the following standing assumptions:
 \begin{enumerate}[label=(\roman*)]
 	\item $m(\cdot )$ is twice continuously differentiable at $x_0$
-	\item $\sigma^2(x) := \operatorname{Var}\left(Y_i \mid X_i = x\right)$ is continuous at $x_0$ and $\sigma^2(x_0) > 0$.
+	\item $\sigma^2(x) \coloneqq \operatorname{Var}\left(Y_i \mid X_i = x\right)$ is continuous at $x_0$ and $\sigma^2(x_0) > 0$.
 	\item $\P_X$ is continuously differentiable at $x_0$, and $f(x_0) > 0$
 	\item $x_0 \in [0,1]^{\circ}$
 	\item $\operatorname{Supp}(K(\cdot )) = [-1,1]$ and\boxednote{We no longer assume that $K$ is nonnegative.} \[
@@ -465,5 +465,5 @@ Recall LLR solves \[
 		\end{pmatrix} 	\right) \right\|_2^{2}
 	,\] \boxednote{\texthl{check}}when $\tilde{X}^T W X$ is invertible.
 
-Thus $\hat{m}(x_0) := \hat{\alpha}=  \sum_{i=1}^{n} \gamma_i Y_i$ where $\gamma_i$ is a function of $X_{1:n}$ and $x_0$.
+Thus $\hat{m}(x_0) \coloneqq \hat{\alpha}=  \sum_{i=1}^{n} \gamma_i Y_i$ where $\gamma_i$ is a function of $X_{1:n}$ and $x_0$.
 \end{comment}

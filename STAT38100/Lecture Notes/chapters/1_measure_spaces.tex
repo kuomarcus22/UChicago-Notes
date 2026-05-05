@@ -35,7 +35,7 @@
 We need to restrict ourselves to measurable subsets to have our notion of probability be well-defined; hence measure theory is necessary.
 
 \begin{definition}[$\sigma$-algebra]
-	Let $\Omega$ denote the sample space and $2^{\Omega} := \{\text{subsets of } \Omega\}$.
+	Let $\Omega$ denote the sample space and $2^{\Omega} \coloneqq \{\text{subsets of } \Omega\}$.
 
 	Given $\Omega$, $\mathscr{F} \subseteq 2^{\Omega}$ is a $\sigma$-field ($\sigma$-algebra) if
 	\begin{enumerate}[label=(\roman*)]
@@ -64,7 +64,7 @@ Trivial examples include $2^{\Omega}$ and $\{\O,\Omega\}$.
 		A_1 \subseteq A_2 \subseteq \ldots
 	\] and similarly for decreasing sequences of sets.
 
-	If $A_n \uparrow$, define $\lim\limits_{n \to \infty} A_n := \cup_n A_n$, and if $A_n \downarrow$, define $\lim\limits_{n \to \infty} A_n := \cap_n A_n$.
+	If $A_n \uparrow$, define $\lim\limits_{n \to \infty} A_n \coloneqq \cup_n A_n$, and if $A_n \downarrow$, define $\lim\limits_{n \to \infty} A_n \coloneqq \cap_n A_n$.
 \end{definition}
 
 We can define the limit of an arbitrary, non-monotone sequence.
@@ -126,7 +126,7 @@ The first and fourth definitions deal with finite operations; the second and thi
 
 	(ii) (Closure under complements.) Define
 	\[
-		M_0 := \{A \in m(\mathscr{A}) : A^{c} \in m(\mathscr{A})\}.
+		M_0 \coloneqq \{A \in m(\mathscr{A}) : A^{c} \in m(\mathscr{A})\}.
 	\]
 	We claim $M_0$ is a monotone class containing $\mathscr{A}$.
 
@@ -147,7 +147,7 @@ The first and fourth definitions deal with finite operations; the second and thi
 
 	Define
 	\[
-		M_1 := \{A \in m(\mathscr{A}) : \forall\,B \in \mathscr{A},\; A \cup B \in m(\mathscr{A})\}.
+		M_1 \coloneqq \{A \in m(\mathscr{A}) : \forall\,B \in \mathscr{A},\; A \cup B \in m(\mathscr{A})\}.
 	\]
 	Clearly $M_1 \subseteq m(\mathscr{A})$. We check that $M_1$ is a monotone class containing
 	$\mathscr{A}$.
@@ -170,7 +170,7 @@ The first and fourth definitions deal with finite operations; the second and thi
 
 	Now define
 	\[
-		M_2 := \{A \in m(\mathscr{A}) : \forall\,B \in m(\mathscr{A}),\; A \cup B \in m(\mathscr{A})\}.
+		M_2 \coloneqq \{A \in m(\mathscr{A}) : \forall\,B \in m(\mathscr{A}),\; A \cup B \in m(\mathscr{A})\}.
 	\]
 	Again $M_2 \subseteq m(\mathscr{A})$. We show $M_2$ is a monotone class containing $\mathscr{A}$.
 
@@ -187,7 +187,7 @@ The first and fourth definitions deal with finite operations; the second and thi
 	Thus $M_2$ is a monotone class containing $\mathscr{A}$, so $m(\mathscr{A}) \subseteq M_2$.
 	In particular, $m(\mathscr{A})$ is closed under finite unions.
 
-	Finally, let $(A_n)_{n\ge1} \subseteq m(\mathscr{A})$ and set $U_m := \bigcup_{n=1}^m A_n$.
+	Finally, let $(A_n)_{n\ge1} \subseteq m(\mathscr{A})$ and set $U_m \coloneqq \bigcup_{n=1}^m A_n$.
 	By finite-union closure, $U_m \in m(\mathscr{A})$ for each $m$, and $U_m \uparrow \bigcup_{n=1}^\infty A_n$.
 	Since $m(\mathscr{A})$ is a monotone class, $\bigcup_{n=1}^\infty A_n \in m(\mathscr{A})$.
 
@@ -259,12 +259,12 @@ The first and fourth definitions deal with finite operations; the second and thi
 		\item (Continuity from below.) If $(A_n)$ is an increasing sequence ($A_n \subseteq A_{n+1}$), then
 		\[
 			\lim_{n \to \infty} \mu(A_n) = \mu\!\left( \lim_{n \to \infty} A_n \right)
-			\qquad\text{where }\ \lim_{n\to\infty}A_n:=\bigcup_{n=1}^\infty A_n .
+			\qquad\text{where }\ \lim_{n\to\infty}A_n\coloneqq\bigcup_{n=1}^\infty A_n .
 		\]
 		\item (Continuity from above.) If $(A_n)$ is a decreasing sequence ($A_{n+1} \subseteq A_n$) and $\mu(A_1) < \infty$, then
 		\[
 			\mu\!\left( \lim_{n \to \infty} A_n \right)= \lim_{n \to \infty} \mu(A_n)
-			\qquad\text{where }\ \lim_{n\to\infty}A_n:=\bigcap_{n=1}^\infty A_n .
+			\qquad\text{where }\ \lim_{n\to\infty}A_n\coloneqq\bigcap_{n=1}^\infty A_n .
 		\]
 	\end{enumerate}
 \end{remark}
@@ -277,11 +277,11 @@ The first and fourth definitions deal with finite operations; the second and thi
 		\]
 		by nonnegativity.
 		
-		\item Assume $A_n \uparrow$ and set $A:=\bigcup_{n=1}^\infty A_n$. Define
+		\item Assume $A_n \uparrow$ and set $A\coloneqq\bigcup_{n=1}^\infty A_n$. Define
 		\[
-			D_1 := A_1,\qquad D_m := A_m \setminus A_{m-1}\ \ (m\ge 2),
+			D_1 \coloneqq A_1,\qquad D_m \coloneqq A_m \setminus A_{m-1}\ \ (m\ge 2),
 		\]
-		(with the convention $A_0:=\varnothing$). Then the $D_m$ are pairwise disjoint and for each $n$,
+		(with the convention $A_0\coloneqq\varnothing$). Then the $D_m$ are pairwise disjoint and for each $n$,
 		\[
 			A_n = \amalg_{m=1}^n D_m,
 			\qquad\text{and}\qquad
@@ -301,7 +301,7 @@ The first and fourth definitions deal with finite operations; the second and thi
 			= \mu\!\left(\bigcup_{n=1}^\infty A_n\right).
 		\]
 		
-		\item Assume $A_n \downarrow$ and $\mu(A_1)<\infty$. Consider $B_n := A_1 \setminus A_n$.
+		\item Assume $A_n \downarrow$ and $\mu(A_1)<\infty$. Consider $B_n \coloneqq A_1 \setminus A_n$.
 		Then $(B_n)$ is increasing, so by (ii),
 		\[
 			\mu\!\left(\bigcup_{n=1}^\infty B_n\right)=\lim_{n\to\infty}\mu(B_n).
@@ -414,7 +414,7 @@ Now that we have an outer measure on $2^{\Omega}$, how do we restrict the domain
 
 \begin{theorem}[Restriction to Carath\'eodory-measurable sets]
 	Let $\tau$ be an outer measure. Define \[
-		\mathscr{F}_\tau := \{A \subseteq \Omega: \forall\ B \subseteq  \Omega, \tau(B) = \tau(B \cap A) + \tau(B \cap A^{c})\}
+		\mathscr{F}_\tau \coloneqq \{A \subseteq \Omega: \forall\ B \subseteq  \Omega, \tau(B) = \tau(B \cap A) + \tau(B \cap A^{c})\}
 	.\]
 
 	Then $\left( \Omega, \mathscr{F}_\tau, \tau \right)$ is a measure space.
@@ -629,7 +629,7 @@ We require the following lemma.
 	.\] For every $m \in \N$, there exists a sequence $\{B_{m,n}\}_n \subseteq \mathscr{A}$ such that $\cup_n B_{m,n} \supseteq A$ and \[
 		\tau(A) + \frac{1}{n} \ge \sum_n \mu(B_{m,n})
 	.\] 
-	Write $B := \cap_m \cup_n B_{m,n} \supseteq A$. Then $B \in \sigma(\mathscr{A})$ because each $B_{m,n} \in \mathscr{A}$.
+	Write $B \coloneqq \cap_m \cup_n B_{m,n} \supseteq A$. Then $B \in \sigma(\mathscr{A})$ because each $B_{m,n} \in \mathscr{A}$.
 	We see
 	\begin{align*}
 		\tau(A) + \frac{1}{n} &\ge \sum_n \mu(B_{m,n}) \\

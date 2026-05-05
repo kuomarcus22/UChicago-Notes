@@ -301,7 +301,7 @@ Consider the following setup to analyze measurement error.
 	We observe outcome $y$, covariates $w$, treatment status $d$, and instrument $r$. Potential outcomes are $y(d,r)$.
 	\begin{enumerate}[label=(\roman*)]
 		\item \textbf{Relevance}: instrument correlated with treatment (possibly conditional on covariates).
-		\item \textbf{Exclusion}: for all $d,r',r''$, $y(d,r')=y(d,r'')$. So it makes sense to write $y(d) := y(d,r')$.
+		\item \textbf{Exclusion}: for all $d,r',r''$, $y(d,r')=y(d,r'')$. So it makes sense to write $y(d) \coloneqq y(d,r')$.
 		\item \textbf{Exogeneity}: for all $d$, $y(d) \perp\!\!\!\perp r \mid w$.
 	\end{enumerate}
 \end{definition}
@@ -807,7 +807,7 @@ Importantly, $\hat{U}$ must be estimated using $\hat{\beta}^{2SLS}$ because $\ha
 
 	\textbf{Step 2: Consistency of the estimated weighting.} If $\Omega$ is invertible, then $\hat{\Omega}^{-1}\xrightarrow{p}\Omega^{-1}$ by continuous mapping. Also $X'Z/n\xrightarrow{p}Q'$. Hence
 	\[
-		\hat{C}^{OGMM}:=\frac{X'Z}{n}\hat{\Omega}^{-1}\xrightarrow{p}Q'\Omega^{-1}=C^{OGMM}
+		\hat{C}^{OGMM}\coloneqq\frac{X'Z}{n}\hat{\Omega}^{-1}\xrightarrow{p}Q'\Omega^{-1}=C^{OGMM}
 	.\]
 
 	\textbf{Step 3: Asymptotic normality.} Write the feasible OGMM estimator in the linear-combination form with $\hat{C}^{OGMM}$:
@@ -866,7 +866,7 @@ All inference theory requires that $\sqrt{n} \left( \hat{\beta} - \beta \right)$
 	Using the consistent variance estimator $\hat{V}^{OGMM}$ and Slutsky's theorem,
 	\[
 		T_n
-		:=
+		\coloneqq
 		\frac{\sqrt{n}\left(e_2'\hat{\beta}^{OGMM}-0\right)}
 		{\sqrt{e_2'\hat{V}^{OGMM}e_2}}
 		\xrightarrow{d}N(0,1)
@@ -914,7 +914,7 @@ All inference theory requires that $\sqrt{n} \left( \hat{\beta} - \beta \right)$
 	Using $\hat{V}^{OGMM}$, the Wald statistic is
 	\[
 		W_n
-		:=
+		\coloneqq
 		n\left(R\hat{\beta}^{OGMM}-c\right)'
 		\left(R\hat{V}^{OGMM}R'\right)^{-1}
 		\left(R\hat{\beta}^{OGMM}-c\right)

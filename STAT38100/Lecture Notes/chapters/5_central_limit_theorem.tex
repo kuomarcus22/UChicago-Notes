@@ -107,7 +107,7 @@ Note that $X_1,X_2,\ldots$ can all live on different probability spaces, but the
 \begin{example}
 	While the directions of the inequalities seem counterintuitive when we look at where the inf and sup are, the direction is determined by the LSC/USC property of $f$ and $g$. 
 
-	We can see a simple example of the inequalities holding strictly. Let $X_n : \frac{1}{n}$ and $X := 0$ almost surely, and let $P_n,P$ denote their distributions. Then $P_n \to P$ weakly since for every bounded continuous $l$,
+	We can see a simple example of the inequalities holding strictly. Let $X_n : \frac{1}{n}$ and $X \coloneqq 0$ almost surely, and let $P_n,P$ denote their distributions. Then $P_n \to P$ weakly since for every bounded continuous $l$,
 	\[
 		\E\left[l(X_n)\right] = l\left( \frac{1}{n} \right) \to l(0) = \E\left[l(X)\right].
 	\]
@@ -141,15 +141,15 @@ Note that $X_1,X_2,\ldots$ can all live on different probability spaces, but the
 \end{corollary}
 
 \begin{proof}
-	For (i), consider $f := \mathds{1}_{B}$, which is LSC from $B$ being open.
+	For (i), consider $f \coloneqq \mathds{1}_{B}$, which is LSC from $B$ being open.
 	Then \[
 		\liminf\limits_{n \to \infty} P_n(B) = \liminf\limits_{n \to \infty} P_n f \ge P f = P(B)
-	.\] For (ii), we can consider the lemma with $g := \mathds{1}_{G}$, which is USC from $G$ being closed.
+	.\] For (ii), we can consider the lemma with $g \coloneqq \mathds{1}_{G}$, which is USC from $G$ being closed.
 \end{proof}
 
 \begin{notation}[Lower semi-continuous minorant]
 	We write \[
-		\mathring{f} := \sup \left\{g \le f: g \text{ is LSC}\right\} = \sup_{g \in \mathscr{G}} g
+		\mathring{f} \coloneqq \sup \left\{g \le f: g \text{ is LSC}\right\} = \sup_{g \in \mathscr{G}} g
 	\] and \[
 		\overline{f} = \inf \left\{g \ge f: g \text{ is USC}\right\}
 	.\] 
@@ -187,7 +187,7 @@ Similarly, $\overline{f}$ is USC. On the homework, we show that $\mathring{\math
 		f(x) - \epsilon \le f(y) \le f(x) + \epsilon
 	\] for all $y \in U$, where $U \ni x$ is open.
 	We can upgrade this inequality to all of $\mathscr{X}$ from $U$ by fixing some $U$ then seeing \[
-		g := \left( f(x) -\epsilon \right)\mathds{1}_{U} -(M+1)\mathds{1}_{U^{c}} \le f(y) \le \left( f(x) + \epsilon \right) \mathds{1}_{U} + \left( M+1 \right)\mathds{1}_{U^{c}} =: h
+		g \coloneqq \left( f(x) -\epsilon \right)\mathds{1}_{U} -(M+1)\mathds{1}_{U^{c}} \le f(y) \le \left( f(x) + \epsilon \right) \mathds{1}_{U} + \left( M+1 \right)\mathds{1}_{U^{c}} =: h
 	.\] Since $M \ge \left| f \right|$ and $1 \ge \epsilon$, the upper bound is upper semi-continuous and the lower bound is lower semi-continuous. Also,
 	\[
 		g(x) = f(x) - \epsilon,
@@ -237,7 +237,7 @@ Note that the $\implies$ direction does not require boundedness of $f$.
 		\limsup\limits_{n \to \infty} P_n f = \liminf\limits_{n \to \infty} P_n f = \lim\limits_{n \to \infty} P_n f = P \overline{f} = P \mathring{f} = Pf
 	.\]
 
-	With $B \in \mathscr{B}(\mathscr{X})$ and $f := \mathds{1}_{B}$, we see that $f$ is discontinuous at $\partial B$. If $P(\partial B) = 0$, then $P (C_f) = 1$, so \[
+	With $B \in \mathscr{B}(\mathscr{X})$ and $f \coloneqq \mathds{1}_{B}$, we see that $f$ is discontinuous at $\partial B$. If $P(\partial B) = 0$, then $P (C_f) = 1$, so \[
 		P_n(B) = P_n \mathds{1}_{B} \to P \mathds{1}_{B} = P(B)
 	.\] 
 \end{proof}
@@ -624,7 +624,7 @@ First, we provide intuition for the specific statement of the CLT.
 		\item $\E\left[X_{n,i}\right] =0$
 		\item $\sum\limits_{i=1}^{k(n)} \operatorname{Var}\left(X_{n,i}\right) = 1$
 		\item (Lindeberg condition) For every $\epsilon > 0$, \[
-			L_n(\epsilon) := \sum\limits_{i=1}^{k(n)} \E\left[X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right| > \epsilon}\right] \xrightarrow{n \to \infty} 0
+			L_n(\epsilon) \coloneqq \sum\limits_{i=1}^{k(n)} \E\left[X_{n,i}^2 \mathds{1}_{\left| X_{n,i} \right| > \epsilon}\right] \xrightarrow{n \to \infty} 0
 		.\] 
 	\end{enumerate}
 	Then \[
@@ -711,7 +711,7 @@ We require a lemma.
 	Suppose	for each $n$ the random variables $X_{n,1},\ldots,X_{n,k(n)}$ are independent and satisfy $\E\left[X_{n,i}\right] = 0$.
 	Let
 	\[
-		S_n^2 := \sum\limits_{i=1}^{k(n)} \E\left[X_{n,i}^2\right],
+		S_n^2 \coloneqq \sum\limits_{i=1}^{k(n)} \E\left[X_{n,i}^2\right],
 	\]
 	and assume $S_n > 0$ for all sufficiently large $n$. If for every $\epsilon > 0$,
 	\[
@@ -999,7 +999,7 @@ For Theorem (\ref{2-19-1}), we require the following lemma and definition.
 
 \begin{definition}[Wasserstein distance]
 	Suppose we have two distributions $W \sim P$ and $Z \sim Q$. The Wasserstein distance is defined between distributions (but often notated as the distance between random variables) and is \begin{align*}
-		\left( \mathscr{W}(W,Z) = \right) \mathscr{W}(P,Q) &:= \sup_{\operatorname{Lip}(h) \le 1} \left| \E\left[h(W)\right] - \E\left[h(Z)\right]  \right|
+		\left( \mathscr{W}(W,Z) = \right) \mathscr{W}(P,Q) &\coloneqq \sup_{\operatorname{Lip}(h) \le 1} \left| \E\left[h(W)\right] - \E\left[h(Z)\right]  \right|
 	.\end{align*} 
 
 	We see that convergence in Wasserstein distance implies weak convergence.
@@ -1021,7 +1021,7 @@ We can prove the CLT with Stein's method instead of Lindeberg swapping. The key 
 	Consider the more general form of Stein's equation, where we replace the indicator with some function $h(\cdot )$ of $w$:
 	\[
 		f'(w) - wf(w) = h(w) - Nh
-		,\] where $Nh := \E\left[h(Z)\right] $ for $Z \sim N(0,1)$.
+		,\] where $Nh \coloneqq \E\left[h(Z)\right] $ for $Z \sim N(0,1)$.
 
 	We can follow the previous derivation to get a solution (dependent on $h$) as \begin{align*}
 		f_h(w) &= e^{\frac{w^2}{2}} \int_{-\infty}^{w} e^{-\frac{x^2}{2}} \left( h(x) - Nh \right)dx
@@ -1129,7 +1129,7 @@ We can prove the CLT with Stein's method instead of Lindeberg swapping. The key 
 	\[
 		\begin{aligned}
 			\operatorname{KS}(P,Q)
-			&:= \sup_t \left| P (-\infty,t] - Q(-\infty,t] \right| \\
+			&\coloneqq \sup_t \left| P (-\infty,t] - Q(-\infty,t] \right| \\
 			&= \sup_t \left| \P\left[W \le t\right]  - \P\left[Z \le t\right]  \right|
 		\end{aligned}
 	.\] 

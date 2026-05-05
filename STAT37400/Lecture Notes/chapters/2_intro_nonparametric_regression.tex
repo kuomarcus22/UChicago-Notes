@@ -4,7 +4,7 @@
 
 
 
-\begin{notation}	Let $Z_i := (X_i,Y_i)$ with $Z_i \overset{\text{iid}}{\sim} P$ on $\R^d\times \R$.
+\begin{notation}	Let $Z_i \coloneqq (X_i,Y_i)$ with $Z_i \overset{\text{iid}}{\sim} P$ on $\R^d\times \R$.
 	Write $X_i\in \R^d$ and $Y_i\in \R$.
 	Given covariates $X$, we want to predict $Y$.
 \end{notation}
@@ -12,14 +12,14 @@
 \begin{definition}[Squared-error (prediction) risk]
 	For any measurable regression function $m:\R^d\to \R$, define its (population) squared-error risk
 	\[
-		R_P(m) := \E_P\big[(Y - m(X))^2\big].
+		R_P(m) \coloneqq \E_P\big[(Y - m(X))^2\big].
 	\]
 \end{definition}
 
 \begin{definition}[Regression function / CEF]
 	The \emph{regression function} (a.k.a.\ the \emph{conditional expectation function} (CEF)) is
 	\[
-		m^*(x) := \E_P[Y \mid X=x].
+		m^*(x) \coloneqq \E_P[Y \mid X=x].
 	\]
 \end{definition}
 
@@ -118,13 +118,13 @@ Nonparametric regression is thus a problem we're very good at solving. One reaso
 		\item \textbf{Discrete-design goal (exact categories).}
 		Suppose $X$ is actually discrete and we want
 		\[
-			m(k) := \E\left[Y\mid X=k\right].
+			m(k) \coloneqq \E\left[Y\mid X=k\right].
 		\]
 		With the cell-mean estimator
 		\[
-			\hat{m}(k) := \frac{1}{N_k}\sum\limits_{i: X_i=k}^{} Y_i,
+			\hat{m}(k) \coloneqq \frac{1}{N_k}\sum\limits_{i: X_i=k}^{} Y_i,
 			\qquad
-			N_k := \#\{i: X_i=k\},
+			N_k \coloneqq \#\{i: X_i=k\},
 		\]
 		we have, whenever $N_k>0$,
 		\[
@@ -133,14 +133,14 @@ Nonparametric regression is thus a problem we're very good at solving. One reaso
 			= \frac{1}{N_k}\sum\limits_{i:X_i=k}^{} m(k)
 			= m(k),
 		\]
-		so the conditional bias relative to the target $m(k)$ is $0$. In this setting, the only issue is what to do when $N_k=0$. We might define $\hat{m}(k) := 0$ in this case, so the bias would be $m(k)$.
+		so the conditional bias relative to the target $m(k)$ is $0$. In this setting, the only issue is what to do when $N_k=0$. We might define $\hat{m}(k) \coloneqq 0$ in this case, so the bias would be $m(k)$.
 
 		\item \textbf{Regressogram goal (binning a continuous regressor).}
 		Now take $X$ continuous and partition the support into bins $(I_j)_j$. For $x_0\in I_j$, define the regressogram
 		\[
-			\hat{m}(x_0) := \frac{1}{N_j}\sum\limits_{i: X_i\in I_j}^{} Y_i,
+			\hat{m}(x_0) \coloneqq \frac{1}{N_j}\sum\limits_{i: X_i\in I_j}^{} Y_i,
 			\qquad
-			N_j := \#\{i: X_i\in I_j\}.
+			N_j \coloneqq \#\{i: X_i\in I_j\}.
 		\]
 		Even if $N_j>0$,
 		\[
@@ -157,7 +157,7 @@ Nonparametric regression is thus a problem we're very good at solving. One reaso
 
 		A natural alternative target is the \emph{bin mean}
 		\[
-			m_j := \E\left[Y\mid X\in I_j\right] = \E\left[m(X)\mid X\in I_j\right],
+			m_j \coloneqq \E\left[Y\mid X\in I_j\right] = \E\left[m(X)\mid X\in I_j\right],
 		\]
 		for which the regressogram is (conditionally) unbiased when $N_j>0$. But if the goal is $m(x_0)$, then there is an unavoidable discretization/smoothing bias.
 
@@ -302,9 +302,9 @@ Bias increases as $k$ increases, while variance is decreasing in $k$. We will no
 	\end{comment}
 	Write $X_{(k)}(x_0;I)$ for the $k$th nearest neighbor of $x_0$ among $\{X_i:i\in I\}$, and set
 	\[
-		R_k := \left\|X_{(k)}(x_0;\{1,\ldots,n\})-x_0\right\|, 
+		R_k \coloneqq \left\|X_{(k)}(x_0;\{1,\ldots,n\})-x_0\right\|, 
 		\qquad 
-		R_{1,j} := \left\|X_{(1)}(x_0;I_j)-x_0\right\|
+		R_{1,j} \coloneqq \left\|X_{(1)}(x_0;I_j)-x_0\right\|
 	\]
 	for blocks $I_1,\ldots,I_{2k}$ forming a partition of $\{1,\ldots,n\}$ (so $\lvert I_j\rvert \approx n/(2k)$).
 	We claim $R_{1,j} \ge R_k$ for at least $k$ blocks $j\in\{1,\ldots,2k\}$.
@@ -327,7 +327,7 @@ Bias increases as $k$ increases, while variance is decreasing in $k$. We will no
 		\qquad\text{(each block has the same distribution).}
 	\end{align*}
 	\noindent\textbf{Plug in the $1$-NN bound at the block size.}
-	Let $m := \lvert I_1\rvert$ (so $m \asymp n/(2k)$). We can use the $1$-NN bound at this block size to get
+	Let $m \coloneqq \lvert I_1\rvert$ (so $m \asymp n/(2k)$). We can use the $1$-NN bound at this block size to get
 	\[
 		\E\left[R_{1,1}^2\right] \le C\, m^{-2/d}.
 	\]
@@ -355,7 +355,7 @@ In order, we will explore:
 	The $\Sigma (\beta, L)$ H\"older class for $\beta > 0$ is defined such that $m \in \Sigma(\beta,L)$ if it is $l$ times differentiable and \[
 		\left| m^{(l)}(x) - m^{(l)}(x') \right| \le L \left| x-x' \right|^{\beta-l}
 	,\] 
-	where $l := \left\lfloor \beta \right\rfloor$ is the largest integer strictly less than $\beta.$ In particular, if $\beta \in \N$ then $l = \left\lfloor \beta \right\rfloor = \beta-1$.
+	where $l \coloneqq \left\lfloor \beta \right\rfloor$ is the largest integer strictly less than $\beta.$ In particular, if $\beta \in \N$ then $l = \left\lfloor \beta \right\rfloor = \beta-1$.
 \end{definition}
 
 \begin{remark}	$\Sigma(1,L)$ is the class of $L$-Lipschitz functions and $\Sigma(2,L)$ are those with $L$-Lipschitz continuous derivatives.

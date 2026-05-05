@@ -2,7 +2,7 @@
 
 \section{Best Predictors and Linear Approximation}
 
-\begin{theorem}	Suppose $\E\left[y^2\right]<\infty$ and $\E\left[x_j^2\right]<\infty$ for each $j=1,\ldots,k$. The function $g(x):=\E\left[y\mid x\right]$ is the best predictor of $y$ given $x$ under square loss. That is:
+\begin{theorem}	Suppose $\E\left[y^2\right]<\infty$ and $\E\left[x_j^2\right]<\infty$ for each $j=1,\ldots,k$. The function $g(x)\coloneqq\E\left[y\mid x\right]$ is the best predictor of $y$ given $x$ under square loss. That is:
 	\[
 		\E\left[y\mid x\right]\in\argmin_g \E\left[(y-g(x))^2\right].
 	\]
@@ -350,7 +350,7 @@ There is a small sample problem for years of education less than 8. We trade off
 	\[
 		Y-\hat Y=Y-P_XY=(I_n-X(X'X)^{-1}X')Y.
 	\]
-	Therefore, the matrix $M_X:=I_n-X(X'X)^{-1}X' = I_n - P_X$ is called the residual maker.
+	Therefore, the matrix $M_X\coloneqqI_n-X(X'X)^{-1}X' = I_n - P_X$ is called the residual maker.
 
 	$M_XY$ is the residual of the projection of $Y$ onto the space spanned by the columns of $X$.
 \end{definition}
@@ -373,9 +373,9 @@ There is a small sample problem for years of education less than 8. We trade off
 
 \begin{definition}[$R^2$]
 	\begin{itemize}
-		\item $\sum_{i=1}^n(y_i-\bar y)^2:=\text{TSS}$ is called the total sum of squares.
-		\item $\sum_{i=1}^n(y_i-x_i'\hat\beta)^2:=\text{SSR}$ is the sum of squared residuals.
-		\item $\sum_{i=1}^n(\hat y_i-\bar y)^2:=\text{ESS}$ is the explained sum of squares.
+		\item $\sum_{i=1}^n(y_i-\bar y)^2\coloneqq\text{TSS}$ is called the total sum of squares.
+		\item $\sum_{i=1}^n(y_i-x_i'\hat\beta)^2\coloneqq\text{SSR}$ is the sum of squared residuals.
+		\item $\sum_{i=1}^n(\hat y_i-\bar y)^2\coloneqq\text{ESS}$ is the explained sum of squares.
 	\end{itemize}
 	The coefficient of determination ($R^2$) is given by
 	\[
@@ -438,7 +438,7 @@ There is a small sample problem for years of education less than 8. We trade off
 
 	Decomposing variance in $y$ as
 	\[
-		\operatorname{Var}(y):=\E\left[\operatorname{Var}(y\mid x)\right]+\operatorname{Var}(\E\left[y\mid x\right]).
+		\operatorname{Var}(y)\coloneqq\E\left[\operatorname{Var}(y\mid x)\right]+\operatorname{Var}(\E\left[y\mid x\right]).
 	,\]
 	the first term represents the unexplained variation in $y$\footnote{Since $\operatorname{Var}\left(y \mid x\right) = \E\left[\left( y - \E\left[y\mid x\right]  \right)^2\right]$ is the square of expected residual against the best linear predictor.}, while the second term represents variation in $y$ that is explained by the model.
 \end{remark}
@@ -604,7 +604,7 @@ Economists don't care too much about $R^2$ because it's a measure of prediction 
 	.\] 
 	Therefore, if we require $\hat{\beta}$ to be unbiased, we require $A(X) X = I_k$. Note that $A(X)$ as defined in OLS satisfies this.
 
-	From now on, write $A := A\left( X \right)$.
+	From now on, write $A \coloneqq A\left( X \right)$.
 
 	Next, we compute the variance of $\tilde{\beta} = AY$ conditional on $X$:
 	\[
@@ -921,7 +921,7 @@ This is the sense in which $\beta_1$ measures the effect of $x_{1}$ on $y$ ``hol
 		= (X_1' M_{X_2} X_1)^{-1} X_1' M_{X_2} Y
 		= (X_1^{*'}X_1^*)^{-1} X_1^{*'} Y^*
 	\]
-	where $M_{X_2} := I_n - P_{X_2}$, $X_1^* := M_{X_2}X_1$ and $Y^* := M_{X_2}Y$.
+	where $M_{X_2} \coloneqq I_n - P_{X_2}$, $X_1^* \coloneqq M_{X_2}X_1$ and $Y^* \coloneqq M_{X_2}Y$.
 	Moreover, because $X_1^{*'}P_{X_2} = 0$, we can equivalently replace $Y^*$ with $Y$:
 	\[
 		\hat{\beta}_1 = (X_1^{*'}X_1^*)^{-1} X_1^{*'} Y.
@@ -1004,7 +1004,7 @@ This is the sense in which $\beta_1$ measures the effect of $x_{1}$ on $y$ ``hol
 	\[
 		\hat{\beta}_2 = (X_2' M_{X_1} X_2)^{-1} X_2' M_{X_1} Y.
 	\]
-	Equivalently, letting $X_2^* := M_{X_1}X_2$ and $Y^* := M_{X_1}Y$, we have
+	Equivalently, letting $X_2^* \coloneqq M_{X_1}X_2$ and $Y^* \coloneqq M_{X_1}Y$, we have
 	\[
 		\hat{\beta}_2 = (X_2^{*'}X_2^*)^{-1} X_2^{*'} Y^*.
 	\]
@@ -1031,7 +1031,7 @@ This is the sense in which $\beta_1$ measures the effect of $x_{1}$ on $y$ ``hol
 
 \begin{remark}[A single coefficient as a regression on residuals]
 	If $X_2$ is a single regressor $x_j$ (a column vector), then $X_2^*=M_{X_1}x_j$ is the vector of residuals from regressing $x_j$ on the variables in $X_1$.
-	Writing $r := M_{X_1}x_j$, we have
+	Writing $r \coloneqq M_{X_1}x_j$, we have
 	\[
 		\hat{\beta}_j = (r'r)^{-1}r'Y = \frac{\sum_{i=1}^n r_i Y_i}{\sum_{i=1}^n r_i^2}.
 	\]
@@ -1048,8 +1048,8 @@ This is the sense in which $\beta_1$ measures the effect of $x_{1}$ on $y$ ``hol
 	\[
 		\operatorname{Var}(\hat{\beta}_j\mid X)=\frac{\sigma^2}{SSR_j},
 	\]
-	where $SSR_j := \sum_{i=1}^n r_i^2$ is the SSR from regressing $x_j$ on the other regressors (including a constant).
-	Writing $SST_j:=\sum_{i=1}^n (x_{ij}-\bar{x}_j)^2$ and denoting the corresponding $R^2$ by $R_j^2$, we have
+	where $SSR_j \coloneqq \sum_{i=1}^n r_i^2$ is the SSR from regressing $x_j$ on the other regressors (including a constant).
+	Writing $SST_j\coloneqq\sum_{i=1}^n (x_{ij}-\bar{x}_j)^2$ and denoting the corresponding $R^2$ by $R_j^2$, we have
 	\[
 		\operatorname{Var}(\hat{\beta}_j\mid X)=\frac{\sigma^2}{SST_j(1-R_j^2)}.
 	\]
@@ -1127,7 +1127,7 @@ If \texttt{bdrms} and \texttt{sqft} are positively correlated and $\hat{\delta}_
 	\]
 	Define $\tilde{\beta}_1$ as the coefficient vector in the best linear predictor of $y$ given $x_1$ and set
 	\[
-		\tilde{y} := y - x_1'\tilde{\beta}_1.
+		\tilde{y} \coloneqq y - x_1'\tilde{\beta}_1.
 	\]
 	For each component $x_{2j}$ of $x_2$, let $\tilde{\gamma}_j$ be the coefficient vector in the best linear predictor of $x_{2j}$ given $x_1$, and stack these into the matrix
 	\[
@@ -1146,7 +1146,7 @@ If \texttt{bdrms} and \texttt{sqft} are positively correlated and $\hat{\delta}_
 	\]
 	Now define the residualized regressor
 	\[
-		\tilde{x}_2 := x_2 - \tilde{\gamma}x_1,
+		\tilde{x}_2 \coloneqq x_2 - \tilde{\gamma}x_1,
 	\]
 	so that $\E[\tilde{x}_2 x_1']=0$.
 	Finally, let $\bar{\beta}_2$ be the coefficient vector in the best linear predictor of $\tilde{y}$ given $\tilde{x}_2$:
@@ -1236,7 +1236,7 @@ If \texttt{bdrms} and \texttt{sqft} are positively correlated and $\hat{\delta}_
 	\]
 \end{proposition}
 \begin{proof}
-	Because $(b_0,b_1)$ defines the best linear predictor of $y$ given $(1,x_1)$, the projection residual $v:=y-b_0-b_1x_1$ satisfies
+	Because $(b_0,b_1)$ defines the best linear predictor of $y$ given $(1,x_1)$, the projection residual $v\coloneqqy-b_0-b_1x_1$ satisfies
 	\[
 		\E[v]=0
 		\qquad \text{and} \qquad
@@ -1292,15 +1292,15 @@ If \texttt{bdrms} and \texttt{sqft} are positively correlated and $\hat{\delta}_
 		Let
 		\[
 			\begin{aligned}
-				y &:= \ln(\text{price}) \in \R^{n\times 1}, \\
-				X_4 &:= \text{bdrms} \in \R^{n\times 1}, \\
-				X_5 &:= \ln(\text{sqrft}) \in \R^{n\times 1}, \\
-				c &:= \mathbf{1}_n \in \R^{n\times 1}.
+				y &\coloneqq \ln(\text{price}) \in \R^{n\times 1}, \\
+				X_4 &\coloneqq \text{bdrms} \in \R^{n\times 1}, \\
+				X_5 &\coloneqq \ln(\text{sqrft}) \in \R^{n\times 1}, \\
+				c &\coloneqq \mathbf{1}_n \in \R^{n\times 1}.
 			\end{aligned}
 		\]
 		and define the ``other columns'' in the long regression by
 		\[
-			X_3 := [\,c \mid X_5\,] \in \R^{n\times 2}.
+			X_3 \coloneqq [\,c \mid X_5\,] \in \R^{n\times 2}.
 		\]
 		The subscripts $3,4,5$ are just labels from the handwritten notes.
 		Here $X_4$ is the regressor we keep in both regressions, and $X_5$ is the regressor we omit in the short regression.
@@ -1318,7 +1318,7 @@ If \texttt{bdrms} and \texttt{sqft} are positively correlated and $\hat{\delta}_
 	Derivation.
 	We have
 	\[
-		M_c := I_n - P_c, \qquad P_c := c(c'c)^{-1}c' = \frac{1}{n}cc'.
+		M_c \coloneqq I_n - P_c, \qquad P_c \coloneqq c(c'c)^{-1}c' = \frac{1}{n}cc'.
 	\]
 	By FWL applied to the short regression (partialling out the intercept), we can write
 	\[
@@ -1342,7 +1342,7 @@ If \texttt{bdrms} and \texttt{sqft} are positively correlated and $\hat{\delta}_
 
 	Define the ``slope from regressing the omitted variable on the kept regressor (with an intercept)''
 	\[
-		\hat{\delta}_1 := (X_4' M_c X_4)^{-1} X_4' M_c X_5,
+		\hat{\delta}_1 \coloneqq (X_4' M_c X_4)^{-1} X_4' M_c X_5,
 	\]
 	so the short and long slopes satisfy the exact sample identity
 	\[
@@ -1353,7 +1353,7 @@ If \texttt{bdrms} and \texttt{sqft} are positively correlated and $\hat{\delta}_
 	Why covariance/variance shows up.
 	Because $M_c = I_n - \frac{1}{n}cc'$, we have $M_cX_4=X_4-\bar{x}_4 c$ and $M_cX_5=X_5-\bar{x}_5 c$, where
 	\[
-		\bar{x}_4 := \frac{1}{n}c'X_4, \qquad \bar{x}_5 := \frac{1}{n}c'X_5.
+		\bar{x}_4 \coloneqq \frac{1}{n}c'X_4, \qquad \bar{x}_5 \coloneqq \frac{1}{n}c'X_5.
 	\]
 		Demeaning $X_5$ is optional because $X_4'M_cX_5 = X_4'M_c M_cX_5$ and
 		\[

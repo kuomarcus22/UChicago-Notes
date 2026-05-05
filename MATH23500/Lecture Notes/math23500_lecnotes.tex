@@ -138,7 +138,7 @@ Iterating, the distribution of $\{X_n\}$ is determined by the distribution of $X
 
 All of the Markov process we consider will be time homogeneous.
 
-To specify a (time homogeneous) Markov process, we only need to describe the distribution of $X_0$ and the transition probabilities $\P\left[ x,y \right] := P\left[ X_1 = y \mid X_0 = x \right].$
+To specify a (time homogeneous) Markov process, we only need to describe the distribution of $X_0$ and the transition probabilities $\P\left[ x,y \right] \coloneqq P\left[ X_1 = y \mid X_0 = x \right].$
 
 \begin{ex}
 	Let $Y_j$ be iid in $\Z$. Let $X_0 = 0, X_n = \sum\limits_{j=1}^{n} X_j$ for $n \ge 1$. This is a Markov process: $X_n = X_{n-1} + Y_n$. The transition probabilities are given by 
@@ -196,7 +196,7 @@ P^{n+m}(x,y)=\sum_{z\in S} P^{n}(x,z)\,P^{m}(z,y).
 \end{prop}
 
 \begin{proof}
-Write $\mathbb{P}_x(\,\cdot\,):=\mathbb{P}(\,\cdot\,\mid X_0=x)$, so that
+Write $\mathbb{P}_x(\,\cdot\,)\coloneqq\mathbb{P}(\,\cdot\,\mid X_0=x)$, so that
 $P^{k}(a,b)=\mathbb{P}_a(X_k=b)$. Then
 \[
 P^{n}(x,z)\,P^{m}(z,y)
@@ -232,7 +232,7 @@ Assume we have a finite state space --- $S$ is finite. WLOG, label the states $s
 		\end{pmatrix} 
 	.\] 
 
-	Put $\pi_j = \P\left[ X_0 = j \right]$, so $\pi := \left( \pi_1,\ldots,\pi_N \right)$ is a row vector encoding the starting probabilities.
+	Put $\pi_j = \P\left[ X_0 = j \right]$, so $\pi \coloneqq \left( \pi_1,\ldots,\pi_N \right)$ is a row vector encoding the starting probabilities.
 \end{defn}
 
 \begin{prop}
@@ -785,7 +785,7 @@ While on a finite state space, irreducibility implied recurrence, this is not tr
 	Assume there exists a recurrent state $x$. Let $\tau_0 = 0$ and $\tau_k$ be the $k$th smallest $n$ such that $X_n = x$. By our assumption, $\P\left[\tau_k < \infty\right] = 1$ for every $k$. By the Strong Markov Property, $\left( X_{\tau_k},\ldots,X_{\tau_{k+1}} \right) \in \bigcup\limits_{n \in N}^{} S^{n}$ are i.i.d.
 
 	Let $y \in S$. Since the Markov chain is irreducible, there exists $n \in \N$ such that $p^n(x,y) > 0$. So, there exists $k$ such that $\P\left[y \in \{X_{\tau_k}, \ldots,X_{\tau_{k+1}}\}\right] > 0$. Because these tuples (sets) are i.i.d, the probabilities do not depend on the choice of $k$, so we can put \[
-		q := \P\left[y \in \{X_{\tau_k},\ldots, X_{\tau_{k+1}}\}\right] 
+		q \coloneqq \P\left[y \in \{X_{\tau_k},\ldots, X_{\tau_{k+1}}\}\right] 
 	.\] 
 
 	Varying $k$, the events $\{y \in \{X_{\tau_k}, \ldots,X_{\tau_{k+1}}\}\}$ are i.i.d and have probability $q > 0$. So, with probability $1$, infinitely many of these events occur; i.e. \[
@@ -1983,7 +1983,7 @@ We have no nice way to deal with the second term in the sum for $\E\left[M_{\tau
 	symmetric random walk on $\Z$ with $X_0 = 0$. Fix $a,b \in \N$ and define the
 	hitting time
 	\[
-		\tau := \min\{ n \ge 0 : X_n = -a \text{ or } X_n = b \}
+		\tau \coloneqq \min\{ n \ge 0 : X_n = -a \text{ or } X_n = b \}
 	.\] 
 	We previously computed $\P\left[ X_\tau = b \right]$ by solving a linear
 	difference equation.\marginnote{This is the same gambler’s–ruin setup as in the
@@ -2005,7 +2005,7 @@ We have no nice way to deal with the second term in the sum for $\E\left[M_{\tau
 	.\] 
 	Write
 	\[
-		p := \P\left[ X_\tau = b \right]
+		p \coloneqq \P\left[ X_\tau = b \right]
 	\]
 	so that $\P\left[ X_\tau = -a \right] = 1-p$. Then
 	\begin{align*}
@@ -2024,11 +2024,11 @@ We have no nice way to deal with the second term in the sum for $\E\left[M_{\tau
 	(Using $X_n^2 - n$ to compute $\E[\tau]$) Keep the same setup: $\{X_n\}$ is
 	simple symmetric random walk with $X_0 = 0$, and
 	\[
-		\tau := \min\{ n \ge 0 : X_n = -a \text{ or } X_n = b \}
+		\tau \coloneqq \min\{ n \ge 0 : X_n = -a \text{ or } X_n = b \}
 	.\] 
 	Define
 	\[
-		M_n := X_n^2 - n
+		M_n \coloneqq X_n^2 - n
 	.\] 
 	One checks (as in the earlier example) that $\{M_n\}$ is a martingale with
 	respect to the natural filtration.\marginnote{The martingale property follows
@@ -2041,7 +2041,7 @@ We have no nice way to deal with the second term in the sum for $\E\left[M_{\tau
 	.\] 
 
 	First, as before, $\P\left[ \tau < \infty \right] = 1$ and $X_\tau \in \{-a,b\}$.
-	Consider the stopped chain $Y_n := X_{\tau \wedge n}$. Then $\{Y_n\}$ is a
+	Consider the stopped chain $Y_n \coloneqq X_{\tau \wedge n}$. Then $\{Y_n\}$ is a
 	Markov chain on $\{-a,\ldots,b\}$ with three communicating classes
 	\[
 		\{-a\}, \qquad \{b\}, \qquad \{-a+1,\ldots,b-1\}
@@ -2077,7 +2077,7 @@ We have no nice way to deal with the second term in the sum for $\E\left[M_{\tau
 		\E\left[ M_\tau \right] = \E\left[ M_0 \right] = 0
 	.\] 
 
-	On the other hand $X_\tau \in \{-a,b\}$, so with $p := \P\left[ X_\tau = b \right]$
+	On the other hand $X_\tau \in \{-a,b\}$, so with $p \coloneqq \P\left[ X_\tau = b \right]$
 	we have
 	\[
 		\E\left[ X_\tau^2 \right]
@@ -2163,7 +2163,7 @@ We have no nice way to deal with the second term in the sum for $\E\left[M_{\tau
 	.\] 
 	Then
 	\[
-		\P\left[ M_\infty := \lim_{n \to \infty} M_n \text{ exists} \right] = 1
+		\P\left[ M_\infty \coloneqq \lim_{n \to \infty} M_n \text{ exists} \right] = 1
 	.\] 
 \end{thm}
 
@@ -2224,7 +2224,7 @@ conditions.
 	for all $n$. Hence $\sup_n \E\left[ |X_{n \wedge \tau}| \right] < \infty$, and
 	by the martingale convergence theorem there exists
 	\[
-		X_\infty := \lim_{n \to \infty} X_{n \wedge \tau} \quad \text{a.s.}
+		X_\infty \coloneqq \lim_{n \to \infty} X_{n \wedge \tau} \quad \text{a.s.}
 	\]
 	In fact $X_{n \wedge \tau} \to X_\tau$ a.s., so $X_\infty$ is a non–degenerate
 	random variable taking values in $\{-a,b\}$.
@@ -2234,7 +2234,7 @@ conditions.
 	(Expectation need not be preserved in the limit) Let $\{X_n\}$ be the random
 	walk on $\Z$ starting at $X_0 = 0$, and define
 	\[
-		\tau := \min\{ n \ge 0 : X_n = 1 \}
+		\tau \coloneqq \min\{ n \ge 0 : X_n = 1 \}
 	.\] 
 	Then $\{X_{n \wedge \tau}\}$ is a martingale and $X_{n \wedge \tau} \le 1$ for
 	all $n$. As above, the martingale convergence theorem shows that
@@ -2264,9 +2264,9 @@ conditions.
 		\item Let $\{Y_k\}_{k \ge 1}$ be iid with
 		      $\P\left[ Y_k = 1 \right] = \P\left[ Y_k = -1 \right] = 1/2$ and define
 		      \[
-			      M_n := \sum_{k=1}^{n} k Y_k
+			      M_n \coloneqq \sum_{k=1}^{n} k Y_k
 		      \]
-		      with the natural filtration $\mathscr{F}_n := \sigma(Y_1,\ldots,Y_n)$.
+		      with the natural filtration $\mathscr{F}_n \coloneqq \sigma(Y_1,\ldots,Y_n)$.
 		      Then $\{M_n\}$ is a martingale: the increment $M_{n+1}-M_n =
 			      (n+1)Y_{n+1}$ has mean zero and is independent of $\mathscr{F}_n$.
 		      One can show that $\{M_n\}$ does not converge almost surely.\marginnote{Heuristically,
@@ -2370,7 +2370,7 @@ Recall the theorem statement.
 	.\] 
 	Then
 	\[
-		\P\left[ M_\infty := \lim_{n \to \infty} M_n \text{ exists} \right] = 1
+		\P\left[ M_\infty \coloneqq \lim_{n \to \infty} M_n \text{ exists} \right] = 1
 	.\] 
 \end{thm}
 
@@ -2938,7 +2938,7 @@ Theorem (\ref{thm:martbm}) motivates the next definition and example.
 	.\] 
 \end{defn}
 
-Harmonic functions solve the heat equation, as we just put $f(\overline{x},t) := f(\overline{x})$.
+Harmonic functions solve the heat equation, as we just put $f(\overline{x},t) \coloneqq f(\overline{x})$.
 
 \begin{ex}
 	Let $\overline{B}_t = \left( B_t^1, B_t^2 \right)$ be a $2$-dimensional Brownian motion. Define \[

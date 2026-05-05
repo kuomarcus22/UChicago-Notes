@@ -257,7 +257,7 @@ Clearly, the previous example has $\P\left[\hat{X} = \hat{Y}\right] = 0 $. How d
 \begin{proof}
 	The formula for $f_A$ was established in the proof of the $(\impliedby)$ direction of the Stein--Chen lemma above. It remains to prove the Lipschitz bound.
 
-	Write $f_A(k+1) = \sum_{i \in A} f_i(k+1)$, where $f_i := f_{\{i\}}$. Substituting $A = \{i\}$ into the formula and using the Poisson probability $\P[Z = j] = \frac{\lambda^j}{j!}e^{-\lambda}$,
+	Write $f_A(k+1) = \sum_{i \in A} f_i(k+1)$, where $f_i \coloneqq f_{\{i\}}$. Substituting $A = \{i\}$ into the formula and using the Poisson probability $\P[Z = j] = \frac{\lambda^j}{j!}e^{-\lambda}$,
 	\begin{align*}
 		f_i(k+1)
 		&= \frac{k!}{\lambda^{k+1}} \sum\limits_{j=0}^{k} \frac{\lambda^j}{j!}\bigl(\mathds{1}_{j=i} - \P[Z=i]\bigr) \\
@@ -432,7 +432,7 @@ What if $X_1,\ldots,X_n$ are dependent?
 
 \begin{definition}[Dependency neighborhood]
 	For each $i \in \N$, consider $\left\{N_i\right\}$ where \[
-		i \in N_i \subseteq [n] := \left\{1,2,\ldots,n\right\}
+		i \in N_i \subseteq [n] \coloneqq \left\{1,2,\ldots,n\right\}
 	\] such that \[
 		X_i \ind \left\{X_j\right\}_{j \not\in N_i}
 	.\] We call $N_i$ the dependency neighborhood of $X_i$.
@@ -509,7 +509,7 @@ What if $X_1,\ldots,X_n$ are dependent?
 	We can count the number of edges with the CLT (for large $n$) or the independent version of the PLT (small $n$).
 
 	More interestingly, we can count the number of triangles: \[
-		T := \sum\limits_{1 \le i < j < k \le n}^{} A_{i j}A_{jk}A_{ki}
+		T \coloneqq \sum\limits_{1 \le i < j < k \le n}^{} A_{i j}A_{jk}A_{ki}
 	.\] 
 		We can use the dependency neighborhood condition. To make indexing easier, consider the dependency neighborhoods $N_\alpha$, so $\alpha \in N_\alpha$ and $X_\alpha \ind \left\{X_\beta\right\}_{\beta \not\in  N_\alpha}$. The dependency version of Stein-Chen PLT then says for $X_\alpha \sim \operatorname{Bernoulli}(p_\alpha)$ and $\lambda = \sum_\alpha p_\alpha$, we have \[
 			\begin{aligned}

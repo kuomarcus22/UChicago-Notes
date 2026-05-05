@@ -8,7 +8,7 @@ Consider \[
 This is the usual least squares objective, but we restrict $m$ to lie in some model class $\mathscr{M}_n$.
 This is often called a \emph{series estimator}: we choose a finite-dimensional family of functions and then fit that family by least squares.
 The simplest example would be\boxednote{Typically $d_n \xrightarrow{n\to \infty} \infty$ slowly.} \[
-		\mathscr{M}_n := \left\{\text{Polynomials of degree at most }d_n\right\}
+		\mathscr{M}_n \coloneqq \left\{\text{Polynomials of degree at most }d_n\right\}
 ,\] so we are considering \[
 		\min_{\left\{\alpha_j\right\}}\frac{1}{n} \sum\limits_{i=1}^{n} \left( Y_i - \sum\limits_{j=0}^{d_n} \alpha_j X_i^{j} \right)^2
 .\] 

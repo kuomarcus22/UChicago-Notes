@@ -153,7 +153,7 @@ Let's derive these $b_k^*$ functions starting from $b_0^*$.
 
 Like before, first suppose that $\left( b_0^*,\ldots,b_{N-2}^{*} \right)$ is a symmetric equilibrium and each $b_k^*(s \mid p_1,\ldots,p_k)$ is strictly increasing in $s$ with the intention to verify it later.
 
-Suppose that all others drop out simultaneously. In this case, they must have the same signal. This is the only scenario that makes $b_0^*$ relevant. Let $y := y_1=y_2= \cdots = y_N$. 
+Suppose that all others drop out simultaneously. In this case, they must have the same signal. This is the only scenario that makes $b_0^*$ relevant. Let $y \coloneqq y_1=y_2= \cdots = y_N$. 
 Then $b^*_0(s) = \E\left[V_1 \mid S_1 = s, Y_1 = Y_2 = \cdots = Y_N = y\right]$. Note that $b_0^*(s)$ is strictly increasing.
 
 Suppose one bidder has dropped out first at price $p_1$. We defined $b_1^*(s \mid p_1)$ as the price at which you drop out when $1$ bidder has dropped out at price $p_1$. 
@@ -283,7 +283,7 @@ We can solve this ODE subject to the boundary condition $\hat{b}(0) = w(0,0)$:\f
 
 Define the integrating factor
 \[
-  \mu(s):=\exp\left(\int_{0}^{s}\frac{f_Y(x\mid x)}{F_{Y_1}(x\mid x)}\,dx\right).
+  \mu(s)\coloneqq\exp\left(\int_{0}^{s}\frac{f_Y(x\mid x)}{F_{Y_1}(x\mid x)}\,dx\right).
 \]
 Multiplying the ODE by \(\mu(s)\) gives
 \[
@@ -306,7 +306,7 @@ Therefore,
 where
 \[
   h(y\mid s)
-  := \frac{f_{Y_1}(y\mid y)}{F_{Y_1}(y\mid y)}
+  \coloneqq \frac{f_{Y_1}(y\mid y)}{F_{Y_1}(y\mid y)}
      \exp\left(-\int_{y}^{s}\frac{f_Y(x\mid x)}{F_{Y_1}(x\mid x)}\,dx\right),
   \qquad 0\le y\le s.
 \]

@@ -119,7 +119,7 @@ Thus, the revenue-maximizing auction we constructed is not an all-pay auction, a
 	Equivalently, for any target sale probability $Q\in[0,1]$, define the \emph{inverse demand}
 	(or quantile-price) function
 	\[
-	P_i(Q)\;:=\;F_i^{-1}(1-Q),
+	P_i(Q)\;\coloneqq\;F_i^{-1}(1-Q),
 	\qquad\text{so that}\qquad
 	1-F_i\!\big(P_i(Q)\big)=Q.
 	\]
@@ -129,7 +129,7 @@ Thus, the revenue-maximizing auction we constructed is not an all-pay auction, a
 	\]
 	Define \emph{marginal revenue} as the derivative of this revenue with respect to $Q$:
 	\[
-	MR_i(Q)\;:=\;\frac{d}{dQ}\big(QP_i(Q)\big)\;=\;P_i(Q)+Q\,P_i'(Q).
+	MR_i(Q)\;\coloneqq\;\frac{d}{dQ}\big(QP_i(Q)\big)\;=\;P_i(Q)+Q\,P_i'(Q).
 	\]
 	To compute $P_i'(Q)$, differentiate the identity $F_i(P_i(Q))=1-Q$:
 	\[
@@ -143,7 +143,7 @@ Thus, the revenue-maximizing auction we constructed is not an all-pay auction, a
 	\;=\;
 	P_i(Q)-\frac{Q}{f_i(P_i(Q))}.
 	\]
-	Now write $v:=P_i(Q)$, so that $Q=1-F_i(v)$.  Then
+	Now write $v\coloneqqP_i(Q)$, so that $Q=1-F_i(v)$.  Then
 	\[
 	MR_i(Q)
 	\;=\;

@@ -386,7 +386,7 @@ Now we define expected value for a general random variable.
 	
 	Let $X^+ = \max(X,0)$ and $X^- = \max(-X,0)$.
 	$X$ has an expected value if at least one of $EX^+$ or $EX^-$ is finite, in which case the expected value of $X$ is \[
-		EX := EX^+ - EX^-
+		EX \coloneqq EX^+ - EX^-
 	.\] 
 
 \end{defn}
@@ -684,7 +684,7 @@ If $X$ has density $f_X$ and the random vector $Y = h(X)$, then $Y$ has density 
 
 \subsection{Covariance and Correlation}
 
-Let $(X,Y)$ be a random vector such that $\mu_X := \E\left[X\right], \mu_Y := \E\left[Y\right] < \infty$. 
+Let $(X,Y)$ be a random vector such that $\mu_X \coloneqq \E\left[X\right], \mu_Y \coloneqq \E\left[Y\right] < \infty$. 
 
 \begin{defn}[Covariance]
 	The covariance of $X$ and $Y$ is \[
@@ -900,11 +900,11 @@ We have the following facts:
 	      that $F$ is continuous and strictly increasing so that we can define
 	      its (generalized) inverse by
 	      \[
-	      	F^{-1}(u) := \inf\{x \in \R : F(x) \ge u\}, \qquad u \in (0,1).
+	      	F^{-1}(u) \coloneqq \inf\{x \in \R : F(x) \ge u\}, \qquad u \in (0,1).
 	      \]
 	      If $U \sim \mathrm{Unif}(0,1)$, then
 	      \[
-	      	X := F^{-1}(U)
+	      	X \coloneqq F^{-1}(U)
 	      \]
 	      has CDF $F$, as
 	      \[
@@ -963,7 +963,7 @@ The rejection sampling algorithm is:
 
 We now justify that the accepted value $X$ indeed has density $f$.  Let
 \[
-	A := \Bigl\{ U \le \frac{c\,g(Y)}{h(Y)} \Bigr\}
+	A \coloneqq \Bigl\{ U \le \frac{c\,g(Y)}{h(Y)} \Bigr\}
 \]
 be the event that a draw $Y$ is accepted.  For small $\epsilon>0$,
 \begin{align*}
@@ -1883,14 +1883,14 @@ What if do not have a known distribution, as in the above cases? For instance, w
 	\end{enumerate}
 \end{rmk}
 
-For the variable $\theta := T(F)$, we can construct the estimator $\hat{T} = T(\hat{F})$.
+For the variable $\theta \coloneqq T(F)$, we can construct the estimator $\hat{T} = T(\hat{F})$.
 
 \begin{ex}
 	For $T = \int_{}^{} x dF(x) $, $\theta$ is the mean. For $T = \int_{} (x-\mu)^2 dF(x) $, $\theta$ is the variance. For $T = F^{-1}(\frac{1}{2})$, $\theta$ is the median.
 \end{ex}
 
 \begin{ex} (Monte Carlo Simulation; Ideal Bootstrap)
-	Let $X_1,\ldots,X_n$ be i.i.d. according to $F$ and let $T_n := g(X_1,\ldots,X_n)$. We want to find $\operatorname{Var}(T_n)$. If it is possible to sample from $F$, then we can repeat the following procedure:
+	Let $X_1,\ldots,X_n$ be i.i.d. according to $F$ and let $T_n \coloneqq g(X_1,\ldots,X_n)$. We want to find $\operatorname{Var}(T_n)$. If it is possible to sample from $F$, then we can repeat the following procedure:
 	\begin{enumerate}[(i)]
 		\item Take $k$ repeated samples of size $n$
 		\item Calculate $T_n$ for each sample

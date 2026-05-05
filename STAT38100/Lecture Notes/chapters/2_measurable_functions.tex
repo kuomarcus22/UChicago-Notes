@@ -6,7 +6,7 @@
 	Let $f : X \to Y$ be a function, and let $\mathscr{G}$ be a collection of subsets of $Y$ (e.g., a $\sigma$-algebra on $Y$). 
 	For any $B \in \mathscr{G}$, define the preimage of $B$ under $f$ by
 	\[
-		f^{-1}(B) := \{x \in X: f(x) \in B\}.
+		f^{-1}(B) \coloneqq \{x \in X: f(x) \in B\}.
 	\]
 \end{definition}
 
@@ -285,7 +285,7 @@ From now on, we only consider $f$ that are integrable.\boxednote{The integral of
 
 \begin{definition}[Expectation of a random variable]
 	For a random variable $X: \left( \Omega, \mathscr{F}, \P \right) \to \left( \R, \mathscr{B}_\R \right)$, we define the expectation of $X$ as \[
-		\E\left[X\right] := \int_{}^{} X d\P 
+		\E\left[X\right] \coloneqq \int_{}^{} X d\P 
 	.\] We say the expectation exists if $\E\left[\left| X \right|\right] < \infty$ ($X$ is integrable).\footnote{Note that the expectation exists if $X$ is integrable. The integral of $X$ existing is not sufficient; it must be finite as well.}
 \end{definition}
 
@@ -397,13 +397,13 @@ From now on, we only consider $f$ that are integrable.\boxednote{The integral of
 
 	For each $f_n$, there exist nonnegative simple functions $(f_{n,k})_k$ such that $f_{n,k} \uparrow f_n$ as $k\to \infty$.
 
-	Define $g_k(x) := \max_{1 \le n \le k} f_{n,k}(x)$. We see that each $g_k$ is a nonnegative simple function. Furthermore, because $f_{n,k} \le f_{n,k+1}$, $\left( g_k \right)$ is increasing\boxednote{$f_{n,k+1}$ is not considered in $g_k$, so the addition of $f_{n+1,k+1}$ poses no problem.}.
+	Define $g_k(x) \coloneqq \max_{1 \le n \le k} f_{n,k}(x)$. We see that each $g_k$ is a nonnegative simple function. Furthermore, because $f_{n,k} \le f_{n,k+1}$, $\left( g_k \right)$ is increasing\boxednote{$f_{n,k+1}$ is not considered in $g_k$, so the addition of $f_{n+1,k+1}$ poses no problem.}.
 	
 	We see that $g_k \le f_k$, so $\lim\limits_{k \to \infty} g_k \le \lim\limits_{k \to \infty} f_k = f$.
 
 	Fix $i \in \N$. For every $k \ge i$, since
 	\[
-		g_k(x) := \max_{1 \le n \le k} f_{n,k}(x),
+		g_k(x) \coloneqq \max_{1 \le n \le k} f_{n,k}(x),
 	\]
 	we have $g_k(x) \ge f_{i,k}(x)$ for all $x$. Taking $k \to \infty$ and using $f_{i,k} \uparrow f_i$ gives
 	\[

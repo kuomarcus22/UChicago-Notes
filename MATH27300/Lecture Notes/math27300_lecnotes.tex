@@ -416,7 +416,7 @@ Suppose $y_1$ solves \[
 	0 &= P \left[ \cdot \right] + Q \left[ \dot{c} \right] + R \left[ \dot{c} \right] \\
 	\text{and combining, the $\mu$-term gives } &\mu \left[ Py_1'' + Qy_1'  + Ry \right] = 0
 .\end{align*}
-Hence, we get something like $A(t)\mu'' + B(t) \mu' = 0$, which is actually a first-order linear ODE for $z(t) := \mu'(t)$.
+Hence, we get something like $A(t)\mu'' + B(t) \mu' = 0$, which is actually a first-order linear ODE for $z(t) \coloneqq \mu'(t)$.
 
 $\mu'' p y_1 + \mu' \left[ 2Py_1' + Qy_1 \right] =0$ can be solved for $\mu'(t)$, then further integrated to recover $\mu$.
 
@@ -438,7 +438,7 @@ Last time, we assumed that $ay'' + by' + cy = 0$ had constants $a,b,c$, so $y = 
 \end{equation}
 in the form \begin{equation}
 	y(x) = \sum\limits_{n=0}^{\infty} a_n (x-x_0)^{n} \label{10-9-1}
-.\end{equation} We will introduce the notion of convergence, where $\mu := \limsup\limits_{n \to \infty} \left| a_n \right|^{\frac{1}{n}}$ dictates that if $\left| x-x_0 \right| < \mu^{-1}$, equation (\ref{10-9-1}) converges.
+.\end{equation} We will introduce the notion of convergence, where $\mu \coloneqq \limsup\limits_{n \to \infty} \left| a_n \right|^{\frac{1}{n}}$ dictates that if $\left| x-x_0 \right| < \mu^{-1}$, equation (\ref{10-9-1}) converges.
 
 Convergence is important because where $y$ is analytic,\footnote{$x \in B(x_0, \mu^{-1})$} \[
 	y'(x) = \sum\limits_{n \ge 1} a_n n \left( x-x_0 \right)^{n-1}
@@ -1455,7 +1455,7 @@ We can get
 	\end{align*}
 	Define the nonnegative function
 	\[
-	D(t):=\int_{t_0}^{t} |\phi(s)-\psi(s)|\,ds ,
+	D(t)\coloneqq\int_{t_0}^{t} |\phi(s)-\psi(s)|\,ds ,
 	\qquad D(t_0)=0.
 	\]
 	Then $D'(t)=|\phi(t)-\psi(t)|\le L D(t)$. Hence
@@ -1499,7 +1499,7 @@ Define \[
 	Once we prove this, we will have the following applications: 
 	\begin{enumerate}[(i)]
 		\item Our motivation is from last class: we used that \[
-		d(t) := \left| \phi(t) - \psi(t) \right| \le L \int_{t_0}^{t} \left| \phi(s) - \psi(s) \right|ds = L \int_{t_0}^{t} d(s) ds  
+		d(t) \coloneqq \left| \phi(t) - \psi(t) \right| \le L \int_{t_0}^{t} \left| \phi(s) - \psi(s) \right|ds = L \int_{t_0}^{t} d(s) ds  
 		.\] Gronwall's inequality is a more general version of this. If we take $\alpha = 0$ and $\beta = L$, then we recover $d \le 0$.
 		\item If $\alpha = 0$, then $\psi \le 0$ automatically.
 		\item We also have the application that if $\alpha(t) = \alpha_0 + \alpha_1 t$ and $\beta = L$, we get
@@ -1662,11 +1662,11 @@ Suppose there is a small perturbation (or measurement error) in $x_0$ or $f$. We
 	\]
 	Define
 	\[
-		\psi(t) := \left| x(t) - y(t) \right|,
+		\psi(t) \coloneqq \left| x(t) - y(t) \right|,
 		\quad
-		\alpha(t) := \left| x_0 - y_0 \right| + M(t - t_0),
+		\alpha(t) \coloneqq \left| x_0 - y_0 \right| + M(t - t_0),
 		\quad
-		\beta(t) := L.
+		\beta(t) \coloneqq L.
 	\]
 	Then
 	\[
@@ -2670,7 +2670,7 @@ Consider $F \in C^2$ such that $F(x^*) = 0$ and we have \[
 	.\end{align*}
 
 	We  want to show that if $\left| z_0 \right| = \delta \ll 1$, then\marginnote{We can move the factor on $\left| z(t) \right|$ to the right hand side to get the approximate inequality we expect, which will show asymptotic stability.} \[
-		d(t) := e^{\frac{2}{3} \lambda t} \left| z(t) \right| \le \tilde{C_A} \delta
+		d(t) \coloneqq e^{\frac{2}{3} \lambda t} \left| z(t) \right| \le \tilde{C_A} \delta
 	.\] 
 
 
@@ -2681,7 +2681,7 @@ Consider $F \in C^2$ such that $F(x^*) = 0$ and we have \[
 	\newthought{Step 2 (decomposition).}
 	Write $z(t) = x(t) - x^*$ then define
 	\[
-	A := \nabla F(x^*), \qquad G(z) := F(x^*+z) - Az.
+	A \coloneqq \nabla F(x^*), \qquad G(z) \coloneqq F(x^*+z) - Az.
 	\]
 	Then $G(0)=0$ and
 	\[
@@ -2709,11 +2709,11 @@ Consider $F \in C^2$ such that $F(x^*) = 0$ and we have \[
 	&\le C_A e^{-\frac{2}{3}\lambda t}\delta
 	 + \tilde C_A \int_0^t e^{-\frac{2}{3}\lambda (t-s)} \|z(s)\|^2\,ds,
 	\end{align*}
-	where $\delta:=\|z_0\|$.
+	where $\delta\coloneqq\|z_0\|$.
 
 	Let
 	\[
-	d(t):= e^{\frac{2}{3}\lambda t}\|z(t)\|.
+	d(t)\coloneqq e^{\frac{2}{3}\lambda t}\|z(t)\|.
 	\]
 	Then
 	\[
@@ -2993,12 +2993,12 @@ We rewrite the definition and theorem statement for clarity:
 	Let $\delta>0$ be arbitrary with $\overline{B(x^*,\delta)}\subset O$.
 	Consider the sphere
 	\[
-	  S_\delta := \{y\in\R^n : |y-x^*|=\delta\}.
+	  S_\delta \coloneqq \{y\in\R^n : |y-x^*|=\delta\}.
 	\]
 	By positive definiteness of $L$, $L>0$ on $S_\delta$, and
 	$S_\delta$ is compact. Hence by continuity of $L$,
 	\[
-	  \alpha := \min_{y\in S_\delta} L(y) > 0.
+	  \alpha \coloneqq \min_{y\in S_\delta} L(y) > 0.
 	\]
 
 	By continuity of $L$ at $x^*$ and $L(x^*)=0$, there exists
@@ -3036,7 +3036,7 @@ We rewrite the definition and theorem statement for clarity:
 	exists for all $t\ge 0$ and $L(x(t))$ is monotone nonincreasing and bounded
 	below by $0$. Thus the limit
 	\[
-	  \ell := \lim_{t\to\infty} L(x(t))
+	  \ell \coloneqq \lim_{t\to\infty} L(x(t))
 	\]
 	exists.
 
@@ -3092,7 +3092,7 @@ By assumption (ii), $\dot L(x)<0$ for $x\ne x^*$, so in particular
 	unless $z\equiv x^*$, which is impossible since $z(0)=z^*\ne x^*$.}
 	Hence $L(z(t))$ is strictly decreasing and
 	\[
-	  \Delta := L(z^*) - L(z(1)) = L(z(0)) - L(z(1)) > 0.
+	  \Delta \coloneqq L(z^*) - L(z(1)) = L(z(0)) - L(z(1)) > 0.
 	\]
 
 	Next, for each $n$, let $y_n(t)$ solve
@@ -3449,7 +3449,7 @@ so the trajectory through $x(t_0)$ is periodic with (minimal) period $T$.
 \begin{prop}
 	If $D$ is positive invariant and closed, and $z \in D$, then $\omega(z) \subseteq D$. In particular, if we define
 \[
-  \omega(D) := \bigcup_{z \in D} \omega(z),
+  \omega(D) \coloneqq \bigcup_{z \in D} \omega(z),
 \]
 then $\omega(D) \subseteq D$.\end{prop}
 \begin{proof}
@@ -3487,7 +3487,7 @@ Recall that we have the semigroup property for $\phi_t(x)$, i.e. \[
 	\left| \phi_t(X) - \phi_t(Y) \right| \le e^{Lt} \left| X-Y \right|
 .\] 
 
-The Implicit Function Theorem says that for $F \in C^1$, $F(x_0, y_0) = 0$ such that $\partial_y F(x_0,y_0)\ne 0$, we can implicitly define a $C^1$ function $y := y(x)$ such that $F(x,y(x))= 0 $ for any $x \in B_\epsilon(x_0)$. 
+The Implicit Function Theorem says that for $F \in C^1$, $F(x_0, y_0) = 0$ such that $\partial_y F(x_0,y_0)\ne 0$, we can implicitly define a $C^1$ function $y \coloneqq y(x)$ such that $F(x,y(x))= 0 $ for any $x \in B_\epsilon(x_0)$. 
 
 \begin{thm}
 	(Poincar\'e--Bendixson) Suppose $\frac{d}{dt}X = F(X)$ is an autonomous ODE in $\R^2$ and that for some $X_0$, $\omega(X_0)$ is bounded. Then $\omega(X_0)$ is either an equilibrium or contains a closed orbit (periodic solution).
@@ -3847,7 +3847,7 @@ then $\phi_{t_1}(Y)=\phi_{t_2}(Y)$.
 	then \[
 		\left| x(t) - y(t) \right| \le \left| x_0-y_0 \right|e^{L \left| t-t_0 \right|} + \frac{M}{L} \left( e^{L \left| t-t_0\right|} - 1 \right)
 	,\] where \[
-		M := \sup_{(t,x) \in V} \left| f(t,x) - g(t,x) \right|
+		M \coloneqq \sup_{(t,x) \in V} \left| f(t,x) - g(t,x) \right|
 	.\]  
 \end{thm}
 
@@ -3897,7 +3897,7 @@ then $\phi_{t_1}(Y)=\phi_{t_2}(Y)$.
 	Suppose for contradiction that there exists $t_1 \in [a,b]$ such that $f(t_1) > g(t_1)$. We assume WLOG (just shrink $b$) that for $t > t_1$, $f(t) > g(t)$ still. Define \[
 		\Omega = \{t: f(t) \le g(t)\}
 	.\] $\Omega$ is nonempty because it includes $a$, so we can put \[
-		t_0 := \sup \{t \in \Omega \cap [a,t_1]\}
+		t_0 \coloneqq \sup \{t \in \Omega \cap [a,t_1]\}
 	.\] By definition, we have that for all $t \in [a,t_0)$, $f(t) \le g(t)$, and for $t \in (t_0, t_1]$, $f(t) > g(t)$. By continuity from the left and right sides, $f(t_0) = g(t_0)$. 
 
 	By assumption, $F$ is Lipschitz in its second argument on $[a,b]$ by constant $L$. Note that by (\ref{comp1}) and (\ref{comp2}), we have that for every $t$,
@@ -3981,7 +3981,7 @@ then $\phi_{t_1}(Y)=\phi_{t_2}(Y)$.
 	($\impliedby$) Suppose we have a sequence with a finite limit point, so we have a sequence $\{t_n\} \in (t_-, t_+)$ such that $\lim\limits_{n \to \infty} (t_n, \phi(t_n)) = (t_+, y)$.
 
 	There exists some $N$ such that for all $n \ge N$, $\left| \phi(t_n) - y \right| \le 1$ and $\left| t_n - t_+ \right| \le 1$. On this square \[
-		S:= \left[ t_+ - 1, t_+ +1 \right]\times \left[ y-1,y+1 \right]
+		S\coloneqq \left[ t_+ - 1, t_+ +1 \right]\times \left[ y-1,y+1 \right]
 	,\] we have that $f$ is continuous and Lipschitz with uniform bound $L$. These give the bounds \[
 		\begin{cases}
 			\phi'(t_n) = \left| f(t_n, \phi(t_n)) \right| < M \\
@@ -4152,7 +4152,7 @@ The nullclines decompose $\R^n$ into a collection of open sets, in each of which
 
 	The linearization of $Y' = F(Y)$ at the equilibrium $Y^*$ is the linear system
 	\[
-	  Z' = A Z, \qquad A := D F(Y^*) = J_F(Y^*),
+	  Z' = A Z, \qquad A \coloneqq D F(Y^*) = J_F(Y^*),
 	\]
 	and $Y^*$ is hyperbolic iff this linear system is hyperbolic.
 
@@ -4171,9 +4171,9 @@ When the equilibrium point is not hyperbolic, we must use Lyapunov's method.
 		\frac{d}{dt}X = F(X)
 	.\]
 	A scalar function $L: O \to R$, which we call a Lyapunov candidate, has derivative along the vector field given by \[
-		\dot{L}(X) := \nabla L(X) \cdot F(X)
+		\dot{L}(X) \coloneqq \nabla L(X) \cdot F(X)
 	.\] Note that this orbital derivative is defined as a function of the state $X$. However, if $z(t)$ is a particular solution to the system, we conviently have \[
-		\dot{L}(z(t)) := \nabla L(z(t)) \cdot F(x(t)) = \nabla L(z(t)) \cdot \frac{d}{dt} z(t) = \frac{d}{dt} L(z(t))
+		\dot{L}(z(t)) \coloneqq \nabla L(z(t)) \cdot F(x(t)) = \nabla L(z(t)) \cdot \frac{d}{dt} z(t) = \frac{d}{dt} L(z(t))
 	\] by the chain rule; this is the reason for defining $\dot{L}$ in this way.
 
 	If $L$ satisfies (i) and (ii) in the following theorem, then it is a Lyapunov function. If it also satisfies (iii), then it is a strict Lyapunov function.
