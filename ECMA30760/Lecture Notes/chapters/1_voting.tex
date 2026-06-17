@@ -1,0 +1,240 @@
+\styledchapter{Voting}
+
+\section{Introduction}
+\begin{notation}
+	Let $A$ be a finite set of outcomes and let $N$ be a finite set of agents (also referred to as voters).
+
+	We take each agent to have strict preferences $\succ_i$ over $A$. 
+	$x \succ_i y$ if agent $i$ strictly prefers outcome $x$ to outcome $y$. We write $x \succsim_i y$ if either $x \succ_i y$ or $x = y$.
+	
+\end{notation}
+Formally, $\succ_i$ is a \emph{binary relation}; i.e., it is a subset of $A \times A$ with the \emph{infix} notation of $x \succ_i y$ instead of $\left( x,y \right) \in \succ_i$.
+\begin{remark}
+	We have the following properties of $\succ_i$:
+	\begin{itemize}
+		\item Irreflexive: For every $x$, it is not the case that $x \succ_i x$.
+		\item Complete: For every $x,y$, if $x \ne y$, then either $x \succ_i y$ or $y \succ_i x$.
+		\item Transitive: If $x \succ_i y$ and $y \succ_i z$, then $x \succ_i z$.
+		\item Asymmetric: For every $x \ne y$, if $x \succ_i y$, then we do not have $y \succ_i x$.
+	\end{itemize}
+
+	A binary relation satisfying these properties is called a \emph{strict total order} or \emph{strict linear order}.
+\end{remark}
+
+Let $P$ be the set of strict orders on $A$ and let $P^N$ be the set of \emph{preference profiles}: \[
+	P^N = \left\{\left( \succ_1, \cdots, \succ_{\left| N \right|} \right):\ \succ_i \in P, \forall\ i\right\}
+.\] 
+
+\begin{definition}[Social choice function]
+	A social choice function is a mapping $f: P^N \to A$.
+\end{definition}
+Informally, a social choice function is a decision rule for each preference profile.
+
+We explore the following social choice functions, which are also referred to as voting rules:
+\begin{definition}[Common Voting Rules]
+	\begin{itemize}
+		\item Plurality: Choose whichever outcome is top-ranked by the most people. (Along with some tiebreaking rule.)
+		\item Instant runoff: All outcomes but the two top-ranked outcomes\footnote{The two outcomes that have the highest number of top-rank votes.} are dropped, then the winner is decided by plurality.
+		\item Elimination: The outcome that is top-ranked by the fewest people is removed and the process repeats.
+		\item Borda count: Let $n = \left| A \right|$. Give $n$ points to a candidate for each agent that top-ranks them, $n-1$ points for each agent that second-ranks them, and so on. The outcome with the most points wins.
+		\item Summation social choice functions: Assign points $\phi_i(m)$ for agent $i$'s $m$th ranked outcome, and the outcome with the most points wins.
+		\item Pairwise comparison graph: We arrange the outcomes into a directed graph with all possible edges labeled by the number of people who prefer the tail node to the head node. A special case is the Copeland social choice function, which counts for each outcome how many arrows point out, and the winner is the node with the highest count. See Figure (\ref{fig:3-23-1}).
+	\end{itemize}
+\end{definition}
+
+\marginimage[Copeland voting rule][fig:3-23-1]{3-23-1}
+
+\begin{example}
+	For instance, if we have \[
+		A = \left\{w,x,y,z\right\}
+	\] with the preference profile of: 
+	\begin{itemize}
+		\item 6 people with $w \succ_i x \succ_i y \succ_i z$
+		\item 5 people with $x \succ_i y \succ_i w \succ_i z$
+		\item 4 people with $y \succ_i x \succ_i w \succ_i z$
+		\item 3 people with $z \succ_i y \succ_i x \succ_i w$,
+	\end{itemize}
+	then the plurality rule chooses $w$, the instant runoff chooses $x$, elimination chooses $y$, the Borda count chooses $x$, and the Copeland rule chooses $x$.
+\end{example}
+
+The first three voting rules are common, while the Borda count and summation social choice functions are mostly seen in sports.
+
+\begin{definition}[Condorcet winner, Condorcet property]
+	An outcome $x$ is a Condorcet winner if it beats all other outcomes in a head-to-head election. A social choice function satisfies the Condorcet property if it picks a Condorcet winner, when one exists.
+\end{definition}
+
+In the above profile, $x$ is a Condorcet winner. We may want to always select a Condorcet winner, but it may not exist.
+\begin{example}
+	Consider
+	\begin{align*}
+			&x \succ_1 y \succ_1 z \\ 
+		&y \succ_2 z \succ_2 x \\
+		&z \succ_3 x \succ_3 y
+	.\end{align*}
+	Then in head-to-heads, we have $x \leftarrow y$, $y \leftarrow z$, but $x \rightarrow z$. Thus there is no Condorcet winner.
+\end{example}
+
+\begin{definition}[Dominating set of outcomes, Smith set, Smith property]
+	A set of outcomes $A' \subseteq A$ is dominating if it is nonempty and for all $x \in A', y \in A \setminus A'$, $x$ beats $y$ in a head-to-head election.
+
+	The Smith set is the smallest dominating set. A social choice function $f$ satisfies the Smith property if it always chooses something in the Smith set.
+\end{definition}
+
+A dominating set always exists because we can take $A' = A$. Furthermore, dominating sets must be ``nested.''
+\begin{lemma}
+	If $X$ and $Y$ are dominating sets, then $X \subseteq Y$ or $Y \subseteq X$.
+\end{lemma}
+\begin{proof}
+	Suppose not. Then any $x \in X \setminus Y$ and $y \in Y \setminus X$ have to both beat each other in head-to-head elections, which cannot happen under strict preferences.
+\end{proof}
+
+This lemma tells us that the Smith set is the intersection of all dominating sets. If a Condorcet winner exists, then it is in the Smith set. 
+
+\section{Gibbard--Satterthwaite}
+
+\begin{definition}[Strategy-proof]
+	A social choice function is strategy-proof if there is no preference profile $\left( \succ_1, \cdots, \succ_{\left| N \right|} \right)$, agent $i$, and preference $\succ_i'$ such that \[
+		f\left( \succ_1, \cdots, \succ_{i-1}, \succ_i', \succ_{i+1}, \cdots, \succ_{|N|} \right) \succ_i f\left( \succ_1, \cdots, \succ_{i-1}, \succ_i, \succ_{i+1}, \cdots, \succ_{|N|} \right)
+	.\] 
+\end{definition}
+A social choice function is not strategy-proof if there is some preference profile and agent where the agent would prefer to misrepresent her preferences.
+Strategy-proofness only restricts unilateral deviations and does not consider the effects of collusion.
+
+We need some definitions for the next theorem.
+\begin{definition}[Lower contour set]
+	Given a preference $\succ_i$ on $A$ and $a \in A$, define the lower contour set as $L_{\succ_i}(a) = \left\{b: a \succ_i b\right\}$, which is the set of outcomes dispreferred to $a$.
+\end{definition}
+
+\begin{definition}[Monotonic social choice function]
+	$f$ is monotonic if for any preference profiles $\succ, \succ'$ such that for every $i$, $L_{\succ_i'}\left( f(\succ) \right) \supseteq L_{\succ_i}\left( f(\succ) \right)$, we have $f(\succ') = f(\succ)$.
+\end{definition}
+Under a monotonic social choice function, changing preferences such that the lower contour set of the outcome doesn't shrink preserves the original outcome. In particular, if the lower countour set of the outcome grows, then the original outcome is still chosen. If we shuffle around alternatives ranked below the outcome, the outcome is preserved.
+
+\begin{definition}[Pareto efficient social choice function]
+	$f$ is Pareto efficient if for all preference profiles $\succ$, $a \succ_i b$ for all $i$ implies that $f(\succ) \ne b$.
+\end{definition}
+A Pareto efficient social choice function does not pick outcomes that all agents disprefer to another (single) outcome.
+
+\begin{theorem}[Gibbard--Satterthwaite] \label{thm:gs}
+	\boxednote{Importantly, $i$ does \emph{not} depend on $\succ $. The dictatorial property says that $i$'s top choice is chosen for all preference profiles.}
+	If $\left| A \right| > 2$, then every surjective and strategy--proof social choice function is dictatorial, in that there is some agent $i$ such that \[
+		f(\succ) = \argmax_{\succ_i}A
+	\] for all $\succ$. (Here, the $\argmax$ over $\succ_i$ means that the ordering of the right hand side is determined by $\succ_i$.)
+\end{theorem}
+
+\begin{proof}
+	We first describe the proof structure:
+	\begin{enumerate}[label = (\roman*)]
+		\item Deduce that surjectivity and strategy-proofness imply monotonicity and Pareto efficiency.
+		\item Assume that $\left| N \right| = 2$, then show monotonicity and Pareto efficiency imply the social choice function is dictatorial.
+		\item Induct.
+	\end{enumerate}
+
+	Now we prove the theorem.
+	Suppose $f$ is strategy-proof and surjective. 
+
+	\textbf{Step 1: Monotonicity and Pareto efficiency}. Let $\succ,\succ'$ be as in the definition of monotonicity, i.e. \[
+		L_{\succ'}(f(\succ)) \supseteq L_{\succ} \left( f(\succ) \right)
+	.\] To show monotonicity, we want to show that $f(\succ) = f(\succ')$.
+	By strategy-proofness, 
+	\begin{align*}
+		f\left( \succ_1, \succ_2, \cdots, \succ_{\left| N \right|} \right) \succsim_1 f\left( \succ_1', \succ_2, \cdots, \succ_{\left| N \right|} \right)
+	.\end{align*}
+	Can it be the case that \[
+		f\left( \succ \right) \succ_1 f\left( \succ_1', \succ_{-1} \right)
+	\] strictly? Suppose this held. Using our assumption of $L_{\succ_i'}\left( f(\succ) \right) \supseteq L_{\succ_i}\left( f(\succ) \right)$, since $f(\succ_1',\succ_{-1})$ is still below $f(\succ)$ when switching from $\succ_1$ to $\succ_1'$, we get \[
+		f\left( \succ  \right)\succ_1' f(\succ_1', \succ_{-1})
+	.\]
+	Thus, under $\succ_1'$, agent 1 strictly prefers $f(\succ)$ to $f(\succ_1', \succ_{-1})$, which violates strategy-proofness of $f$. Therefore \[
+		f\left( \succ  \right) = f\left( \succ_1', \succ_{-1} \right)
+	.\] We can iterate to arrive that $f(\succ) = f(\succ')$, so $f$ is monotonic.
+
+	We claim that monotonicity and surjectivity imply Pareto efficiency.
+	Suppose not, so for some $\succ$, we have that for every $i$, $a \succ_i b$ but $f(\succ) = b$. Construct a new profile $\succ'$ from $\succ $ by moving $a$ to the top of everyone's list. Then by the lower contour sets of $b$ staying the same and monotonicity, $f(\succ') = b$.
+
+	At the same time, by surjectivity, there exists a profile $\succ^*$ such that $f(\succ^*) = a$.
+	Modify $\succ^*$ to $\succ^{*'}$ by moving $a$ to the top of all agents' list. By the same argument, $f(\succ^{*'}) = a$ as well. Comparing $\succ^{'}$ to $\succ^{*'}$, we have that $a$ is at the top of everyone's orderings in both preference profiles, but $f(\succ') = b \ne a = f(\succ^{*'})$, which violates $f$'s monotonicity,\footnote{Monotonicity is violated because the lower contour sets of $a = f(\succ^{*'})$ are the same, yet $f(\succ') = b \ne a$.} a contradiction. Therefore, $f$ must be Pareto efficient.
+
+	\textbf{Step 2: 2-agent case}.
+	Suppose 
+	\boxednote{After deciding that agent 1 wins in the tie of Equation (\ref{3-25-1}), we:
+	\begin{enumerate}[label = (\roman*)]
+		\item Show that 1 is the dictator over $a$.
+		\item Show that 1 is the dictator over all $c \ne a,b$.
+		\item Show that 1 is the dictator over $b$.
+	\end{enumerate}
+	To show that 1 is the dictator over $a$, we create a strategy profile where 2 top-ranks $b$, bottom-ranks $a$, show that the SCF still picks $a$, and use monotonicity to upgrade to all other strategy profiles where 1 top-ranks $a$.}
+	\begin{equation} \label{3-25-1}
+		a \succ_1 b \succ_1 \cdots, \quad b\succ_2 a \succ_2 \cdots.
+	\end{equation} Suppose further that $f$ is strategy-proof and surjective, so it is monotonic and Pareto efficient.
+
+	We know that $f(\succ_1, \succ_2) \in \left\{a,b\right\}$ by Pareto efficiency, as $a \succ_i c$ for $i = 1,2$ and any $c \ne a,b$.
+	Assume without loss that $f(\succ_1,\succ_2) = a$. Consider a new profile $\succ_2'$ such that $b\succ_2' \cdots \succ_2' a$. We see that $f(\succ_1, \succ_2') = b$ cannot hold, as by monotonicity, the original profile would end with $b$, as the lower contour set of $b$ does not shrink from $\succ_2$ to $\succ_2'$.\footnote{We can shuffle the outcomes below $b$ in $\succ_2'$ to arrive at $\succ_2$, which monotonicity says should lead to $\succ_2$ having the same outcome as $\succ_2'$, which is $b$.} (This would also violate strategy-proofness.)
+	By Pareto efficiency, $f(\succ_1, \succ_2')$ is also not any $c \ne a,b$. Therefore, $f(\succ_1,\succ_2') = a$. By monotonicity, $f\left( \succ_1^{''}, \succ_2^{''} \right) = a$ whenever $a = \argmax_{\succ_1''} A$, as the lower contour sets of $a$ stay the same from $\succ_1$ to $\succ_1^{''}$ and grow from $\succ_2'$ to $\succ_2^{''}$.
+	Thus, it makes sense to say that agent 1 is the dictator over $a$.\boxednote{Given an outcome $a \in A$, we say that agent $i$ is \emph{the dictator over $a$} if $f(\succ) = a$ whenever $a = \argmax_{\succ_i} A$. Two agents can be dictators over an outcome at the same time, but it is impossible for two agents to be dictators over different outcomes, as both of them top-ranking their respective dictatorial outcomes leads to a contradiction.}
+
+	Redefine the original preferences, fix $c \ne a,b$\footnote{We know that there exists $c\ne a,b$ because $\left| A \right| > 2$.} and consider \[
+		c \succ_1 b \succ_1 \cdots, \quad b \succ_2 c \succ_2 \cdots
+	.\] Is $f(\succ_1, \succ_2) = b$ possible? No, because by the same logic, 2 would be the dictator over $b$, which breaks down when 1 top-ranks $a$ and 2 top-ranks $b$. This implies that $f(\succ_1,\succ_2) = c$, so 1 is the dictator over $c$. Since $c$ was arbitrary other than $a,b$, we know that 1 is the dictator over all outcomes $A \setminus \left\{b\right\}$.
+
+	Finally, consider another new profile \[
+		b \succ_1 a \succ_1 \cdots,\quad a \succ_2 b \succ_2 \cdots
+	.\]
+	We know from Pareto efficiency that $f(\succ_1,\succ_2) \in \left\{a,b\right\}$. Suppose $f(\succ_1,\succ_2) = a$, so 2 is a dictator over $a$.\footnote{This does not contradict 1 being a dictator over $a$. If we have $A = \left\{a,b\right\}$, and $b$ is chosen only when both agents rank it first, then both are dictators over $a$. This is why we need $\left| A \right| > 2$.} By our assumption that $\left| A \right| > 2$ and our previous work, 1 is the dictator over some $c \ne a,b$. However, because 2 could top-rank $a$ while 1 top-ranks $c$, this leads to a contradiction.
+	Therefore $f(\succ_1,\succ_2) = b$ and 1 is the dictator at $b$, so 1 is the dictator over everything.
+
+	Whoever we side with in Equation (\ref{3-25-1})	is the dictator.
+
+	\textbf{Step 3: Induct}.
+	Assume that the Gibbard--Satterthwaite theorem holds with $\left| N \right| = n$ agents. 
+	Let $f$ be a strategy-proof and surjective mechanism for $n+1$ agents. 
+
+	We want to reduce the domain of $f$. Define \[
+		g\left( \succ_1, \succ_2 \right) = f\left( \succ_1, \succ_2, \cdots, \succ_2 \right)
+	.\]
+	We first want to show that $g$ is dictatorial. $g$ is surjective because $f$ is Pareto efficient (for every outcome, we can have everyone top-rank that outcome).
+	To show that $g$ is strategy-proof, consider $\succ_2$ and $\succ_2'$, and fix $\succ_1$. Then by strategy-proofness of $f$,
+	\begin{align*}
+		g\left( \succ_1,\succ_2 \right)&= f\left( \succ_1,\succ_2, \cdots, \succ_2 \right) \\
+									   &\succsim_2 f\left( \succ_1, \succ_2', \succ_2, \cdots, \succ_2 \right)\\
+									   &\succsim_2 f\left( \succ_1, \succ_2', \succ_2', \succ_2, \cdots, \succ_2 \right) \\
+									   &\vdots \\
+									   &\succsim_2 f(\succ_1, \succ_2', \cdots, \succ_2') = g(\succ_1,\succ_2')
+	.\end{align*}
+	So $g(\succ_1,\succ_2) \succsim_2 g\left( \succ_1,\succ_2' \right)$ and $g$ is strategy-proof for agent 2.
+
+	Strategy-proofness of $f$ also (more directly) gives strategy-proofness of $g$ for agent $1$. By the 2-agent case, $g$ is dictatorial with dictator 1.
+
+	If 1 is the dictator, we have that $f$ is dictatorial after applying monotonicity.\footnote{Exercise: Show the details.}
+	Now consider 2 being the dictator. Fix $\succ_1^*$ and define the $n$-agent social choice function \[
+		h\left( \succ_2, \cdots, \succ_{n+1} \right) = f\left( \succ_1^*, \succ_2, \cdots, \succ_{n+1} \right)
+	.\] $h$ is surjective because for any $a \in A$, agents $2,\ldots,\left| N \right|$ can all report $a$ as their top choices and recover $g$, which 2 is the dictator of. $h$ is strategy-proof by $f$'s strategy-proofness.
+	By the induction assumption, for this particular profile $\succ_1^*$, there exists a dictator $K$ of $h$. 
+
+	Fix $\succ_2^*, \cdots, \succ_{K-1}^*, \succ_{K+1}^*, \cdots, \succ_{n+1}^*$ and define \[
+		q\left( \succ_1, \succ_K \right) = f\left( \succ_1, \succ_2^*, \cdots, \succ_{K-1}^*, \succ_K, \succ_{K+1}^*, \cdots, \succ_{n+1}^* \right)
+	.\] $q$ inherits strategy-proofness from $f$.
+
+	If $\succ_1= \succ_1^*$, then we know from $h$ that $K$ is the dictator, so $q$ is surjective. By the 2-agent case, $q$ is dictatorial; thus, since $K$ is the dictator over everything when agent 1 reports $\succ_1^*$, $K$ must be the dictator over everything no matter what agent 1 reports. Since $\succ_2^*,\cdots,\succ_{K-1}^*, \succ_{K+1}^*,\cdots, \succ_{n+1}^*$ were arbitrary and K is the dictator of $f$ no matter what 1 reports, K must be the dictator of $f$ in all cases.
+
+	Through $g$, we showed that if 1 is the dictator of $g$, then 1 is the dictator of $f$. If 2 is the dictator of $g$, then there exists agent $K$ who is the dictator of $f$, where $K$ does not depend on the $\succ_1^*$ we fixed.
+\end{proof}
+
+\begin{remark}
+	There are some ways around Theorem (\ref{thm:gs}):
+	\begin{enumerate}[label = (\roman*)]
+		\item We may not care if we have to restrict the image of the social choice function to cardinality $2$.
+		\item Strategy-proofness is a strong restriction. Once we fix a social choice function, a game is induced. Strategy-proofness is a dominant strategy equilibrium in the game.
+			\begin{itemize}
+				\item For each agent $i$, we have a type space $\Theta_i$. 
+				\item For each type $\theta_i \in \Theta_i$, we have a utility function $u_i(\theta_i, a)$, which is the utility for agent $i$ of type $\theta_i$ if $a$ is chosen. We also assume that there is a common prior (belief) over the distribution of types people may have: $\mu \in \Delta \left( \prod_{i=1}^{\left| N \right|} \Theta_i  \right)$
+			\end{itemize}
+			Everything, including the existence of dominant strategies, depends on $\mu$.
+		\item Some may say that $P$ is too large or that there is more information in particular contexts. For example, we may expect single-peaked preferences, under which we show there exist strategy-proof social choice functions that are not dictatorial (Problem 3 of the notes). Furthermore, we may want to expand $P$ to allow for indifference between outcomes. In a resource allocation problem, agents only care about their own allocations.
+
+			Using information in cardinal utilities does not allow for nondictatorial social choice functions, as the restriction of strategy-proofness becomes stronger.
+		\item We could allow $f: P^N \to \Delta(A)$. This is explored in Problem 4 of the notes, which shows that there is always a random Condorcet winner. However, this does not get us out of the theorem. Gibbard (1977) showed that any strategy-proof mechanism $f: P^N \to \Delta(A)$ is a randomization over mechanisms that are either dictatorial or ``duple'' (restricted to two outcomes).
+	\end{enumerate}
+
+	Criticism (ii) is the strongest.
+\end{remark}

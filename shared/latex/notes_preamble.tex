@@ -30,12 +30,12 @@
 \usepackage[
     paper=letterpaper,
     includeheadfoot,
-    left=0.65in,
-    right=2.58in,
+    left=0.50in,
+    right=2.13in,
     top=0.70in,
     bottom=0.85in,
     marginparsep=0.18in,
-    marginparwidth=1.96in,
+    marginparwidth=1.66in,
     headheight=15pt,
     headsep=0.18in,
     footskip=0.38in
@@ -45,7 +45,18 @@
 % Typography and microtypography.
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
+%\usepackage[semibold]{libertine}
+% Core math and theorem support.
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+%\DeclareMathSizes{10}{9.5}{7}{5}
+%\DeclareMathSizes{10.5}{10}{7.25}{5.2}
+%\DeclareMathSizes{11}{10.4}{7.6}{5.6}
+%\DeclareMathSizes{12}{11.3}{8.1}{6}
+\setlength{\jot}{0.75pt}
+\setlength{\abovedisplayskip}{3pt plus 1pt minus 1pt}
+\setlength{\belowdisplayskip}{3pt plus 1pt minus 1pt}
+\setlength{\abovedisplayshortskip}{1.5pt plus 1pt minus 0.5pt}
+\setlength{\belowdisplayshortskip}{1.5pt plus 1pt minus 0.5pt}
 \usepackage{microtype}
 \usepackage{textcomp}
 \usepackage{setspace}
@@ -72,8 +83,6 @@
 \makeatother
 \raggedbottom
 
-% Core math and theorem support.
-\usepackage{amsmath, amssymb, amsthm, mathtools}
 \usepackage{dsfont}
 \numberwithin{equation}{chapter}
 \usepackage{mathrsfs}
@@ -109,6 +118,9 @@
 % Boxes and marginalia.
 \usepackage[most]{tcolorbox}
 \tcbuselibrary{theorems}
+\newcommand{\lecboxednoteribbon}{black!22}
+\newcommand{\lecsetboxednoteribbon}[1]{\gdef\lecboxednoteribbon{#1}}
+\newcommand{\lecresetboxednoteribbon}{\lecsetboxednoteribbon{black!22}}
 \ifnotescheatsheet
 \tcbset{
   lecrcodeboxstyle/.style={
@@ -125,6 +137,7 @@
     arc=0pt,
     colback=white,
     colframe=black,
+    boxrule=0.25pt,
     left=3pt,
     right=3pt,
     top=3pt,
@@ -150,33 +163,36 @@
 \else
 \tcbset{
   lecrcodeboxstyle/.style={
-    colback=gray!8,
+    colback=gray!5,
     colframe=black!65,
     boxrule=0.45pt,
-    arc=2.4mm,
+    arc=1.4mm,
     left=6pt,
     right=6pt,
     top=6pt,
     bottom=6pt
   },
   lecnoteboxstyle/.style={
-    arc=2.4mm,
-    colback=gray!4,
-    colframe=black!65,
-    left=5pt,
-    right=5pt,
-    top=4pt,
-    bottom=4pt
+    arc=0.8mm,
+    outer arc=0.8mm,
+    sharp corners=west,
+    colback=white,
+    colframe=black!45,
+    boxrule=0.25pt,
+    left=4pt,
+    right=4pt,
+    top=3pt,
+    bottom=3pt
   },
   lecthmbasetitlestyle/.style={
-    arc=2.4mm,
+    arc=1.4mm,
     left=6pt,
     right=6pt,
     top=4pt,
     bottom=4pt
   },
   lecthmbasestyle/.style={
-    arc=2.4mm,
+    arc=1.4mm,
     left=8pt,
     right=8pt,
     top=8pt,
@@ -189,7 +205,8 @@
 \usepackage{varwidth}
 \usepackage{marginnote}
 \usepackage{marginfix}
-\setlength{\marginparpush}{18pt}
+\usepackage{zref-savepos}
+\setlength{\marginparpush}{9pt}
 \renewcommand*{\marginfont}{\footnotesize}
 
 % Links.
@@ -220,12 +237,12 @@
 \newcommand{\notesyear}{2026}
 
 \makeatletter
-\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter: #1}{}}
 \makeatother
 
 \fancypagestyle{notesbody}{%
     \fancyhf{}
-    \fancyhead[L]{\itshape\nouppercase{\leftmark}}
+	\fancyhead[L]{\itshape\nouppercase{\leftmark}}
     \fancyhead[R]{\itshape\notesauthor}
     \fancyfoot[L]{\itshape\notesyear}
     \fancyfoot[C]{\thepage}
@@ -317,11 +334,11 @@
 
 % Margin note box.
 \makeatletter
-\NewDocumentCommand{\lecnotebox}{ +m }{%
+\NewDocumentCommand{\lecnotebox}{ O{\lecboxednoteribbon} +m }{%
   \begin{tcolorbox}[
     enhanced,
-    boxrule=0.45pt,
     lecnoteboxstyle,
+    borderline west={1.5pt}{0pt}{#1},
     width=\marginparwidth,
     before skip=0pt,
     after skip=0pt
@@ -329,6 +346,7 @@
   {%
     \begingroup
     \setstretch{1.0}%
+    \raggedright
     \let\lec@orig@footnotetext\@footnotetext
     \long\def\@footnotetext##1{%
       \begingroup
@@ -343,10 +361,74 @@
       \lec@orig@mpfootnotetext{##1}%
       \endgroup
     }%
-    \lecnotefont #1\par
+    \lecnotefont #2\par
     \endgroup
   }
   \end{tcolorbox}%
+}
+\NewDocumentCommand{\lecmarginparnotebox}{ +m }{%
+  \begingroup
+  \edef\lec@tmp{%
+    \endgroup
+    \noexpand\marginpar{%
+      \noexpand\lecnotebox[\lecboxednoteribbon]{\unexpanded{#1}}%
+    }%
+  }%
+  \lec@tmp
+}
+\NewDocumentCommand{\lecmarginnotenotebox}{ O{0pt} +m }{%
+  \begingroup
+  \edef\lec@tmp{%
+    \endgroup
+    \noexpand\marginnote{%
+      \noexpand\lecnotebox[\lecboxednoteribbon]{\unexpanded{#2}}%
+    }\unexpanded{[#1]}%
+  }%
+  \lec@tmp
+}
+\newbox\lec@inboxnotebox
+\newdimen\lec@inboxnoteheight
+\newdimen\lec@inboxnoteoffset
+\newdimen\lec@inboxnoteprevbottom
+\newcount\lec@inboxnotecount
+\newcounter{lecboxednoteid}
+\newcommand{\lecresetinboxnoteoffset}{%
+  \global\lec@inboxnoteoffset=0pt\relax
+  \global\lec@inboxnoteprevbottom=0pt\relax
+  \global\lec@inboxnotecount=0\relax
+}
+\NewDocumentCommand{\lecstackedmarginnotenotebox}{ O{0pt} +m }{%
+  \stepcounter{lecboxednoteid}%
+  \edef\lec@inboxnoteposlabel{lecboxednote-\arabic{lecboxednoteid}}%
+  \zsavepos{\lec@inboxnoteposlabel}%
+  \begingroup
+  \setbox\lec@inboxnotebox=\vbox{%
+    \hsize=\marginparwidth
+    \linewidth=\hsize
+    \marginfont\raggedrightmarginnote\strut\hspace{\z@}%
+    \lecnotebox[\lecboxednoteribbon]{#2}%
+    \endgraf
+  }%
+  \global\lec@inboxnoteheight=\dimexpr\ht\lec@inboxnotebox+\dp\lec@inboxnotebox\relax
+  \ifnum\zposy{\lec@inboxnoteposlabel}=0\relax
+    \dimen@=\dimexpr#1+\lec@inboxnoteoffset\relax
+    \global\advance\lec@inboxnoteoffset by \dimexpr\lec@inboxnoteheight+\marginparpush\relax
+  \else
+    \ifnum\lec@inboxnotecount=0\relax
+      \dimen@=#1\relax
+    \else
+      \dimen@=\dimexpr\zposy{\lec@inboxnoteposlabel}sp-\lec@inboxnoteprevbottom+\marginparpush\relax
+      \ifdim\dimen@<0pt\relax
+        \dimen@=0pt\relax
+      \fi
+      \advance\dimen@ by #1\relax
+    \fi
+    \global\lec@inboxnoteprevbottom=\dimexpr\zposy{\lec@inboxnoteposlabel}sp-\dimen@-\lec@inboxnoteheight\relax
+  \fi
+  \global\advance\lec@inboxnotecount by 1\relax
+  \xdef\lec@inboxnoteplacementoffset{\the\dimen@}%
+  \endgroup
+  \lecmarginnotenotebox[\lec@inboxnoteplacementoffset]{#2}%
 }
 \makeatother
 
@@ -355,20 +437,27 @@
 % to \marginnote as a manual escape hatch.
 \NewDocumentCommand{\lecnormalboxednoteplace}{ O{0pt} +m }{%
   \ifdim#1=0pt\relax
-    \marginpar{\lecnotebox{#2}}%
+    \lecmarginparnotebox{#2}%
   \else
-    \marginnote{\lecnotebox{#2}}[#1]%
+    \lecmarginnotenotebox[#1]{#2}%
   \fi
 }
 \NewDocumentCommand{\leccheatsheetboxednoteplace}{ O{0pt} +m }{%
   \footnote{#2}%
+}
+\NewDocumentCommand{\lecboxednoteinboxplace}{ O{0pt} +m }{%
+  \ifnotescheatsheet
+    \leccheatsheetboxednoteplace[#1]{#2}%
+  \else
+    \lecstackedmarginnotenotebox[#1]{#2}%
+  \fi
 }
 \let\lecboxednoteplace\lecnormalboxednoteplace
 \ifnotescheatsheet
 \let\lecboxednoteplace\leccheatsheetboxednoteplace
 \fi
 
-% Notes triggered in math mode or inside theorem boxes are queued until we hit
+% Notes triggered in math mode or other inner boxes are queued until we hit
 % a stable text boundary where the chosen backend can place them safely.
 \makeatletter
 \newcommand{\lecdeferrednotes}{}
@@ -386,9 +475,9 @@
 \NewDocumentCommand{\boxednote}{ O{0pt} +m }{%
   \ifmmode
     \lecdefernote[#1]{#2}%
-  \else\ifinner
-    \lecdefernote[#1]{#2}%
   \else\iflecinbox
+    \lecboxednoteinboxplace[#1]{#2}%
+  \else\ifinner
     \lecdefernote[#1]{#2}%
   \else
     \lecflushdeferrednotes
@@ -397,38 +486,37 @@
 }
 
 % Margin figure helper: caption (with number) above, image nearly full width.
-% Usage: \marginimage[Caption][fig:label]{filename}
+% Usage: \marginimage[Caption][fig:label][Figure note.]{filename}
 % - `filename` is relative to `images/`
-% - Omit caption/label by leaving the optional args empty
-\NewDocumentCommand{\marginimage}{ O{} o m }{%
+% - Omit caption/label/note by leaving the optional args empty
+\NewDocumentCommand{\marginimage}{ O{} o O{} m }{%
   \boxednote{%
     \begingroup
     \centering
-    \IfNoValueTF{#2}{%
-      \if\relax\detokenize{#1}\relax
-        \includegraphics[width=\linewidth]{images/#3}%
-      \else
-        \refstepcounter{figure}%
-        {\footnotesize\bfseries \figurename~\thefigure.\ \itshape #1\par}%
-        \vspace{4pt}%
-        \includegraphics[width=\linewidth]{images/#3}%
-      \fi
-    }{%
+    \if\relax\detokenize{#1}\relax
+      \IfNoValueF{#2}{%
+        \if\relax\detokenize{#2}\relax\else
+          \refstepcounter{figure}%
+          \label{#2}%
+        \fi
+      }%
+    \else
       \refstepcounter{figure}%
-      \label{#2}%
-      \if\relax\detokenize{#1}\relax
-        \includegraphics[width=\linewidth]{images/#3}%
-      \else
-        {\footnotesize\bfseries \figurename~\thefigure.\ \itshape #1\par}%
-        \vspace{4pt}%
-        \includegraphics[width=\linewidth]{images/#3}%
-      \fi
-    }%
+      \IfNoValueF{#2}{%
+        \if\relax\detokenize{#2}\relax\else\label{#2}\fi
+      }%
+      {\footnotesize\bfseries \figurename~\thefigure.\ \itshape #1\par}%
+      \vspace{4pt}%
+    \fi
+    \includegraphics[width=\linewidth]{images/#4}%
+    \if\relax\detokenize{#3}\relax\else
+      \fignote{#3}%
+    \fi
     \endgroup
   }%
 }
 \ifnotescheatsheet
-\RenewDocumentCommand{\marginimage}{ O{} o m }{}%
+\RenewDocumentCommand{\marginimage}{ O{} o O{} m }{}%
 \fi
 
 % Notes under tables/figures.
@@ -487,23 +575,22 @@
 % Colors for theorem boxes.
 % User palette (hex):
 %  - theorem/proposition: #ccd5ae
-%  - lemma/corollary:     #e9edc9 (different now)
-%  - assumption:          #d4a373
+%  - lemma/corollary:     #ecf1d3
+%  - assumption:          #ddb892
 %  - definition/notation: #fefae0
-%  - example:             #faedcd (different now)
+%  - example:             #ffd9c7
 \definecolor{lecthm}{HTML}{CCD5AE}
 \definecolor{leclem}{HTML}{ECF1D3}
 \definecolor{lecassump}{HTML}{DDB892}
 \definecolor{lecdef}{HTML}{FEFAE0}
 \definecolor{lecex}{HTML}{FFD9C7}
 
-% Main box fill shade: lower = darker (closer to the title bar color),
-% higher = lighter (more white mixed in).
-\newcommand{\lecmainmix}{45}
+% Main box fill shade: lower = lighter (more white mixed in),
+% higher = darker (closer to the base color).
+\newcommand{\lecmainmix}{32}
 
-% Darken title bars + outlines slightly by mixing with black.
-% Higher = darker.
-\newcommand{\lectitlebarmix}{95}
+% Title bars are mixed with neutral gray: lower = less saturated.
+\newcommand{\lectitlebarmix}{92}
 \newcommand{\lecframemix}{95}
 \ifnotescheatsheet
 \colorlet{lecthm}{white}
@@ -546,57 +633,55 @@
 
 % Base tcolorbox style for theorem environments.
 \tcbset{
-  thmbasetitle/.style={
-    enhanced,
-    boxrule=0.45pt,
-    lecthmbasetitlestyle,
-    coltitle=black,
-    fonttitle=\bfseries,
-  },
   thmbase/.style={
     enhanced,
     breakable,
-    boxrule=0.45pt,
-    lecthmbasestyle,
-    fonttitle=\bfseries,
+    boxrule=0.32pt,
+    arc=0.6mm,
+    left=6pt,
+    right=6pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=4pt,
+    after skip=5pt,
+    fonttitle=\bfseries\fontsize{9.75}{11.7}\selectfont,
     coltitle=black,
+    titlerule=0pt,
+    toptitle=2pt,
+    bottomtitle=2pt,
     separator sign none,
     description delimiters parenthesis,
     terminator sign={.},
-    % Use \linewidth so titles wrap correctly inside lists/minipages.
-    varwidth boxed title=\dimexpr\linewidth-3em\relax,
-    attach boxed title to top left={xshift=7pt,yshift*=-2mm},
-    boxed title style={thmbasetitle},
   },
 	  thmbluestyle/.style={
 	    thmbase,
-	    colback=lecthm!\lecmainmix!white,
-	    colframe=lecthm!\lecframemix!black,
-	    boxed title style={thmbasetitle, colback=lecthm!\lectitlebarmix!black, colframe=lecthm!\lecframemix!black},
+	    colback=lecthm!8!white,
+	    colframe=lecthm!86!black,
+	    colbacktitle=lecthm!90!gray,
 	  },
 	  thmbgstyle/.style={
 	    thmbase,
-	    colback=leclem!\lecmainmix!white,
-	    colframe=leclem!\lecframemix!black,
-	    boxed title style={thmbasetitle, colback=leclem!\lectitlebarmix!black, colframe=leclem!\lecframemix!black},
+	    colback=leclem!8!white,
+	    colframe=leclem!82!black,
+	    colbacktitle=leclem!90!gray,
 	  },
 	  thmyellowstyle/.style={
 	    thmbase,
-	    colback=lecdef!\lecmainmix!white,
-	    colframe=lecdef!\lecframemix!black,
-	    boxed title style={thmbasetitle, colback=lecdef!\lectitlebarmix!black, colframe=lecdef!\lecframemix!black},
+	    colback=lecdef!7!white,
+	    colframe=lecdef!85!black,
+	    colbacktitle=lecdef!92!gray,
 	  },
 	  thmpinkstyle/.style={
 	    thmbase,
-	    colback=lecex!\lecmainmix!white,
-	    colframe=lecex!\lecframemix!black,
-	    boxed title style={thmbasetitle, colback=lecex!\lectitlebarmix!black, colframe=lecex!\lecframemix!black},
+	    colback=lecex!7!white,
+	    colframe=lecex!80!black,
+	    colbacktitle=lecex!88!gray,
 	  },
 	  thmassumpstyle/.style={
 	    thmbase,
-	    colback=lecassump!\lecmainmix!white,
-	    colframe=lecassump!\lecframemix!black,
-	    boxed title style={thmbasetitle, colback=lecassump!\lectitlebarmix!black, colframe=lecassump!\lecframemix!black},
+	    colback=lecassump!7!white,
+	    colframe=lecassump!82!black,
+	    colbacktitle=lecassump!88!gray,
 	  },
 	}
 
@@ -609,6 +694,7 @@
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lectheorem}{Theorem}{
   thmbluestyle,
   before upper={
+    \lecsetboxednoteribbon{lecthm!90!gray}
     % theorem, proposition, corollary: faKiwiBird # the kiwibird emoji is cute
     \theoremproofstyle
     \setlecproofname{Proof of Theorem~\thethmcounter}
@@ -618,6 +704,7 @@
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecproposition}{Proposition}{
   thmbluestyle,
   before upper={
+    \lecsetboxednoteribbon{lecthm!90!gray}
     % theorem, proposition, corollary: faKiwiBird # the kiwibird emoji is cute
     \propositionproofstyle
     \setlecproofname{Proof of Proposition~\thethmcounter}
@@ -627,6 +714,7 @@
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{leclemma}{Lemma}{
   thmbgstyle,
   before upper={
+    \lecsetboxednoteribbon{leclem!90!gray}
     % lemma: faLockOpen # lemma and lightbulb start with L, and lemma proofs unlock tools for later use.
     \lemmaproofstyle
     \setlecproofname{Proof of Lemma~\thethmcounter}
@@ -636,6 +724,7 @@
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{leccorollary}{Corollary}{
   thmbgstyle,
   before upper={
+    \lecsetboxednoteribbon{leclem!90!gray}
     % theorem, proposition, corollary: faKiwiBird # the kiwibird emoji is cute
     \corollaryproofstyle
     \setlecproofname{Proof of Corollary~\thethmcounter}
@@ -644,11 +733,15 @@
 
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecdefinition}{Definition}{
   thmyellowstyle,
+  before upper={
+    \lecsetboxednoteribbon{lecdef!92!gray}
+  },
 }{thm}
 
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecexample}{Example}{
   thmpinkstyle,
   before upper={
+    \lecsetboxednoteribbon{lecex!88!gray}
     % example: faFrog
     \exampleproofstyle
   },
@@ -659,10 +752,16 @@
 
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecassumption}{Assumption}{
   thmassumpstyle,
+  before upper={
+    \lecsetboxednoteribbon{lecassump!88!gray}
+  },
 }{thm}
 
 \newtcbtheorem[use counter=thmcounter, number freestyle={\noexpand\thesection.\noexpand\arabic{thmcounter}}]{lecnotation}{Notation}{
   thmyellowstyle,
+  before upper={
+    \lecsetboxednoteribbon{lecdef!92!gray}
+  },
 }{thm}
 
 % Wrapper environments: optional title, optional label.
@@ -677,6 +776,7 @@
 \makeatother
 \NewDocumentEnvironment{theorem}{ O{} o }{%
   \global\lecinboxtrue
+  \lecresetinboxnoteoffset
   \IfNoValueTF{#2}{%
     \stepcounter{lecautolabel}%
     \begin{lectheorem}{#1}{auto-\arabic{lecautolabel}}%
@@ -685,9 +785,10 @@
     \begin{lectheorem}{#1}{#2}%
     \lecsetthmcurrentlabel
   }%
-}{\end{lectheorem}\global\lecinboxfalse\lecflushdeferrednotes}
+}{\end{lectheorem}\global\lecinboxfalse\lecflushdeferrednotes\lecresetboxednoteribbon}
 \NewDocumentEnvironment{proposition}{ O{} o }{%
   \global\lecinboxtrue
+  \lecresetinboxnoteoffset
   \IfNoValueTF{#2}{%
     \stepcounter{lecautolabel}%
     \begin{lecproposition}{#1}{auto-\arabic{lecautolabel}}%
@@ -696,9 +797,10 @@
     \begin{lecproposition}{#1}{#2}%
     \lecsetthmcurrentlabel
   }%
-}{\end{lecproposition}\global\lecinboxfalse\lecflushdeferrednotes}
+}{\end{lecproposition}\global\lecinboxfalse\lecflushdeferrednotes\lecresetboxednoteribbon}
 \NewDocumentEnvironment{lemma}{ O{} o }{%
   \global\lecinboxtrue
+  \lecresetinboxnoteoffset
   \IfNoValueTF{#2}{%
     \stepcounter{lecautolabel}%
     \begin{leclemma}{#1}{auto-\arabic{lecautolabel}}%
@@ -707,9 +809,10 @@
     \begin{leclemma}{#1}{#2}%
     \lecsetthmcurrentlabel
   }%
-}{\end{leclemma}\global\lecinboxfalse\lecflushdeferrednotes}
+}{\end{leclemma}\global\lecinboxfalse\lecflushdeferrednotes\lecresetboxednoteribbon}
 \NewDocumentEnvironment{corollary}{ O{} o }{%
   \global\lecinboxtrue
+  \lecresetinboxnoteoffset
   \IfNoValueTF{#2}{%
     \stepcounter{lecautolabel}%
     \begin{leccorollary}{#1}{auto-\arabic{lecautolabel}}%
@@ -718,9 +821,10 @@
     \begin{leccorollary}{#1}{#2}%
     \lecsetthmcurrentlabel
   }%
-}{\end{leccorollary}\global\lecinboxfalse\lecflushdeferrednotes}
+}{\end{leccorollary}\global\lecinboxfalse\lecflushdeferrednotes\lecresetboxednoteribbon}
 \NewDocumentEnvironment{definition}{ O{} o }{%
   \global\lecinboxtrue
+  \lecresetinboxnoteoffset
   \IfNoValueTF{#2}{%
     \stepcounter{lecautolabel}%
     \begin{lecdefinition}{#1}{auto-\arabic{lecautolabel}}%
@@ -729,9 +833,10 @@
     \begin{lecdefinition}{#1}{#2}%
     \lecsetthmcurrentlabel
   }%
-}{\end{lecdefinition}\global\lecinboxfalse\lecflushdeferrednotes}
+}{\end{lecdefinition}\global\lecinboxfalse\lecflushdeferrednotes\lecresetboxednoteribbon}
 \NewDocumentEnvironment{example}{ O{} o }{%
   \global\lecinboxtrue
+  \lecresetinboxnoteoffset
   \IfNoValueTF{#2}{%
     \stepcounter{lecautolabel}%
     \begin{lecexample}{#1}{auto-\arabic{lecautolabel}}%
@@ -740,9 +845,10 @@
     \begin{lecexample}{#1}{#2}%
     \lecsetthmcurrentlabel
   }%
-}{\end{lecexample}\global\lecinboxfalse\lecflushdeferrednotes}
+}{\end{lecexample}\global\lecinboxfalse\lecflushdeferrednotes\lecresetboxednoteribbon}
 \NewDocumentEnvironment{assumption}{ O{} o }{%
   \global\lecinboxtrue
+  \lecresetinboxnoteoffset
   \IfNoValueTF{#2}{%
     \stepcounter{lecautolabel}%
     \begin{lecassumption}{#1}{auto-\arabic{lecautolabel}}%
@@ -751,9 +857,10 @@
     \begin{lecassumption}{#1}{#2}%
     \lecsetthmcurrentlabel
   }%
-}{\end{lecassumption}\global\lecinboxfalse\lecflushdeferrednotes}
+}{\end{lecassumption}\global\lecinboxfalse\lecflushdeferrednotes\lecresetboxednoteribbon}
 \NewDocumentEnvironment{notation}{ O{} o }{%
   \global\lecinboxtrue
+  \lecresetinboxnoteoffset
   \IfNoValueTF{#2}{%
     \stepcounter{lecautolabel}%
     \begin{lecnotation}{#1}{auto-\arabic{lecautolabel}}%
@@ -762,7 +869,7 @@
     \begin{lecnotation}{#1}{#2}%
     \lecsetthmcurrentlabel
   }%
-}{\end{lecnotation}\global\lecinboxfalse\lecflushdeferrednotes}
+}{\end{lecnotation}\global\lecinboxfalse\lecflushdeferrednotes\lecresetboxednoteribbon}
 
 % Unboxed environments: remark and aside (amsthm, sharing thmcounter).
 \theoremstyle{remark}
@@ -901,7 +1008,7 @@
   \setcounter{section}{0}%
   \setcounter{subsection}{0}%
   \setcounter{equation}{0}%
-  \markboth{#1}{}%
+  \markboth{\thechapter: #1}{}%
   \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
   \chapteropening{#1}%
 }

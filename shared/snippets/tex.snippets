@@ -294,26 +294,26 @@ endsnippet
 
 priority 250
 context "math()"
-snippet '(?<!\\)(alpha|beta|gamma|delta|Delta)' "Greek A–D" riA
+snippet '(?<![A-Za-z\\])(alpha|beta|gamma|delta|Delta)' "Greek A–D" riA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
 priority 250
 context "math()"
-snippet '(?<!\\)(epsilon|varepsilon|zeta|theta|vartheta|iota|kappa|Theta)' "Greek E–K" riA
+snippet '(?<![A-Za-z\\])(epsilon|varepsilon|zeta|theta|vartheta|iota|kappa|Theta)' "Greek E–K" riA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
 
 priority 250
 context "math()"
-snippet '(?<!\\)(lambda|mu|nu|xi|pi|varpi|rho|varrho|Lambda|Pi)' "Greek L–R" riA
+snippet '(?<![A-Za-z\\])(lambda|mu|nu|xi|pi|varpi|rho|varrho|Lambda|Pi)' "Greek L–R" riA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
 priority 250
 context "math()"
-snippet '(?<!\\)(sigma|varsigma|tau|upsilon|phi|varphi|chi|omega|Sigma|Upsilon|Phi|Psi|Omega)' "Greek S–Omega" riA
+snippet '(?<![A-Za-z\\])(sigma|varsigma|tau|upsilon|phi|varphi|chi|omega|Sigma|Upsilon|Phi|Psi|Omega)' "Greek S–Omega" riA
 \\`!p snip.rv = match.group(1)`
 endsnippet
 
@@ -359,6 +359,11 @@ endsnippet
 context "math()"
 snippet := "coloneqq" iA
 \coloneqq 
+endsnippet
+
+context "math()"
+snippet =: "eqqcolon" iA
+\eqqcolon 
 endsnippet
 
 context "math()"
@@ -433,6 +438,7 @@ $3
 \end{bmatrix} $0
 endsnippet
 
+priority 100
 context "math()"
 snippet () "left( right)" iA
 \left( ${1:${VISUAL}} \right)$0
@@ -873,6 +879,17 @@ snippet cases "cases" w
 \end{cases}
 endsnippet
 
+snippet case "description case" w
+\begin{description}
+	\item[${1:Case 1}:] $2
+	\item[${3:Case 2}:] $4
+\end{description}
+endsnippet
+
+snippet it "item object" b
+\item 
+endsnippet
+
 snippet SI "SI" iA
 \SI{$1}{$2}
 endsnippet
@@ -978,6 +995,17 @@ endsnippet
 
 snippet msc "math script" wA
 \mathscr{$1}$0
+endsnippet
+
+priority 200
+context "math()"
+snippet N() "normal, gaussian" wA
+\mathcal{N}\left( $1 \right) $0
+endsnippet
+
+context "math()"
+snippet iidsim "iid \sim" wA
+\overset{\text{iid}}{\sim}$0
 endsnippet
 
 context "math()"
@@ -1147,10 +1175,6 @@ endsnippet
 
 snippet ntsl "newthought solution" bA
 \newthought{Solution.} $0
-endsnippet
-
-snippet mnn "margin note" iA
-\marginnote{$1}$0
 endsnippet
 
 snippet fnn "footnote" iA
@@ -1384,7 +1408,7 @@ $0
 endsnippet
 
 snippet mimage "margin image" b
-\marginimage[${1:caption}]{${2:path from images}}
+\marginimage[${1:caption}][][${3:Notes.}]{${2:path from images}}
 endsnippet
 
 snippet 2image "two figures side by side: caption above, fignote below" b

@@ -1,0 +1,231 @@
+\styledchapter{Social Choice with Indifferences, Constrained Allocation}
+
+In Gibbard--Satterthwaite, we assumed everyone had strict preferences, but now we can suppose that agents can be indifferent between allocations, e.g., if they are indifferent between allocations which assign them the same objects.
+
+\section{Introduction and the Equivalence of Constrained Allocation}
+
+We introduce seemingly different problems that will turn out to be equivalent.
+
+\begin{definition}[Social choice problem with indifferences]
+	For each agent $i\in N$, suppose we have a partition $A^i \coloneqq \left\{A_1^i, \ldots,A_{m_i}^{i}\right\}$ of $A$ such that if $x,y \in A_\ell^{i}$, then $i$ is indifferent between $x$ and $y$.
+	Let $P^i$ be the set of strict preferences on $A^i$.
+	Then any $\succ_i \in P^i$ induces a weak ranking $\succsim_i^\star$ on $A$, defined by the following relation for $x \in A_\ell^i$, $y \in A_k^{i}$: \[
+		\begin{cases}
+			x \succ_i^\star y, \quad A_\ell^{i} \ne A_k^{i} \text{ and } A_\ell^{i} \succ_i A_k^{i} \\
+			x \sim_i^\star y, \quad A_\ell^{i}=A_{k}^{i}
+		\end{cases}
+	.\] 
+
+	A social choice function with indifferences is a function $f: \prod_{i \in N}^{} P^i \to A$ and is defined by \[
+		\left( N, A, \left( A^i \right)_{i \in N} \right)
+	,\] 
+	and the social choice problem is to select such a function given the indifference partitions.
+\end{definition}
+
+\begin{definition}[Constrained allocation problem]
+	Suppose for each agent $i \in N$, we have a set $X_i$ of available objects. 
+	An allocation is a function $\mu: N \to \cup_{i \in N} X_i$ such that for every $i \in N$, $\mu(i) \in X_i$. An allocation specifies for each agent $i$ a feasible object to be received.
+	Denote $\mathscr{A} \coloneqq \left\{\mu: N \to \cup_{i \in N}\right\}$ to be the set of allocations.
+
+	A constraint is a set $C \subseteq \mathscr{A}$ that is nonempty.\boxednote{The constraint set is given to us in the allocation problem.} Allocations in $C$ are called \emph{feasible}, while allocations not in $C$ are \emph{infeasible}.
+	Let $\tilde{P}_i$ be the set of strict preferences on $X_i$. A mechanism is a function $f: \prod_{i \in N}^{} \tilde{P}_i \to C$.
+
+	The constrained allocation problem is defined by \[
+		\left( N, \left( X_i \right)_{i \in N}, C \right)
+	.\] 
+\end{definition}
+
+\begin{proposition}[Equivalence of social choice with indifferences and constrained allocation]
+	Every constrained allocation problem can be written as a social choice problem with indifferences. Conversely, every social choice problem with indifferences can be written as a constrained allocation problem. Under these translations, mechanisms are the same up to outcomes that all agents regard as indifferent.
+\end{proposition}
+\begin{proof}
+	($\implies$) First start with a constrained allocation problem defined on \[
+		\left( N, \left( X_i \right)_{i \in N}, C \right)
+	.\] 
+	Replace each $X_i$ with $\left\{x \in X_i: \mu(i) = x \text{ for some } \mu \in C\right\}$, so every remaining available object is assigned to agent $i$ in some feasible allocation. Then set $A \coloneqq C$.
+	For each $i \in N$, define a partition of $A$ by \[
+		A^i \coloneqq \left\{ \left\{\mu \in C: \mu(i) = x\right\}: x \in X_i \right\}
+	.\] 
+	Thus two feasible allocations are in the same indifference class for agent $i$ exactly when they give agent $i$ the same object.\footnote{This is the right indifference class because in the constrained allocation problem, agent $i$ only has a strict preference over her own set $X_i$ of objects and does not care about others' objects.}
+
+	A strict preference $\succ_i$ on $X_i$ induces a strict preference $\succ_i^\star$ on $A^i$ by \[
+		\left\{\mu \in C: \mu(i) = x\right\} \succ_i^\star \left\{\mu \in C: \mu(i) = y\right\} \iff x \succ_i y
+	.\] 
+	This gives a canonical identification of the constrained allocation preference domain $\tilde{P}_i$ with the social choice preference domain $P^i$.
+	Hence a constrained allocation mechanism $f: \prod_{i \in N}^{} \tilde{P}_i \to C$ can be regarded as the social choice function with indifferences $f^\star: \prod_{i \in N}^{} P^i \to A$ given by \[
+		f^\star\left( \succ_1^\star,\ldots,\succ_{\left| N \right|}^\star \right)
+		=
+		f\left( \succ_1,\ldots,\succ_{\left| N \right|} \right)
+	.\] 
+	In this direction, the equivalence of mechanisms is immediate because the social outcomes are exactly the feasible allocations: $A=C$.
+
+	\medskip
+
+	($\impliedby$) Conversely, start with a social choice problem with indifferences defined on $\left( N,A,\left( A^i \right)_{i \in N} \right)$.
+	Set $X_i \coloneqq A^i$, so agent $i$'s available objects are her indifference classes.
+	With this definition, the constrained allocation preference domain $\tilde{P}_i$ is exactly $P^i$, the set of strict preferences over $A^i$.
+	Note that any allocation $\mu$ chooses one class $\mu(i) \in A^i$ for each agent $i$.
+	Define the constraint as a subset of all possible allocations $\mathscr{A} \coloneqq \left\{\mu: N \to \times_{i \in N} X_i \right\}= \left\{\mu: N \to \times_{i \in N} A_i\right\}$ by \[
+		C \coloneqq \left\{\mu \in \mathscr{A}: \bigcap_{i \in N}^{} \mu(i) \ne \O \right\}
+	.\] 
+	A tuple $(\mu(i))_i	\in \prod_{i \in N}^{} A^i$ of assigned indifference classes is feasible if there exists at least one original outcome $a \in A$ such that $a$ is in every assigned indifference class.
+
+	Thus any social choice function $f: \prod_{i \in N}^{} P^i \to A$ induces a constrained allocation mechanism $\hat{f}: \prod_{i \in N}^{} \tilde{P}_i \to C$ by \[
+		\hat{f}(\succ)(i) = A_\ell^i
+		\quad \text{where } f(\succ) \in A_\ell^i
+	.\] 
+	$\hat{f}(\succ)(i)$ is the indifference class $A_\ell^{i}$ in $i$'s partition of $A$, which is agent $i$'s object in the constructed constrained allocation problem.
+
+	To show that no preference-relevant information is lost in this translation, take a constrained allocation mechanism $g: \prod_{i \in N}^{} \tilde{P}_i \to C$ in the constructed allocation problem.
+	Since each feasible allocation $g(\succ)$ is a tuple of indifference classes with nonempty intersection, choose for each $\mu \in C$ some representative $r(\mu) \in \cap_{i \in N} \mu(i)$ and define the social choice function $\hat{g}: \prod_{i \in N}^{} P^i \to A$ by \[
+		\hat{g}(\succ) \coloneqq r(g(\succ))
+	.\] 
+	The choice of representative does not matter for preferences, since every representative lies in the same indifference class for every agent.
+\end{proof}
+
+\begin{example}[Examples of Equivalence]
+	Consider:
+	\begin{enumerate}[label = (\roman*)]
+		\item House allocation: Suppose we have a set of possible houses $H$, and put $X_i \coloneqq H$ for every $i$. The constrained set of allocations is \[
+			C = \left\{\mu: N \to H: \mu(i) \ne \mu(j), \text{ if } i \ne j\right\}
+		.\] 
+		\item School choice: Denote the set of schools $X$, and put $X_i \coloneqq X$ for all $i$. Each school $x \in X$ has a capacity $q_x \ge 0$, and the constrained set is \[
+			C = \left\{\mu: N \to X: \left| \mu^{-1}(x) \right| \le q_x, \forall x\right\}
+		.\] 
+		\item One-sided matching:\footnote{More commonly called the roommates problem.} Suppose $X_i \coloneqq N$ for every $i$ and we have the constrained set \[
+			C = \left\{\mu: N \to N : \mu\circ \mu (i) = i, \forall i\right\}
+		.\] 
+		$C$ requires that if $i$ is matched with $j$, $j$ must be matched with $i$. But it allows for people to be matched with themselves, i.e. unmatched.
+		\item Two-sided matching: Consider $N = M \amalg W$. Set \[
+			X_i = \begin{cases}
+				W, \quad i \in M \\ M, \quad i \in W
+			\end{cases}
+		,\] and put \[
+			C = \left\{\mu: N \to N: \mu \circ \mu(i) = i \text{ and } \mu(i) \in M \text{ if } i \in W, \forall i\right\} 
+		.\] 
+		\item Social choice: Put $X_i \coloneqq A$ for every $i$ and let \[
+			C = \left\{\mu: N \to A : \mu(i) = \mu(j), \forall i,j\right\}
+		.\] Thus the social choice problem we have been thinking of this whole time is a special case of the constrained allocation problem.
+	\end{enumerate}
+\end{example}
+
+We reintroduce two concepts in this new setting.
+
+\begin{definition}[Strategy-proof, Pareto efficient]
+	In the setting of a constrained allocation problem, a mechanism $f: \prod_{i \in N}^{} \tilde{P}_i \to C$ is strategy-proof if there does not exist $i, \succ_i, \succ_i', \succ_{-i}$ such that \[
+		f\left( \succ_i', \succ_{-i} \right)(i) \succ_i f\left( \succ_i, \succ_{-i} \right)(i)
+	.\] 
+
+	$f$ is Pareto efficient if for all $\succ \in \prod_{i \in N}^{} \tilde{P}_i$, there does not exist $\mu \in C$ such that:
+	\begin{enumerate}[label = (\roman*)]
+		\item For every $j \in N$, $\mu(j) \succsim_j f(\succ)(j)$ and 
+		\item For some $i \in N$, $\mu(i) \succ_i f(\succ)(i)$.
+	\end{enumerate}
+\end{definition}
+
+\section{Two Agent Constrained Allocation}
+
+Now, assume $N = \left\{1,2\right\}$.
+Fix the possible sets $X_1,X_2$ and a constraint $C$.
+
+\begin{definition}[Local dictator]
+	A local dictator at an infeasible allocation $(x,y) \not\in C$ is an agent who gets to keep her top choice when $x,y$ are top-ranked by agents 1 and 2 respectively.
+\end{definition}
+
+We will describe all strategy-proof and Pareto efficient mechanisms for $C$.
+
+\begin{proposition}[Two-agent local dictatorships] \label{4-13-a}
+	Let $G$ be the graph whose nodes are infeasible allocations and whose edges connect two infeasible allocations that share a coordinate.
+	After removing objects that can never be assigned to an agent in any feasible allocation, a mechanism $f$ is strategy-proof and Pareto efficient if and only if it is a local dictatorship: each connected component of $G$ is assigned a local dictator, and for every profile with top-ranked objects $(x,y)$, the mechanism gives both agents their top choices if $(x,y) \in C$; otherwise, the local dictator for the component containing $(x,y)$ keeps that agent's top choice and the other agent receives her favorite object compatible with the dictator's top choice.
+\end{proposition}
+
+\begin{lemma} \label{4-13-1}
+	Suppose that there exists $x \in X_i$ for some $i$ such that $\mu(i) \ne x$ for every $\mu \in C$. 
+	If $f$ is strategy-proof and Pareto efficient, then for $\succ_i$ and $\succ_i'$ that differ only in the position of $x$, then \[
+		f(\succ_i, \succ_j)(i) = f\left( \succ_i', \succ_j \right)(i)
+	.\] 
+	Furthermore, $j$'s object is unchanged by $i$'s misreport: \[
+		f\left( \succ_i,\succ_j \right)(j)
+		= 
+		f\left( \succ_i',\succ_j \right)(j)
+	.\] 
+\end{lemma}
+\begin{proof}
+	If the objects are not the same, then $i$ has a strict preference between the two objects. 
+	Suppose \[
+		f(\succ_i, \succ_j)(i) \succ_i f\left( \succ_i', \succ_j \right)(i)
+	.\] Since neither side is $x$ and $\succ_i,\succ_i'$ differ only in the position of $x$, we also have \[
+		f(\succ_i, \succ_j)(i) \succ_i' f\left( \succ_i', \succ_j \right)(i)
+	,\] 
+	which violates strategy-proofness.
+
+	If instead \[
+		f(\succ_i, \succ_j)(i) \prec_i f\left( \succ_i', \succ_j \right)(i)
+	,\] 
+	strategy-proofness is immediately violated.
+
+	\medskip
+
+	For the second claim, suppose for contradiction (without loss) that \[f\left( \succ_i, \succ_j \right)(j) \succ_j f\left( \succ_i',\succ_j \right)(j).\]
+	Then $f(\succ_i', \succ_j)$ is not efficient, as $f(\succ_i, \succ_j) \in C$ and $f(\succ_i,\succ_j) \sim_i f\left( \succ_i', \succ_j \right)$ by the first claim.
+\end{proof}
+
+We can write an allocation as a pair $(x,y)$. By Lemma (\ref{4-13-1}), for each $i$, we can get rid of all $x \in X_i$ that can never be chosen\boxednote{This is true because if there does not exist such a $y'$, $\mu(i) \ne x$ for all $\mu$, but we already got rid of all such $x$.} and assume that for every $(x,y) \not\in C$, there exist $x', y'$ such that $(x',y) \in C$ and $\left( x,y' \right) \in C$.
+
+Let $\overline{C} \subseteq C$ be the set of infeasible allocations.
+
+\begin{lemma} (\ref{5-23-1})
+	For any strategy-proof and efficient mechanism $f$, each infeasible allocation $\left( x,y \right) \not\in  C$ is associated with a local dictator. In particular, there exists a function $D: \overline{C} \to \left\{1,2\right\}$ that describes who is the local dictator at every infeasible allocation.
+
+	Furthermore, if $(x,y'') \not\in C$ as well, then \[
+		D\left( \left( x,y \right) \right) = 1 \implies D\left( \left( x,y'' \right) \right) = 1
+	.\] 
+\end{lemma}
+
+\begin{proof}	
+	Suppose $(x,y)$ is not feasible and there exist $x',y'$ such that $(x',y) \in C$ and $(x,y') \in C$. Consider the preferences
+	\begin{align*}
+		&\succ_1 : x \succ_1 x' \succ_1 \cdots \\
+		&\succ_2: y \succ_2 y' \succ_2 \cdots
+	.\end{align*}
+	We know that $f(\succ_1,\succ_2) \in \left\{\left( x,y' \right), \left( x',y \right)\right\}$ by Pareto efficiency of $f$.
+	Suppose without loss that we side with agent 1 and $f(\succ_1,\succ_2) = (x,y')$.
+
+	Consider another preference $\succ_2'$ where $y$ is top-ranked. We know by strategy-proofness that $f(\succ_1,\succ_2')(2) \ne y$. This implies $f(\succ_1,\succ_2')(1) = x$ by Pareto efficiency, as otherwise, we could have put $f(\succ_1,\succ_2') = (x',y)$, making agent 1 no worse off and agent 2 strictly better off.
+	By one more application of strategy-proofness, $f(\succ_1',\succ_2')(1) = x$ for any $\left( \succ_1',\succ_2' \right)$ such that 1 top-ranks $x$ and 2 top-ranks $y$, as if agent 1 does not get $x$ by ranking $x \succ_1' x'' \succ_1' \cdots$, she could deviate to reporting $x \succ_1 x' \succ_1 \cdots$ and get $x$, which is her top choice under $\succ_1'$. By Pareto efficiency, this implies that agent 2 gets his favorite object compatible with 1 getting $x$.
+
+	We have shown that agent $1$ is a local dictator over $(x,y)$.
+	We can repeat this procedure for every infeasible allocation,
+	put \[
+		D: \overline{C} \to \left\{1,2\right\}
+	,\] 
+	where the function indicates who we sided with in getting his or her top-ranked object.
+
+	\medskip
+
+	For the second claim, suppose not, so $D\left( \left( x,y'' \right) \right) = 2$. Consider the preferences 
+	\begin{align*}
+		&\succ_1: x \succ_1 \cdots \\
+		&\succ_2: y \succ_2 y'' \succ_2 \cdots \\
+		&\succ_2': y'' \succ_2' \cdots
+	.\end{align*}
+	Under $(\succ_1,\succ_2)$ then 2 gets something worse than $y''$, since 1 is the local dictator at $(x,y)$ and $(x,y'')$ is infeasible. But 2 can misreport $\succ_2'$ to get $y''$, as he is the dictator at $(x,y'')$, which violates strategy-proofness.
+
+	The same argument works for infeasible allocations that share the second coordinate instead of the first coordinate. Repeating this argument along a connected path shows that all infeasible allocations in the same connected component of $G$ have the same local dictator.
+\end{proof}
+
+\propositionproofstyle
+\begin{proof}[Proof of Proposition \ref{4-13-a}]
+	The first lemma lets us ignore any object that is never assigned to an agent in a feasible allocation, since changing the position of such an object cannot affect either agent's allocation.
+	Thus, for any infeasible $(x,y)$, there exist $x'$ and $y'$ such that $(x',y) \in C$ and $(x,y') \in C$.
+
+	The second lemma then assigns a local dictator to every infeasible allocation and shows that this assignment is constant across infeasible allocations that share a coordinate. Equivalently, it is constant on every horizontal or vertical edge of $G$, and therefore on every connected component of $G$.
+	Hence any strategy-proof and Pareto efficient mechanism must be a local dictatorship.
+
+	Conversely, suppose $f$ is a local dictatorship.
+	It is Pareto efficient because if the top-ranked pair $(x,y)$ is feasible, both agents receive their top choices; if $(x,y)$ is infeasible and agent 1 is the local dictator, then 1 receives $x$ and agent 2 receives her favorite object among the feasible allocations with first coordinate $x$, so no feasible allocation can improve 2 without making 1 worse off. The case where agent 2 is the local dictator is symmetric.
+
+	To see strategy-proofness, first suppose the reported top-ranked objects are feasible. Then each truthful agent receives that agent's favorite object and cannot gain by deviating. If the reported top-ranked pair is infeasible, the local dictator cannot gain because the dictator keeps the dictator's favorite object. The non-dictator receives the best object compatible with the dictator's reported top choice. 
+	A deviation by the non-dictator to another infeasible allocation means the dictator is the same by Lemma (\ref{5-23-1}), so the non-dictator cannot improve further on his or her best compatible object. 
+	A deviation that makes the top-ranked pair feasible gives the dictator the dictator's top choice and therefore gives the deviating non-dictator an object compatible with that same top choice, again no better than what the non-dictator already received. Thus no unilateral deviation is profitable.
+\end{proof}

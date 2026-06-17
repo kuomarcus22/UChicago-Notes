@@ -1,0 +1,347 @@
+\documentclass[10pt,oneside]{book}
+
+\usepackage[
+    paper=letterpaper,
+    includeheadfoot,
+    left=0.50in,
+    right=2.13in,
+    top=0.70in,
+    bottom=0.85in,
+    marginparsep=0.18in,
+    marginparwidth=1.66in,
+    headheight=15pt,
+    headsep=0.18in,
+    footskip=0.38in
+]{geometry}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage{hyperref}
+
+\setlength{\parindent}{15pt}
+\setlength{\parskip}{0pt}
+\raggedbottom
+\setlist[itemize]{topsep=2pt,itemsep=1pt,parsep=0pt,leftmargin=1.4em}
+
+\definecolor{lecthm}{HTML}{CCD5AE}
+\definecolor{leclem}{HTML}{ECF1D3}
+\definecolor{lecassump}{HTML}{DDB892}
+\definecolor{lecdef}{HTML}{FEFAE0}
+\definecolor{lecex}{HTML}{FFD9C7}
+\definecolor{lecline}{HTML}{4A4A4A}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\itshape ECMA 30760 Option 2 variants}
+\fancyhead[R]{\itshape Marcus Kuo}
+\fancyfoot[L]{\itshape Spring 2026}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\titleformat{\section}{\normalfont\bfseries\large}{\thesection}{0.9em}{}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{0.8em}{}
+
+\newcommand{\VariantTitle}[3]{%
+  \clearpage
+  \thispagestyle{fancy}
+  \noindent{\Large\bfseries Variant #1: #2}\par
+  \vspace{0.25em}
+  \noindent{\small #3}\par
+  \vspace{0.75em}
+}
+
+\newcommand{\StructurePreview}{%
+  \begin{tcolorbox}[
+    enhanced,
+    colback=white,
+    colframe=black!50,
+    boxrule=0.3pt,
+    arc=0.8mm,
+    left=6pt,
+    right=6pt,
+    top=5pt,
+    bottom=5pt,
+    before skip=3pt,
+    after skip=8pt,
+    title={Structure retained},
+    colbacktitle=black!5,
+    coltitle=black,
+    fonttitle=\bfseries\small,
+    attach boxed title to top left={xshift=5pt,yshift*=-1.45mm},
+    boxed title style={colframe=black!20,boxrule=0.25pt,arc=0.8mm,left=5pt,right=5pt,top=2pt,bottom=2pt}
+  ]
+  \begin{minipage}[t]{0.43\linewidth}
+    \textbf{Contents}\par
+    \vspace{0.2em}
+    0\quad Course Overview \dotfill 3\par
+    1\quad Voting \dotfill 4\par
+    \hspace*{1.2em}1.1\quad Introduction \dotfill 4\par
+    \hspace*{1.2em}1.2\quad Gibbard--Satterthwaite \dotfill 7
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.51\linewidth}
+    \rule{\linewidth}{0.45pt}\par
+    \vspace{0.35em}
+    {\Large\bfseries Voting}\hfill{\fontsize{26}{26}\selectfont\bfseries 1}\par
+    \vspace{0.35em}
+    \rule{\linewidth}{0.45pt}\par
+    \vspace{0.45em}
+    1.1\quad Introduction \dotfill 4\par
+    1.2\quad Gibbard--Satterthwaite \dotfill 7
+  \end{minipage}
+  \end{tcolorbox}
+}
+
+\newcommand{\BodyLead}{%
+  \section*{1.1 Introduction}
+  Formally, $\succ_i$ is a \emph{binary relation}; i.e., it is a subset of $A \times A$
+  with the infix notation of $x \succ_i y$ instead of $(x,y) \in \succ_i$.
+}
+
+\newcommand{\SampleMarginNote}{%
+  \marginpar{%
+    \begin{tcolorbox}[
+      enhanced,
+      colback=white,
+      colframe=black!45,
+      boxrule=0.25pt,
+      arc=0.8mm,
+      left=4pt,
+      right=4pt,
+      top=3pt,
+      bottom=3pt,
+      borderline west={1.5pt}{0pt}{lecthm!80!black}
+    ]
+    \scriptsize Importantly, $i$ does not depend on $\succ$. The dictatorial property
+    says that $i$'s top choice is chosen for all preference profiles.
+    \end{tcolorbox}%
+  }%
+}
+
+\newcommand{\DefText}{A social choice function is a mapping $f:P^N\to A$.}
+\newcommand{\ExampleText}{For instance, if $A=\{w,x,y,z\}$, plurality chooses $w$,
+instant runoff chooses $x$, elimination chooses $y$, the Borda count chooses $x$,
+and the Copeland rule chooses $x$.}
+\newcommand{\LemmaText}{If $X$ and $Y$ are dominating sets, then $X\subseteq Y$ or $Y\subseteq X$.}
+\newcommand{\TheoremText}{If $|A|>2$, then every surjective and strategy-proof social
+choice function is dictatorial, in that there is some agent $i$ such that
+\[
+  f(\succ)=\arg\max_{\succ_i}A
+\]
+for all preference profiles $\succ$.}
+\newcommand{\ProofText}{%
+  \noindent\textit{Proof of Lemma 1.1.9.}
+  Suppose not. Then any $x\in X\setminus Y$ and $y\in Y\setminus X$ have to both
+  beat each other in head-to-head elections, which cannot happen under strict preferences.
+  \hfill$\square$\par
+}
+
+\newcommand{\TBox}[3]{\begin{tcolorbox}[#1,title={#2}]#3\end{tcolorbox}}
+\newcommand{\RBox}[4]{%
+  \begin{tcolorbox}[#1]
+  \noindent{\colorbox{#4}{\strut\bfseries\footnotesize #2}}\hspace{0.45em}#3
+  \end{tcolorbox}
+}
+\newcommand{\OpenHead}[4]{%
+  \par\vspace{4pt}
+  \noindent{\colorbox{#4}{\makebox[\dimexpr\linewidth-2\fboxsep\relax][l]{\strut\bfseries\small #2}}}\par
+  \noindent\begin{tcolorbox}[#1]#3\end{tcolorbox}
+}
+\newcommand{\RuleBlock}[4]{%
+  \par\vspace{4pt}
+  \noindent{\bfseries\small #2}\par
+  \noindent{\color{#4}\rule{\linewidth}{1.2pt}}\par\vspace{-3pt}
+  \begin{tcolorbox}[#1]#3\end{tcolorbox}
+}
+
+\newcommand{\DefaultSample}{%
+  \StructurePreview
+  \BodyLead
+  \SampleMarginNote
+  \TBox{defbox}{Definition 1.1.3 (Social choice function).}{\DefText}
+  Informally, a social choice function is a decision rule for each preference profile.
+  \TBox{exbox}{Example 1.1.5.}{\ExampleText}
+  \TBox{lembox}{Lemma 1.1.9.}{\LemmaText}
+  \ProofText
+  \TBox{thmbox}{Theorem 1.2.5 (Gibbard--Satterthwaite).}{\TheoremText}
+}
+
+\newcommand{\RunInSample}{%
+  \StructurePreview
+  \BodyLead
+  \SampleMarginNote
+  \RBox{defbox}{Definition 1.1.3}{\DefText}{lecdef!88!gray}
+  Informally, a social choice function is a decision rule for each preference profile.
+  \RBox{exbox}{Example 1.1.5}{\ExampleText}{lecex!84!gray}
+  \RBox{lembox}{Lemma 1.1.9}{\LemmaText}{leclem!84!gray}
+  \ProofText
+  \RBox{thmbox}{Theorem 1.2.5}{\TheoremText}{lecthm!84!gray}
+}
+
+\newcommand{\OpenHeadSample}{%
+  \StructurePreview
+  \BodyLead
+  \SampleMarginNote
+  \OpenHead{defbox}{Definition 1.1.3 (Social choice function).}{\DefText}{lecdef!90!gray}
+  Informally, a social choice function is a decision rule for each preference profile.
+  \OpenHead{exbox}{Example 1.1.5.}{\ExampleText}{lecex!84!gray}
+  \OpenHead{lembox}{Lemma 1.1.9.}{\LemmaText}{leclem!86!gray}
+  \ProofText
+  \OpenHead{thmbox}{Theorem 1.2.5 (Gibbard--Satterthwaite).}{\TheoremText}{lecthm!84!gray}
+}
+
+\newcommand{\RuleSample}{%
+  \StructurePreview
+  \BodyLead
+  \SampleMarginNote
+  \RuleBlock{defbox}{Definition 1.1.3 (Social choice function).}{\DefText}{lecdef!75!black}
+  Informally, a social choice function is a decision rule for each preference profile.
+  \RuleBlock{exbox}{Example 1.1.5.}{\ExampleText}{lecex!72!black}
+  \RuleBlock{lembox}{Lemma 1.1.9.}{\LemmaText}{leclem!75!black}
+  \ProofText
+  \RuleBlock{thmbox}{Theorem 1.2.5 (Gibbard--Satterthwaite).}{\TheoremText}{lecthm!78!black}
+}
+
+\newcommand{\StyleOne}{%
+  \tcbset{
+    basebox/.style={enhanced,breakable,boxrule=0.25pt,arc=0.5mm,left=6pt,right=6pt,top=3pt,bottom=3pt,before skip=3pt,after skip=4pt,fonttitle=\bfseries\small,coltitle=black,titlerule=0pt,toptitle=1.5pt,bottomtitle=1.5pt},
+    defbox/.style={basebox,colback=lecdef!4!white,colframe=lecdef!72!black,colbacktitle=lecdef!90!gray},
+    exbox/.style={basebox,colback=lecex!4!white,colframe=lecex!70!black,colbacktitle=lecex!84!gray},
+    lembox/.style={basebox,colback=leclem!4!white,colframe=leclem!72!black,colbacktitle=leclem!86!gray},
+    thmbox/.style={basebox,colback=lecthm!5!white,colframe=lecthm!78!black,colbacktitle=lecthm!84!gray}
+  }%
+}
+
+\newcommand{\StyleTwo}{%
+  \tcbset{
+    basebox/.style={enhanced,breakable,boxrule=0pt,frame hidden,arc=0mm,left=7pt,right=6pt,top=3pt,bottom=3pt,before skip=3pt,after skip=4pt,fonttitle=\bfseries\small,coltitle=black,titlerule=0pt,toptitle=1.5pt,bottomtitle=1.5pt,borderline south={0.25pt}{0pt}{black!25}},
+    defbox/.style={basebox,colback=lecdef!3!white,colbacktitle=lecdef!90!gray,borderline west={2pt}{0pt}{lecdef!80!black}},
+    exbox/.style={basebox,colback=lecex!3!white,colbacktitle=lecex!84!gray,borderline west={2pt}{0pt}{lecex!74!black}},
+    lembox/.style={basebox,colback=leclem!3!white,colbacktitle=leclem!86!gray,borderline west={2pt}{0pt}{leclem!78!black}},
+    thmbox/.style={basebox,colback=lecthm!3!white,colbacktitle=lecthm!84!gray,borderline west={2pt}{0pt}{lecthm!82!black}}
+  }%
+}
+
+\newcommand{\StyleThree}{%
+  \tcbset{
+    basebox/.style={enhanced,breakable,boxrule=0.28pt,arc=0.8mm,left=6pt,right=6pt,top=4pt,bottom=4pt,before skip=4pt,after skip=5pt,fonttitle=\bfseries\small,coltitle=black,titlerule=0.25pt,toptitle=2pt,bottomtitle=2pt,segmentation style={solid,black!15,line width=0.25pt}},
+    defbox/.style={basebox,colback=white,colframe=lecdef!65!black,colbacktitle=lecdef!88!gray},
+    exbox/.style={basebox,colback=white,colframe=lecex!62!black,colbacktitle=lecex!82!gray},
+    lembox/.style={basebox,colback=white,colframe=leclem!66!black,colbacktitle=leclem!84!gray},
+    thmbox/.style={basebox,colback=white,colframe=lecthm!72!black,colbacktitle=lecthm!82!gray}
+  }%
+}
+
+\newcommand{\StyleFour}{%
+  \tcbset{
+    basebox/.style={enhanced,breakable,frame hidden,boxrule=0pt,arc=0mm,left=6pt,right=6pt,top=3pt,bottom=3pt,before skip=3pt,after skip=4pt,fonttitle=\bfseries\footnotesize,coltitle=black,titlerule=0pt,toptitle=1pt,bottomtitle=1pt,halign title=flush left},
+    defbox/.style={basebox,colback=lecdef!3!white,colframe=lecdef!65!black,colbacktitle=lecdef!88!gray,borderline north={1.6pt}{0pt}{lecdef!82!black}},
+    exbox/.style={basebox,colback=lecex!3!white,colframe=lecex!62!black,colbacktitle=lecex!82!gray,borderline north={1.6pt}{0pt}{lecex!75!black}},
+    lembox/.style={basebox,colback=leclem!3!white,colframe=leclem!65!black,colbacktitle=leclem!84!gray,borderline north={1.6pt}{0pt}{leclem!78!black}},
+    thmbox/.style={basebox,colback=lecthm!3!white,colframe=lecthm!70!black,colbacktitle=lecthm!82!gray,borderline north={1.6pt}{0pt}{lecthm!82!black}}
+  }%
+}
+
+\newcommand{\StyleFive}{%
+  \tcbset{
+    basebox/.style={enhanced,breakable,frame hidden,arc=0mm,left=0pt,right=0pt,top=0pt,bottom=0pt,before skip=4pt,after skip=4pt,colback=white},
+    defbox/.style={basebox,colback=lecdef!2!white},
+    exbox/.style={basebox,colback=lecex!2!white},
+    lembox/.style={basebox,colback=leclem!2!white},
+    thmbox/.style={basebox,colback=lecthm!2!white}
+  }%
+}
+
+\newcommand{\StyleSix}{%
+  \tcbset{
+    basebox/.style={enhanced,breakable,boxrule=0.22pt,arc=1mm,left=5pt,right=5pt,top=3pt,bottom=3pt,before skip=3pt,after skip=4pt,colback=white},
+    defbox/.style={basebox,colframe=lecdef!70!black,borderline west={1.5pt}{0pt}{lecdef!84!black}},
+    exbox/.style={basebox,colframe=lecex!66!black,borderline west={1.5pt}{0pt}{lecex!78!black}},
+    lembox/.style={basebox,colframe=leclem!68!black,borderline west={1.5pt}{0pt}{leclem!82!black}},
+    thmbox/.style={basebox,colframe=lecthm!74!black,borderline west={1.5pt}{0pt}{lecthm!84!black}}
+  }%
+}
+
+\newcommand{\StyleSeven}{%
+  \tcbset{
+    basebox/.style={enhanced,breakable,boxrule=0.28pt,arc=0mm,left=7pt,right=6pt,top=3pt,bottom=4pt,before skip=3pt,after skip=4pt,fonttitle=\bfseries\small,coltitle=black,titlerule=0pt,toptitle=1.5pt,bottomtitle=1.5pt,boxed title style={empty},attach title to upper={\quad}},
+    defbox/.style={basebox,colback=white,colframe=lecdef!70!black,colbacktitle=lecdef!88!gray},
+    exbox/.style={basebox,colback=white,colframe=lecex!66!black,colbacktitle=lecex!82!gray},
+    lembox/.style={basebox,colback=white,colframe=leclem!68!black,colbacktitle=leclem!84!gray},
+    thmbox/.style={basebox,colback=white,colframe=lecthm!76!black,colbacktitle=lecthm!82!gray}
+  }%
+}
+
+\newcommand{\StyleEight}{%
+  \tcbset{
+    basebox/.style={enhanced,breakable,boxrule=0pt,frame hidden,arc=0mm,left=6pt,right=6pt,top=3pt,bottom=3pt,before skip=3pt,after skip=4pt,colback=white},
+    defbox/.style={basebox,borderline west={2.2pt}{0pt}{lecdef!82!black}},
+    exbox/.style={basebox,borderline west={2.2pt}{0pt}{lecex!75!black}},
+    lembox/.style={basebox,borderline west={2.2pt}{0pt}{leclem!78!black}},
+    thmbox/.style={basebox,borderline west={2.2pt}{0pt}{lecthm!82!black}}
+  }%
+}
+
+\begin{document}
+\pagenumbering{roman}
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{1.0in}
+{\fontsize{26}{30}\selectfont\bfseries Option 2 Adjacent\par Note Formats\par}
+\vspace{0.35in}
+{\Large ECMA 30760 sample renderings\par}
+\vspace{0.25in}
+{\large Spring 2026\par}
+\vfill
+\begin{tabular}{>{\bfseries}p{1.05in}p{4.25in}}
+Anchor & Option 2 worked because the color identified the environment quickly
+without making the whole body visually heavy.\\
+Direction & These variants keep mostly white bodies and colored headings, but vary
+rules, gutters, run-in labels, and open blocks.\\
+Deviation & Some variants are deliberately less box-like, so the notes can become
+denser without losing the color coding.
+\end{tabular}
+\end{titlepage}
+\pagenumbering{arabic}
+
+\StyleOne
+\VariantTitle{1}{Micro Header Bands}{The closest sibling to Option 2: full-width colored headers, smaller vertical padding, and very faint body tints.}
+\DefaultSample
+
+\StyleTwo
+\VariantTitle{2}{Band Plus Left Spine}{A full header band keeps the Option 2 scan pattern, while a thin colored spine lets boxes remain recognizable even when the header is far above a multi-page block.}
+\DefaultSample
+
+\StyleThree
+\VariantTitle{3}{White Cards With Saturated Headers}{The body is fully white and the environment color is concentrated in the header. This is cleaner for long formal statements and proofs.}
+\DefaultSample
+
+\StyleFour
+\VariantTitle{4}{Overline Bands}{A stronger colored rule sits above each header. This is more editorial: the color reads like a section marker rather than a filled note.}
+\DefaultSample
+
+\StyleFive
+\VariantTitle{5}{Open Full-Width Ribbons}{The header is a full-width ribbon, but the body is not framed. This is the most page-efficient banded design while still preserving color-coded environment starts.}
+\OpenHeadSample
+
+\StyleSix
+\VariantTitle{6}{Run-In Tags With Side Rules}{The label begins the paragraph, so short definitions save an entire title line. The side rule preserves the color code when the text wraps.}
+\RunInSample
+
+\StyleSeven
+\VariantTitle{7}{Inline Header Row}{The title is attached to the upper text row rather than separated by a title/body boundary. This makes compact environments feel closer to normal paragraphs.}
+\DefaultSample
+
+\StyleEight
+\VariantTitle{8}{Rule-Led Blocks}{This is the largest departure: no box fill and no frame, just a title, a color rule, and a lightly indented body. It is compact but still highly scannable.}
+\RuleSample
+
+\end{document}

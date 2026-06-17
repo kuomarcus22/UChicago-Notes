@@ -1,0 +1,282 @@
+\styledchapter{Aggregation}
+
+How should a benevolent social planner decide the outcome if people report their individual preferences to her?
+
+\section{Ordinal Aggregation}
+
+\begin{notation}
+	Let $R$ denote the set of weak preferences on $A$; i.e., the set of orderings, allowing ties.
+\end{notation}
+
+$R$ is the set of complete, transitive, and reflexive binary relations $\succsim$ on $A.$
+
+\begin{definition}[Strict, weak social welfare function]
+	A strict social welfare function is a function $F: P^N \to P$. A weak social welfare function is a function $F: P^N \to R$.
+\end{definition}
+
+Note that even weak social welfare functions are defined on the set of \emph{strict} preference profiles.
+
+\begin{definition}[Kendall--Tau distance] \label{3-30-2}
+	For any two strict rankings $\succ_i, \succ_i'$ on $A$, define the distance $d(\succ_i, \succ_i')$ between the two rankings as the number of pairs $a,b \in A$ such that $a \prec_i b$ and $a\succ_i' b$ or $a \succ_i b$ and $a\prec_i' b$.
+\end{definition}
+
+Note that the outcome of social welfare functions is a preference itself. Examples include:
+\begin{enumerate}[label = (\roman*)]
+	\item Dictatorship: $F\left( \succ_1, \cdots, \succ_{\left| N \right|} \right) = \succ_1$ for every $\left( \succ_1, \cdots, \succ_{\left| N \right|} \right)$.
+	\item Elimination: rank in increasing order of round left.
+	\item Borda count.
+	\item Copeland method. 
+	\item Kemeny--Young: Choose $F(\succ)$ to minimize \[
+		\sum\limits_{i=1}^{\left| N \right|} d\left( F(\succ), \succ_i \right)
+	.\] 
+	\item Dodgson: For any outcome $a$ and preference profile $\succ$, let $\succ^{a}$ be the profile such that
+		\begin{enumerate}[label = (\roman*)]
+			\item $a$ is a Condorcet winner,
+			\item $\sum_{i=1}^{\left| N \right|} d(\succ_i, \succ_i^a)$ is minimized.
+		\end{enumerate}
+	Then define $z(a) = \sum_{i=1}^{\left| N \right|} d(\succ_i, \succ_i^{a})$. Rank $a$ above $b$ iff $z(a) \le z(b)$.
+\end{enumerate}
+
+The elimination SWF is weak, as in a given round, the same number of people could rank the bottom two outcomes as their top choices. The Borda count is also weak.
+
+\begin{definition}[Paretian property]
+	A social welfare function $F$ satisfies the Paretian property if for any $\succ $ and $a,b \in A$ is such that if for all $i$, $a \succ_i b$, then \[
+		a F(\succ) b
+	.\] 
+\end{definition}
+\begin{definition}[Independence of irrelevant alternatives]
+	A social welfare function $F$ satisfies independence of irrelevant alternatives (IIA) if for any two profiles $\succ,\succ'$ such that for all $i$, $\succ_i$ and $\succ_i'$ agree when restricted to $\left\{a,b\right\}$ for $a,b \in A$, then \[
+		a F(\succ) b \iff a F(\succ') b
+	.\] 
+\end{definition}
+	
+\begin{example}[IIA assumption]
+	Consider $A = \left\{a,b,c\right\}$ where $a \succ_1 b \succ_1 c$ and $b \succ_2 c \succ_2 a$. Without IIA, we might want to rank $b \succ_{S} a \succ_S c$, which seems sensible. Why would we want IIA? It is because in the preference $\succ_S$, we inferred cardinal rankings from ordinal rankings. To see why this is problematic, consider adding outcomes $d_1,\ldots,d_k$, where $d_\ell$ means that outcome $a$ is selected and you lose $\ell$ cents. Then
+	\begin{align*}
+		&a \succ_1' d_1 \succ_1' \cdots \succ_1' b \succ_1' c \\
+		& b \succ_2' c \succ_2' a \succ_2' d_1 \succ_2' \cdots \succ_2' d_k
+	,\end{align*}
+	in which case IIA prohibits us from picking $a$.
+\end{example}
+
+The Borda count infers cardinal information when it shouldn't (and does not satisfy IIA); this is why in the Kendall--Tau distance, we just use the number of outcomes that the two preferences disagree on, and not anything relating to the ordering.
+
+\begin{theorem}[Arrow's Impossibility]
+	If $\left| A \right| > 2$, then the only (weak or strict) social welfare functions that satisfy IIA and the Paretian property are dictatorial.
+\end{theorem}
+
+\section{Cardinal Aggregation}
+
+Assume that each agent $i$ has a utility function $u_i : A \to \R^+$, where we have a class $\mathscr{U}$ so $u_i \in \mathscr{U}$. We want to provide axioms on a function $F$ mapping $\mathscr{U}^{N} \to R$ or $\mathscr{U}^{N} \to U$.
+For each $a \in A$, we can stack the utilities into a vector $\left( u_1(a), u_2(a), \ldots,u_{\left| N \right|}(a) \right)'$. Instead of defining axioms on $F$, we could provide axioms on a binary relation $\succsim_s$ on $\R_+^{\left| N \right|}$. This would allow us to compare outcomes $a,b \in A$ by comparing their vectors $\left( u_1(a),\ldots,u_{\left| N \right|}(a) \right)$ and $\left( u_1(b),\ldots,u_{\left| N \right|}(b) \right)$.
+We could use this to form a function $F: \mathscr{U}^{\left| N \right|} \to R$, where \[
+	a \succsim b \iff \left( u_1(a),\ldots,u_{\left| N \right|}(a) \right) \succsim \left( u_1(b),\ldots,u_{\left| N \right|}(b) \right)
+.\] 
+
+\begin{definition}[Cardinal social welfare ranking]
+	A cardinal social welfare ranking is a complete, transitive and reflexive binary relation $\succsim_s$ on $\R_+^{\left| N \right|}$.
+\end{definition}
+
+\begin{example}[Cardinal social welfare rankings]
+	We have some examples:\footnote{The leximin ranking is discussed further later in this section.}
+	\begin{enumerate}[label = (\roman*)]
+		\item Utilitarian: $u \succsim_s u'$ iff $\sum_i u_i \ge \sum_i u_i'$ 
+		\item Rawlsian: $u \succsim_s u'$ iff $\min_i u_i \ge \min_i u_i'$ 
+		\item Leximin: $u \succ_s v \iff u_k^* \succ v_k^*,$  where $u^*,v^*$ are $u,v$ rearranged in increasing order, and $k$ is the first index where $u,v$ differ.
+	\end{enumerate}
+\end{example}
+
+Now we define properties we want cardinal rankings to satisfy.
+\begin{definition}[Continuous cardinal social welfare ranking]
+	We say that $\succsim_s$ is continuous if for any $u \in \R_+^{\left| N \right|}$, the sets \[
+		\left\{u': u' \succsim_s u\right\}, \quad \left\{u' : u \succsim_s u'\right\}
+	\]  are closed. 
+	In other words, if $\left\{u^n\right\} \to u^*$ is such that $u^n \succsim_s u'$ for each $n\in \N$, then $u^* \succsim_s u'$. Similarly, if $u' \succsim_s u^n$ for each $n\in \N$, then $u' \succsim_s u^*$.
+\end{definition}
+
+\begin{definition}[Independence of unconcerned agents]
+	$\succsim_s$ is independent of unconcerned agents if for any $x,y \in \R_+$ and any agent $i$, we have \[
+		(x, u_{-i}) \succsim_s (x, u_{-i}') \iff (y,u_{-i}) \succsim_s (y,u_{-i}')
+	\] 
+	for any $u_{-i}, u_{-i}'$.
+\end{definition}
+
+We can represent a well-behaved ranking by a function that is additively separable across agents.
+
+\begin{theorem}[Debreu]
+	For any $\succsim_s$ satisfying continuity and independence of unconcerned agents, there exist functions $\left\{g_i\right\}_{i \in N}$ such that \[
+		u\succsim_s u' \iff \sum\limits_{i}^{} g_i(u_i) \ge \sum\limits_{i}^{} g_i(u_i')
+	.\] 
+\end{theorem}
+
+We have the following analogue of the Paretian property.
+
+\begin{definition}[Strict monotonicity]
+	We say that $\succsim_s$ is strictly monotonic if whenever $u_i \ge u_i'$ for all $i$ and there is some $j$ with $u_j > u_j'$, then $u \succ_s u'$.
+\end{definition}
+
+\begin{definition}[Scale invariance]
+	We say $\succsim_s$ is scale invariant if \[
+		u \succsim_s u' \iff \lambda u \succsim_s \lambda u', \quad \forall\  \lambda \in \R_{>0}
+	.\] 
+\end{definition}
+
+\begin{theorem} \label{4-1-1}
+	If $\succsim_s$ satisfies continuity, independence of unconcerned agents, strict monotonicity, and scale invariance, and if $\left| N \right| \ge 2$, then there are positive weights $w_{1},\ldots,w_{\left| N \right|}$ which sum to $1$ and some $\gamma \in \R$ such that \[
+		u \succsim_s v \iff \sum\limits_{i}^{} w_i \frac{u_i^{1-\gamma}-1}{1-\gamma} \ge \sum\limits_{i}^{} w_i \frac{v_i^{1-\gamma} - 1}{1- \gamma}
+	.\] 
+\end{theorem}
+
+We now explore properties of this CRRA transformation of the utilities. We see that when $\gamma=0$, we have \[
+	u \succsim_s v \iff \sum\limits_{i}^{} w_i u_i \ge \sum\limits_{i}^{} w_i v_i
+,\] which is a weighted utilitarian preference.
+
+Furthermore, \[
+	\lim\limits_{\gamma \uparrow 1} \frac{u^{1-\gamma}-1}{1-\gamma} = \ln{\left(u\right)}
+,\] so for $\gamma$ close to $1$,  \[
+	u\succsim_s v  \iff \sum\limits_{i}^{} w_i \ln{\left(u_i\right)} \ge \sum\limits_{i}^{} w_i \ln{\left(v_i\right)} \iff \prod\limits_{i}^{} u_i^{w_i} \ge \prod\limits_{i}^{}  v_i ^{w_i}
+,\] 
+which is called \emph{Nash welfare}.
+
+As $\gamma\to \infty$, we get the leximin\footnote{A portmanteau of lexicographic and min.} order, in that \[
+	u \succ_s v \iff u_k^* \succ v_k^*
+,\] 
+where $u^*,v^*$ are $u,v$ rearranged in increasing order, and $k$ is the first index where $u,v$ differ. The leximin ordering is a refinement (in the English, not mathematical sense) of the Rawlsian ordering.
+
+Note that Theorem (\ref{4-1-1}) does not say that we can pick $\gamma$; instead, after fixing some ranking $\succsim_s$ of the planner, then we know there is \emph{some} $\gamma$ that represents the planner's rankings in this additively separable, CRRA way.
+
+\section{Aggregation Under Uncertainty}
+
+Suppose there is a finite number of states $\Theta = \left\{\theta_1,\ldots,\theta_m\right\}$. Each agent $i$ has utility $u_i: \Theta \to \R$ and evaluates a lottery $p$ over $\Theta$ by the Von Neumann--Morgenstern expected utility function \[
+	U_i(p) = \sum\limits_{k=1}^{m} p_k \underbrace{u_i (\theta_k)}_{\mathclap{\text{Bernoulli index}}}
+.\] 
+(We use $U$ to denote utility over $\Delta(\Theta)$, including degenerate lotteries, and $u$ to denote utility over $\Theta$.)
+
+There are good normative reasons for people to be VNM maximizers, but in an experimental setting, people violate this utility structure.
+We assume that the planner is also VNM rational with utility \[
+	U_s(p) = \sum\limits_{k=1}^{m} p_k u_s(\theta_k)
+.\] 
+
+\begin{definition}[Paretian property]
+	The planner's utility function $U_s(\cdot)$ satisfies the Paretian property if $U_i(p) \ge U_i(q)$ for all $i$ implies $U_s(p) \ge U_s(q)$.
+\end{definition}
+
+\begin{theorem}[Harsanyi]
+	The planner's utility $U_s$ is Paretian iff there is a constant $\beta$ and weights $\left( w_i \right)_{i \in N}$ which are nonnegative such that \[
+		u_s(\theta) = \beta + \sum\limits_{i}^{} w_i u_i(\theta), \quad \forall\  \theta \in \Theta
+	.\] Equivalently, we have a necessary and sufficient condition for the Paretian property of \[
+		U_s(p) = \beta + \sum\limits_{i}^{} w_i U_i(p)
+	.\] 
+\end{theorem}
+
+To prove this theorem, we first recall Lemma (\ref{4-1-2}). 
+
+\begin{proof}
+	We can write this as a linear programming problem, where the theorem holds if there exist $\beta$ and $(w_i)_{i \in N}$ such that \[
+		\begin{pmatrix}
+			1 & u_1(\theta_1) & u_2(\theta_1) & \cdots & u_{\left| N \right|}(\theta_1) \\
+			1 & u_1(\theta_2) & u_2(\theta_2) & \cdots & u_{\left| N \right|}(\theta_2) \\
+			\vdots & \vdots & \vdots & \ddots & \vdots \\
+			1 & u_1(\theta_{m}) & u_2(\theta_m) & \cdots & u_{\left| N \right|}(\theta_m)
+		\end{pmatrix} \begin{pmatrix}
+		\beta \\
+		w_1 \\
+		w_2 \\
+		\vdots \\
+		w_{\left| N \right|}
+		\end{pmatrix} = \begin{pmatrix}
+		u_s(\theta_1) \\
+		u_s(\theta_2) \\
+		\vdots \\
+		u_{s}(\theta_m)
+		\end{pmatrix} 
+	\] and \[
+	-\begin{pmatrix}
+		0 & 1 & 0 & \cdots & 0 \\
+		0 & 0 & 1 & \cdots & 0 \\
+		0 &  &  & \ddots & 0 \\
+		0 & 0 & 0 & \cdots & 1
+	\end{pmatrix} \begin{pmatrix}
+		\beta \\
+		w_1 \\
+		w_2 \\
+		\vdots \\
+		w_{\left| N \right|}
+		\end{pmatrix} \le \begin{pmatrix}
+		0  \\
+		0 \\ \vdots \\ 0
+		\end{pmatrix} 
+	.\] 
+
+	If the feasibility alternative in Farkas' Lemma holds, then we are done. So, assume that we do not have satisfactory $\beta$ and $(w_i)_{i \in N}$.
+	To apply Lemma (\ref{4-1-2}), take the vector of unknowns to be
+	\[
+		x = \left(\beta,w_1,\ldots,w_{\left| N \right|}\right)'.
+	\]
+	The first displayed system above is the equality system $Bx=c$, with one equality for each state $\theta_k$. The second displayed system is the inequality system $Ax \le 0$, with one inequality $-w_j \le 0$ for each agent $j$.
+	Hence the Farkas certificate has two kinds of multipliers. The equality constraints receive unrestricted multipliers $q_1,\ldots,q_m$, while the inequalities $-w_j \le 0$ receive nonnegative multipliers $p_1,\ldots,p_{\left| N \right|}$.
+	Writing $p$ and $q$ as row vectors, the certificate alternative in Lemma (\ref{4-1-2}) says that, if no such $\beta,w$ exist, then these multipliers must satisfy
+	\[
+		pA + qB = 0, \qquad 0 > p \cdot b + q \cdot c = p \cdot 0 + q\cdot c = q \cdot c
+	.\]
+	Here, the inequality matrix $A$ has rows
+	\[
+		\left(0, -e_j\right), \qquad j \in N,
+	\]
+	where the $0$ is the coefficient on $\beta$ and $-e_j$ selects the coefficient on $w_j$. Hence
+	\[
+		pA = \left(0,-p_1,\ldots,-p_{\left| N \right|}\right).
+	\]
+	The equality matrix $B$ has one row for each state:
+	\[
+		\left(1,u_1(\theta_k),\ldots,u_{\left| N \right|}(\theta_k)\right), \qquad k=1,\ldots,m.
+	\]
+	Therefore
+	\[
+		qB =
+		\left(
+			\sum\limits_{k=1}^{m} q_k,
+			\sum\limits_{k=1}^{m} q_k u_1(\theta_k),
+			\ldots,
+			\sum\limits_{k=1}^{m} q_k u_{\left| N \right|}(\theta_k)
+		\right).
+	\]
+	The condition $pA+qB=0$ means that each component of this row vector is zero. From the first component, which is the coefficient on $\beta$, we have
+	\begin{equation}
+		\sum\limits_{k=1}^{m} q_k = 0 \label{eq:4-1-1}
+	,\end{equation}
+	while the component corresponding to $w_j$ is
+	\[
+		-p_j + \sum\limits_{k=1}^{m} q_k u_j(\theta_k),
+	\]
+	so the coefficients on the $w_j$ imply
+	\begin{equation}
+		\sum\limits_{k=1}^{m} q_k u_j(\theta_k)-p_j = 0, \quad \forall\ j \label{eq:4-1-2}
+	.\end{equation}
+	Lastly, $c$ is the right-hand side of the equality system, so
+	\[
+		c =
+		\left(u_s(\theta_1),\ldots,u_s(\theta_m)\right)'.
+	\]
+	Thus the strict inequality $q \cdot c < 0$ is
+	\begin{equation}
+		\sum\limits_{k=1}^{m} q_k u_s(\theta_k) < 0 \label{eq:4-1-3}
+	.\end{equation}
+
+	Because $p_j \ge 0$, Equation (\ref{eq:4-1-2}) implies
+	\[
+		\sum\limits_{k=1}^{m} q_k u_j(\theta_k) \ge 0, \quad \forall\ j
+	.\] 
+	Notice that if $q$ solves the above three constraints, then for every $\lambda > 0$, $\lambda q$ is a solution as well. Rescale $q$ such that \[
+		\left| q_k \right| \le \frac{1}{m}
+	\] for each $k$ and define $r_k = q_k + \frac{1}{m}$ for all $k$. 
+
+	Returning to the three constraints with $r$ replacing $q$, 
+	\begin{align*}
+		\sum\limits_{k=1}^{m} r_k &= 1, \quad r_k \ge 0, \qquad \forall\ k \\
+		\sum\limits_{k=1}^{m} r_k u_j(\theta_k) - \sum\limits_{k=1}^{m} \frac{1}{m} u_j(\theta_k) &\ge 0, \quad \forall\ j \\
+		\sum\limits_{k=1}^{m} r_k u_s(\theta_k) - \sum\limits_{k=1}^{m} \frac{1}{m} u_s(\theta_k) &< 0
+	.\end{align*}
+	The second line says that every agent $j$ weakly prefers the lottery defined by $(r_k)$ to the uniform lottery, while the planner strictly prefers the uniform lottery. This is a violation of the Paretian property.
+\end{proof}
+

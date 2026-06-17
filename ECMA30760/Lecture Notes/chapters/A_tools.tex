@@ -1,0 +1,500 @@
+\styledchapter{Tools}
+
+\section{Systems of Linear Inequalities}
+
+For $A \in \R^{m\times n}$, $x \in \R^n$, and $b \in \R^m$, we can write $b$ linear constraints on the $n$ components of $x$ by writing \[
+	Ax \le b
+\] if $e_i' Ax \le b_i$ for every $i$.
+
+We interpret $\le$ componentwise: for $u,v \in \R^m$,
+\[
+	u \le v \iff u_i \le v_i \quad \forall i=1,\ldots,m
+.\]
+
+The feasible set is \[
+	x \in \R^n : Ax \le b
+.\] Each inequality cuts off a half-space, as the overall space is split into two parts: one fulfilling the inequality and one not. The feasible set is the intersection of all half-spaces.
+
+\begin{definition}[Polyhedron, polytope]
+	A polyhedron is the solution set to a system of linear inequalities $Ax \le b$, and a polytope is a bounded polyhedron.
+\end{definition}
+
+Polyhedra are convex.
+
+\section{Fourier--Motzkin Elimination}
+Suppose a linear system involves many variables. If we want to eliminate variable $x_n$, we can rewrite all inequalities so that they get either upper bounds on $x_n$ or lower bounds on $x_n$. Then we have \[
+	x_n \le u_i \left( x_1,\ldots,x_{n-1} \right), \quad x_n \ge l_j \left( x_1,\ldots,x_{n-1} \right)
+.\] Feasibility requires that \[
+	l_j\left( x_1,\ldots,x_{n-1} \right) \le u_i\left( x_1,\ldots,x_{n-1} \right)
+\] for every $i,j$, which is a system of linear inequalities in $x_1,\ldots,x_{n-1}$.
+
+The variable can be chosen iff \[
+	\max_j l_j(x_{-n}) \le \min_i u_i(x_{-n})
+,\] and so we can eliminate $x_n$ by replacing the original inequalities with $l_j(x_{-n}) \le u_i(x_{-n})$ for all $i,j$.
+
+We can continue this process until we only get one variable left, from which it is easy to see if the resulting system of inequalities is contradictory. We then know if there is a solution to the original system.
+
+\begin{definition}[Consequence relation]
+	An inequality
+	\[
+		a_0 x \le b_0
+	\]
+	is a consequence relation of the system $Ax \le b$ if every $x \in \R^n$ satisfying $Ax \le b$ also satisfies $a_0 x \le b_0$.
+\end{definition}
+
+If $z \in \R^m$ satisfies $z \ge 0$ and $z \ne 0$, then
+\[
+	(zA)x \le z \cdot b
+\]
+is a consequence relation of $Ax \le b$.
+
+\section{Farkas' Lemma}
+
+If there does not exist an $x$ such that $Ax \le b$, then can we prove infeasibility in a systematic way?
+Informally, Farkas' Lemma says that if a linear system has no solution, then there is a linear combination of the constraints that visibly produces a contradiction.
+
+\begin{lemma}[Farkas']
+	Let $A \in \R^{m\times n}$ and $b \in \R^m$. Either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $x \in \R^n$ such that \[
+			Ax \le b
+		.\] 
+		\item There exists\footnote{Here, and in the rest of the chapter, we take $y \in \R^m$ to be a row vector. We call $y$ the \emph{multiplier vector} or \emph{certificate of infeasibility}.} $y \in \R^m$ with $y \ge 0$ such that \[
+			y A  = 0, \quad y \cdot b < 0
+		.\]
+	\end{enumerate}
+	but not both.
+\end{lemma}
+\begin{proof}
+	First, the two alternatives are mutually exclusive. If both held, then multiplying the inequalities by $y$ gives \[
+		y\left( Ax \right) \le y \cdot b
+	,\] but $yA = 0$, so \[
+		0 \le y \cdot  b < 0
+	,\]  a contradiction.
+
+	Now suppose there is no $x$ such that $Ax \le b$. Repeatedly applying Fourier--Motzkin elimination eventually removes all variables and produces an impossible scalar inequality
+	\[
+		0 \le c
+	\]
+	with $c<0$. Every inequality produced along the way comes from a nonnegative linear combination of previously derived inequalities, and therefore from a nonnegative linear combination of the original inequalities. Hence this final contradiction has the form
+	\[
+		(yA)x \le y \cdot b
+	\]
+	for some $y \in \R^m$ with $y \ge 0$, where the left-hand side is identically zero because all variables have been eliminated. Thus $yA=0$ and $y \cdot b = c < 0$.
+\end{proof}
+
+Farkas is useful when checking whether transfers or prices exist that make a mechanism implementable.
+
+There are some alternative formulations of Farkas' Lemma.
+\begin{lemma}[Rational Farkas']
+	Let $A \in \Q^{m\times n}$ and $b \in \Q^m$. Either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $x \in \Q^n$ such that \[
+			Ax \le b
+		.\] 
+		\item There exists $y \in \Z^m$ with $y \ge 0$ such that \[
+			y A  = 0, \quad y \cdot b < 0
+		.\]
+		\end{enumerate}
+	but not both.
+\end{lemma}
+
+If all entries of $A$ and $b$ are rational, then Fourier--Motzkin elimination preserves rationality. Hence in Farkas' Lemma we may take $y$ to be rational, and then clear denominators to take $y$ integer-valued.
+
+What if our system had equalities as well as inequalities? Suppose we want to know if there is an $x \in \R^n$ with \[
+	Ax \le b, \quad Bx = c
+\] for some matrix $B \in \R^{p\times n}$. We have that
+\begin{align*}
+	&Ax \le b, \quad Bx = c \\
+	\iff\ &Ax \le b, \quad Bx \le c, \quad -Bx \le -c
+.\end{align*}
+So we can rewrite the problem as a system of inequalities and apply Farkas' Lemma. Writing the resulting multiplier as $\left[s\ \ t_1\ \ t_2\right]$ with $s \in \R^m$ and $t_1,t_2 \in \R^p$, and then setting $t = t_1 - t_2$, gives the following variant.
+
+\begin{lemma}[Farkas' II] \label{4-1-2}
+	Let $A \in \R^{m\times n}$, $b \in \R^m$, $B \in \R^{p \times n}$, and $c \in \R^p$. Then either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $x \in \R^n$ such that \[
+			Ax \le b, \quad Bx = c
+		.\] 
+		\item There exists $s \in \R^m$ and $t \in \R^p$ such that \[
+			s \ge 0, \quad sA + tB = 0, \quad s \cdot b + t \cdot c < 0
+			.\]
+	\end{enumerate}
+	but not both.
+\end{lemma}
+
+Another common situation is to want solutions with $x \ge 0$. A similar argument gives:
+\begin{lemma}[Farkas' III]
+	Let $A \in \R^{m\times n}$, $b \in \R^m$, $B \in \R^{p \times n}$, and $c \in \R^p$. Then either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $x \in \R^n$ with $x \ge 0$ such that \[
+			Ax \le b, \quad Bx = c
+		.\] 
+		\item There exists $s \in \R^m$ and $t \in \R^p$ with $s \ge 0$ such that \[
+			sA + tB \ge 0, \quad s \cdot b + t \cdot c < 0
+			.\]
+	\end{enumerate}
+	but not both.
+\end{lemma}
+
+\begin{lemma}[Gordan's]
+	Let $A \in \Q^{m \times d}$. Then either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $y \in \R^d$ such that  \[
+			Ay \gg 0
+		,\] i.e. every entry of $Ay$ is strictly positive, or
+		\item There exists a nonzero vector of nonnegative integers $z \ne 0$ such that \[
+			zA = 0
+		.\] 
+	\end{enumerate}
+	but not both.
+\end{lemma}
+
+\section{Minimax Theorem}
+
+Consider a two-player zero-sum game. Players 1 and 2 can play actions in the sets \[
+	A_1 = \left\{1,\ldots,q\right\}, \quad A_2 = \left\{1,\ldots,r\right\}
+\] respectively. The payoffs are captured by a matrix $B \in \R^{q\times r}$ where $B_{ij}$ records the amount player 2 pays to player 1 if player 1 plays $i$ and player 2 plays $j$. If $B_{ij} < 0$, this means player 1 pays player 2.
+
+Each player can choose a mixed strategy \[
+	\alpha_1 \in \Delta A_1, \quad \alpha_2 \in \Delta A_2
+,\] which gives the expected payoff $\alpha_1 B \alpha_2$ to player 1 and $-\alpha_1 B \alpha_2$ to player 2.
+
+Given a fixed strategy $\alpha_1$ for player 1, player 2 would choose $\alpha_2$ to minimize $\alpha_1 B \alpha_2$. Thus player 1's value is
+\[
+	V_1^* = \max_{\alpha_1 \in \Delta A_1} \min_{\alpha_2 \in \Delta A_2} \alpha_1 B \alpha_2
+.\]
+Conversely, player 2's value is
+\[
+	V_2^* = \min_{\alpha_2 \in \Delta A_2} \max_{\alpha_1 \in \Delta A_1} \alpha_1 B \alpha_2
+.\]
+If $\alpha_1^*$ solves the maximin problem and $\alpha_2^*$ solves the minimax problem, then
+\begin{align*}
+	V_1^*
+	&= \max_{\alpha_1 \in \Delta A_1} \min_{\alpha_2 \in \Delta A_2} \alpha_1 B \alpha_2 \\
+	&= \min_{\alpha_2 \in \Delta A_2} \alpha_1^* B \alpha_2 \\
+	&= \min\left\{\eta(1)\alpha_1^* B e_1 + \cdots + \eta(r)\alpha_1^* B e_r : \left(\eta(1),\ldots,\eta(r)\right) \in \Delta A_2\right\} \\
+	&= \min\left\{\alpha_1^* B e_j : 1 \le j \le r\right\}
+.\end{align*}
+That is, once player 1 has fixed $\alpha_1^*$, player 2 can do no better with mixed strategies than with a pure strategy. Hence
+\[
+	V_1^*
+	= \min_{1\le j\le r} \alpha_1^* B e_j
+	\le \alpha_1^* B \alpha_2^*
+	\le \max_{\alpha_1 \in \Delta A_1} \alpha_1 B \alpha_2^*
+	= V_2^*
+,\]
+so always $V_1^* \le V_2^*$.
+\begin{theorem}[Minimax]
+	In a two-player zero-sum game, \[
+		\max_{\alpha_1 \in \Delta A_1} \min_{\alpha_2 \in \Delta A_2} \alpha_1 B \alpha_2
+		=
+		\min_{\alpha_2 \in \Delta A_2} \max_{\alpha_1 \in \Delta A_1} \alpha_1 B \alpha_2
+	.\] 
+\end{theorem}
+\begin{proof}
+	Suppose $V_1^* < V_2^*$. Then the following system is infeasible:
+	\begin{align*}
+		xB &\ge V_2^* \mathds{1}_r' \\
+		x &\ge 0 \\
+		x \cdot \mathds{1}_q &= 1
+	.\end{align*}
+	Indeed, if it had a solution, then that strategy $x$ would guarantee player 1 a payoff of at least $V_2^*$ against every pure strategy of player 2, and hence against every mixed strategy of player 2 as well.
+
+	We can rewrite the inequality $xB \ge V_2^* \mathds{1}_r'$ as
+	\[
+		-B'x' \le -V_2^* \mathds{1}_r
+	.\]
+	By Farkas' Lemma III, there must exist $s \in \R^r$ with $s \ge 0$ and $t \in \R$ such that
+	\[
+		s(-B') + t\mathds{1}_q \ge 0, \quad -V_2^* s \cdot \mathds{1}_r + t < 0
+	.\]
+	Equivalently,
+	\[
+		sB' \le t\mathds{1}_q, \quad V_2^* s \cdot \mathds{1}_r > t
+	.\]
+	Note that $s \ne 0$, since otherwise we would have $0 \le t\mathds{1}_q$ and $0 > t$, a contradiction. Let
+	\[
+		s^* = \frac{s}{1 \cdot s}
+	.\]
+	Then
+	\[
+		s^* B' \le \frac{t}{1 \cdot s} \mathds{1}_q, \quad \frac{t}{1 \cdot s} < V_2^*
+	.\]
+	Taking transposes gives
+	\[
+		B(s^*)' \le \frac{t}{1 \cdot s} \mathds{1}_q, \quad \frac{t}{1 \cdot s} < V_2^*
+	.\]
+	But this says that the strategy $s^*$ for player 2 guarantees a payment of at most $\frac{t}{1 \cdot s}$, which is strictly less than the optimal value $V_2^*$, a contradiction.
+\end{proof}
+
+\section{The Standard Form}
+
+It is often useful to rewrite a linear system in the form
+\[
+	Cz = d, \quad z \ge 0
+.\]
+We can convert any system
+\[
+	Ax \le b
+\]
+into this form in two steps.
+
+First, introduce slack variables $s \ge 0$ so that
+\[
+	Ax + s = b
+.\]
+Second, rewrite each unrestricted variable as the difference of two nonnegative variables:
+\[
+	x_i = y_i - y_i', \quad y_i,y_i' \ge 0
+\]
+for every $i$. Then
+\[
+	A\left( y-y' \right) + s = b
+\]
+with $y,y',s \ge 0$. Equivalently,
+\[
+	\begin{pmatrix}
+		A & -A & I
+	\end{pmatrix}
+	\begin{pmatrix}
+		y \\ y' \\ s
+	\end{pmatrix}
+	= b,
+	\quad
+	\begin{pmatrix}
+		y \\ y' \\ s
+	\end{pmatrix}
+	\ge 0
+.\]
+
+\begin{proposition}
+	The system $Ax \le b$ has a solution if and only if
+	\[
+		\begin{pmatrix}
+			A & -A & I
+		\end{pmatrix}
+		\begin{pmatrix}
+			y \\ y' \\ s
+		\end{pmatrix}
+		= b
+	\]
+	has a solution with $y,y',s \ge 0$.
+\end{proposition}
+\begin{proof}
+	If $x$ satisfies $Ax \le b$, let
+	\[
+		s = b-Ax
+	\]
+	so that $s \ge 0$. Then define
+	\[
+		y_i = \max\left\{x_i,0\right\}, \quad y_i' = \max\left\{-x_i,0\right\}
+	\]
+	for each $i$. Thus $x = y-y'$ and
+	\[
+		A\left( y-y' \right) + s = Ax + (b-Ax) = b
+	.\]
+
+	Conversely, if $y,y',s \ge 0$ satisfy
+	\[
+		A\left( y-y' \right) + s = b
+	,\]
+	then setting $x = y-y'$ gives
+	\[
+		Ax = b-s \le b
+	\]
+	since $s \ge 0$.
+\end{proof}
+
+\section{Polyhedra}
+
+Thus far our approach to systems of the type $Ax \le b$ has been algebraic. It is also useful to take a geometric point of view. Write
+\[
+	P(A,b) = \left\{x \in \R^n : Ax \le b\right\}
+.\]
+
+\begin{definition}[Face]
+	A face of $P(A,b)$ is a set of the form
+	\[
+		F = P(A,b) \cap \left\{x : a_0 x = b_0\right\}
+	\]
+	where $a_0 x \le b_0$ is a consequence relation of $Ax \le b$.
+\end{definition}
+
+Taking $a_0 = 0$ and $b_0 = 1$ shows that $\varnothing$ is always a face, while taking $a_0 = 0$ and $b_0 = 0$ shows that $P(A,b)$ itself is a face.
+
+\begin{definition}[Vertex]
+	A face consisting of a single point is called a vertex.
+\end{definition}
+
+If $P$ is a polytope, let $\operatorname{vert}(P)$ denote the set of vertices of $P$.
+
+\begin{proposition}
+	Let $v \in P(A,b)$. The following are equivalent:
+	\begin{enumerate}[label = (\roman*)]
+		\item $v$ is a vertex of $P(A,b)$.
+		\item There do not exist distinct $x,y \in P(A,b)$ and $\theta \in (0,1)$ such that
+		\[
+			v = \theta x + (1-\theta)y
+		.\]
+		\item There is no nonzero vector $d$ such that both $v+d$ and $v-d$ belong to $P(A,b)$.
+		\item There are $n$ linearly independent rows $A_{i_1},\ldots,A_{i_n}$ of $A$ such that
+		\[
+			A_{i_1}v = b_{i_1}, \quad \ldots, \quad A_{i_n}v = b_{i_n}
+		.\]
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	(i) $\implies$ (ii): Since $v$ is a vertex, there is a consequence relation $a_0 x \le b_0$ such that
+	\[
+		\left\{v\right\} = P(A,b) \cap \left\{x : a_0 x = b_0\right\}
+	.\]
+	If $v = \theta x + (1-\theta)y$ with $x,y \in P(A,b)$ and $\theta \in (0,1)$, then
+	\[
+		b_0 = a_0 v = \theta a_0 x + (1-\theta)a_0 y
+	.\]
+	Since $a_0 x \le b_0$ and $a_0 y \le b_0$, this is only possible if $a_0 x = b_0 = a_0 y$. Hence $x,y \in \left\{v\right\}$.
+
+	(ii) $\implies$ (iii): If $v+d$ and $v-d$ both lie in $P(A,b)$ for some $d \ne 0$, then
+	\[
+		v = \frac{1}{2}(v+d) + \frac{1}{2}(v-d)
+	\]
+	writes $v$ as a nontrivial convex combination of two distinct feasible points.
+
+	(iii) $\implies$ (iv): Let
+	\[
+		T = \left\{A_i : A_i v = b_i\right\}
+	\]
+	be the set of tight rows at $v$. If $\operatorname{span}(T) \ne \R^n$, then there is a nonzero vector $d$ orthogonal to every row in $T$. For rows $A_j \notin T$, we have $A_j v < b_j$, so for sufficiently small $\varepsilon > 0$,
+	\[
+		A_j(v \pm \varepsilon d) < b_j
+	.\]
+	For rows in $T$, orthogonality gives
+	\[
+		A_i(v \pm \varepsilon d) = A_i v = b_i
+	.\]
+	Hence $v \pm \varepsilon d \in P(A,b)$, contradicting (iii).
+
+	(iv) $\implies$ (i): Let $I = \left\{i_1,\ldots,i_n\right\}$. If $x \in P(A,b)$ satisfies
+	\[
+		\sum_{i \in I} A_i x = \sum_{i \in I} b_i
+	,\]
+	then since each $A_i x \le b_i$, equality of the sums implies $A_i x = b_i$ for every $i \in I$. Because the rows $\left\{A_i\right\}_{i \in I}$ are linearly independent, this system has the unique solution $x = v$. Thus
+	\[
+		\left\{v\right\} = P(A,b) \cap \left\{x : \left(\sum_{i \in I} A_i\right)x = \sum_{i \in I} b_i\right\}
+	,\]
+	so $v$ is a face consisting of a single point.
+\end{proof}
+
+\begin{definition}[Facet]
+	A facet of $P(A,b)$ is a proper face $F \ne P(A,b)$ that is maximal among proper faces, i.e. there is no proper face $G \ne F$ with $F \subseteq G$.
+\end{definition}
+
+\begin{proposition}
+	Every polytope is the convex hull of its vertices. Conversely, the convex hull of any finite subset of $\R^n$ is a polytope.
+\end{proposition}
+
+This gives two useful descriptions of a polytope $P$:
+\begin{enumerate}[label = (\roman*)]
+	\item the \emph{H-representation}, $P = \left\{x : Ax \le b\right\}$,
+	\item the \emph{V-representation}, $P = \operatorname{co}\left(\operatorname{vert}(P)\right)$.
+\end{enumerate}
+The H-representation makes membership easy to check, while the V-representation is convenient for optimization because linear objectives attain their optima at vertices.
+
+\begin{example}[Birkhoff--von Neumann]
+	A matrix $B \in \R^{n\times n}$ is \emph{bistochastic} if
+	\begin{enumerate}[label = (\roman*)]
+		\item $\sum_{j=1}^n B_{ij} = 1$ for every row $i$,
+		\item $\sum_{i=1}^n B_{ij} = 1$ for every column $j$,
+		\item $B_{ij} \ge 0$ for all $i,j$.
+	\end{enumerate}
+	The set of bistochastic matrices is a polytope, called the \emph{Birkhoff polytope} and denoted $B_n$.
+
+	A matrix $P \in \left\{0,1\right\}^{n\times n}$ is a \emph{permutation matrix} if each row and each column contains exactly one $1$.
+\end{example}
+
+\begin{theorem}[Birkhoff--von Neumann]
+	The vertices of $B_n$ are exactly the permutation matrices.
+\end{theorem}
+\begin{proof}
+	First, every permutation matrix is a vertex. Indeed, let $P$ be a permutation matrix and suppose
+	\[
+		P = \theta M + (1-\theta)N
+	\]
+	with $M,N \in B_n$ and $\theta \in (0,1)$. If $P_{ij} = 0$, then nonnegativity implies $M_{ij} = N_{ij} = 0$. If $P_{ij} = 1$, then since $M_{ij},N_{ij} \le 1$, we must have $M_{ij} = N_{ij} = 1$. Hence $M=N=P$.
+
+	Conversely, let $M$ be a vertex of $B_n$. Suppose some entry satisfies $0 < M_{ij} < 1$. Since row $i$ sums to $1$, there is another column $k \ne j$ with $0 < M_{ik} < 1$. Since column $k$ also sums to $1$, there is some row $\ell \ne i$ with $0 < M_{\ell k} < 1$. Continuing in this way, and using finiteness, we eventually obtain a cycle of entries of $M$ lying strictly between $0$ and $1$.
+
+	Along that cycle, add $\delta$ to every other entry and subtract $\delta$ from the alternating entries. For sufficiently small $\left|\delta\right|$, all entries remain in $\left[0,1\right]$, and because each row and column in the cycle gains and loses exactly one $\delta$, the row and column sums remain equal to $1$. Thus both modified matrices $M^{+\delta}$ and $M^{-\delta}$ belong to $B_n$, and
+	\[
+		M = \frac{1}{2}M^{+\delta} + \frac{1}{2}M^{-\delta}
+	\]
+	with $M^{+\delta} \ne M^{-\delta}$, contradicting that $M$ is a vertex. Therefore every entry of a vertex is either $0$ or $1$, and the row and column sum conditions force the matrix to be a permutation matrix.
+\end{proof}
+
+\section{Lattices and Tarski's Fixed Point Theorem}
+
+\begin{definition}[Partial order]
+	A binary relation $\ge$ on a set $L$ is a partial order if it is reflexive, transitive, and antisymmetric.
+\end{definition}
+
+\begin{definition}[Complete lattice]
+	A complete lattice $(L,\ge)$ is a set $L$ with a partial order $\ge$ such that:
+	\begin{enumerate}[label = (\roman*)]
+		\item for every $A \subseteq L$, there is an element $u \in L$, denoted $\bigvee A$, such that $u \ge x$ for all $x \in A$ and whenever $v \ge x$ for all $x \in A$, we have $v \ge u$;
+		\item for every $A \subseteq L$, there is an element $u \in L$, denoted $\bigwedge A$, such that $u \le x$ for all $x \in A$ and whenever $v \le x$ for all $x \in A$, we have $v \le u$.
+	\end{enumerate}
+\end{definition}
+
+In particular, a complete lattice has a largest element $1 = \bigvee L$ and a smallest element $0 = \bigwedge L$.
+
+\begin{example}
+	For any set $X$, the power set $2^X$ ordered by inclusion is a complete lattice. The join is union and the meet is intersection.
+\end{example}
+
+\begin{example}
+	For any set $X$, the set $2^X \times 2^X$ becomes a complete lattice under
+	\[
+		(A,B) \ge (A',B') \iff A \supseteq A' \text{ and } B \subseteq B'
+	.\]
+	Then
+	\[
+		(A,B) \vee (A',B') = \left(A \cup A',\, B \cap B'\right),
+	\]
+	while
+	\[
+		(A,B) \wedge (A',B') = \left(A \cap A',\, B \cup B'\right)
+	.\]
+\end{example}
+
+\begin{definition}[Order-preserving]
+	If $(L,\ge)$ is a complete lattice and $f : L \to L$, we say $f$ is order-preserving if
+	\[
+		x \le y \implies f(x) \le f(y)
+	.\]
+\end{definition}
+
+\begin{theorem}[Tarski]
+	If $(L,\ge)$ is a complete lattice and $f : L \to L$ is order-preserving, then the set of fixed points
+	\[
+		F = \left\{x \in L : f(x) = x\right\}
+	\]
+	is a nonempty complete lattice under $\ge$.
+\end{theorem}
+\begin{proof}
+	Let
+	\[
+		D = \left\{x \in L : x \le f(x)\right\}
+	.\]
+	Since $0 \le f(0)$, the set $D$ is nonempty. Let $u = \bigvee D$. For every $x \in D$, we have $x \le u$, hence
+	\[
+		f(x) \le f(u)
+	\]
+	by monotonicity. But $x \le f(x)$ for $x \in D$, so $x \le f(u)$ for all $x \in D$. Therefore $u \le f(u)$, which implies $f(u) \in D$. Since $u$ is the least upper bound of $D$, we also have $f(u) \le u$. Hence $f(u)=u$, so $F$ is nonempty.
+
+	Now let $G \subseteq F$ and put $w = \bigvee G$. For every $x \in G$, we have $x = f(x) \le f(w)$, so $f(w)$ is an upper bound for $G$. Hence
+	\[
+		w \le f(w)
+	.\]
+	Thus $f$ maps the interval $\left[w,1\right]$ into itself. Applying the first part of the argument to the lattice $\left[w,1\right]$ shows that $f$ has a least fixed point in $\left[w,1\right]$, and that fixed point is exactly the least upper bound of $G$ inside $F$. A symmetric argument gives greatest lower bounds in $F$. Therefore $F$ is a complete lattice.
+\end{proof}

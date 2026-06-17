@@ -55,6 +55,57 @@
 
 \usepackage{listings} % Required for insertion of code
 
+\tcbset{
+	hwrcodeboxstyle/.style={
+		colback=gray!5,
+		colframe=black!65,
+		boxrule=0.45pt,
+		arc=1.4mm,
+		left=6pt,
+		right=6pt,
+		top=6pt,
+		bottom=6pt
+	}
+}
+
+\lstdefinelanguage{Rnote}{
+	language=R,
+	morekeywords={
+		mutate,summarise,summarize,filter,group_by,ungroup,across,
+		case_when,if_else,coalesce,replace_na,left_join,inner_join,
+		full_join,semi_join,anti_join,pivot_longer,pivot_wider,
+		ggplot,aes,labs,facet_wrap
+	}
+}
+
+\lstdefinestyle{hwrcode}{
+	language=Rnote,
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue!75!black},
+	commentstyle=\itshape\color{teal!55!black},
+	stringstyle=\color{red!70!black},
+	showstringspaces=false,
+	columns=fullflexible,
+	keepspaces=true,
+	tabsize=4,
+	gobble=1,
+	breaklines=true,
+	breakatwhitespace=false,
+	breakautoindent=true,
+	breakindent=2em,
+	aboveskip=0pt,
+	belowskip=0pt,
+	frame=none
+}
+
+\newtcblisting{rcodebox}{
+	enhanced,
+	breakable,
+	listing only,
+	hwrcodeboxstyle,
+	listing options={style=hwrcode}
+}
+
 \usepackage{etoolbox} % Required for if statements
 
 \usepackage{mathrsfs}
@@ -107,9 +158,10 @@
 %	FONT
 %----------------------------------------------------------------------------------------
 
-\usepackage[utf8]{inputenc} % Required for inputting international characters
-\usepackage[T1]{fontenc} % Output font encoding for international characters
-
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+% Core math and theorem support.
+\usepackage{amsmath, amssymb, amsthm, mathtools}
 
 %----------------------------------------------------------------------------------------
 %	HEADERS AND FOOTERS

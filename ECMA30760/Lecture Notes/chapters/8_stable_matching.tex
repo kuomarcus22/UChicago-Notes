@@ -1,0 +1,503 @@
+\styledchapter{Stable Matching}
+
+We now specialize to cases of cooperative games with non-transferable utility. Recall that an action $a \in A_N$ of all agents is in the core if there is no coalition $S \subseteq N$ and $a' \in A_S$ such that $a'$ is a Pareto improvement, i.e. \[
+	a' \succsim_j a, \ \forall j \in S \text{ and } a' \succ_k a \text{ for some } k \in S
+.\] 
+\section{One-Sided Matching}
+
+Consider a set $N$ of agents and a scenario where we want to match the agents into pairs and singletons.
+Each $i \in N$ has a strict ranking on $N$.\boxednote{If $i\succ_i j$, then $i$ would prefer to be unmatched than to match with $j$.}
+
+\begin{definition}[Matching]
+	A matching is a function $\mu: N \to N$ such that $\mu \circ \mu = \operatorname{id}_N$. Equivalently, if $i$ is matched with $j$, then $j$ is matched with $i$.
+\end{definition}
+
+Since we want to consider deviations by coalitions $S$, define $A_S$ to be the set of all matchings among the agents in $S$, in that \[
+	A_S = \left\{\nu: S\to S \mid \nu \circ \nu = \operatorname{id}_S\right\}
+.\] 
+We can extend agent $i$'s preference on $N$ to a ranking $\succsim_i^\star$ on $\cup_{\left\{S: i \in S\right\}} A_S$ by letting\boxednote{There are now indifferences because multiple actions now match agent $i$ with agent $j$; the agents $i$ and $j$ are indifferent between these actions.} \[
+	\nu \succsim_i^\star \eta \iff \nu(i) \succ_i \eta(i) \text{ or } \nu(i) = \eta(i)
+.\] 
+
+\begin{definition}[Acceptable, individually rational]
+	We say that $j$ is acceptable to $i$ if $j \succ_i i$. A matching $\mu$ is individually rational if $\mu(i)$ is acceptable for every $i$ such that $\mu(i) \ne i$, i.e. if everyone who is matched weakly prefers his/her partner to him/herself.
+\end{definition}
+
+\begin{definition}[Stable, blocking pair]
+	A matching $\mu$ is stable if it is individually rational and there is no pair $i,j$ such that $i \ne j$ and \[
+		i \succ_j \mu(j) \text{ and } j \succ_i \mu(i)
+	.\] 
+
+	A pair $(i,j)$ in which \[
+		i \succ_j \mu(j) \text{ and } j \succ_i \mu(i)
+	\] is called a \emph{blocking pair}, as they could form a coalition (blocking the matching $\mu$) and both be better off.
+\end{definition}
+
+\begin{example}
+	Consider $N = \left\{1,2,3\right\}$ with the following preferences:
+	\[
+		\begin{array}{ccc}
+			\succsim_1 & \succsim_2 & \succsim_3 \\
+			\hline
+			2 & 3 & 1 \\
+			3 & 1 & 2 \\
+			1 & 2 & 3
+		\end{array}
+	.\]
+	Then all matchings have a blocking pair.
+\end{example}
+
+\begin{proposition}
+	A matching $\mu$ is in the core if and only if it is stable. In particular, to check the core, we just need to check deviations from coalitions of size $2$.
+\end{proposition}
+\begin{proof}
+	The forward direction is immediate from the definition of the core. There is no coalition of any size that can break off and be weakly better off, so there is no coalition of size 2 that can break off and be weakly better off. The agents in any potential coalition of size 2 must be matched to each other in the new matching, so their partners must be different from in the original matching, so if they were weakly better off, they would be strictly better off (by strict preferences on $N$). $\mu$ being in the core gives us that there is no coalition of size 2 where both agents are strictly better off; i.e., there is no blocking pair.
+
+	We prove the reverse direction by contraposition. Suppose $\mu$ is not in the core, so there exists nonempty $S \subseteq N$ and $\nu \in A_S$ such that for all $j \in S$, $\nu(j) \succsim_j^\star \mu(j)$, and there exists $i \in S$ such that $\nu(i) \succ_i^\star \mu(i)$.
+
+	To show nonstability, we need a deviation that makes an agent strictly better off: we must keep $i$ in the pair.
+	\begin{description}
+		\item[Case 1]: Suppose $\nu(i) = i$.
+		Then $i \succ_i \mu(i)$, so $\mu$ is not individually rational and hence not stable.
+		\item[Case 2]: Suppose $\nu(i) = k \in S$ for $k \ne i$.
+		Since $k \in S$, $\nu(k) \succsim_k^\star \mu(k)$.
+		But because $\mu(k) \ne i$ (if $\mu(k) = i$, then $\mu(i) = k = \nu(i)$ and $i$ is not actually strictly better off under $\nu$) this preference is strict, so \[
+			\nu(k) \succ_k^\star \mu(k)
+		.\] This implies that $(i,k)$ is a blocking pair at $\mu$, so $\mu$ is not stable.
+	\end{description}
+\end{proof}
+
+\section{One-to-One Two-Sided Matching}
+Suppose $M,W \subseteq N$ are disjoint, nonempty, and $M \cup W = N$.
+We can view this as a special case of the one-sided matching environment where for all $m \ne m' \in M$ and $w \ne w' \in W$, \[
+	m' \succ_m m, \quad w' \succ_w w
+.\] In other words, each agent would rather be unmatched than be matched to someone from the same group.
+
+\begin{definition}[Gale--Shapley (Deferred Acceptance Algorithm)]
+	The traditional algorithm is the $M$-proposing deferred acceptance algorithm.
+	The algorithm proceeds in the following steps:
+	\begin{enumerate}[label = (\arabic*)]
+		\item Each $m \in M$ proposes to his favorite acceptable $w \in W$. Each $w \in W$ is tentatively matched with her favorite acceptable proposer and rejects everyone else. Call $\mu_1$ this match. If there were no rejections, stop and return the tentative matches.
+		\item In each step $k \ge 2$, each $m \in M$ who was rejected in the previous round proposes to his favorite acceptable $w$ who has not yet rejected him. Each $w \in W$ is tentatively matched with her favorite acceptable $m$ among those who applied in this round and her tentative match from the previous round. All other applicants are rejected. Let $\mu_k$ denote this match. If there were no rejections, stop and return the tentative matches.
+	\end{enumerate}
+
+	For any profile of preferences $\succ$, let $DA_M(\succ)$ be the matching returned by the $M$-proposing deferred acceptance algorithm.
+\end{definition}
+
+\begin{remark}
+	Note that:
+	\begin{enumerate}[label = (\roman*)]
+		\item The welfare of each $w$ is nondecreasing during the course of the algorithm.
+		\item The algorithm is at most $\left| M \right| \cdot (\left| W \right| + 1)$ steps.
+	\end{enumerate}
+\end{remark}
+
+\begin{example}
+	Let \[
+		M\coloneqq \left\{m_1,m_2,m_3,m_4\right\}, W \coloneqq \left\{w_1,w_2,w_3,w_4\right\}
+	.\] Write out the ordering of \emph{acceptable} matches as \[
+		\begin{array}{cccc|cccc}
+			\succ_{m_1} & \succ_{m_2} & \succ_{m_3} & \succ_{m_4} & \succ_{w_1} & \succ_{w_2} & \succ_{w_3} & \succ_{w_4} \\
+			\hline
+			w_1 & w_1 & w_1 & w_1 & m_1 & m_1 & m_3 & m_1 \\
+			    & w_2 & w_2 & w_2 &     & m_4 &     & m_2 \\
+			    &     & w_3 & w_3 &     & m_2 &     &     \\
+			    &     &     & w_4 &     & m_3 &     &
+		\end{array}
+	.\]
+
+	In step 1, all $m$ apply to $w_1$, who rejects all but $m_1$. Then we have the tentative match \[
+		\mu_1: \left( m_1,w_1 \right),m_2,m_3,m_4,w_2,w_3,w_4
+	.\] 
+
+	In step 2, $m_2$, $m_3$, and $m_4$ apply to $w_2$, who rejects all but $m_4$. Then we have \[
+		\mu_2: \left( m_1,w_1 \right), \left( m_4,w_2 \right), m_2, m_3, w_3,w_4
+	.\] 
+
+	In step 3, $m_2$ would rather be unmatched, so only $m_3$ proposes to $w_3$, and is not rejected, so we have the final matching \[
+		\mu_3: \left( m_1,w_1 \right), \left( m_4,w_2 \right), \left( m_3,w_3 \right), m_2,w_4
+	.\]
+\end{example}
+
+\begin{proposition}
+	The $M$-proposing DA outcome is stable.
+	Hence, the core of the one-to-one two-sided matching problem is nonempty.
+\end{proposition}
+\begin{proof}
+	Suppose $DA$ results in $\mu_{DA}$.
+	Note that $\mu_{DA}$ is individually rational because no agents are ever matched with an unacceptable partner; $m \in M$ only applies to acceptable $w\in W$, and $w$ only accepts $m$ who are acceptable.
+
+	For the absence of a blocking pair, suppose that $w \succ_m \mu_{DA}(m)$.
+	Then $m$ proposed to $w$ before he matched with $\mu_{DA}(m)$.
+	Since $m$ and $w$ were not matched, this means that $w$ rejected $m$ at some point. Either $w$ does not find $m$ acceptable, or at the step where $w$ rejected $m$, 
+	$w$ was tentatively matched with an agent $m'$ she prefers to $m$. Since the welfare of each agent is nondecreasing throughout the algorithm, $w$ ends up with a partner whom she weakly prefers to $m'$ and thus strictly to $m$, i.e. \[
+		\mu_{DA}(w) \succsim_w m' \succ_w m
+	.\]
+	So there is no pair that would prevent $\mu_{DA}$ from being stable.
+\end{proof}
+
+\begin{definition}[Achievable]
+	We say that $w \in W$ is achievable for $m \in M$ if there exists a stable matching where $m$ and $w$ are matched.
+\end{definition}
+
+\begin{proposition}
+	In the $M$-proposing DA algorithm, each $m \in M$ who is matched is matched with his favorite achievable partner and each $w \in W$ who is matched is matched with her least-favorite achievable partner.
+\end{proposition}
+
+\begin{proof}
+	Fix $\succ$ and $\mu_{DA}$. We first show that each $m$ is matched with his favorite achievable partner.
+	Consider the first stage\footnote{Root calls this the first step, but it is not the literal first step in the DA algorithm.} of the DA algorithm at which some $m \in M$ was rejected by an achievable partner.
+	Suppose $w$ rejects $m$ and $w$ is achievable for $m$ with $w \succ_m \mu_{DA}(m)$. Let $m'$ be $w$'s match at this step of the algorithm. Since this is the first step where any agent in $M$ was rejected by an achievable partner and $m'$ is matched to someone, $m'$ has not yet been rejected by an achievable partner. In particular, $m'$ prefers $w$ to all of his (other\footnote{$w$ may or may not be achievable.}) achievable partners.
+
+	$w$ is achievable for $m$, so let $\nu$ be a stable matching in which $m$ and $w$ are matched. Clearly, $m' \succ_w m$, since $w$ rejected $m$ in favor of $m'$ during this stage.
+	But we also have $w \succ_{m'} \nu(m')$. To see why, note that $w$ is matched to $m$ in $\nu$, so $w \ne \nu(m')$. Furthermore, $\nu(m')$ is an achievable partner for $m'$ by stability, and we saw earlier that $m'$ prefers $w$ to all achievable partners who are not $w$, including $\nu(m')$. Hence $(m',w)$ is a blocking pair to $\nu$.
+
+	Since there is not a first step where an $m$ is rejected by an achievable partner, there is no such step.
+
+	It remains to show that every $w \in W$ is matched with her least-favorite achievable partner, i.e. there does not exist $w \in W$ and achievable $m$ such that \[
+		\mu_{DA}(w) \succ_w m
+	.\] 
+	Suppose that these $w$ and $m$ exist. We know by achievability that there is a stable $\nu$ such that $\nu(m) = w$.
+	Denote $m' \coloneqq \mu_{DA}(w)$. Note $\nu(m') \ne w$, since $\nu(m) = w$ and $m' \ne m$ (as $\mu_{DA}(w) \succ_w m = \nu(w)$ implies $m' \coloneqq \mu_{DA}(w) \ne \nu(w) = m$). Since $m'$ is matched with $w$ in the $M$-proposing $\mu_{DA}$, we know that $\mu_{DA}(m') \succ_{m'} \nu(m')$ by the first part of the proof and $\nu(m') \ne w$.
+	But $\mu_{DA}(m') = w$, so $w \succ_{m'} \nu(m')$. Our assumption gives the other side of the blocking pair: $m' = \mu_{DA}(w) \succ_w m = \nu(w)$. Hence $(m',w)$ is a blocking pair for $\nu$.
+\end{proof}
+
+\begin{notation}
+	For each $m \in M$, let $P_m$ be the set of strict preferences on $W \cup \left\{m\right\}$. For each $w \in W$, let $P_w$ be the set of strict preferences on $M \cup \left\{w\right\}$.
+	Let $\mathscr{P}$ be the set of preference profiles where $\succ_m \in P_m$ and $\succ_w \in P_w$ for every $m$ and $w$.
+	Denote the set of matchings that never match two agents from the same side as
+	\begin{align*}
+		\Sigma \coloneqq  \left\{\mu: M \cup W \to M \cup W \mid \right.&\mu\circ\mu = \operatorname{id}_{M \cup W}, \\
+																 &\mu(m) \in W \cup \left\{m\right\}, \ \forall m \in M,\\
+																 &\left.\mu(w) \in M \cup \left\{w\right\} \ \forall w \in W\right\}
+	.\end{align*}
+\end{notation}
+\boxednote{Tentative grades --- A: 39+; A-: [33,39); B+: [27,33); B: [21,27); B-: [15,21).} 
+
+\begin{definition}[Mechanism]
+	A one-to-one two-sided matching mechanism is a function $f: \mathscr{P} \to \Sigma$. It is stable if for every $\succ \in \mathscr{P}$, $f(\succ)$ is stable. In other words, mechanisms are stable if they give stable matchings for every preference profile.
+\end{definition}
+
+\begin{proposition}
+	There are no stable and strategy-proof one-to-one two-sided matching mechanisms.
+\end{proposition}
+\begin{proof}
+	Consider the preference profile $\succ$ given by
+	\[
+		\begin{array}{cccc}
+			\succ_{m_1} & \succ_{m_2} & \succ_{w_1} & \succ_{w_2} \\
+			\hline
+			w_1 & w_2 & m_2 & m_1 \\
+			w_2 & w_1 & m_1 & m_2
+		\end{array}
+	.\] Then the only stable matchings are $A \coloneqq \left\{(m_1,w_1),(m_2,w_2)\right\}$ and $B\coloneqq \left\{(m_1,w_2), (m_2,w_1)\right\}$. Any matching that leaves agents unpaired is not stable.
+
+	Assume that $f(\succ) = A$.
+	If $w_1$ switches to reporting $\succ_{w_1}'$, which only has $m_2$ as acceptable, then $B$ is the only stable matching.
+
+	If $f(\succ) = B$, then $w_2$ can misreport only $m_1$ as acceptable.
+	
+	In the general case, as long as $\left| M \right|,\left| W \right| \ge 2$, this problem arises.
+\end{proof}
+
+\begin{theorem} \label{5-11-1}
+	In the mechanism that returns the $M$-proposing DA outcome for every preference profile, it is a dominant strategy for each $m \in M$ to truthfully report his preference.
+\end{theorem}
+
+The blocking lemma says that when comparing any matching $\mu$ to the stable matching of the $M$-proposing DA mechanism for a given preference, there is at least one $m \in M$ who weakly prefers his match under the DA mechanism. It also says that if $M' \ne \O$, then there is an $m$ outside $M'$ and a $w$ who is matched to someone in $M'$ under $\mu$ such that $(m,w)$ blocks $\mu$.
+
+\begin{lemma}[Blocking]
+	Let $\mu_{DA}$ be the outcome of the $M$-proposing DA mechanism for the preferences $\succ$. 
+	Let $\mu$ be any other matching (not necessarily stable). Let $M'$ be the set of men who strictly prefer their matches under $\mu$ to their matches under $\mu_{DA}$, i.e. \[
+		M' = \left\{m \in M : \mu(m) \succ_m \mu_{DA}(m)\right\}
+	.\]  Then
+	\begin{enumerate}[label = (\roman*)]
+		\item $M' \ne M$, and 
+		\item If $M' \ne \O$, then there is an $m \in M \setminus M'$ and a $w$ in $\mu(M')$ such that $(m,w)$ is a blocking pair for $\mu$.
+	\end{enumerate} 
+\end{lemma}
+\begin{proof}
+	We prove this for when all $m \in M$ and $w \in W$ are mutually acceptable and $\left| M \right| = \left| W \right|$.
+
+	If $M' = \O$, then (i) is immediate and (ii) is vacuous. Thus suppose $M' \ne \O$.
+	It suffices to prove (ii), since the existence of an $m \in M \setminus M'$ will imply $M' \ne M$.
+
+	For each $m' \in M'$, $\mu(m')$ must be a woman, since $m'$ strictly prefers $\mu(m')$ to the woman $\mu_{DA}(m')$ and everyone on the opposite side is acceptable.
+	Thus $\mu(M')$ and $\mu_{DA}(M')$ are two sets of women with the same cardinality, namely $\left| M' \right|$.
+
+	\begin{description}
+		\item[Case 1]: Suppose $\mu(M') \ne \mu_{DA}(M')$.
+		Then we can choose a woman who is matched to someone in $M'$ only under the new matching, with \[
+			w \in \mu(M') \setminus \mu_{DA}(M')
+		.\]
+		\boxednote{The blocking pair will be $w$ and her partner $m$ from the DA matching.}Let $m' \coloneqq \mu(w)$ be the man in $M'$ who is matched to $w$ under $\mu$, and let $m \coloneqq \mu_{DA}(w)$ be the man matched to $w$ under $\mu_{DA}$.
+		Since $w \not\in \mu_{DA}(M')$, we have $m \not\in M'$.
+
+		First consider $m$'s preferences.
+		Since $m \not\in M'$, he weakly prefers his DA partner to his partner under $\mu$: \[
+			\mu_{DA}(m) \succsim_m \mu(m)
+		.\]
+		But $\mu_{DA}(m) = w$.
+		Also, $w$ is matched under $\mu$ to $m' \in M'$, so $\mu(m) \ne w$.
+		Preferences are strict, so this weak preference is actually \[
+			w \succ_m \mu(m)
+		.\]
+
+		Now consider $w$'s preferences.
+		If $m' \succ_w m$, then $(m',w)$ would block $\mu_{DA}$: the man $m' \in M'$ strictly prefers $w=\mu(m')$ to $\mu_{DA}(m')$, and $w$ strictly prefers $m'$ to $m=\mu_{DA}(w)$.
+		Since $\mu_{DA}$ is stable, this is impossible.
+		Therefore $m \succ_w m'=\mu(w)$.
+		Thus $(m,w)$ is a blocking pair for $\mu$.
+		\item[Case 2]: Suppose $\mu(M') = \mu_{DA}(M')$.
+		Then the men in $M'$ are matched to the same set of women under $\mu$ and $\mu_{DA}$, but each of them strictly prefers his partner under $\mu$.
+
+		Look at the run of the $M$-proposing DA algorithm that produces $\mu_{DA}$.
+		Let $k$ be the first stage at the end of which every man in $M'$ is tentatively matched to his final partner under $\mu_{DA}$.
+		Choose some $m' \in M'$ who becomes matched to his final partner at stage $k$, and denote this woman by \[
+			w \coloneqq \mu_{DA}(m')
+		.\]
+		Since $\mu(M') = \mu_{DA}(M')$, this same woman $w$ is matched under $\mu$ to some man in $M'$.
+		Call that man \[
+			m'' \coloneqq \mu(w)
+		.\]
+		Because $m' \in M'$ strictly prefers $\mu(m')$ to $\mu_{DA}(m') = w$, we have that $\mu(m') \ne w = \mu(m'')$, so $m'' \ne m'$.
+
+		Since $m'' \in M'$ and $\mu(m'')=w$, man $m''$ strictly prefers $w$ to his final DA partner $\mu_{DA}(m'')$.
+		Therefore, during the DA algorithm, $m''$ must have proposed to $w$ before proposing to $\mu_{DA}(m'')$.
+		He is not matched to $w$ in $\mu_{DA}$, so $w$ rejected him at some point.
+		This rejection happened before step $k$: if $m''$ were rejected at stage $k$, then at the end of step $k$ he would not be tentatively matched to his final DA partner, contradicting the definition of $k$.
+
+		Once a woman has a tentative match in DA, she remains tentatively matched and her partner only improves.
+		Thus, just before step $k$, woman $w$ was tentatively matched to some man; call him $m$.
+		At step $k$, she becomes matched to $m'$, so she rejects this incumbent $m$.
+		In particular, $m \not\in M'$: otherwise, being rejected at step $k$ would leave $m$ unmatched at the end of step $k$, again contradicting the definition of $k$ as a particular stage where every many in $M'$ is tentatively matched to his final partner. (The final partner cannot be himself, as all of $W$ is acceptable to $m$ and $\left| M \right| = \left| W \right|$.)
+
+		Now compare preferences.
+		On $w$'s side, she rejected $m''$ before she was holding $m$, and her tentative partner only improves over time, so \[
+			m \succ_w m'' = \mu(w)
+		.\]
+		On $m$'s side, he was holding $w$ before being rejected at step $k$, so he must prefer $w$ to his final DA partner: \[
+			w \succ_m \mu_{DA}(m)
+		.\]
+		Since $m \not\in M'$, he weakly prefers his DA partner to his partner under $\mu$: \[
+			\mu_{DA}(m) \succsim_m \mu(m)
+		.\]
+		Hence $w \succ_m \mu(m)$.
+		Therefore $(m,w)$ is a blocking pair for $\mu$.
+	\end{description}
+\end{proof}
+
+\theoremproofstyle
+
+\begin{proof}[Proof of Theorem (\ref{5-11-1})]
+	Fix a preference profile $\succ$ and a potential misreport $\succ_m'$.
+	Let $\mu$ be the DA-$M$ outcome under $\succ$ and let $\nu$ be the DA-$M$ outcome under $(\succ_{m'}, \succ_{-m})$.
+
+	Suppose that $\mu$ is not strategy-proof for $m$, so there is another matching where $\nu(m) \succ_{m} \mu(m)$.
+	$m$ is better off in $\nu$ than $\mu$, so by the blocking lemma, there must be a blocking pair $(m',w')$ for $\nu$ under $\succ$ such that $M' \not\ni m' \ne m \in M'$ and $w' \in \nu(M')$.
+
+	We know that $\nu$ is stable under $(\succ_{m'}, \succ_{-m})$ because it is the DA-$M$ outcome.
+	But the preferences of $m'$ and $w'$ do not change between $\succ$ and $(\succ_m', \succ_{-m})$, so $(m',w')$ blocks $\nu$ under $(\succ_{m'},\succ_{-m})$ as well.; $\nu$ is not stable under $(\succ_{m'}, \succ_{-m})$, a contradiction.
+\end{proof}
+
+\section{Many-to-One Two-Sided Matching}
+
+Suppose each $w$ has an integer-valued capacity $c_w \ge 1$.
+
+\begin{definition}[Matching]
+	A matching is a function $\mu: M \to M \cup W$ such that:
+	\begin{enumerate}[label = (\roman*)]
+		\item $\left| \mu^{-1}(w) \right| \le c_w$ for every $w$ 
+		\item If $\mu(m) = m' \in M$, then $m = m'$.
+	\end{enumerate}
+\end{definition}
+
+Now, each $w$ is matched with a set of agents from $M$, so we assume that $w$ has a strict preference $\succ_w$ on the set of all subsets of $M$ with cardinality at most $c_w$: $\succ_w$ is defined on \[
+	\left\{M' \subseteq M : \left| M' \right| \le c_w\right\}
+.\] 
+
+\begin{definition}[Stable, blocking pair]
+	A matching $\mu$ is stable if:
+	\begin{enumerate}[label = (\roman*)]
+		\item Each $m$ is matched to an acceptable $w$ or is unmatched, and 
+		\item There is no $M' \subseteq M$ and some $w$ such that $M' \succ_w \left\{m: \mu(m) = w\right\}$ and each $m \in M'$ weakly prefers $w$ to his match in $\mu$.
+	\end{enumerate}
+	Such a pair $(M',w)$ in (ii) is called a blocking pair.
+\end{definition}
+
+\boxednote{The outside option for the $w$ agents is remaining unmatched. The definition of stability builds in a form of individual rationality for $w$. If $w$ prefers the empty set to her currently-matched set, then we take $(M' = \O,w)$ as the blocking pair.}
+\begin{example}
+	Suppose $M = \left\{m_1,m_2\right\}$, $W = \left\{w_1,w_2\right\}$, $c_{w_1} = 2$, and $c_{w_2} = 1$.
+	Consider \[
+		\begin{array}{cccc}
+			\succsim_{m_1} & \succsim_{m_2} & \succsim_{w_1} & \succ_{w_2} \\
+				\hline
+			w_2 & w_1 & \left\{m_1,m_2\right\} & \left\{m_2\right\} \\
+			w_1 & w_2 & \left\{m_1\right\} & \left\{m_1\right\} \\
+			m_1 & m_2 & \O &\O
+		\end{array}
+	.\]
+	We investigate stability, where each blocking pair defines the next case.
+	\begin{description}
+		\item[Case 1]: Consider $\mu(m_1) =m_1$ and $\mu(m_2) = m_2$. There is a blocking pair $\left( \left\{m_2\right\},w_2 \right)$.
+		\item[Case 2]: Consider $\mu(m_1) = m_1$ and $\mu(m_2) = w_2$. Then $\left( \left\{m_1\right\},w_1 \right)$ is a blocking pair.
+		\item[Case 3]: Consider $\mu(m_1) = w_1$ and $\mu(m_2) = w_2$. Then $\left( \left\{m_1,m_2\right\},w_1 \right)$ is a blocking pair.
+		\item[Case 4]: Consider $\mu(m_1) = \mu(m_2) = w_1$. Then $(\left\{m_1\right\}, w_2)$ is a blocking pair.
+		\item[Case 5]: Consider $\mu(m_1) = w_2$ and $\mu(m_2) = w_1$. Then $\left( \O, w_1 \right)$ is a blocking pair.
+		\item[Case 6]: Consider $\mu(m_1) = w_2$ and $\mu(m_2) = m_2$. Then $\left( \left\{m_2\right\}, w_2 \right)$ is a blocking pair.
+		\item[Case 7]: $\mu(m_1) = \mu(m_2) = w_2$ is blocked by $\left( \O, w_2 \right)$.
+		\item[Case 8]: Consider $\mu(m_1) = m_1$ and $\mu(m_2) = w_1$. Then $\left( \left\{m_1\right\}, w_2 \right)$ is a blocking pair.
+		\item[Case 9]: Consider $\mu(m_1) = w_1$ and $\mu(m_2) = m_2$. Then $\left( \left\{m_2\right\}, w_2 \right)$ is a blocking pair.
+	\end{description}
+\end{example}
+So it's possible for there to be no stable matching.
+When exactly is a matching stable?
+
+We want to turn the preference of a school/hospital $\succ_w$ over subsets of $M$ to be defined on a preference over elements of $M$ itself.
+\begin{definition}[Responsive]
+	\boxednote{Responsiveness is much stronger than a not-minimal sufficient condition for stability, which is \emph{rejection monotonicity}. \emph{Observable monotonicity} is the minimal sufficient condition. There are good reasons why we want to allow for complementarity.}
+	A preference $\succ_w$ is responsive if there is a strict ranking $\succ_w^\star$ on $M\cup \left\{w\right\}$ such that for any $S$ with $\left| S \right| < c_w$,\boxednote{Note that $\left| S \right| < c_w$ strictly because the responsiveness conditions are about \emph{adding} an agent to $w$'s matchings, $S$.}
+	\begin{enumerate}[label = (\roman*)]
+		\item For any $m,m' \not\in S$, we have that \[
+			S \cup \left\{m\right\} \succ_w S \cup \left\{m'\right\} \iff m \succ_w^\star m'
+		,\] 
+		\item and for every $m \not\in S$, \[
+			S \cup \left\{m\right\} \succ_w S \iff m \succ_w^\star w
+		.\]  
+	\end{enumerate}
+\end{definition}
+With these preferences, a stable matching always exists. An easy way to do so is to adapt the $M$-proposing DA algorithm by having, in each step, $w$ reject all $m$ except for those in $w$'s favorite subset of $M$ including the agents currently matched with $w$ and all new applicants.
+
+\begin{definition}[Deferred acceptance algorithm, many-to-one]
+	Let $\mu_0(m) = m$ for every $m$.
+	The algorithm proceeds as follows:
+	\begin{enumerate}[label = (\roman*)]
+		\item All $m \in M$ apply to their favorite acceptable $w$. If for every $m$, no $w$ is acceptable, return $\mu_0$. Otherwise, each $w \in W$ considers the set of applicants $A_w^{1}$ and rejects all $m \in A_m^{1}$ except those in \[
+			\argmax_{\succ_w} \left\{M' \subseteq A_w^{1}: \left| M' \right| \le c_w\right\}
+		.\] Let $\mu_1$ be the matching in which $m$ is matched to $w$ if he applied to $w$ and was not rejected, and where $m$ is otherwise unmatched.
+		\item For steps $k\ge 2$, \emph{each}\footnote{Contrasts with the one-to-one DA-$M$ algorithm.} $m$ applies to his favorite $w$ who has not yet rejected him. If there are not applications, return $\mu_{k-1}$.
+
+		Each $w$ gets applicants $A_w^{k}$ and rejects all $m$ not in \[
+			\argmax_{\succ_w} \left\{M' \subseteq A_w^{k} \cup \mu_{k-1}^{-1}(w): \left| M' \right| \le c_w\right\}
+		.\] 
+		Let $\mu_k$ be the matching where each $m$ is matched to his favorite $w$ to whom he applied and was not rejected. If there is no such $w$, then $m$ is unmatched.
+		If there are no rejections, then return $\mu_k$.
+	\end{enumerate}
+\end{definition}
+
+\begin{proposition}[Stability of DA-$M$ under responsiveness.]
+	The many-to-one two-sided DA-$M$ algorithm is stable if each $w$'s preferences are responsive.
+\end{proposition}
+The following proof was left as an exercise.
+\begin{proof}
+	Suppose $\succ_w$ is responsive for every $w \in W$, and let $\mu$ be the DA-$M$ outcome. Suppose for contradiction that $\mu$ is not stable. Then at least one of the following is true:
+	\begin{enumerate}[label = (\roman*)]
+		\item There is some $m$ who is matched to an unacceptable $w$, or
+		\item There is $M' \subseteq M$ and some $w^\star$ such that \[
+			M' \succ_{w^\star} \left\{m: \mu(m) = w^\star\right\}
+		\] and each $m \in M'$ weakly prefers $w^\star$ to his match in $\mu$.
+	\end{enumerate}
+	(i) cannot be the case, because the DA-$M$ algorithm only matches $m\in M$ to schools that he applies to, which are schools that he finds acceptable. So fix the specific $M'$ and $w^\star$ from (ii). Without loss, we can take $M'$ to only contains partners acceptable to $w^\star$, since removing unacceptable partners would produce a set of matches for $w^\star$ that she strictly prefers to $M'$ and hence $\mu(w^\star)$ as well.
+
+	%Since $M' \succ_{w^\star} \left\{m: \mu(m) = w^\star\right\}$ strictly, there is some $m^\star \in M'$ such that $\mu(m^\star) \ne w$. We know that $m^\star$ weakly prefers $w^\star$ to his match $\mu(m^\star)$ under $\mu$, and by nonequality, this preference must be strict, so \[
+		%w^\star \succ_{m^\star} \mu(m^\star) \succ_{m^\star} m^\star
+	%\] 
+	%after also considering that the DA-$M$ algorithm satisfies individual rationality.
+	We claim that by responsiveness of $\succ_{w^\star}$, there exists $m^\star \in M' \setminus \mu(w^\star)$ such that either 
+	\begin{description}
+		\item[{Case 1}]: $\left| \mu(w^\star) \right| < c_{w^\star}$, or 
+		\item[{Case 2}]: there is some $m \in \mu(w^\star)$ such that $m^\star \succ_{w^\star}^\star m$.
+	\end{description}
+	First, we claim that \(M' \setminus \mu(w^\star)\) is nonempty. If \(M' \subseteq \mu(w^\star)\), then either \(M'=\mu(w^\star)\), contradicting
+	\(M' \succ_{w^\star} \mu(w^\star)\), or \(M'\) omits some acceptable member(s) of \(\mu(w^\star)\). Adding those omitted acceptable members one at a time strictly improves the set by responsiveness, so \(\mu(w^\star) \succ_{w^\star} M'\), again a contradiction.
+
+	Now suppose that we are not in Case 1, so \(\left|\mu(w^\star)\right|=c_{w^\star}\). If no \(m^\star \in M'\setminus\mu(w^\star)\) is ranked above any \(m\in\mu(w^\star)\) under \(\succ_{w^\star}^\star\), then every member of \(\mu(w^\star)\) is ranked above every member of \(M'\setminus\mu(w^\star)\). Starting from \(M'\), replace the members of \(M'\setminus\mu(w^\star)\) one by one with distinct members of \(\mu(w^\star)\setminus M'\). Each replacement strictly improves the set by responsiveness. Note that since $\left| \mu(w^\star) \right| = c_{w^\star}$, there are more potential replacements than to-be-replaced agents. If any members of \(\mu(w^\star)\) are still missing, add them one by one; each addition also strictly improves the set, since these members are acceptable ($w^\star$ is only matched with acceptable partners in the DA-$M$ algorithm). Hence \(\mu(w^\star)\succ_{w^\star} M'\), contradicting \(M'\succ_{w^\star}\mu(w^\star)\). Therefore some \(m^\star\in M'\setminus\mu(w^\star)\) satisfies \(m^\star\succ_{w^\star}^\star m\) for some \(m\in\mu(w^\star)\).
+
+	Since in each step of the algorithm, each $m$ applies to his favorite acceptable $w$ that has not yet rejected him, he must have applied and been rejected by $w^\star$ at one step, since $m^\star \in M' \setminus \mu(w^\star)$ implies that $w^\star \succ_{m^\star} \mu(m^\star)$ by definition of $M'$.
+
+	%Responsiveness of $\succ_{w^\star}$ implies that $w^\star$ only accepts applications from individuals who she prefers to herself, i.e. acceptable applicants.
+	%Without loss, we can take $M'$ to be only partners acceptable to $w^\star$; if there is an unacceptable partner $m$, we can remove them and maintain \[
+		%M' \setminus \left\{m\right\} \succ_{w^\star} M' \succ_{w^\star} \mu(w^\star)
+	%\] 
+	%through property (ii) of responsiveness.
+
+	We claim that for every $k \ge 1$, if $m' \in \mu_{k-1}(w^\star)$ and $m' \not\in \mu_k(w^\star)$, then each $m \in \mu_k(w^\star) \setminus \mu_{k-1}(w^\star)$ is weakly preferred by $w^\star$ to $m'$.
+	This is true because if $m' \succ_{w^\star} m$ strictly, then by responsiveness, \[\mu_k(w^\star) \setminus \left\{m\right\} \cup \underbrace{\left\{m'\right\}}_{\mathclap{\not\in \mu_k(w^\star) \text{ so } \not\in \mu_k(w^\star) \setminus \left\{m\right\}}} \succ_{w^\star} \mu_k(w^\star) \setminus \left\{m\right\} \cup \underbrace{\left\{m\right\}}_{\mathclap{\not\in \mu_k(w^*) \setminus \left\{m\right\}}} = \mu_k(w^\star).\]
+	Since each $m$ keeps applying to his favorite $w$ who has not rejected him and $m' \in \mu_{k-1}(w^\star)$ means that $m'$ was accepted by $w^\star$ in step $k-1$, $m'$ still applies to $w^\star$ in step $k$. Hence $\mu_k(w^\star) \setminus \left\{m\right\} \cup \left\{m'\right\}$ is a subset of applicants to $w^\star$ in step $k$, so $\mu_k(w^\star)$ cannot be the argmax over the applicant set, a contradiction.
+
+	Let $\ell$ be the first iteration of the algorithm in which $m^\star$ applied to $w^\star$ but $m^\star \not\in \mu_\ell(w^\star)$. 
+	Since $m^\star$ is acceptable to $w^\star$ (we showed earlier it is without loss to take $M'$ containing only acceptable partners), we know that $\left| \mu_\ell(w^\star) \right| = c_{w^\star}$.
+	Because $m^\star$ applied to $w^\star$ in round $\ell$ and was not chosen, each of the $c_{w^\star}$ members in $\mu_\ell(w^\star)$ is weakly preferred by $w^\star$ to $m^\star$.
+	Furthermore, any match added in $\mu_{\ell + 1}(w^\star)$ is weakly preferred by $w^\star$ to a discarded match in $\mu_{\ell}(w^\star) \setminus \mu_{\ell + 1}(w^\star)$ and hence to $m^\star$ as well.
+
+	Iterating, we find that all men matched to $w^\star$ in the final matching $\mu(w^\star)$ are weakly preferred by $w^\star$ to $m^\star$, a contradiction.
+\end{proof}
+\section{More on the Deferred Acceptance Algorithm}
+
+Why is the DA-$M$ algorithm good? Why is it stable? Why is it strategy-proof for all agents on the proposing side?
+
+These properties were all very nice for when the $M$ side was more important than the $W$ side, like in school choice.
+
+In Problem Set 3, we showed that stable matchings are Pareto efficient. But this efficiency considers preferences on the $W$ side.
+This efficiency breaks down when we stop consider the ``preferences'' of ``agents'' in $W$.
+
+\begin{example}
+	For intuition, consider a one-to-one matching from the DA algorithm. \[
+		\begin{array}{cccccc|cccc}
+			\succ_{m_1} & \succ_{m_2} & \succ_{m_3} & \cdots & \succ_{m_n} & \succ_{m_{n+1}} & \succ_{w_1} & \succ_{w_2} & \cdots & \succ_{w_n}\\
+				\hline
+			w_1 & w_2 & w_3 & \cdots & w_n & w_n & m_2 & m_3 & \cdots & m_1 \\
+			w_2 & w_3 & w_4 & \cdots & w_1 & w_1 & m_3 & m_4 & \cdots & m_2 \\
+			w_3 & w_4 & w_5 & \cdots & w_2 & w_2 & m_4 & m_5 & \cdots & m_3 \\
+			\vdots & \vdots & \vdots & & \vdots & \vdots & \vdots & \vdots & & \vdots \\
+			w_{n-2} & w_{n-1} & w_n & \cdots & w_{n-3} & w_{n-3} & m_{n-1} & m_n & \cdots & m_{n-2} \\
+			w_{n-1} & w_n & w_1 & \cdots & w_{n-2} & w_{n-2} & m_n & m_{n+1} & \cdots & m_{n-1} \\
+			w_n & w_1 & w_2 & \cdots & w_{n-1} & w_{n-1} & m_{n+1} & m_1 & \cdots & m_n \\
+			    &     &     &        &           &           & m_1 & m_2 & \cdots & m_{n+1}
+		\end{array}
+	.\]
+	In the first step, each $m_k$ applies to $w_k$ for $k\le n$, and $m_{n+1}$ applies to $w_n$. Then all $m$ are accepted except for $m_{n+1}$.
+	In the second round, $m_{n+1}$ applies to $w_1$, who accepts him in favor of $m_1$. In the third round, $m_1$ applies to $w_2$, who accepts him in favor of $m_2$.
+	This continues until $m_{n+1}$ is rejected by everyone, and each $m_k $ for $k\le n$ is matched with his least-favorite partner.
+
+	Thus, the $M$-proposing DA mechanism is not Pareto efficient when we consider just the agents on the $M$ side.
+\end{example}
+In practice, when markets are large, the correlation structure that leads to these harmful cycles do not really show up.
+
+Another criticism of DA is that there are two overwhelming factors that students care about:
+\begin{enumerate}[label = (\roman*)]
+	\item School quality.
+	\item Distance.
+\end{enumerate}
+Priorities are generally decreasing in distance and decreasing in test scores.
+
+\begin{definition}[Aligned]
+	We say that preferences $\left( \succ_m \right)_{m \in M}$ and $\left( \succ_w \right)_{w \in W}$ are aligned if there exists $U : M \times W \to \R$ such that for every $m \in M$ and $w \in W$, $U(m,\cdot)$ represents $m$'s preferences and $U(\cdot, w)$ represents $w$'s preferences.
+\end{definition}
+
+An example of aligned preferences could agree with the underlying $U$ with values \[
+	\begin{array}{c|cccc}
+		 & w_1 & w_2 & w_3 \\
+		 \hline
+		m_1 & 7 & 6 & 8\\
+		m_2 & 1 & 2 & 0 \\
+		m_3 & 4 & 5 & 7
+	\end{array}
+.\] 
+Since $8$ is the highest value, we know that any stable matching must match $(m_1,w_3)$; otherwise, the pair would block. Then we consider the lower left submatrix, where $(m_3,w_2)$ match, leaving $(m_2,w_1)$ to be matched.
+
+Welfare maximization implies the diagonal. The leximin ordering also implies the diagonal.
+
+The stable matching is done via a greedy algorithm, which can be quite bad for the people left at the end, as they face a small choice set. It does not agree with welfare maximization or the leximin ordering.
+
+Suppose each $m$ has utility \[
+	-d(m,w) + q(w)
+\] for each $w$, and that each $w$ has similar priority \[
+	-d(m,w)  + h(m)
+\] 
+for each $m$.
+Then the preferences are aligned with the function \[
+	U(m,w) = -d(m,w) + q(w) + h(m)
+.\] 
+Thus, the preferences in school choice are at least approximately aligned, so the DA-$M$ algorithm may be ``too greedy.''
+

@@ -15,15 +15,23 @@
 % Typography.
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
+\usepackage[semibold]{libertine}
+% Core math and theorem support.
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\DeclareMathSizes{10}{9.5}{7}{5}
+\DeclareMathSizes{10.5}{10}{7.25}{5.2}
+\DeclareMathSizes{11}{10.4}{7.6}{5.6}
+\DeclareMathSizes{12}{11.3}{8.1}{6}
+\setlength{\jot}{0.75pt}
+\setlength{\abovedisplayskip}{3pt plus 1pt minus 1pt}
+\setlength{\belowdisplayskip}{3pt plus 1pt minus 1pt}
+\setlength{\abovedisplayshortskip}{1.5pt plus 1pt minus 0.5pt}
+\setlength{\belowdisplayshortskip}{1.5pt plus 1pt minus 0.5pt}
 \usepackage{microtype}
 \usepackage{textcomp}
 \usepackage{setspace}
 \setstretch{1.08}
 \raggedbottom
-
-% Core math support.
-\usepackage{amsmath, amssymb, amsthm, mathtools}
 \usepackage{mathrsfs}
 \usepackage{dsfont}
 \numberwithin{equation}{section}

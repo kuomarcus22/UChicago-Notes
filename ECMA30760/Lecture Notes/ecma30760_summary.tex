@@ -1,0 +1,815 @@
+\documentclass[10pt]{article}
+
+\usepackage[letterpaper,margin=0.75in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[semibold]{libertine}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\DeclareMathSizes{10}{9.5}{7}{5}
+\DeclareMathSizes{10.5}{10}{7.25}{5.2}
+\DeclareMathSizes{11}{10.4}{7.6}{5.6}
+\DeclareMathSizes{12}{11.3}{8.1}{6}
+\usepackage{microtype}
+\setlength{\jot}{0.75pt}
+\setlength{\abovedisplayskip}{3pt plus 1pt minus 1pt}
+\setlength{\belowdisplayskip}{3pt plus 1pt minus 1pt}
+\setlength{\abovedisplayshortskip}{1.5pt plus 1pt minus 0.5pt}
+\setlength{\belowdisplayshortskip}{1.5pt plus 1pt minus 0.5pt}
+\usepackage{mathrsfs,dsfont}
+\usepackage{booktabs,array,tabularx,tabularray,enumitem}
+\usepackage{graphicx,float,caption}
+\usepackage[normalem]{ulem}
+\usepackage{cancel}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,pdftitle={ECMA 30760 Summary}}
+
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{2}
+\numberwithin{equation}{section}
+
+\newcommand*\N{\mathbb{N}}
+\newcommand*\R{\mathbb{R}}
+\newcommand*\Q{\mathbb{Q}}
+\newcommand*\Z{\mathbb{Z}}
+\newcommand*\E{\mathbb{E}}
+\let\oldL\L
+\let\oldP\P
+\renewcommand*\P{\mathbb{P}}
+\renewcommand*\L{\mathbb{L}}
+\let\O\varnothing
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+\newcommand{\ind}{\perp\!\!\!\perp}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\plim}{plim}
+\DeclareMathOperator{\opvec}{vec}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\Bias}{Bias}
+\DeclareMathOperator{\MSE}{MSE}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\newcommand{\summarychapter}[2]{%
+  \par\addvspace{1.4\baselineskip}%
+  \noindent{\large\bfseries #1\quad #2}\par\nobreak
+  \addvspace{0.55\baselineskip}%
+  \addcontentsline{toc}{section}{#1\quad #2}%
+}
+\newcommand{\summarysection}[2]{%
+  \renewcommand{\thesection}{#1}%
+  \refstepcounter{section}%
+  \setcounter{theorem}{0}%
+  \par\addvspace{1.0\baselineskip}%
+  \noindent{\normalsize\bfseries #1\quad #2}\par\nobreak
+  \addvspace{0.4\baselineskip}%
+  \addcontentsline{toc}{subsection}{#1\quad #2}%
+}
+\newcommand{\summarysubsection}[1]{%
+  \par\addvspace{0.8\baselineskip}%
+  \noindent{\small\bfseries #1}\par\nobreak
+  \addvspace{0.3\baselineskip}%
+}
+\newcommand{\summarysubsubsection}[1]{%
+  \par\addvspace{0.65\baselineskip}%
+  \noindent{\footnotesize\bfseries #1}\par\nobreak
+  \addvspace{0.25\baselineskip}%
+}
+\newcommand{\summarydefinitionsheading}[1]{%
+  \par\addvspace{1.4\baselineskip}%
+  \noindent{\large\bfseries #1}\par\nobreak
+  \addvspace{0.55\baselineskip}%
+  \addcontentsline{toc}{section}{#1}%
+}
+
+\title{ECMA 30760 Summary}
+\date{}
+
+\begin{document}
+\maketitle
+
+% Source: /Users/marcuskuo/Documents/UChicago/ECMA30760/Lecture Notes/ecma30760_lecnotes.tex
+
+\summarychapter{2}{Voting}
+
+\summarysection{2.1}{Introduction}
+
+\begin{lemma}
+	If $X$ and $Y$ are dominating sets, then $X \subseteq Y$ or $Y \subseteq X$.
+\end{lemma}
+
+\summarysection{2.2}{Gibbard--Satterthwaite}
+
+\begin{theorem}[Gibbard--Satterthwaite]
+	If $\left| A \right| > 2$, then every surjective and strategy--proof social choice function is dictatorial, in that there is some agent $i$ such that \[
+		f(\succ) = \argmax_{\succ_i}A
+	\] for all $\succ$. (Here, the $\argmax$ over $\succ_i$ means that the ordering of the right hand side is determined by $\succ_i$.)
+\end{theorem}
+
+\summarychapter{3}{Aggregation}
+
+\summarysection{3.1}{Ordinal Aggregation}
+
+\begin{theorem}[Arrow's Impossibility]
+	If $\left| A \right| > 2$, then the only (weak or strict) social welfare functions that satisfy IIA and the Paretian property are dictatorial.
+\end{theorem}
+
+\summarysection{3.2}{Cardinal Aggregation}
+
+\begin{theorem}[Debreu]
+	For any $\succsim_s$ satisfying continuity and independence of unconcerned agents, there exist functions $\left\{g_i\right\}_{i \in N}$ such that \[
+		u\succsim_s u' \iff \sum\limits_{i}^{} g_i(u_i) \ge \sum\limits_{i}^{} g_i(u_i')
+	.\] 
+\end{theorem}
+
+\begin{theorem}
+	If $\succsim_s$ satisfies continuity, independence of unconcerned agents, strict monotonicity, and scale invariance, and if $\left| N \right| \ge 2$, then there are positive weights $w_{1},\ldots,w_{\left| N \right|}$ which sum to $1$ and some $\gamma \in \R$ such that \[
+		u \succsim_s v \iff \sum\limits_{i}^{} w_i \frac{u_i^{1-\gamma}-1}{1-\gamma} \ge \sum\limits_{i}^{} w_i \frac{v_i^{1-\gamma} - 1}{1- \gamma}
+	.\] 
+\end{theorem}
+
+\summarysection{3.3}{Aggregation Under Uncertainty}
+
+\begin{theorem}[Harsanyi]
+	The planner's utility $U_s$ is Paretian iff there is a constant $\beta$ and weights $\left( w_i \right)_{i \in N}$ which are nonnegative such that \[
+		u_s(\theta) = \beta + \sum\limits_{i}^{} w_i u_i(\theta), \quad \forall\  \theta \in \Theta
+	.\] Equivalently, we have a necessary and sufficient condition for the Paretian property of \[
+		U_s(p) = \beta + \sum\limits_{i}^{} w_i U_i(p)
+	.\] 
+\end{theorem}
+
+\summarychapter{4}{Social Choice with Money}
+
+\summarysection{4.1}{Introduction}
+
+\begin{proposition}
+	The second-price transfer payment mechanism is strategy-proof.
+\end{proposition}
+
+\summarysection{4.2}{Quasilinear Preferences}
+
+\begin{proposition}[Quasilinear representation of preferences]
+	If $\succsim$ satisfies the axioms in (\ref{4-6-1}), there exists a utility function $u: A \to \R$ such that \[
+		(a,p) \succsim (a',p') \iff u(a) - p \ge u(a') - p'
+	.\] 
+\end{proposition}
+
+\summarysection{4.3}{Implementability, Cyclical Monotonicity, and Farkas' Lemma}
+
+\begin{proposition}[Equivalence of cyclical monotonicity and implementability]
+	A social choice function $g: V^{N} \to A$ is implementable in dominant strategies iff $g$ satisfies cyclical monotonicity.
+\end{proposition}
+
+\begin{proposition}
+	Suppose $g: \mathscr{U}^{\left| N \right|} \to A$ is such that \[g(u_1,u_2,\ldots,u_{\left| N \right|}) \in \argmax_{a \in A} \sum\limits_{i\in N}^{} u_i(a).\] Then $g$ is cyclically monotone.
+\end{proposition}
+
+\begin{corollary}
+	Pairing this result with Proposition (\ref{4-8-0}) yields that any welfare-maximizing social choice function is implementable in dominant strategies.
+\end{corollary}
+
+\summarysection{4.5}{The Vickrey--Clarke--Groves Mechanism}
+
+\begin{proposition}
+	Let $g$ be a welfare-maximizing utility function.
+	Consider the rule \[
+		p_i\left( u_i,u_{-i} \right) \coloneqq -\sum\limits_{j\ne i}^{} u_j\left( g\left( u_i,u_{-i} \right) \right)
+	.\] Under these transfer payments, truthful reporting is a dominant strategy; $p$ implements $g$.
+\end{proposition}
+
+\begin{proposition}
+	If $h: \mathscr{U}^{\left| N \right|-1} \to \R$ and $p$ implements $g$, then if \[
+	p_i'\left( u_i,u_{-i} \right) = p_i\left( u_i, u_{-i} \right) + h\left( u_{-i} \right)
+	,\] $p' = \left( p_i',p_{-i} \right)$ also implements $g$.
+\end{proposition}
+
+\begin{corollary}
+	In particular, the payments in the VCG mechanism implement the VCG mechanism's social choice function.
+\end{corollary}
+
+\begin{theorem}[Roberts']
+	Suppose that $\left| A \right| \ge 3$. $g: \mathscr{U}^{\left| N \right|} \to A$ is implementable in dominant strategies iff there are nonnegative weights $\left\{w_i\right\}_{i \in N}$ which are not identically zero and constants $\left\{C_a\right\}_{a \in A}$ for each $a \in A$ such that \[
+		g\left( u_1,\ldots,u_{\left| N \right|} \right) \in \argmax_{ a\in A} \sum\limits_{i\in N}^{} w_i u_i(a) + C_a
+	.\] 
+\end{theorem}
+
+\summarysection{4.6}{Domain Restrictions}
+
+\begin{theorem}[Saks and Yu, 2005]
+	Suppose $\mathscr{V} \subseteq \mathscr{U}$ is convex. $g: \mathscr{V}^{\left| N \right|}\to A$ is implementable in dominant strategies iff it is weakly monotonic.
+\end{theorem}
+
+\summarychapter{5}{Social Choice with Indifferences}
+
+\summarysection{5.1}{Introduction and the Equivalence of Constrained Allocation}
+
+\begin{proposition}[Equivalence of social choice with indifferences and constrained allocation]
+	Every constrained allocation problem can be written as a social choice problem with indifferences. Conversely, every social choice problem with indifferences can be written as a constrained allocation problem. Under these translations, mechanisms are the same up to outcomes that all agents regard as indifferent.
+\end{proposition}
+
+\summarysection{5.2}{Two Agent Constrained Allocation}
+
+\begin{proposition}[Two-agent local dictatorships]
+	Let $G$ be the graph whose nodes are infeasible allocations and whose edges connect two infeasible allocations that share a coordinate.
+	After removing objects that can never be assigned to an agent in any feasible allocation, a mechanism $f$ is strategy-proof and Pareto efficient if and only if it is a local dictatorship: each connected component of $G$ is assigned a local dictator, and for every profile with top-ranked objects $(x,y)$, the mechanism gives both agents their top choices if $(x,y) \in C$; otherwise, the local dictator for the component containing $(x,y)$ keeps that agent's top choice and the other agent receives her favorite object compatible with the dictator's top choice.
+\end{proposition}
+
+\begin{lemma}
+	Suppose that there exists $x \in X_i$ for some $i$ such that $\mu(i) \ne x$ for every $\mu \in C$. 
+	If $f$ is strategy-proof and Pareto efficient, then for $\succ_i$ and $\succ_i'$ that differ only in the position of $x$, then \[
+		f(\succ_i, \succ_j)(i) = f\left( \succ_i', \succ_j \right)(i)
+	.\] 
+	Furthermore, $j$'s object is unchanged by $i$'s misreports: \[
+		f\left( \succ_i,\succ_j \right)(j)
+		= 
+		f\left( \succ_i',\succ_j \right)(j)
+	.\] 
+\end{lemma}
+
+\begin{lemma}
+	For any strategy-proof and efficient mechanism $f$, each infeasible allocation $\left( x,y \right) \not\in  C$ is associated with a local dictator. In particular, there exists a function $D: \overline{C} \to \left\{1,2\right\}$ that describes who is the local dictator at every infeasible allocation.
+
+	Furthermore, if $(x,y'') \not\in C$ as well, then \[
+		D\left( \left( x,y \right) \right) = 1 \implies D\left( \left( x,y'' \right) \right) = 1
+	.\] 
+\end{lemma}
+
+\summarychapter{6}{Auctions}
+
+\summarysection{6.1}{Optimal Posted Price With a Single Buyer}
+
+\begin{proposition}
+	In this single-buyer, single-good environment with a posted price, the optimal price is the $p^\star$ satisfying \[
+		p^\star = \frac{1-F(p^\star)}{f(p^\star)}
+	.\] 
+	\begin{itemize}
+		\item The optimal price leads to an inefficient outcome, and
+		\item The optimal price depends on $F$.
+	\end{itemize}
+\end{proposition}
+
+\summarysection{6.2}{Overview of Auctions}
+
+\begin{proposition}[Revenue of a second price auction]
+	The revenue of a second-price auction is \[
+		R_{\text{SPA}} = 1 - \int_{0}^{1} F_{(2)}(w)dw = \int_{0}^{1} \left( 1-F(w) \right)^2dw 
+	.\] 
+\end{proposition}
+
+\begin{proposition}[Revenue of a first-price auction]
+	The optimal bidding strategy in a first price auction with common value distribution with CDF $F$ for a bidder with value $v$ is \[
+		b(v) = v - \frac{1}{F(v)} \int_{0}^{v} F(w)dw 
+	.\] 
+	The expected revenue is thus \[
+		R_{\text{FPA}} = 1 - \int_{0}^{1} F_{(2)}(w)dw = \int_{0}^{1} \left( 1-F(w) \right)^2dw 
+	,\] 
+	which is exactly the expected revenue of the second-price auction.
+\end{proposition}
+
+\summarysection{6.3}{Revelation Principle}
+
+\begin{proposition}[Revelation Principle]
+	For any $G$ and equilibrium $s$, there exists a direct mechanism in which it is a Bayes--Nash equilibrium for agents to truthfully report such that the outcome (set of allocation probabilities and transfer payments) is the same under $G, s$ and under the direct mechanism.
+\end{proposition}
+
+\summarysection{6.4}{Revenue-Maximizing Auctions}
+
+\begin{proposition}
+	If $s$ is a Bayes--Nash equilibrium of an auction game $G$, then the induced interim allocation probabilities $X_i$ and payments $P_i$ satisfy the following:
+	\begin{enumerate}[label = (\roman*)]
+		\item The interim allocation $X(\cdot)$ is nondecreasing.
+		\item For any $v$, \[
+			P(v) = P(0) + vX(v) - \int_{0}^{v} X(t)dt 
+		.\] The only choices that the seller has are in controlling $P(0)$ and $X(v)$ for each $v \in [0,1]$. The payment at any value is then uniquely determined.
+	\end{enumerate}
+\end{proposition}
+
+\begin{corollary}[A revenue-maximizing auction's payments]
+	A revenue-maximizing auction satisfying individual rationality has payment schedule \[
+		P(v) = vX(v) - \int_{0}^{v} X(t)dt 
+	.\] 
+	This payment schedule and $X_i(\cdot)$ being nondecreasing (from Proposition \ref{4-20-b}) are necessary conditions for an auction to be revenue-maximizing.
+\end{corollary}
+
+\begin{proposition}
+	For any $G,G'$ and equilibria $s,s'$ such that $X_G$ and $X_{G'}$ are the same and $P_G(0)=P_{G'}(0)$, the revenue is the same.
+\end{proposition}
+
+\begin{theorem}[Revenue maximization of the virtual value auction]
+	Consider individually rational auctions with a single good and symmetric bidders whose values are drawn iid from a regular distribution $F$. One\footnote{Any revenue-maxizing auction must have $x_i(v_i,v_{-i}) = 0$ for any $i$ where $c(v_i) \le 0$ or $c(v_i) < c(v_j)$ for some $j$.} revenue-maximizing auction has assignment probabilities for each bidder $i$ given by
+	\[
+		x_i \left( v_i,v_{-i} \right) = \begin{cases}
+			0, \quad &c(v_i) \le 0 \text{ or } c(v_i) < c(v_j) \text{ for some }j \\
+			\frac{1}{m}, \quad & m \coloneqq \left| \left\{j: v_j = v_i\right\} \right|
+		\end{cases}
+	.\]
+	Moreover, the direct mechanism with this allocation rule and payments
+	\[
+		p_i(v_i,v_{-i}) = v_ix_i(v_i,v_{-i}) - \int_{0}^{v_i} x_i(t,v_{-i})dt
+	\]
+	is a revenue-maximizing virtual value auction.
+\end{theorem}
+
+\summarysection{6.5}{Multiple Goods and a Single Buyer}
+
+\begin{proposition}
+	In a two-good, single buyer auction with independent value distributions $F^1, F^2 \sim \operatorname{Unif}(0,1)$, the optimal mechanism is one in which the buyer has the options to:
+	\begin{enumerate}[label = (\roman*)]
+		\item Buy either good at price $\frac{3}{4}$, or
+		\item Buy both goods at price $\frac{4-\sqrt{2} }{3}$.
+	\end{enumerate}
+\end{proposition}
+
+\begin{proposition}
+	If both $F^1$ and $F^2$ are Beta distributions, the optimal mechanism offers an uncountably large menu.
+\end{proposition}
+
+\summarysection{6.6}{Mussa--Rosen (1978)}
+
+\begin{proposition}
+	Assume $F$ is regular, so its virtual value
+	\[
+		c(\theta) \coloneqq \theta - \frac{1-F(\theta)}{f(\theta)}
+	\]
+	is strictly increasing. Then an individually rational revenue-maximizing direct mechanism has quality rule
+	\[
+		q^\star(\theta) = \begin{cases}
+			0, \quad &c(\theta) \le C'(0) \\
+			\left(C'\right)^{-1}\left( c(\theta) \right), \quad &C'(0) < c(\theta) < C'(\overline{q}) \\
+			\overline{q}, \quad &c(\theta) \ge C'(\overline{q})
+		\end{cases}
+	\]
+	and payment rule
+	\[
+		p^\star(\theta) = \theta q^\star(\theta) - \int_{0}^{\theta} q^\star(t)dt
+	.\]
+	In particular, $q^\star$ is nondecreasing.
+\end{proposition}
+
+\summarychapter{A}{Tools}
+
+\summarysection{A.3}{Farkas' Lemma}
+
+\begin{lemma}[Farkas']
+	Let $A \in \R^{m\times n}$ and $b \in \R^m$. Either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $x \in \R^n$ such that \[
+			Ax \le b
+		.\] 
+		\item There exists\footnote{Here, and in the rest of the chapter, we take $y \in \R^m$ to be a row vector. We call $y$ the \emph{multiplier vector} or \emph{certificate of infeasibility}.} $y \in \R^m$ with $y \ge 0$ such that \[
+			y A  = 0, \quad y \cdot b < 0
+		.\]
+	\end{enumerate}
+	but not both.
+\end{lemma}
+
+\begin{lemma}[Rational Farkas']
+	Let $A \in \Q^{m\times n}$ and $b \in \Q^m$. Either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $x \in \Q^n$ such that \[
+			Ax \le b
+		.\] 
+		\item There exists $y \in \Z^m$ with $y \ge 0$ such that \[
+			y A  = 0, \quad y \cdot b < 0
+		.\]
+		\end{enumerate}
+	but not both.
+\end{lemma}
+
+\begin{lemma}[Farkas' II]
+	Let $A \in \R^{m\times n}$, $b \in \R^m$, $B \in \R^{p \times n}$, and $c \in \R^p$. Then either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $x \in \R^n$ such that \[
+			Ax \le b, \quad Bx = c
+		.\] 
+		\item There exists $s \in \R^m$ and $t \in \R^p$ such that \[
+			s \ge 0, \quad sA + tB = 0, \quad s \cdot b + t \cdot c < 0
+			.\]
+	\end{enumerate}
+	but not both.
+\end{lemma}
+
+\begin{lemma}[Farkas' III]
+	Let $A \in \R^{m\times n}$, $b \in \R^m$, $B \in \R^{p \times n}$, and $c \in \R^p$. Then either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $x \in \R^n$ with $x \ge 0$ such that \[
+			Ax \le b, \quad Bx = c
+		.\] 
+		\item There exists $s \in \R^m$ and $t \in \R^p$ with $s \ge 0$ such that \[
+			sA + tB \ge 0, \quad s \cdot b + t \cdot c < 0
+			.\]
+	\end{enumerate}
+	but not both.
+\end{lemma}
+
+\begin{lemma}[Gordan's]
+	Let $A \in \Q^{m \times d}$. Then either
+	\begin{enumerate}[label = (\roman*)]
+		\item There exists $y \in \R^d$ such that  \[
+			Ay \gg 0
+		,\] i.e. every entry of $Ay$ is strictly positive, or
+		\item There exists a nonzero vector of nonnegative integers $z \ne 0$ such that \[
+			zA = 0
+		.\] 
+	\end{enumerate}
+	but not both.
+\end{lemma}
+
+\summarysection{A.4}{Minimax Theorem}
+
+\begin{theorem}[Minimax]
+	In a two-player zero-sum game, \[
+		\max_{\alpha_1 \in \Delta A_1} \min_{\alpha_2 \in \Delta A_2} \alpha_1 B \alpha_2
+		=
+		\min_{\alpha_2 \in \Delta A_2} \max_{\alpha_1 \in \Delta A_1} \alpha_1 B \alpha_2
+	.\] 
+\end{theorem}
+
+\summarysection{A.5}{The Standard Form}
+
+\begin{proposition}
+	The system $Ax \le b$ has a solution if and only if
+	\[
+		\begin{pmatrix}
+			A & -A & I
+		\end{pmatrix}
+		\begin{pmatrix}
+			y \\ y' \\ s
+		\end{pmatrix}
+		= b
+	\]
+	has a solution with $y,y',s \ge 0$.
+\end{proposition}
+
+\summarysection{A.6}{Polyhedra}
+
+\begin{proposition}
+	Let $v \in P(A,b)$. The following are equivalent:
+	\begin{enumerate}[label = (\roman*)]
+		\item $v$ is a vertex of $P(A,b)$.
+		\item There do not exist distinct $x,y \in P(A,b)$ and $\theta \in (0,1)$ such that
+		\[
+			v = \theta x + (1-\theta)y
+		.\]
+		\item There is no nonzero vector $d$ such that both $v+d$ and $v-d$ belong to $P(A,b)$.
+		\item There are $n$ linearly independent rows $A_{i_1},\ldots,A_{i_n}$ of $A$ such that
+		\[
+			A_{i_1}v = b_{i_1}, \quad \ldots, \quad A_{i_n}v = b_{i_n}
+		.\]
+	\end{enumerate}
+\end{proposition}
+
+\begin{proposition}
+	Every polytope is the convex hull of its vertices. Conversely, the convex hull of any finite subset of $\R^n$ is a polytope.
+\end{proposition}
+
+\begin{theorem}[Birkhoff--von Neumann]
+	The vertices of $B_n$ are exactly the permutation matrices.
+\end{theorem}
+
+\summarysection{A.7}{Lattices and Tarski's Fixed Point Theorem}
+
+\begin{theorem}[Tarski]
+	If $(L,\ge)$ is a complete lattice and $f : L \to L$ is order-preserving, then the set of fixed points
+	\[
+		F = \left\{x \in L : f(x) = x\right\}
+	\]
+	is a nonempty complete lattice under $\ge$.
+\end{theorem}
+
+\clearpage
+\summarydefinitionsheading{Definitions}
+
+\summarychapter{2}{Voting}
+
+\summarysection{2.1}{Introduction}
+
+\begin{definition}[Social choice function]
+	A social choice function is a mapping $f: P^N \to A$.
+\end{definition}
+
+\begin{definition}[Common Voting Rules]
+	\begin{itemize}
+		\item Plurality: Choose whichever outcome is top-ranked by the most people. (Along with some tiebreaking rule.)
+		\item Instant runoff: All outcomes but the two top-ranked outcomes\footnote{The two outcomes that have the highest number of top-rank votes.} are dropped, then the winner is decided by plurality.
+		\item Elimination: The outcome that is top-ranked by the fewest people is removed and the process repeats.
+		\item Borda count: Let $n = \left| A \right|$. Give $n$ points to a candidate for each agent that top-ranks them, $n-1$ points for each agent that second-ranks them, and so on. The outcome with the most points wins.
+		\item Summation social choice functions: Assign points $\phi_i(m)$ for agent $i$'s $m$th ranked outcome, and the outcome with the most points wins.
+		\item Pairwise comparison graph: We arrange the outcomes into a directed graph with all possible edges labeled by the number of people who prefer the tail node to the head node. A special case is the Copeland social choice function, which counts for each outcome how many arrows point out, and the winner is the node with the highest count. See Figure (\ref{fig:3-23-1}).
+	\end{itemize}
+\end{definition}
+
+\begin{definition}[Condorcet winner, Condorcet property]
+	An outcome $x$ is a Condorcet winner if it beats all other outcomes in a head-to-head election. A social choice function satisfies the Condorcet property if it picks a Condorcet winner, when one exists.
+\end{definition}
+
+\begin{definition}[Dominating set of outcomes, Smith set, Smith property]
+	A set of outcomes $A' \subseteq A$ is dominating if it is nonempty and for all $x \in A', y \in A \setminus A'$, $x$ beats $y$ in a head-to-head election.
+
+	The Smith set is the smallest dominating set. A social choice function $f$ satisfies the Smith property if it always chooses something in the Smith set.
+\end{definition}
+
+\summarysection{2.2}{Gibbard--Satterthwaite}
+
+\begin{definition}[Strategy-proof]
+	A social choice function is strategy-proof if there is no preference profile $\left( \succ_1, \cdots, \succ_{\left| N \right|} \right)$, agent $i$, and preference $\succ_i'$ such that \[
+		f\left( \succ_1, \cdots, \succ_{i-1}, \succ_i', \succ_{i+1}, \cdots, \succ_{|N|} \right) \succ_i f\left( \succ_1, \cdots, \succ_{i-1}, \succ_i, \succ_{i+1}, \cdots, \succ_{|N|} \right)
+	.\] 
+\end{definition}
+
+\begin{definition}[Lower contour set]
+	Given a preference $\succ_i$ on $A$ and $a \in A$, define the lower contour set as $L_{\succ_i}(a) = \left\{b: a \succ_i b\right\}$, which is the set of outcomes dispreferred to $a$.
+\end{definition}
+
+\begin{definition}[Monotonic social choice function]
+	$f$ is monotonic if for any preference profiles $\succ, \succ'$ such that for every $i$, $L_{\succ_i'}\left( f(\succ) \right) \supseteq L_{\succ_i}\left( f(\succ) \right)$, we have $f(\succ') = f(\succ)$.
+\end{definition}
+
+\begin{definition}[Pareto efficient social choice function]
+	$f$ is Pareto efficient if for all preference profiles $\succ$, $a \succ_i b$ for all $i$ implies that $f(\succ) \ne b$.
+\end{definition}
+
+\summarychapter{3}{Aggregation}
+
+\summarysection{3.1}{Ordinal Aggregation}
+
+\begin{definition}[Strict, weak social welfare function]
+	A strict social welfare function is a function $F: P^N \to P$. A weak social welfare function is a function $F: P^N \to R$.
+\end{definition}
+
+\begin{definition}[Kendall--Tau distance]
+	For any two strict rankings $\succ_i, \succ_i'$ on $A$, define the distance $d(\succ_i, \succ_i')$ between the two rankings as the number of pairs $a,b \in A$ such that $a \prec_i b$ and $a\succ_i' b$ or $a \succ_i b$ and $a\prec_i' b$.
+\end{definition}
+
+\begin{definition}[Paretian property]
+	A social welfare function $F$ satisfies the Paretian property if for any $\succ $ and $a,b \in A$ is such that if for all $i$, $a \succ_i b$, then \[
+		a F(\succ) b
+	.\] 
+\end{definition}
+
+\begin{definition}[Independence of irrelevant alternatives]
+	A social welfare function $F$ satisfies independence of irrelevant alternatives (IIA) if for any two profiles $\succ,\succ'$ such that for all $i$, $\succ_i$ and $\succ_i'$ agree when restricted to $\left\{a,b\right\}$ for $a,b \in A$, then \[
+		a F(\succ) b \iff a F(\succ') b
+	.\] 
+\end{definition}
+
+\summarysection{3.2}{Cardinal Aggregation}
+
+\begin{definition}[Cardinal social welfare ranking]
+	A cardinal social welfare ranking is a complete, transitive and reflexive binary relation $\succsim_s$ on $\R_+^{\left| N \right|}$.
+\end{definition}
+
+\begin{definition}[Continuous cardinal social welfare ranking]
+	We say that $\succsim_s$ is continuous if for any $u \in \R_+^{\left| N \right|}$, the sets \[
+		\left\{u': u' \succsim_s u\right\}, \quad \left\{u' : u \succsim_s u'\right\}
+	\]  are closed. 
+	In other words, if $\left\{u^n\right\} \to u^*$ is such that $u^n \succsim_s u'$ for each $n\in \N$, then $u^* \succsim_s u'$. Similarly, if $u' \succsim_s u^n$ for each $n\in \N$, then $u' \succsim_s u^*$.
+\end{definition}
+
+\begin{definition}[Independence of unconcerned agents]
+	$\succsim_s$ is independent of unconcerned agents if for any $x,y \in \R_+$ and any agent $i$, we have \[
+		(x, u_{-i}) \succsim_s (x, u_{-i}') \iff (y,u_{-i}) \succsim_s (y,u_{-i}')
+	\] 
+	for any $u_{-i}, u_{-i}'$.
+\end{definition}
+
+\begin{definition}[Strict monotonicity]
+	We say that $\succsim_s$ is strictly monotonic if whenever $u_i \ge u_i'$ for all $i$ and there is some $j$ with $u_j > u_j'$, then $u \succ_s u'$.
+\end{definition}
+
+\begin{definition}[Scale invariance]
+	We say $\succsim_s$ is scale invariant if \[
+		u \succsim_s u' \iff \lambda u \succsim_s \lambda u', \quad \forall\  \lambda \in \R_{>0}
+	.\] 
+\end{definition}
+
+\summarysection{3.3}{Aggregation Under Uncertainty}
+
+\begin{definition}[Paretian property]
+	The planner's utility function $U_s(\cdot)$ satisfies the Paretian property if $U_i(p) \ge U_i(q)$ for all $i$ implies $U_s(p) \ge U_s(q)$.
+\end{definition}
+
+\summarychapter{4}{Social Choice with Money}
+
+\summarysection{4.2}{Quasilinear Preferences}
+
+\begin{definition}[Quasilinear Preferences]
+	A quasilinear preference $v$ on $A \times \R$ can be written \[
+		v(a,p) = u(a) - p
+	.\] 
+\end{definition}
+
+\begin{definition}[Represents]
+	Suppose $\succsim$ is a weak preference on $A \times \R$; i.e., it is complete, transitive, and reflexive. Suppose $A$ is a second-countable\footnote{In other words, $A$'s topology is separable/has a countable base.} topological space.
+
+	We say that $v: A \times \R \to \R$ represents $\succsim$ if \[
+		(a,p) \succsim (a',p') \iff v(a,p) \ge v(a',p')
+	.\] 
+\end{definition}
+
+\summarysection{4.3}{Implementability, Cyclical Monotonicity, and Farkas' Lemma}
+
+\begin{definition}[Implementability]
+	We say that a social choice function $g: \mathscr{U}^{\left| N \right|} \to A$ is implementable in dominant strategies if there exists $p: \mathscr{U}^{\left| N \right|} \to \R^n$ such that for every $i, u_i, u_{-i}$ and $u_i'$, \[
+		u_i\left( g\left( u_i,u_{-i} \right) \right) - p_i\left( u_i, u_{-i} \right) \ge 
+		u_i\left( g\left( u_i',u_{-i} \right) \right) - p_i\left( u_i', u_{-i} \right)
+	.\] 
+	Equivalently, \[
+		p_i\left( u_i, u_{-i} \right) - p_i\left( u_i', u_{-i} \right) \le u_i\left( g\left( u_i,u_{-i} \right) \right) - u_i\left( g\left( u_i',u_{-i} \right) \right)
+	.\] 
+\end{definition}
+
+\begin{definition}[Cycles and cyclical monotonicity]
+	Fix a player $i \in N$. A \emph{cycle} in player $i$'s type space is a finite sequence \[
+		v^1,v^2,\ldots,v^{q-1},v^q = v^1
+	,\] where each $v^k \in V$. Given $v_{-i} \in V^{N \setminus \left\{ i \right\}}$, this means that the reports of all players other than $i$ are fixed at $v_{-i}$, while player $i$'s report moves around the cycle.
+
+	A social choice function $g: V^N \to A$ satisfies \emph{cyclical monotonicity} if for every $i$, every $v_{-i}$, and every cycle in player $i$'s type space, \[
+		\sum\limits_{k=1}^{q-1} v^k \left( g\left( v^k, v_{-i} \right) \right) - v^k \left( g\left( v^{k+1},v_{-i} \right) \right) \ge 0
+	.\] 
+\end{definition}
+
+\summarysection{4.5}{The Vickrey--Clarke--Groves Mechanism}
+
+\begin{definition}[Vickrey--Clarke--Groves (VCG) mechanism]
+	The VCG mechanism has social choice function \[
+		g\left( u_1,\ldots,u_{\left| N \right|} \right) \in \argmax_{a \in A} \sum\limits_{i}^{} u_i(a)
+	\] and payments \[
+		p_i\left( u_i,u_{-i} \right) = \sum\limits_{j\ne i}^{} \left[ u_j\left( a^\star\left( u_{-i} \right) \right) - u_j\left(g\left(u_i,u_{-i} \right)\right)\right]
+	,\] 
+	where $a^\star\left( u_{-i} \right) \in \argmax_{a \in A} \sum\limits_{j \ne i}^{} u_j(a)$.
+\end{definition}
+
+\summarysection{4.6}{Domain Restrictions}
+
+\begin{definition}[Weak monotonicity]
+	Let $\mathscr{V} \subseteq \mathscr{U}$. We say that $g: \mathscr{V}^{\left| N \right|}\to A$ satisfies weak monotonicity if it satisfies cyclical monotonicity for all cycles of length $2$. That is, for all $i$, $v_{-i}$, and all $v_i, v_i'$, we have \[
+		v_i\left( g\left( v_i, v_{-i} \right) \right) - v_i \left( g\left( v_{i}', v_{-i} \right) \right) + v_i'\left( g\left( v_i',v_{-i} \right) \right) - v_i'\left( g\left( v_i, v_{-i} \right) \right) \ge 0
+	.\] 
+\end{definition}
+
+\summarychapter{5}{Social Choice with Indifferences}
+
+\summarysection{5.1}{Introduction and the Equivalence of Constrained Allocation}
+
+\begin{definition}[Social choice problem with indifferences]
+	For each agent $i\in N$, suppose we have a partition $A^i \coloneqq \left\{A_1^i, \ldots,A_{m_i}^{i}\right\}$ of $A$ such that if $x,y \in A_\ell^{i}$, then $i$ is indifferent between $x$ and $y$.
+	Let $P^i$ be the set of strict preferences on $A^i$.
+	Then any $\succ_i \in P^i$ induces a weak ranking $\succsim_i^\star$ on $A$, defined by the following relation for $x \in A_\ell^i$, $y \in A_k^{i}$: \[
+		\begin{cases}
+			x \succ_i^\star y, \quad A_\ell^{i} \ne A_k^{i} \text{ and } A_\ell^{i} \succ_i A_k^{i} \\
+			x \sim_i^\star y, \quad A_\ell^{i}=A_{k}^{i}
+		\end{cases}
+	.\] 
+
+	A social choice function with indifferences is a function $f: \prod_{i \in N}^{} P^i \to A$ and is defined by \[
+		\left( N, A, \left( A^i \right)_{i \in N} \right)
+	,\] 
+	and the social choice problem is to select such a function given the indifference partitions.
+\end{definition}
+
+\begin{definition}[Constrained allocation problem]
+	Suppose for each agent $i \in N$, we have a set $X_i$ of available objects. 
+	An allocation is a function $\mu: N \to \cup_{i \in N} X_i$ such that for every $i \in N$, $\mu(i) \in X_i$. An allocation specifies for each agent $i$ a feasible object to be received.
+	Denote $\mathscr{A} \coloneqq \left\{\mu: N \to \cup_{i \in N}\right\}$ to be the set of allocations.
+
+	A constraint is a set $C \subseteq \mathscr{A}$ that is nonempty.Allocations in $C$ are called \emph{feasible}, while allocations not in $C$ are \emph{infeasible}.
+	Let $\tilde{P}_i$ be the set of strict preferences on $X_i$. A mechanism is a function $f: \prod_{i \in N}^{} \tilde{P}_i \to C$.
+
+	The constrained allocation problem is defined by \[
+		\left( N, \left( X_i \right)_{i \in N}, C \right)
+	.\] 
+\end{definition}
+
+\begin{definition}[Strategy-proof, Pareto efficient]
+	In the setting of a constrained allocation problem, a mechanism $f: \prod_{i \in N}^{} \tilde{P}_i \to C$ is strategy-proof if there does not exist $i, \succ_i, \succ_i', \succ_{-i}$ such that \[
+		f\left( \succ_i', \succ_{-i} \right)(i) \succ_i f\left( \succ_i, \succ_{-i} \right)(i)
+	.\] 
+
+	$f$ is Pareto efficient if for all $\succ \in \prod_{i \in N}^{} \tilde{P}_i$, there does not exist $\mu \in C$ such that:
+	\begin{enumerate}[label = (\roman*)]
+		\item For every $j \in N$, $\mu(j) \succsim_j f(\succ)(j)$ and 
+		\item For some $i \in N$, $\mu(i) \succ_i f(\succ)(i)$.
+	\end{enumerate}
+\end{definition}
+
+\summarysection{5.2}{Two Agent Constrained Allocation}
+
+\begin{definition}[Local dictator]
+	A local dictator at an infeasible allocation $(x,y) \not\in C$ is an agent who gets to keep her top choice when $x,y$ are top-ranked by agents 1 and 2 respectively.
+\end{definition}
+
+\summarychapter{6}{Auctions}
+
+\summarysection{6.2}{Overview of Auctions}
+
+\begin{definition}[Bayesian game]
+	A Bayesian game is defined by the following primitives:
+	\begin{itemize}
+		\item A set $N$ of agents.
+		\item For each $i \in N$, there is a set of types $T_i$ which encodes her own type and her beliefs over others' types. We denote the type space $T \coloneqq \prod_{i \in N}^{} T_i $.
+		\item For each $i \in N$, there is a set of actions $A_i$, and we denote the set of action profiles $A \coloneqq \prod_{i \in N}^{} A_i $.
+		\item For each $i \in N$, there is a utility function \[
+			U_i: T_i \times A \to \R
+		.\] 
+		\item (We assume there is) A common prior $\mu \in \Delta(T)$. Player $i$'s belief over the others' types is determined by conditioning $\mu$ on her realized type $t_i \in T_i$ and is notated $\mu\left( t_{-i} \mid t_i \right)$.
+	\end{itemize}
+	A strategy for player $i$ is a function \[
+		\sigma_i : T_i \to \Delta(A_i)
+	.\] The strategy profile $\sigma = \left( \sigma_i \right)_{i \in N}$ induces the payoff for agent $i$ \[
+		U_i(\sigma, t_i) = \sum\limits_{t_{-i}} \sum\limits_{a \in A}^{} u_i(t_i,a) \sigma_i\left( a\mid t_i \right) \sigma\left( a_{-i} \mid t_{-i} \right) \mu\left( t_{-i}\mid t_i \right)
+	.\] 
+	The strategy profile $\sigma$ is a Bayes-Nash equilibrium if for every agent $i$, $\sigma$, $\sigma_i'$, and $t_i$, \[
+		U_i\left( \sigma,t_i \right) \ge U_i\left( \left( \sigma_i', \sigma_{-i} \right), t_i \right)
+	.\] 
+\end{definition}
+
+\summarysection{6.3}{Revelation Principle}
+
+\begin{definition}[Direct mechanism]
+	A direct mechanism is a game where $\mathscr{A}_i = V$ so that agents report a value $v$.
+\end{definition}
+
+\summarysection{6.4}{Revenue-Maximizing Auctions}
+
+\begin{definition}[Individual rationality]
+	An auction game $G$ with equilibrium $s$ is individually rational if for each $v$, \[
+		vX(v) - P(v) \ge 0
+	.\] 
+\end{definition}
+
+\begin{definition}[Regular value distribution, virtual value]
+	A distribution with CDF $F$ and density $f$ is regular if the virtual value \[
+		c(w) \coloneqq w - \frac{1-F(w)}{f(w)}
+	\] is strictly increasing.
+\end{definition}
+
+\begin{definition}[Virtual value auction]
+	In the virtual value auction, all buyers submit their values for the good. Using $F$, the seller converts these to virtual values. If no virtual value is positive, the seller keeps the good. Otherwise, she gives the good to the agent with the highest value. If there are multiple such agents, then each gets the good with equal probability. Buyers pay the lowest value they could have submitted and still won the auction with, i.e. the second-highest value after excluding duplicates.
+\end{definition}
+
+\summarychapter{A}{Tools}
+
+\summarysection{A.1}{Systems of Linear Inequalities}
+
+\begin{definition}[Polyhedron, polytope]
+	A polyhedron is the solution set to a system of linear inequalities $Ax \le b$, and a polytope is a bounded polyhedron.
+\end{definition}
+
+\summarysection{A.2}{Fourier--Motzkin Elimination}
+
+\begin{definition}[Consequence relation]
+	An inequality
+	\[
+		a_0 x \le b_0
+	\]
+	is a consequence relation of the system $Ax \le b$ if every $x \in \R^n$ satisfying $Ax \le b$ also satisfies $a_0 x \le b_0$.
+\end{definition}
+
+\summarysection{A.6}{Polyhedra}
+
+\begin{definition}[Face]
+	A face of $P(A,b)$ is a set of the form
+	\[
+		F = P(A,b) \cap \left\{x : a_0 x = b_0\right\}
+	\]
+	where $a_0 x \le b_0$ is a consequence relation of $Ax \le b$.
+\end{definition}
+
+\begin{definition}[Vertex]
+	A face consisting of a single point is called a vertex.
+\end{definition}
+
+\begin{definition}[Facet]
+	A facet of $P(A,b)$ is a proper face $F \ne P(A,b)$ that is maximal among proper faces, i.e. there is no proper face $G \ne F$ with $F \subseteq G$.
+\end{definition}
+
+\summarysection{A.7}{Lattices and Tarski's Fixed Point Theorem}
+
+\begin{definition}[Partial order]
+	A binary relation $\ge$ on a set $L$ is a partial order if it is reflexive, transitive, and antisymmetric.
+\end{definition}
+
+\begin{definition}[Complete lattice]
+	A complete lattice $(L,\ge)$ is a set $L$ with a partial order $\ge$ such that:
+	\begin{enumerate}[label = (\roman*)]
+		\item for every $A \subseteq L$, there is an element $u \in L$, denoted $\bigvee A$, such that $u \ge x$ for all $x \in A$ and whenever $v \ge x$ for all $x \in A$, we have $v \ge u$;
+		\item for every $A \subseteq L$, there is an element $u \in L$, denoted $\bigwedge A$, such that $u \le x$ for all $x \in A$ and whenever $v \le x$ for all $x \in A$, we have $v \le u$.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}[Order-preserving]
+	If $(L,\ge)$ is a complete lattice and $f : L \to L$, we say $f$ is order-preserving if
+	\[
+		x \le y \implies f(x) \le f(y)
+	.\]
+\end{definition}
+
+\end{document}

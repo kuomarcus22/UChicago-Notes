@@ -1,0 +1,334 @@
+\styledchapter{Social Choice with Money}
+
+Suppose we have one good and two agents. If we ask the agents to report their values and assign the good to the person with the higher value, we run into an obvious problem.
+
+\section{Introduction}
+
+We assume the utility for agent $i$ getting the good and being charged the transfer price $p$ follows \emph{quasilinear preferences}:\boxednote{The notation is poor: there are separate $v_i$ objects for the reported value and for the actual value.} \[
+	u\left( \text{getting the good, being charged }p \right) = v_i - p
+.\] 
+We can try implementing a second-price auction: the agent with the higher reported value wins the object and pays the lower reported value.
+\begin{proposition}
+	The second-price transfer payment mechanism is strategy-proof.
+\end{proposition}
+\begin{proof}
+	Consider true values $v_1,v_2$ and the misreport $v_1'$:
+	We have the following cases for the effect from agent 1's perspective, where $v_1 < v_2$ and agent 1 does not win the good:
+	\begin{description}
+		\item[Case 1]: $v_1' <1$ induces no change.
+		\item[Case 2]: $v_1' \in \left( v_1,v_2 \right)$ also has no change.
+		\item[Case 3]: $v_1' = v_2$ leads to agent $1$ winning with probability $\frac{1}{2}$, in which case she gets utility $v_1-v_2 < 0$.
+		\item[Case 4]: $v_1' > v_2$ leads to agent 1 winning and getting utility $v_1 - v_2 < 0$.
+	\end{description}
+	When $v_2 < v_1$, agent 1 wins the good with utility $v_1-v_2$. Misreporting $v_1'$:
+	\begin{description}
+		\item[Case 1]: $v_1' < v_2$ means agent 1 loses the good and has utility $0$.
+		\item[Case 2]: $v_1' = v_2$ means agent 1 wins with probability $\frac{1}{2}$, in which case she gets utility $v_1 - v_2$.
+		\item[Case 3]: $v_1' > v_2$ leads to no change.
+	\end{description}
+	If $v_1=v_2$, then under truthful reporting, agent 1 wins with probability $\frac{1}{2}$ and has utility $0$. With $v_1' < v_2$, she does not win the good and has utility $0$. With $v_1' > v_2$, she wins the good and gets utility $v_1 - v_2 =0$.
+
+	In other words, bidding our true value allows us to win when we want to win and lose when we want to lose.
+\end{proof}
+
+This mechanism implements the desired (efficient) outcome, but comes with the expense of the mechanism designer now collecting (a lot of) money.
+
+\section{Quasilinear Preferences}
+
+Consider outcomes in $A$ and transfers in $\R$. 
+We want to define preferences on $A \times \R$ and make statements like $(a,p) \succsim (a',p')$.
+
+\begin{definition}[Quasilinear Preferences]
+	A quasilinear preference $v$ on $A \times \R$ can be written \[
+		v(a,p) = u(a) - p
+	.\] 
+\end{definition}
+
+\begin{definition}[Represents]
+	Suppose $\succsim$ is a weak preference on $A \times \R$; i.e., it is complete, transitive, and reflexive. Suppose $A$ is a second-countable\footnote{In other words, $A$'s topology is separable/has a countable base.} topological space.
+
+	We say that $v: A \times \R \to \R$ represents $\succsim$ if \[
+		(a,p) \succsim (a',p') \iff v(a,p) \ge v(a',p')
+	.\] 
+\end{definition}
+
+We take the following assumptions (axioms):
+\begin{assumption}[Axioms of preferences] \label{4-6-1}
+	\begin{enumerate}[label = (\roman*)]
+		\item $(a,p) \succsim (a',p')$ iff $(a,p+\delta) \succsim(a',p'+\delta)$ for every $\delta$.
+		\item For any $a,a' \in A$, there exists $p$ such that $(a,p) \sim (a',0)$
+		\item For any $a,p$ and $\delta > 0$, we have $(a,p) \succ (a,p+\delta)$
+		\item $\succsim$ is continuous.
+	\end{enumerate}
+\end{assumption}
+
+\begin{remark}
+	Assumption (i) imposes that preferences over $A$ are independent of transfer payments. We may not want this if $a$ represents luxury goods.
+
+	Assumption (ii) assumes that we can compensate people enough money to take outcome $a'$ over $a$. This may not be a good idea if $a$ relates to health outcomes or property with personal value.
+\end{remark}
+
+\begin{proposition}[Quasilinear representation of preferences]
+	If $\succsim$ satisfies the axioms in (\ref{4-6-1}), there exists a utility function $u: A \to \R$ such that \[
+		(a,p) \succsim (a',p') \iff u(a) - p \ge u(a') - p'
+	.\] 
+\end{proposition}
+\begin{proof}
+	See the course notes.
+\end{proof}
+
+We assume from now on that people have quasilinear preferences.
+
+\section{Implementability, Cyclical Monotonicity, and Farkas' Lemma}
+
+We want to implement some social choice function $g: \mathscr{U}^{|N|} \to A$, where $\mathscr{U} \coloneqq \left\{u: A \to \R\right\}$. We will do so using the transfer payments $p: \mathscr{U}^{|N|} \to \R^n$, where if the utilities are $\left( u_1,\ldots,u_{\left| N \right|} \right)$, agent $i$ pays $p_i\left( u_1,\ldots,u_{\left|  N\right|} \right)$ to the planner.
+
+The main question we want to answer is the following: For which $g$ is there a $p$ such that truthful reporting is a dominant strategy?
+
+\begin{definition}[Implementability]
+	We say that a social choice function $g: \mathscr{U}^{\left| N \right|} \to A$ is implementable in dominant strategies if there exists $p: \mathscr{U}^{\left| N \right|} \to \R^n$ such that for every $i, u_i, u_{-i}$ and $u_i'$, \[
+		u_i\left( g\left( u_i,u_{-i} \right) \right) - p_i\left( u_i, u_{-i} \right) \ge 
+		u_i\left( g\left( u_i',u_{-i} \right) \right) - p_i\left( u_i', u_{-i} \right)
+	.\] 
+	Equivalently, \[
+		p_i\left( u_i, u_{-i} \right) - p_i\left( u_i', u_{-i} \right) \le u_i\left( g\left( u_i,u_{-i} \right) \right) - u_i\left( g\left( u_i',u_{-i} \right) \right)
+	.\] 
+\end{definition}
+
+To answer our question, we want to use Farkas' lemma. Note that the $u_i(g(\cdot))$ are fixed, as we take $u$ and $g$ as given. The $p_i$s are what we are free to choose, but $u_i \in \mathscr{U}$ can take infinitely many forms.
+First fix the set of quasilinear preferences $V \subseteq \mathscr{U}$, and assume $u_i \in V$ for each $i$. Fix agent $i$ and $u_{-i} \in V^{N \setminus \left\{i\right\}}$ (which is fine since the transfers can depend on the agent).
+Let $x(v) \coloneqq p_i(v,u_{-i})$, which is the transfer that $i$ pays when she reports $v$ (for an already-fixed $u_{-i}$). With the truthful value $v_i$ and misreport $v_i'$,
+our condition is that \[
+	x(v_i) - x(v_i') \le v_i(g(v_i,u_{-i})) - v_i(g(v_i',u_{-i}))
+.\] 
+
+\begin{definition}[Cycles and cyclical monotonicity]
+	\boxednote{Root keeps saying that a social choice function is not cyclically monotone if agents can pretend to be the next agent in the cycle and on average be better off. But it would be more accurate to say that there are $q$ games, all in which agents $-i$ have values $v_{-i}$. In the $k$th game, agent $i$ has value $v^{k}$ and reports $v^{k+1}$. The social choice function is cyclically monotone if on average this is \emph{not} profitable for agent $i$. a}
+	Fix a player $i \in N$. A \emph{cycle} in player $i$'s type space is a finite sequence \[
+		v^1,v^2,\ldots,v^{q-1},v^q = v^1
+	,\] where each $v^k \in V$. Given $v_{-i} \in V^{N \setminus \left\{ i \right\}}$, this means that the reports of all players other than $i$ are fixed at $v_{-i}$, while player $i$'s report moves around the cycle.
+
+	A social choice function $g: V^N \to A$ satisfies \emph{cyclical monotonicity} if for every $i$, every $v_{-i}$, and every cycle in player $i$'s type space, \[
+		\sum\limits_{k=1}^{q-1} v^k \left( g\left( v^k, v_{-i} \right) \right) - v^k \left( g\left( v^{k+1},v_{-i} \right) \right) \ge 0
+	.\] 
+\end{definition}
+
+\begin{proposition}[Equivalence of cyclical monotonicity and implementability] \label{4-8-0}
+	A social choice function $g: V^{N} \to A$ is implementable in dominant strategies iff $g$ satisfies cyclical monotonicity.
+\end{proposition}
+\begin{remark}
+	The proposition still holds with $\mathscr{U}$ instead of $V$. This version of the proposition is now notable enough to be called a theorem, named after Rochet.
+\end{remark}
+
+\begin{proof}
+	We first show that cyclical monotonicity implies implementability.
+
+	We want to use Farkas' lemma. We want to show existence of transfer payments --- a vector with a component for each agent's reported value --- that satisfy the inequality \[
+		x(v_i) - x(v_i') \le v_i\left( g(v_i,u_{-i}) \right) - v_i\left( g(v_i',u_{-i}) \right)
+	\] for each $(v_i,v_i')$ pair of true value and misreport. We drop the subscripts and call this $(v,v')$.
+
+	Consider a matrix $A$ where the rows are indexed by a pair $(v,v')$. There are $\left| V \right|$ possibilities for what $i$'s value can be and $\left| V \right|-1$ possibilities for misreports. Thus, $A$ should have $\left| V \right|\left( \left| V \right|- 1 \right)$ rows. Furthermore, $A$ should have $\left| V \right|$ columns, as our choice variables are \[
+		x\coloneqq \begin{bmatrix}
+		x(v_1) \\
+		\vdots \\ x(v_{\left| V \right|})
+		\end{bmatrix} 
+	.\] The constraint vector should be \[
+		b \coloneqq \begin{bmatrix}
+		v\left( g(v,u_{-i}) \right) - v \left( g\left( v',u_{-i} \right) \right) \\
+		\vdots	
+		\end{bmatrix} 
+	.\] The large matrix has entry in the row with index $(v,v')$ and column $v''$ \[
+		A_{(v,v'), v''} = \begin{cases}
+			1, \quad v'' = v \\
+			-1, \quad v'' = v' \\
+			0, \quad \text{otherwise}
+		\end{cases}
+	.\] 
+
+	Hence, on this finite space $V$ of quasilinear preferences on the set of outcomes $A$, $g$ is implementable in dominant strategies if \[
+		Ax \le b
+	.\] 
+	By Farkas' Lemma, there exists no solution $x \in \R^{\left| V \right|}$ (transfer payment when $u_{-i}$ is fixed) iff there exists $y \in \R^{\left| V \right|\left( \left| V \right| - 1 \right)}$ with $y \ge 0$ such that $yA = 0$ and $y \cdot b < 0$. Suppose this is the case and index $y$ by $(v,v')$, where $v$ can take on $\left| V \right|$ values and for each $v$, $v'$ can take on $\left| V \right|-1$ values.
+
+	$y=0$ is not possible because we require $y \cdot b < 0$. By $y \ge 0$, we are guaranteed a particular $v,v'$ such that $y_{(v,v')} > 0$. This element of $y$ gets multiplied against everything in the $(v,v')$ row of $A$; in particular, it is multiplied against $A_{(v,v'),v'} = -1$. Since $yA = 0$, there must be some entry in the $v'$ column of $A$ with a value of $1$, which is exactly rows in the form $(v',v'')$, that is multiplied against a positive component of $y$. This is the $(v',v'')$ component, so we have found $v''$ such that $y_{(v',v'')} > 0$.
+
+	Iterating, there exists a sequence $v^1,v^2,\ldots$ such that $y_{(v^k, v^{k+1})} > 0$ for all $k$. Since $\left| V \right|$ is finite, the sequence must eventually repeat an index. Let $q$ be the first time that this occurs.
+	Without loss, we can assume $v^q= v^1$.
+
+	Now we have \[y_{(v_1,v_2)} > 0, y_{(v_2,v_3)} > 0,\ldots,y_{(v^{q-2},v^{q-1})} > 0, y_{(v^{q-1}, v^{1})} > 0.\]
+	Let $y^* \in \R^{\left| V \right|\left( \left| V \right| - 1 \right)}$ be a vector\footnote{$y^*$ is a finite sequence of types in the support of $y$.} of indicators such that \[
+		y^*_{(v,v')} = \mathds{1}\left\{\left( v,v' \right) = \left( v^k, v^{k+1} \right)\text{ for some $k$}\right\}
+	.\] Essentially, it is just $y$ with all positive weights made to be $1$.
+
+	Note that $y^* A = 0$ by construction. Let $\alpha \coloneqq\min_k \left\{y_{\left( v^k, v^{k+1} \right)}\right\}$.
+	By distributing, $(y- \alpha y^*) A = 0$. Furthermore, $(y-\alpha y^*)$ has at least one more $0$ than $y$ does. By definition of $\alpha$, $y-\alpha y^* \ge 0$. We can repeat this process of finding indices where the residual vector is positive until the residual is $0$, so we get \[
+		y = \alpha_1 y_1^* + \cdots + \alpha_p y_p^*
+	\] for some $p$ and each $y_\ell^*$ is a cycle like $y^*$.
+
+	With this representation of $y$ and recalling $y \cdot b < 0$, we know that $y^*_\ell \cdot b < 0$ for at least one $\ell$. 
+
+	We have shown that if there exist no transfers to implement $g$ in dominant strategies, then there exists a sequence of utilities $v^{1},\ldots,v^{r}$ (coming from $y^*_\ell$) such that \[
+		0 > \sum_{j=1}^{r-1} b_{\left( v^j, v^{j+1} \right)} = \sum\limits_{j=1}^{r-1} v^{j}\left( g\left( v^{j},u_{-i} \right) \right) - v^{j}\left( g\left( v^{j+1},u_{-i} \right) \right)
+	.\]
+	The net change from the $r-1$ games where agent $i$ misreports $v^j$ as $v^{j+1}$ is negative.
+	Thus, if $g$ is cyclically monotone, there cannot be such a $y$ with $y \ge 0$, $yA = 0$, and $y \cdot b < 0$. By Farkas' Lemma, $Ax \le b$ has a solution. Taking $p_i(v,u_{-i}) = x(v)$ for this fixed $i$ and $u_{-i}$, and repeating for every $i$ and $u_{-i}$, gives transfer payments that implement $g$.
+
+	Conversely, suppose $g$ is implementable in dominant strategies by the transfer rule $p$. Fix $i$, $v_{-i}$, and a cycle $v^1,\ldots,v^{q-1},v^q = v^1$. For each $k = 1,\ldots,q-1$, incentive compatibility gives \[
+		p_i(v^k,v_{-i}) - p_i(v^{k+1},v_{-i}) \le v^k\left( g(v^k,v_{-i}) \right) - v^k\left( g(v^{k+1},v_{-i}) \right)
+	.\] 
+	Summing over $k$, the left-hand side telescopes to \[
+		p_i(v^1,v_{-i}) - p_i(v^q,v_{-i}) = 0
+	,\] since $v^q = v^1$. Hence \[
+		0 \le \sum\limits_{k=1}^{q-1} v^k\left( g(v^k,v_{-i}) \right) - v^k\left( g(v^{k+1},v_{-i}) \right)
+	,\] so $g$ satisfies cyclical monotonicity.
+\end{proof}
+
+\begin{proposition}
+	Suppose $g: \mathscr{U}^{\left| N \right|} \to A$ is such that \[g(u_1,u_2,\ldots,u_{\left| N \right|}) \in \argmax_{a \in A} \sum\limits_{i\in N}^{} u_i(a).\] Then $g$ is cyclically monotone.
+\end{proposition}
+
+\begin{proof}
+	By definition of $g$ as utilitarian, we have that for every $\left( u_i,u_{-i} \right)$,
+	\begin{align*}
+		u_i(g(u_i,u_{-i})) + \sum\limits_{j \ne i}^{} u_j\left( g\left( u_i,u_{-i} \right) \right)
+		&\ge u_i(a) + \sum\limits_{j\ne i}^{} u_j(a)	, \quad \forall a \in A 
+		\intertext{Adding and substracting,}
+		u_i\left( g(u_i,u_{-i}) \right) - u_i(a) \ge \sum\limits_{j \ne i}^{} u_j(a) &- u_j\left( g\left( u_i,u_{-i} \right) \right), \quad \forall a \in A
+	.\end{align*}
+
+	Fix $u_{-i}$ and consider the cycle $u^{1},\ldots,u^{q-1},u^{q} = u^{1}$. To check cyclical monotonicity, we compute
+	\begin{align*}
+		&\sum\limits_{\ell = 1}^{q-1} u^{\ell}\left( g(u^\ell, u_{-i} \right) - u^{\ell}\left( g(u^{\ell +1},u_{-i} )\right) \\
+		&\ge \sum\limits_{\ell = 1}^{q-1} \sum\limits_{j \ne i}^{} u_j\left( g\left( u^{\ell + 1},u_{-i} \right) \right) - u_j\left( g(u_\ell, u_{-i}) \right) \text{ by the add-subtract result}\\
+		&= \sum\limits_{j\ne i}^{} \underbrace{\sum\limits_{\ell = 1}^{q-1} u_j\left( g\left( u^{\ell + 1},u_{-i} \right) \right) - u_j\left( g(u_\ell, u_{-i}) \right)}_{=0 \text{ by telescoping around a cycle}} = 0
+	.\end{align*}
+\end{proof}
+
+\begin{corollary}
+	Pairing this result with Proposition (\ref{4-8-0}) yields that any welfare-maximizing social choice function is implementable in dominant strategies.
+\end{corollary}
+
+\section{Another Approach to Cyclical Monotonicity}
+
+The proof to Proposition (\ref{4-8-0}) relied on Farkas' lemma and is not beautiful. We can refer to the course notes for a more instructive proof using convex functions and their subdifferentials.
+
+\section{The Vickrey--Clarke--Groves Mechanism}
+
+We need to determine the transfer payments $p_i$. \boxednote{Implementability only says that some transfers support truthful reporting; it does not by itself guarantee budget balance, individual rationality, or any fairness property. The VCG construction below gives a family of transfers for welfare maximization by charging each agent the externality she imposes on others, though even VCG need not be budget-balanced or distributionally fair in general.}
+
+\begin{proposition}
+	Let $g$ be a welfare-maximizing utility function.
+	Consider the rule \[
+		p_i\left( u_i,u_{-i} \right) \coloneqq -\sum\limits_{j\ne i}^{} u_j\left( g\left( u_i,u_{-i} \right) \right)
+	.\] Under these transfer payments, truthful reporting is a dominant strategy; $p$ implements $g$.
+\end{proposition}
+
+\begin{proof}
+	Considering the deviation from reporting $u_i$ to $u_i'$, we can show the following chain between agent $i$'s welfare under truthful and misreporting, where the inequality comes from $g$ being welfare-maximizing.
+	\begin{align*}
+		u_i(g\left( u_i,u_{-i} \right)) - p_i\left( u_i,u_{-i} \right)
+		&= u_i\left( g\left( u_i,u_{-i} \right) \right) - \left( - \sum\limits_{j\ne i}^{} u_j \left( g\left( u_i,u_{-i} \right) \right) \right) \\
+		&= \sum_k u_k\left( g\left( u_i,u_{-i} \right) \right) \\
+		&\ge \sum_k u_k \left( g\left( u_i',u_{-i} \right) \right) \\
+		&= u_i\left( g\left( u_i', u_{-i} \right) \right) - \left( - \sum\limits_{j \ne i}^{} u_j \left( g\left( u_i', u_{-i} \right) \right) \right) \\
+		&= u_i \left( g\left( u_i', u_{-i} \right) \right) - p_i \left( u_i', u_{-i} \right)
+	.\end{align*}
+\end{proof}
+
+This payment plan is super expensive, though; the planner has to pay out $\left| N \right|-1$ times total utility. What a \st{stupid} silly mechanism.
+
+There is a better mechanism, which uses the idea that if your payment does not depend on your report, you cannot game a lower payment by misreporting.
+\begin{definition}[Vickrey--Clarke--Groves (VCG) mechanism]
+	The VCG mechanism has social choice function \[
+		g\left( u_1,\ldots,u_{\left| N \right|} \right) \in \argmax_{a \in A} \sum\limits_{i}^{} u_i(a)
+	\] and payments \[
+		p_i\left( u_i,u_{-i} \right) = \sum\limits_{j\ne i}^{} \left[ u_j\left( a^\star\left( u_{-i} \right) \right) - u_j\left(g\left(u_i,u_{-i} \right)\right)\right]
+	,\] 
+	where $a^\star\left( u_{-i} \right) \in \argmax_{a \in A} \sum\limits_{j \ne i}^{} u_j(a)$.
+\end{definition}
+
+\begin{proposition} \label{4-8-1}
+	If $h: \mathscr{U}^{\left| N \right|-1} \to \R$ and $p$ implements $g$, then if \[
+	p_i'\left( u_i,u_{-i} \right) = p_i\left( u_i, u_{-i} \right) + h\left( u_{-i} \right)
+	,\] $p' = \left( p_i',p_{-i} \right)$ also implements $g$.
+\end{proposition}
+If a payment rule $p$ implements $g$ (i.e. $(g,p)$ is incentive-compatible), then adding to $i$'s payment any function of $u_{-i}$ to form $p_i'$ does not change incentive compatibility.
+
+\begin{corollary} \label{4-8-2}
+	In particular, the payments in the VCG mechanism implement the VCG mechanism's social choice function.
+\end{corollary}
+
+\begin{proof}
+	We take Proposition (\ref{4-8-1}) as given. It implies Corollary (\ref{4-8-2}), but we can show it directly as well.
+	We make the same comparison as before:
+	\begin{align*}
+		u_i\left( g(u_i,u_{-i}) \right) - p_i \left( u_i,u_{-i} \right)
+		&= u_i \left( g\left( u_i, u_{-i} \right) \right) - \sum\limits_{j\ne i}^{} \left[ u_j\left( a^\star(u_{-i}) \right) - u_j\left( g\left(u_i,u_{-i} \right)\right)\right] \\
+		&= \sum\limits_{k}^{} u_k\left( g\left(u_i,u_{-i} \right) \right) - \sum\limits_{j\ne i}^{} u_j\left( a^\star\left( u_{-i} \right) \right) \\
+		&\ge \sum\limits_{k}^{} u_k \left( g\left( u_i', u_{-i} \right) \right) - \sum\limits_{j \ne i}^{} u_j\left( a^\star\left( u_{-i} \right) \right) \\
+		&= u_i \left( g\left( u_i', u_{-i} \right) \right) - \sum\limits_{j\ne i}^{} \left[ u_j\left( a^\star\left( u_{-i} \right) \right) - u_j\left( g\left( u_i', u_{-i} \right) \right)\right] \\
+		&= u_i \left( g\left( u_i', u_{-i} \right) \right) - p_i \left( u_i', u_{-i} \right)
+	,\end{align*}
+	where the inequality follows from $g$ being utilitarian under the true profile.
+\end{proof}
+
+It turns out that maximizing welfare is implementable in dominant strategies, and the only such social welfare functions that are implementable are those that are utilitarian (with weights $\left\{w_i\right\}$ and biases over outcomes $\left\{C_a\right\}$).
+Just like Gibbard--Satterthwaite, Roberts' theorem depends crucially on the domain of $g$ being unrestricted.
+
+\begin{theorem}[Roberts'] \label{4-8-3}
+	Suppose that $\left| A \right| \ge 3$. $g: \mathscr{U}^{\left| N \right|} \to A$ is implementable in dominant strategies iff there are nonnegative weights $\left\{w_i\right\}_{i \in N}$ which are not identically zero and constants $\left\{C_a\right\}_{a \in A}$ for each $a \in A$ such that 
+	\boxednote{We call the social choice function $g$ in Roberts' theorem an \emph{affine maximizer}.}
+	\[
+		g\left( u_1,\ldots,u_{\left| N \right|} \right) \in \argmax_{ a\in A} \sum\limits_{i\in N}^{} w_i u_i(a) + C_a
+	.\] 
+\end{theorem}
+
+\begin{proof}
+	We omit the proof.
+\end{proof}
+
+\section{Domain Restrictions}
+
+The VCG mechanism is designed for the space $\mathscr{U}^{\left| N \right|}$. If we have some $\mathscr{V} \subseteq \mathscr{U}$ and a social choice function $g' : \mathscr{V}^{\left| N \right|} \to A$ that maximizes welfare, does the VCG mechanism restricted to $\mathscr{V}$ implement $g'$ in dominant strategies?
+Yes, because restricting the space to optimize over makes the problem easier. If you didn't want to deviate from your truthful utility in $\mathscr{U}$, then you would not want to deviate in $\mathscr{V}$ either.
+
+\begin{example}
+	Consider a single good to be allocated to one agent out of $n$. We can identify $A$ with the unit vectors in $\R^n$.
+	Suppose each agent gets value $b_i$ if she receives the good and utility $0$ if she doesn't get the good.
+	The agent with the highest value $b_{(1)}$ gets the good and she pays $b_{(2)}$.
+\end{example}
+
+\begin{example}
+	Suppose Google has $K$ sponsored slots $1,2,\ldots,K$ for search results.
+	Each slot $\ell$ has a clickthrough rate of $\alpha_\ell$. Assume that $\alpha_1 \ge \alpha_2 \ge \cdots \ge \alpha_K$.
+	If $K < \left| N \right|$, add many slots with clickthrough rate $0$.
+	Each advertising firm $i$ has value $v_i$ from a click, so if they are given slot $\ell$, they have utility $v_i \alpha_\ell$.
+
+	Here, $A$ is the set of permutations for which firm is assigned to what slot.
+	We have a very large domain restriction; firm $i$'s utility is in a specific form that is invariant to other firms' utilities.
+
+	Order the agents so that $v_1 \ge v_2 \ge \cdots \ge v_{\left| N \right|}$. 
+	We claim with great conviction that welfare is maximized by assigning slot $\ell$ to firm $\ell$ for $\ell = 1,\ldots,\left| N \right|$.
+	
+	The VCG payments are \[
+		p_i\left( v_i, v_{-i} \right) = \sum_{j > i} \left( \alpha_{j-1} - \alpha_j \right) v_j
+	.\] 
+\end{example}
+
+Cyclical monotonicity is the correct characterization (condition) for implementability in dominant strategies, as Rochet's theorem is not sensitive to domain restrictions, as seen in Proposition (\ref{4-8-0}) and the subsequent remark.
+
+However, the forward direction of Roberts' theorem no longer holds with domain restrictions, since implementability of $g$ is easier to satisfy when the condition must hold over fewer utility functions. There are known mechanisms for domain restrictions that are not affine maximizers. Hence, we should try to better understand cyclical monotonicity. We can try weakening it by imposing the cycles are only of length 2.
+
+\begin{definition}[Weak monotonicity]
+	Let $\mathscr{V} \subseteq \mathscr{U}$. We say that $g: \mathscr{V}^{\left| N \right|}\to A$ satisfies weak monotonicity if it satisfies cyclical monotonicity for all cycles of length $2$. That is, for all $i$, $v_{-i}$, and all $v_i, v_i'$, we have \[
+		v_i\left( g\left( v_i, v_{-i} \right) \right) - v_i \left( g\left( v_{i}', v_{-i} \right) \right) + v_i'\left( g\left( v_i',v_{-i} \right) \right) - v_i'\left( g\left( v_i, v_{-i} \right) \right) \ge 0
+	.\] 
+\end{definition}
+More intuitively, \[
+	v_i\left( g(v_i,v_{-i}) \right) - v_i\left( g(v_i', v_{-i}) \right) \ge v_i'\left( g(v_i, v_{-i}) \right) - v_i'\left( g(v_i', v_{-i}) \right)
+.\] 
+$v_i$'s change in utility from the misreport $v_i'$ to the true value $v_i$ must be bigger than $v_i'$'s change in utility from the true value $v_i'$ to the misreport $v_i$.
+\begin{theorem}[Saks and Yu, 2005]
+	Suppose $\mathscr{V} \subseteq \mathscr{U}$ is convex. $g: \mathscr{V}^{\left| N \right|}\to A$ is implementable in dominant strategies iff it is weakly monotonic.
+\end{theorem}
+The theorem says that if our domain restriction is to a convex set, then we only need to check cycles of length $2$, which is much easier to check than cycles of possibly infinite length.

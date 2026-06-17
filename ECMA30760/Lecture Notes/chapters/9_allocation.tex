@@ -1,0 +1,671 @@
+\styledchapter{Allocation Problems}
+
+In this section, we will consider the problem of allocating a finite number of indivisible objects to a set of agents who have preferences over the objects. 
+Example applications include the distribution of public housing units and the assignment of tasks to workers in a firm.
+
+\section{Deterministic Allocation}
+
+We first focus on deterministic mechanisms.
+
+\subsection{Svensson (1999)}
+
+We have $N$ agents and a set $X$ of houses.\footnote{More generally, objects} We assume for simplicity that $\left| N \right| = \left| X \right|$.
+
+Suppose each $i$ has a strict preference $\succ_i$ on $X$. 
+
+\begin{definition}[Allocation, mechanism]
+	An allocation is a bijection $\mu: N \to X$. We denote the set of allocations as $A$.
+
+	A mechanism is a function $f: P^N \to A$.
+\end{definition}
+Agents are indifferent between any two allocations that give her the same object, while the planner is to decide on the assignments for everyone.
+
+\begin{definition}[(Group) strategy-proof]
+	A mechanism $f$ is:
+	\begin{itemize}
+		\item Strategy-proof if for every $i$, $\succ \in P^{N}$, and $\succ_i'$, \[
+			f(\succ)(i) \succsim_i f\left( \succ_i', \succ_{-i}\right) (i)
+		.\] 
+		\item Group strategy-proof if for all $\succ \in P^N$, there is no nonempty coalition $S \subseteq N$ and joint misreport $\succ_S' = \left( \succ_i' \right)_{i \in S}$ such that
+		\[
+			f(\succ_S',\succ_{-S})(j) \succsim_j f(\succ)(j) \quad \text{for all } j \in S
+		\]
+		and
+		\[
+			f(\succ_S', \succ_{-S})(i) \succ_i f(\succ)(i) \quad \text{for some } i \in S
+		.\] 
+		\item Monotonic if for any $\succ,\succ'$ such that for all $i$ and all $x \in X$, if \[
+			f(\succ)(i) \succ_i x \implies f(\succ)(i) \succ_i' x
+		,\] then $f(\succ') = f(\succ)$.
+		If the set of objects dispreferred to $f(\succ)(i)$ weakly grows from $\succ$ to $\succ'$ for agent $i$, then $f$ is monotone if $i$ maintains the same object.
+		\item Non-bossy if for all $i$, $\succ_{-i}$, $\succ_i$, and $\succ_i'$, \[
+				f(\succ_i,\succ_{-i})(i) = f(\succ_i', \succ_{-i})(i) \implies f(\succ_i, \succ_{-i}) = f(\succ_i', \succ_{-i})
+		.\] 
+		For an agent $i$ and preferences for the remaining agents, if $i$ is able to change her preference without affecting her own allocation, then her changing her preference can't change others' allocations.
+	\end{itemize}
+\end{definition}
+
+In house allocation, strategy proofness is actually a very weak condition and doesn't buy us much. Group strategy proofness is a much nicer restriction to work with.
+\begin{lemma} \label{5-13-1}
+	For any mechanism $f$, the following are equivalent:
+	\begin{enumerate}[label = (\roman*)]
+		\item $f$ is group strategy-proof.
+		\item $f$ is strategy-proof and non-bossy.
+		\item $f$ is monotonic.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+	We showed $\text{(i)} \iff \text{(ii)}$ in Problem Set 4.\boxednote{This proof was left as an exercise.}
+	Now we show $\text{(ii)}\iff\text{(iii)}$.\\
+	$(\implies)$ Suppose $f$ is strategy-proof and non-bossy.
+	Consider $\succ$ and $\succ'$ such that for all $i$ and $x \in X$, \[
+		f(\succ)(i) \succ_i x \implies f(\succ)(i) \succ_i' x
+	.\] 
+	We will link $f(\succ)$ to $f(\succ')$ by changing one agent's preference at a time.
+
+	Consider agent 1 changing her report from $\succ_1$ to $\succ_1'$ and everyone else maintaining their preferences.
+	By strategy-proofness, \[
+		f(\succ)(1) \succsim_1 f(\succ_1',\succ_{-1})(1)
+	.\] 
+	If equality did not hold, then we would have $f(\succ)(1) \succ_1 f(\succ_1',\succ_{-1})(1)$, so by the assumption, \[
+		f(\succ)(1) \succ_1' f(\succ_1',\succ_{-1})(1)
+	,\] and strategy-proofness of $f$ at $(\succ_1', \succ_{-1})$ would be violated with the profitable deviation of agent 1 to $\succ_1$.
+
+	So $f(\succ)(1) = f(\succ_1',\succ_{-1})(1)$. By non-bossiness, $f(\succ) = f(\succ_1',\succ_{-1})$.
+
+	Now we induct. Suppose $f(\succ) = f(\succ_1',\ldots,\succ_{k}', \succ_{k+1},\ldots,\succ_{\left| N \right|})$.
+	Strategy-proofness of $f$ at $(\succ_{\left\{1,\ldots,k\right\}}',\succ_{k+1,\ldots,\left| N \right|})$ gives \[
+		f(\succ_{\left\{1,\ldots,k\right\}}',\succ_{\left\{k+1,\ldots,\left| N \right|\right\}})(k) \succsim_{k} f\left( \succ_{\left\{1,\ldots,k+1\right\}}',\succ_{k+2,\ldots,\left| N \right|} \right)
+	.\] If equality does not hold, then strategy-proofness of $f$ at $(\succ_{\left\{1,\ldots,k+1\right\}}',\succ_{\left\{k+2,\ldots,\left| N \right|\right\}})$ is violated, so $k$'s object does not change between the two reports.
+	Non-bossiness forces everyone else to maintain their objects as well, so \[
+		f(\succ) = f\left( \succ_{\left\{1,\ldots,k+1\right\}'},\succ_{\left\{k+2,\ldots,\left| N \right|\right\}} \right)
+	.\] 
+
+	Eventually, we reach that $f(\succ) = f(\succ')	$. Since $\succ,\succ'$ were arbitrary, $f$ is monotonic.
+
+	($\impliedby$)
+	Suppose $f$ is monotonic.
+	Fix agent $i$, $\succ$, and a misreport $\succ_i'$.
+	Let $a\coloneqq  f(\succ)(i)$ and $b\coloneqq f(\succ_i',\succ_{-i})(i)$. Suppose for contradiction that $b \succ_i a$.
+	Consider the preference $\succ_i^\star$ where $i$ moves $b$ to the top of $\succ_i$ and leaves everything else unchanged.
+	By monotonicity, since the lower contour set of $a$ does not shrink from $\succ_i$ to $\succ_i^\star$, and all other agents' preferences are unchanged, \[
+		f(\succ) = f(\succ_i^\star,\succ_{-i})
+	,\] and in particular \[
+		a = f(\succ)(i) = f(\succ_i^\star, \succ_{-i})(i)
+	.\] 
+	Again by monotonicity since $b$ is top-ranked in $\succ_i^\star$, the lower contour set of $b$ does not shrink from $\succ_i'$ and $\succ_i^\star$ (in fact, it may grow), and all other agents' preferences are unchanged so \[
+		f(\succ_i',\succ_{-i}) = f(\succ_i^\star,\succ_{-i}) 
+	.\] In particular, \[
+		b = f(\succ_i',\succ_{-i})(i) = f(\succ_{i}^\star,\succ_{-i})(i) = a
+	.\] But this contradicts $b \succ_i a$, so $a\succsim_i b$, and $f$ is indeed strategy-proof.
+
+	Showing non-bossiness is similar. Suppose $\succ_i$, $\succ_i'$ are such that \[
+		a\coloneqq f(\succ)(i) = f(\succ_i', \succ_{-i})(i)
+	.\] Move $a$ to the top of $\succ_i$ to create $\succ_i^\star$ and move $a$ to the top of $\succ_i'$ to create $\succ_i''$.
+	By monotonicity, since the other agents' preferences do not change, \[
+		f(\succ) = f(\succ_i^\star,\succ_{-i}), \quad f(\succ_i',\succ_{-i}) = f(\succ_i'',\succ_{-i})
+	,\] and in all allocations, $i$ gets $a$.
+	By monotonicity again, since $\succ_i^\star$ and $\succ_i''$ have the same lower contour set of $a$, and all other agents' preferences do not change, \[
+		f(\succ_i^\star,\succ_{-i}) = f(\succ_{i}'',\succ_{-i})
+	.\] 
+	Combining this display with the previous one yields that \[
+		f(\succ) = f(\succ_i',\succ_{-i})
+	,\] so $f$ is non-bossy.
+\end{proof}
+
+\begin{lemma}
+	If a mechanism is group strategy-proof, then it is Pareto efficient iff it is surjective.
+\end{lemma}
+\begin{proof}
+	($\implies$)
+	\boxednote{This proof was left as an exercise.}Suppose $f$ is group strategy-proof and Pareto efficient.
+	For an outcome $x \in X$, let $\succ^\star$ be a preference over $X$ where $x$ is top-ranked. Then by efficiency, $f(\succ^\star,\ldots,\succ^\star) = x$. Since $x$ was arbitrary, $f$ is surjective.
+
+	($\impliedby$) Suppose $f$ is group strategy-proof and surjective.
+	Assume for contradiction that $f$ is not Pareto efficient, so there exists some $\mu \in A$ such that \[
+		\mu(i) \succsim_i f(\succ)(i), \quad \mu(j) \succ_j f(\succ')(j)
+	.\] 
+	By surjectivity, there exists $\succ'$ such that $\mu = f(\succ')$.
+	Then the grand coalition $S = \left| N \right|$ has a profitable group deviation, so $f$ is not group strategy-proof, a contradiction.
+\end{proof}
+
+\begin{definition}[Serial dictatorship mechanism]
+	The serial dictatorship mechanism with order $\rho: \left\{1,2,\ldots,\left| N \right|\right\} \to N$ ($\rho$ is a bijection) is the mechanism that gives $\rho(1)$ her top choice, $\rho(2)$ her favorite choice of the remaining objects, and so on.
+
+	We call $\rho$ the \emph{picking order} of the mechanism.
+\end{definition}
+Note that since $\rho$ is independent of $\succ$, a single order $\rho$ is used to prioritize the agents regardless of preference.
+
+\begin{definition}[Neutrality]
+	Let $\sigma$ be a permutation on $X$. If $\mu\in A$, define $\sigma\,\mu$ to be the allocation where each agent $i$ gets $\sigma(\mu(i))$, i.e. \[
+		(\sigma\,\mu)(i) \coloneqq \sigma(\mu(i))
+	.\] 
+
+	If $\succ_i \in P$, let $\sigma\,\succ_i$ be the preference such that \[
+		x \mathrel{\sigma\!\succ_i} y \iff \sigma^{-1}(x) \succ_i \sigma^{-1}(y)
+	.\] 
+
+	A mechanism $f$ is neutral if for every $\succ \in P^{\left| N \right|}$ and all permutations $\sigma$, \[
+		f(\sigma\,\succ) = \sigma\,f(\succ)
+	.\] 
+\end{definition}
+
+What kinds of mechanisms satisfy neutrality?
+\begin{example}[Neutrality]
+	Consider $N = \left\{1,2,3\right\}$, $X = \left\{a,b,c\right\}$, and $\sigma(a) = b, \sigma(b) = a, \sigma(c) = c$.
+
+	With the preferences \[
+			\begin{array}{ccc}
+				\succ_1 & \succ_2 & \succ_3 \\
+				\hline
+				a & a & b \\
+				b & c & a \\
+				c & b & c	
+			\end{array}
+	,\] 
+	we have that \[
+			\begin{array}{ccc}
+				\sigma\,\succ_1 & \sigma\,\succ_2 & \sigma\,\succ_3 \\
+				\hline
+				b & b & a \\
+				a & c & b \\
+				c & a & c	
+			\end{array}
+	.\]
+
+	In class, some specific $f$ was given, but I didn't write it down. But an $f$ that implements the Borda count satisfies neutrality, as \[
+		f(\sigma\, \succ) = b = \sigma(a) = \sigma\, f(\succ)
+	.\] 
+\end{example}
+
+\begin{theorem}[Svensson] \label{5-13-2}
+	A mechanism $f$ is group strategy-proof and neutral iff it is a serial dictatorship.
+	\boxednote{It turns out that group strategy-proofness is equivalent to group strategy-proofness limited to coalitions of size 1 and 2. Still, we may think group strategy-proofness is too strong, because the jump from strategy-proofness to group strategy-proofness requires nonbossiness. The second price auction is bossy.}
+\end{theorem}
+
+\begin{proof}
+	($\impliedby$). Suppose $f = SD_\rho$. Consider a possible coalition manipulation, and let $\rho(k)$ be the first member of the coalition in the picking order. The agents before $\rho(k)$ in the order are not in the coalition, so their reports and assignments do not change. Hence when $\rho(k)$ picks, the same set of objects is available as before. Truthful reporting already gives $\rho(k)$ her favorite object from that set, so she cannot get a strictly better object. If she gets a different object, she is worse off; if she gets the same object, the same argument applies to the next coalition member in the picking order. Therefore no coalition can make all its members weakly better off and one member strictly better off, so serial dictatorships are group strategy-proof.
+	 
+	Serial dictatorships are also neutral. At each step $k$, the set of remaining objects under $\sigma\,\succ$ is the image under $\sigma$ of the set of remaining objects under $\succ$. Therefore the favorite remaining object of agent $\rho(k)$ under $\sigma\,\succ_{\rho(k)}$ is exactly $\sigma$ applied to her favorite remaining object under $\succ_{\rho(k)}$. Hence $f(\sigma\, \succ) = \sigma\, f(\succ)$.
+
+	($\implies$). Fix a single agent's preference $\succ_\star \in P$. Consider the preference profile $(\succ_\star, \ldots,\succ_\star) \in P^{\left| N \right|}$. Fix a mechanism $f$ that is group strategy-proof and neutral, so it is also strategy-proof and nonbossy by Lemma (\ref{5-13-1}).
+
+	Without loss, suppose $\succ_\star$ ranks $x_1$ first, $x_2$ second, and so on. Since $f(\succ_\star,\ldots,\succ_\star)$ is an allocation, each object is assigned to exactly one agent. Define the order $\rho$ by letting $\rho(k)$ be the agent who gets $x_k$ at $(\succ_\star,\ldots,\succ_\star)$.
+
+	By neutrality, in any profile where all agents agree, agent $\rho(1)$ gets the common top choice, agent $\rho(2)$ gets the common second choice, and so on. To see this, if the common ranking is $y_1,\ldots,y_{\left|X\right|}$, take the permutation $\sigma$ with $\sigma(x_k) = y_k$ for each $k$ and apply neutrality to $(\succ_\star,\ldots,\succ_\star)$.
+	Hence $f$ agrees with the serial dictatorship mechanism $SD_\rho$ on unanimous preference profiles.
+
+	Now let $\succ$ be an arbitrary preference profile.
+	Let $\mu = SD_\rho(\succ)$. Let $\succ^\mu$ be the preference where $\mu(\rho(1))$ is top-ranked, $\mu(\rho(2))$ is second-ranked, and so on, and let $\succ' = (\succ^\mu,\ldots,\succ^\mu)$ be the corresponding unanimous profile.
+	For each $k$, by the definition of $SD_\rho$, $\mu(\rho(k))$ is agent $\rho(k)$'s favorite object among the objects not assigned to agents $\rho(1),\ldots,\rho(k-1)$. In particular, agent $\rho(1)$ top-ranks $\mu(\rho(1))$ under $\succ_{\rho(1)}$; more generally, if agent $\rho(k)$ ranks an object above $\mu(\rho(k))$ under $\succ_{\rho(k)}$, that object must be one of $\mu(\rho(1)),\ldots,\mu(\rho(k-1))$.
+
+	Then $f(\succ')$ agrees with the serial dictatorship with picking order $\rho$, so agent $\rho(1)$ gets the top-rank in $\succ'$, agent $\rho(2)$ gets the second rank in $\succ'$, and so on. Thus $f(\succ') = \mu$.
+	
+	We want to show that $f(\succ) = \mu$ and will do so by replacing the reports in $\succ'$ with the reports in $\succ$ one at a time. For each $k = 0,1,\ldots,\left|N\right|$, define
+	\[
+		\succ_{\rho(\ell)}^k =
+		\begin{cases}
+			\succ_{\rho(\ell)} & \text{if } \ell \leq k, \\
+			\succ^\mu & \text{if } \ell > k
+		\end{cases}
+	,\]
+	so $\succ^0 = \succ'$ and $\succ^{\left|N\right|} = \succ$. We claim by induction on $k$ that $f(\succ^k) = \mu$. The base case $k=0$ follows from the previous paragraph.
+
+	Now suppose $f(\succ^{k-1}) = \mu$. The only difference between $\succ^{k-1}$ and $\succ^k$ is that agent $\rho(k)$ reports $\succ_{\rho(k)}$ instead of $\succ^\mu$. First apply strategy-proofness at the profile $\succ^k$: if agent $\rho(k)$ instead reported $\succ^\mu$, the outcome would be $f(\succ^{k-1}) = \mu$, so
+	\[
+		f(\succ^k)(\rho(k)) \succsim_{\rho(k)} \mu(\rho(k))
+	.\]
+	By the definition of $SD_\rho$, the only objects that agent $\rho(k)$ ranks above $\mu(\rho(k))$ under $\succ_{\rho(k)}$ are among $\mu(\rho(1)),\ldots,\mu(\rho(k-1))$.
+
+	Second, apply strategy-proofness at the profile $\succ^{k-1}$: if agent $\rho(k)$ instead reported $\succ_{\rho(k)}$, the outcome would be $f(\succ^k)$, so $\mu(\rho(k))$ is weakly preferred to $f(\succ^k)(\rho(k))$ under $\succ^\mu$. Since $\succ^\mu$ ranks exactly $\mu(\rho(1)),\ldots,\mu(\rho(k-1))$ above $\mu(\rho(k))$, this rules out the possibility that $f(\succ^k)(\rho(k))$ is one of those earlier objects. Therefore $f(\succ^k)(\rho(k)) = \mu(\rho(k))$.
+
+	Since agent $\rho(k)$'s allocation is unchanged when her report changes from $\succ^\mu$ to $\succ_{\rho(k)}$, non-bossiness implies $f(\succ^k) = f(\succ^{k-1}) = \mu$. By induction, $f(\succ) = \mu = SD_\rho(\succ)$. Since $\succ$ was arbitrary, $f$ is a serial dictatorship with picking order $\rho$.
+\end{proof}
+
+\subsection{Top Trading Cycles}
+
+Suppose we start with an initial allocation $\mu_0$. How can we determine the best reallocation?
+
+We describe algorithm to compute the \emph{top trading cycle}, which is the mechanism that agrees with the result of this algorithm. Given a preference profile $\succ \in P^{\left| N \right|}$, it proceeds as follows:
+\begin{description}
+	\item[Step 1]: All agents point at the agent who is assigned her favorite house in $\mu_0$. Formally, we have a graph of agents as nodes and directed edges with one tail at each agent of an edge with head at the agent who is assigned to her favorite house.
+
+	\boxednote{Note that the cycle may be a degenerate cycle.}A cycle $i_1 \to i_2 \to \cdots \to i_n \to i_1$ must exist, since in any finite directed graph where every node has exactly one outgoing edge, following edges from any node eventually repeats a node, and hence produces a directed cycle. Trade endowments along all cycles
+	\begin{align*}
+		i_1 &\to \mu_0(i_2), \\
+		i_2 &\to \mu_0(i_3), \\
+		&\vdots \\
+		i_n &\to \mu_0(i_1).
+	\end{align*}
+	Then remove all agents in these cycles and the houses they receive from the problem.
+	\item[Step $k$]: Repeat with the remaining agents and houses who were not previously in a cycle. Stop when there are no agents left.
+\end{description}
+
+\begin{example}
+	Again consider \[
+		\begin{array}{ccc}
+			\succ_1 & \succ_2 & \succ_3 \\
+			\hline
+			\textcircled{a} & a & \textcircled{b} \\
+			b & \textcircled{c} & a \\
+			c & b & c	
+		\end{array}
+	,\] and suppose we start with \[
+		\mu_0(1) = b, \quad \mu_0(2) = c, \quad \mu_0(3) = a
+	.\]
+	\begin{center}
+		\begin{tikzpicture}[
+			agent/.style={circle, draw, thick, minimum size=8.5mm, inner sep=0pt},
+			removed/.style={circle, draw=black!30, text=black!40, thick, minimum size=8.5mm, inner sep=0pt},
+			ptr/.style={->, thick, shorten >=3pt, shorten <=3pt},
+			cycleptr/.style={->, very thick, blue!70!black, shorten >=3pt, shorten <=3pt},
+			every node/.style={font=\small}
+		]
+			\node[font=\footnotesize\bfseries] at (0,2.55) {Step 1};
+			\node[agent] (one) at (0,1.55) {$1$};
+			\node[agent] (two) at (-1.75,0) {$2$};
+			\node[agent] (three) at (1.75,0) {$3$};
+			\node[font=\scriptsize] at ($(one)+(0,0.55)$) {$b$};
+			\node[font=\scriptsize] at ($(two)+(0,-0.55)$) {$c$};
+			\node[font=\scriptsize] at ($(three)+(0,-0.55)$) {$a$};
+			\draw[cycleptr] (one) to[bend left=9] node[midway, above right, font=\scriptsize] {$a$} (three);
+			\draw[ptr] (two) to[bend right=9] node[midway, below, font=\scriptsize] {$a$} (three);
+			\draw[cycleptr] (three) to[bend left=9] node[midway, left, font=\scriptsize] {$b$} (one);
+			\node[font=\scriptsize, blue!70!black] at (0,-1.05) {$1$ and $3$ trade};
+
+			\begin{scope}[xshift=5.4cm]
+				\node[font=\footnotesize\bfseries] at (0,2.55) {Step 2};
+				\node[removed] (onep) at (0,1.55) {$1$};
+				\node[agent] (twop) at (-1.75,0) {$2$};
+				\node[removed] (threep) at (1.75,0) {$3$};
+				\node[font=\scriptsize, text=black!40] at ($(onep)+(0,0.55)$) {$a$};
+				\node[font=\scriptsize] at ($(twop)+(0,-0.55)$) {$c$};
+				\node[font=\scriptsize, text=black!40] at ($(threep)+(0,-0.55)$) {$b$};
+				\draw[cycleptr] ($(twop)+(-0.22,0.28)$)
+					.. controls ($(twop)+(-0.95,0.95)$) and ($(twop)+(0.95,0.95)$)
+					.. node[midway, above, font=\scriptsize] {$c$} ($(twop)+(0.22,0.28)$);
+				\node[font=\scriptsize, blue!70!black] at (0,-1.05) {$2$ keeps $c$};
+			\end{scope}
+		\end{tikzpicture}
+	\end{center}
+	In step 1, agents 1 and 2 point at 3, who points at 1, so agents 1 and 3 trade. In step 2, agent 2 trades with himself, and then we are done.
+
+	So in the last allocation, \[
+		\mu_2(1) = a, \quad \mu_2(2) = c,\quad \mu_2(3) = b
+	.\] 
+
+	Since TTC is group strategy-proof by Proposition (\ref{5-23-1}), Theorem (\ref{5-13-2}) implies that TTC cannot be neutral unless it is a serial dictatorship (it is not). The following permutation shows the failure of neutrality directly.
+	Consider \[
+		\sigma(c) = a, \quad \sigma(b) = b, \quad \sigma(a) = c
+	.\] 
+	Then the new preference profile is \[
+		\begin{array}{ccc}
+			\succ_1 & \succ_2 & \succ_3 \\
+			\hline
+			c & \textcircled{c} & b \\
+			\textcircled{b} & a & c \\
+			a & b & \textcircled{a}
+		\end{array}
+		.\] The endowments are not permuted.
+	\begin{center}
+		\begin{tikzpicture}[
+			agent/.style={circle, draw, thick, minimum size=8.5mm, inner sep=0pt},
+			removed/.style={circle, draw=black!30, text=black!40, thick, minimum size=8.5mm, inner sep=0pt},
+			ptr/.style={->, thick, shorten >=3pt, shorten <=3pt},
+			cycleptr/.style={->, very thick, blue!70!black, shorten >=3pt, shorten <=3pt},
+			every node/.style={font=\small}
+		]
+			\node[font=\footnotesize\bfseries] at (0,2.5) {Step 1};
+			\node[agent] (onea) at (0,1.45) {$1$};
+			\node[agent] (twoa) at (-1.25,0) {$2$};
+			\node[agent] (threea) at (1.25,0) {$3$};
+			\node[font=\scriptsize] at ($(onea)+(0,0.55)$) {$b$};
+			\node[font=\scriptsize] at ($(twoa)+(0,-0.55)$) {$c$};
+			\node[font=\scriptsize] at ($(threea)+(0,-0.55)$) {$a$};
+			\draw[ptr] (onea) to[bend right=10] node[midway, left, font=\scriptsize] {$c$} (twoa);
+			\draw[cycleptr] ($(twoa)+(-0.22,0.28)$)
+				.. controls ($(twoa)+(-0.85,0.9)$) and ($(twoa)+(0.55,0.9)$)
+				.. node[midway, above, font=\scriptsize] {$c$} ($(twoa)+(0.22,0.28)$);
+			\draw[ptr] (threea) to[bend left=8] node[midway, above right, font=\scriptsize] {$b$} (onea);
+
+			\begin{scope}[xshift=4.2cm]
+				\node[font=\footnotesize\bfseries] at (0,2.5) {Step 2};
+				\node[agent] (oneb) at (0,1.45) {$1$};
+				\node[removed] (twob) at (-1.25,0) {$2$};
+				\node[agent] (threeb) at (1.25,0) {$3$};
+				\node[font=\scriptsize] at ($(oneb)+(0,0.55)$) {$b$};
+				\node[font=\scriptsize, text=black!40] at ($(twob)+(0,-0.55)$) {$c$};
+				\node[font=\scriptsize] at ($(threeb)+(0,-0.55)$) {$a$};
+				\draw[cycleptr] ($(oneb)+(0.22,0.28)$)
+					.. controls ($(oneb)+(0.85,0.9)$) and ($(oneb)+(-0.85,0.9)$)
+					.. node[midway, above, font=\scriptsize] {$b$} ($(oneb)+(-0.22,0.28)$);
+				\draw[ptr] (threeb) to[bend left=9] node[midway, above right, font=\scriptsize] {$b$} (oneb);
+			\end{scope}
+
+			\begin{scope}[xshift=8.4cm]
+				\node[font=\footnotesize\bfseries] at (0,2.5) {Step 3};
+				\node[removed] (onec) at (0,1.45) {$1$};
+				\node[removed] (twoc) at (-1.25,0) {$2$};
+				\node[agent] (threec) at (1.25,0) {$3$};
+				\node[font=\scriptsize, text=black!40] at ($(onec)+(0,0.55)$) {$b$};
+				\node[font=\scriptsize, text=black!40] at ($(twoc)+(0,-0.55)$) {$c$};
+				\node[font=\scriptsize] at ($(threec)+(0,-0.55)$) {$a$};
+				\draw[cycleptr] ($(threec)+(0.22,0.28)$)
+					.. controls ($(threec)+(0.85,0.9)$) and ($(threec)+(-0.85,0.9)$)
+					.. node[midway, above, font=\scriptsize] {$a$} ($(threec)+(-0.22,0.28)$);
+			\end{scope}
+		\end{tikzpicture}
+	\end{center}
+	Agent 1 points to 2, 2 points to himself, and 3 points to 1. So 2 gets her top choice, which is already a violation. In step 2, 1 points to herself, while 3 points to 1. Then in step 3, 3 points to herself.
+	Hence \[
+		\mu_3(1) = b = \ne \sigma(a), \quad \mu_3(2) = c = \sigma(a), \quad \mu_3(3) = a = \sigma(c) \ne \sigma(b)
+	.\] 
+	While agents 2 ends with the permuted versions of her original outcome, agents 1 and 3 fail to have the permuted versions of their original outcomes.
+\end{example}
+
+\begin{proposition} \label{5-23-1}
+	The top trading cycles mechanism is group strategy-proof and Pareto efficient.
+\end{proposition}
+\begin{proof}
+	We will first show that TTC is monotonic, since this implies group strategy-proofness (and non-bossiness).
+	Then we will show surjectivity, which in conjunction with group strategy-proofness, is equivalent to Pareto efficiency.
+
+	\textbf{Monotonicity:} Suppose $\TTC_{\mu_0}(\succ) = \mu$ and $\succ'$ is such that for all $i$ and $x$, \[
+		\mu(i) \succ_i x \implies \mu(i) \succ_i' x
+	.\] 
+	We want to show that $\TTC_{\mu_0}(\succ') = \mu$.
+	Let $r(i)$ denote the round in which agent $i$ is removed in $\TTC_{\mu_0}(\succ)$.
+	We prove by induction on the rounds of $\TTC_{\mu_0}(\succ')$ that every cycle removed under $\succ'$ is a cycle that was removed under $\succ$, and that every removed agent receives the same object as under $\mu$.
+	\begin{description}
+		\item[Base case:] Before the first round of $\TTC_{\mu_0}(\succ')$, no agents have been removed, so the induction hypothesis is vacuous.
+		\item[Inductive step:] Suppose that every cycle already removed in TTC under $\succ'$ is a cycle from TTC under $\succ$, and that every already removed agent received the same object as under $\mu$.
+			Consider a cycle $j_1 \to j_2 \to \cdots j_m \to j_1$ be a cycle that is about to be removed in TTC under $\succ'$ where $j_1$ is such that $r(j_1)$ is minimal among the agents in this cycle.
+
+			We first show a lemma. In the original run, then any object preferred by $i$ to $\mu(i)$ must be owned by an agent in an earlier original round: \[
+				x \succ_i \mu(i) \implies r(\mu_0^{-1}(x)) < r(i)
+			.\] By the contrapositive of the monotonicity assumption, \[
+				x \succ_i' \mu(i) \implies x\succ_i \mu(i) \implies r(\mu_0^{-1}(x)) < r(i)
+			.\] So any object $x$ that an agent $i$ prefers to $\mu(i)$ in $\succ_i'$ is owned by an agent who was removed earlier than $i$ in TTC under $\succ$. (Note that this lemma is consistent with agents who are removed in the first round of TTC under $\succ$ receiving their favorite objects.)
+
+			Since $r(j_1)$ is minimal among the cycle, we know that $\left\{\mu(j_1),\ldots,\mu(j_m)\right\}$ are all still available at this point in TTC under $\succ'$.
+			In this step, if $j_1$ points to some object $x$ other than $\mu(j_1)$, then \[
+				x \succ_{j_1}' \mu(j_1)
+			.\] But then by the lemma, $x$ is the initial object of an agent in an earlier original round than $j_1$. Since $j_1$ points to this agent at this time in TTC under $\succ'$, $j_1$ cannot have the minimal original round of this cycle in TTC under $\succ'$, a contradiction.
+			So $j_1$ must point to an object not preferred to $\mu(j_1)$. Since $\mu(j_1)$ is still available, she points to $\mu(j_1)$, which is owned by the next agent $j_2$ in the current cycle under consideration, i.e. $\mu_0(j_2) = \mu(j_1)$. Thus $j_2$ is the successor of $j_1$ in the original TTC cycle containing $j_1$. 
+			
+			$j_1$ and $j_2$ are in the same original TTC cycle, so $r(j_1) = r(j_2)$, and $j_2$ also has minimal round in the current cycle. We get that $j_2$ points to $\mu(j_2) = \mu_0(j_3)$ in the TTC cycle under $\succ'$, so $j_3$ is the successor of $j_2$ in the original TTC cycle.
+
+			For each $\ell = 1,\ldots,m$, agent $j_\ell$ points to $\mu(j_\ell)$ under $\succ'$, so the current cycle under $\succ'$ is an original TTC cycle under $\succ$, and every agent in it receives the same object as under $\mu.$
+
+			Nothing in the proof considers agents in another cycle to be removed at the same time as $j_1 \to \cdots \to j_m \to j_1$ in TTC under $\succ'$, so all cycles formed in round 1 of TTC under $\succ'$ were formed in TTC under $\succ$ with the same pairings, and so on for future rounds.
+	\end{description}
+
+	\textbf{Surjectivity:}
+	Let $\mu \in A$. Then with $\mu_0 \coloneqq \mu$ and preferences $\succ$ such that each agent $i$ top-ranks $\mu(i)$, in the first round of TTC, everyone points at themselves, and so $f(\succ) = \mu_0 = \mu$.
+\end{proof}
+\begin{comment}
+\begin{proof}
+	We will show that TTC is monotonic and surjective, as the former implies the former and the latter implies the latter from group strategy-proofness. Suppose $\text{TTC}_{\mu_0}(\succ) = \mu$.
+
+	Let $\succ'$ be a profile such that for all $i$ and all $x$, if $\mu(i) \succ_i x$, then $\mu(i) \succ_i' x$. We need to show that $\text{TTC}_{\mu_0}(\succ') = \mu$ to establish monotonicity.
+
+	Let $N_1,N_2,\ldots,N_q$ be a partition of $N$ so that $N_k$ is the set of agents assigned their objects in round $k$ of $\text{TTC}_{\mu}(\succ)$. 
+
+	We will prove by induction that the same cycles form under $\succ'$, possibly at different steps.
+
+	\begin{description}
+		\item[Base case]: Any cycle in $N_1$ is a cycle in the first step of $\text{TTC}_{\mu}(\succ)$. 
+		\item[Inductive step]: Now assume that for all $\ell \le k$, all cycles in $N_\ell$ form in $\text{TTC}_{\mu_0}(\succ')$. Let $j_1 \to j_2 \to \cdots \to j_r \to j_1$ be a cycle in $N_{k+1}$.
+			For any $j$ in this cycle any any $x \succ_j' \mu(j)$, we must have that $\mu-^{-1}(x) \in N_\ell$ for some $\ell < k+1$. Since $j$ left in step $k+1$, we know \[
+				x \succ_j \mu(j)
+			\] by the monotonicity relationship of $\succ, \succ'$. 
+
+			By the inductive hypothesis, there exists a step of $\text{TTC}_{m_0}(\succ)$ where $j$'s top-remaining house is $\mu(j)$. Hence the cycle $j_1 \to j_2 \to \cdots \to j_r \to j_1$ is formed in some step.
+	\end{description}
+\end{proof}
+\end{comment}
+
+\section{Random Allocation}
+
+For any $\mu \in A$, we can associate a permutation matrix $M(\mu)$ be the $\left| N \right|\times \left| N \right|$ matrix defined by \[
+	M(\mu)_{ij} = \begin{cases}
+		1, \quad \mu(i) = j \\
+		0, \quad \text{otherwsie}
+	\end{cases}
+.\] 
+Going forward, we will identify $\mu$ and $M(\mu)$ by $\mu$.
+
+\begin{definition}[Bistochastic matrix]
+	A square matrix $M$ is bistochastic if the rows and columns sum to $1$ and all entries are positive, i.e. \[
+		\sum\limits_{j} M_{ij} = 1, \ \forall i, \qquad \sum\limits_{i}^{} M_{ij} = 1,\ \forall j
+	.\] 
+
+	Let $\mathscr{B}_{\left| N \right|}$ be the set of bistochastic $\left| N \right| \times \left| N \right|$ matrices.
+\end{definition}
+We think of row $i$ of a bistochastic matrix $M$ as corresponding to a lottery over objects for agent $i$, while column $x$ corresponds to a lottery over agents for object $x$.\footnote{We don't really consider the second perspective too much.}
+
+Note that $M_1,\ldots,M_p$ are permutation matrices and $\alpha_1,\ldots,\alpha_p$ are nonnegative numbers that sum to $1$, then \[
+	\alpha_1M_1 + \cdots + \alpha_p M_p
+\] is a bistochastic matrix.
+
+\begin{theorem}[Birkhoff Von--Neumann]
+	Any bistochastic matrix can be written as a convex combination of permutation matrices.
+\end{theorem}
+
+\begin{definition}[Random allocation mechanism]
+	A random allocation mechanism is a function $f: P^{\left| N \right|} \to B_{\left| N \right|}$.
+	$f(\succ)_{i x}$ is agent $i$'s probability of being assigned house $x$ when preferences are $\succ$ under $f$.
+	We write $f(\succ)_i$ for the $i$th row of the matrix $f(\succ)$, which is agent $i$'s lottery over houses.
+\end{definition}
+
+By the Birkhoff Von--Neumann theorem, there exists a lottery over $A$ (the set of all allocations) which yields $f(\succ)$ for every $\succ$.
+We call this lottery a \emph{social implementation} of $f(\succ)$.
+
+Basically, $f$ is outputting a matrix of probabilities.
+
+\begin{definition}[First-order stochastic dominance]
+	Let $p,p \in \Delta(X)$ and let $\succ_i$ be a strict ordering on $X = \left\{x_1,x_2,\ldots,x_{\left| N \right|}\right\}$.
+	We say that $p$ first-order stochastically dominates $p'$ with respect to $\succ_i$ if\boxednote{Note that FOSD is \emph{not} a binary relation. When neither lottery dominates the other, we say that the lotteries are not \emph{comparable}.}
+	\begin{itemize}
+		\item $p(x_1) \ge p'(x_1)$,
+		\item $p(x_1) + p(x_2) \ge p'(x_1) + p'(x_2)$,
+		\item and so on, such that for every $x \in X$, \[
+				\sum\limits_{y : y \succsim_i x} p(y) \ge \sum\limits_{y: y \succsim_i x}^{} p'(y)
+		.\] 
+	\end{itemize}
+	We denote first order stochastic dominance of $p$ over $p'$ with respect to $\succ_i$ by \[
+		p \FOSD_{\succ_i}p'
+	.\] 
+\end{definition}
+
+It turns out that $p \FOSD_{\succ_i} p'$ iff 
+\boxednote{We are overloading notation of $u$, where we have utility over objects and lotteries over the objects.}\[
+	\E\left[u(p)\right] \coloneqq  \sum\limits_{x \in X}^{} p(x)u(x) \ge \sum\limits_{x \in X}^{} p'(x)u(x) =: \E\left[u(p')\right] 
+\] 
+for all $u: X \to \R $ that agree with $\succ_i$.
+
+\begin{definition}[Strategy-proof, Ex-post efficient, Equal treatment of equals]
+	Let $f: P^{\left| N \right|}\to \mathscr{B}_{\left| N \right|}$ be a random mechanism. $f$ is strategy-proof if for all $i$, $\succ_{-i}$, $\succ_i$, and $\succ_{i}'$,
+	\[
+		f(\succ_i,\succ_{-i})_i \FOSD_{\succ_i} f(\succ_i', \succ_{-i})_i
+	.\]\boxednote{Note that strategy-proofness is not just about non-FOSD of the misreport over the truthful report; the truthful report must FOSD all potential misreports.}Implicitly, if $f$ is strategy-proof, then the lotteries $f(\succ_i,\succ_{-i})_i$ and $f(\succ_i',\succ_{-i})_i$ must be comparable.
+
+	We say that $f$ is ex-post efficient if for all $\succ$, $f(\succ)$ can be written as a convex combination\footnote{We alternatively say that $f(\succ)$ has a social implementation $\sum_k \alpha_k \mu_k$.} \[
+		\alpha_1 \mu_1 + \cdots + \alpha_p \mu_p
+	\] where each $\mu_j$ is a deterministic Pareto efficient allocation.
+
+	$f$ satisfies equal treatment of equals (ETOE) if for any $i,j$ and $\succ_{-ij}$, if $\succ_i = \succ_j$, \boxednote{Recall that we use $f(\succ)_i$ to denote the $i$th row of $f(\succ)$, i.e. the lottery given to $i$ under $f$ with reported preference profile $\succ$.} \[
+		f(\succ_i,\succ_j,\succ_{-ij})_i = f\left( \succ_i,\succ_j,\succ_{-ij} \right)_{j}
+	.\]  
+\end{definition}
+
+\begin{definition}[Random serial dictatorship, random top trading cycles]
+	\boxednote{Both $\SD$ and $\TTC$ are strategy-proof deterministic mechanisms for the relevant deterministic assignment problems. Randomizing over a collection of such mechanisms, as in $\RSD$ or $\RTTC$, preserves strategy-proofness because each realized deterministic mechanism makes truthful reporting weakly optimal, and taking the average preserves the FOSD inequalities.}
+	Random serial dictatorship (RSD) is the mechanism \[
+		\RSD(\succ) = \frac{1}{\left| N \right|!} \sum\limits_{\rho}^{} \SD_\rho(\succ)
+	.\] 
+
+	Random top trading cycles (RTTC) is the mechanism \[
+		\RTTC(\succ) = \frac{1}{\left| N \right|!} \sum\limits_{\mu_0 \in A}^{} \TTC_{\mu_0}(\succ)
+	.\] Note that $\left| N \right|! = \left| A \right|$, where $A$ is the set of \emph{allocations}, not objects.
+\end{definition}
+
+\begin{proposition}
+	$\RSD = \RTTC$. 
+\end{proposition}
+\begin{proof}
+	There is no intuition. See the course notes for a proof.
+\end{proof}
+
+\begin{proposition}
+	RSD and RTTC are strategy-proof, ex-post efficient, and satisfy ETOE.
+	Furthermore, by Bastek and Ehlers (2024), these three properties uniquely characerize RSD/RTTC up until $\left| N \right| = 4$, while there exist strategy-proof, ex-post efficient, and ETOE mechanisms for $\left| N \right| \ge 5$.
+\end{proposition}
+\begin{proof}
+	Of course, we just prove the first part.\boxednote{The proof was left as an exercise.}\\
+	\begin{description}
+		\item[Strategy-proofness:] 
+			Each serial dictatorship that RSD randomizes over is strategy-proof for each agent, since she gets her favorite outcome compatible with her picking order, which her reported preference does not affect.
+			Her reported preference doesn't affect the uniform randomizations over picking orders, so misreporting cannot lead to any gain.
+
+			We showed that each instance of TTC given a starting allocation $\mu_0$ is group strategy-proof. Thus, it is individually strategy-proof as well. Since an individual's reported preference does not affect the uniform randomization over initial allocations, RTTC is strategy-proof as well.
+		\item[Ex-post efficiency:]
+			Both RSD and RTTC are lotteries with uniform probabilities $\frac{1}{\left| N \right|!}$ and $\frac{1}{\left| A \right|}$ respectively over Pareto efficient deterministic allocations, so they are efficient.
+		\item[Equal treatment of equals:] 
+			Fix two agents $k \ne k'$. Consider a picking order $\rho$. There is a paired picking order $\rho'$ where the picking order of everyone but $k$ and $k'$ is maintained but $k$ and $k'$ switch spots.
+			If $k$ and $k'$ have the same preferences, then $k$ gets $\SD_\rho(k)$ in the first mechanism, whereas $k'$ gets $\SD_\rho'(k') = \SD_\rho(k)$ in the second mechanism, both with probability $\frac{1}{\left| N \right|!}$.
+			No two distinct picking orders can be paired with the same picking order, so every lottery where agent $k$ gets an object $x \in X$ under a picking order $\rho$ has exactly one paired picking order $\rho'$ such that agent $k'$ gets $x$.
+			Since each picking order is chosen with equal probability,agents $k$ and $k'$ get any object $x \in X$ with the same total probability.
+
+			The same logic applies to the starting allocation $\mu_0$ by switching the initial objects $k$ and $k'$ have.
+			Every starting allocation $\mu_0$ has one paired allocation $\mu_0'$ where all other than $k,k'$ have their starting objects preserved and $k,k'$ swap objects.
+			The outcome of $\mu_0$ and $\mu_0'$ are identical, except that $k'$ and $k$ swap their ending objects.
+			Since initial allocations are determined uniformly, the marginal probabilities of each object match between $k$ and $k'$.
+	\end{description}
+\end{proof}
+
+\begin{example} \label{5-18-1}
+	Suppose $N = \left\{1,2,3,4\right\}$, $X = \left\{a,b,c,d\right\}$. Let the preferences over objects be:
+	\[
+		\begin{array}{cccc}
+			\succ_1 & \succ_2 & \succ_3 & \succ_4 \\
+			\hline
+			a & a & b & b \\
+			b & b & a & a \\
+			c & c & c & c \\
+			d & d & d & d
+		\end{array}
+	.\]
+	Then we get that:
+	\[
+		\RSD(\succ) =
+		\begin{array}{c|cccc}
+			& a & b & c & d \\
+			\hline \\[-0.45em]
+			1 & \frac{5}{12} & \frac{1}{12} & \frac{1}{4} & \frac{1}{4} \\[0.45em]
+			2 & \frac{5}{12} & \frac{1}{12} & \frac{1}{4} & \frac{1}{4} \\[0.45em]
+			3 & \frac{1}{12} & \frac{5}{12} & \frac{1}{4} & \frac{1}{4} \\[0.45em]
+			4 & \frac{1}{12} & \frac{5}{12} & \frac{1}{4} & \frac{1}{4}
+		\end{array}
+	.\]
+	It's easy to fill in the columns for $c$ and $d$. Note that agent $1$ gets $a$ if she is the first dictator (probability $1/4$) or if she is the second dictator and 3 or 4 is the first dictator (probability $1 /2 \cdot 1/3 = 1/6$), which happens with total probability $5 /12$.
+
+	Note that while $\RSD(\succ)$ is strategy-proof, ex-post efficient, and has ETOE, there is a simple change that first-order stochastically dominates $\RSD(\succ)$ under $\succ$ for every agent $i$, as we can use  \[
+		\begin{array}{c|cccc}
+			& a & b & c & d \\
+			\hline \\[-0.45em]
+			1 & \frac{1}{2} & 0 & \frac{1}{4} & \frac{1}{4} \\[0.45em]
+			2 & \frac{1}{2} & 0 & \frac{1}{4} & \frac{1}{4} \\[0.45em]
+			3 & 0 & \frac{1}{2} & \frac{1}{4} & \frac{1}{4} \\[0.45em]
+			4 & 0 & \frac{1}{2} & \frac{1}{4} & \frac{1}{4}
+		\end{array}
+	.\]
+\end{example}
+
+The previous example motivates the following.
+\begin{definition}[Ordinal efficiency]
+	We say that $f$ is ordinally efficient if for every $\succ$, there is no $M \ne f(\succ)$ such that \[
+		M_i \FOSD_{\succ_i} f(\succ)_i
+	\] for every $i$.
+\end{definition}
+Though they both use FOSD as a comparison tool, strategy-proofness is concerned with a single agent's potential profit from misreporting, while ordinal efficiency examines if there is another mechansim where everyone becomes better off.
+
+\begin{definition}[Probabilistic serial mechansim]
+	The probability serial mechanism is defined by the following:
+	\begin{enumerate}[label = (\roman*)]
+		\item Start at $t=0$. 
+		\item As $t$ increases, let agent ``eat' probability shares of her favorite object at unit speed until one or more objects is fully consumed (i.e. the total probability share eaten of some object is $1$). Continue by having every agent ``eat'' probability shares of her favorite object remaining until $t=1$.
+	\end{enumerate}
+\end{definition}
+
+In Example (\ref{5-18-1}), agents 1 and 2 begin by eating $a$, while agents 3 and 4 begin by eating $b$. We can fill in the first two columns of $f(\succ)$ at this point. At time $t=1 /2$, everyone switches to $c$, and at time $t = 3 / 4$ (after we fill in the third column), everyone switches to $d$.
+\begin{proposition}
+	The probabilistic serial mechanism is ordinally efficient.
+\end{proposition}
+\begin{proof}
+	Fix an agent $i$, $\succ$, and potential misreport $\succ_i'$. 
+	Let $t_k \in (0,1]$ be the time at which agent $i$ finished eating her $k$th favorite object.
+	In the original probabilistic serial mechanism, she eats objects in order of preference in $\succ_i$, so she gets one of her favorite $k$ objects in $\succ_i$ with probability $t_k$.
+
+	If $\succ_i'$ maintains the top $k$ objects of $\succ_i$, then $i$ spends the same $t_k$ time eating her top $k$ objects, again because she eats her most-preferred objects first.
+	If $\succ_i'$ replaces one of the top $k$ objects with a less-preferred object, $i$ spends less than $t_k$ time eating her $k$ favorite objects in $\succ_i$ when she reports $\succ_i'$, so she gets one of her $k$ favorite objects with probability less than $t_k$ by misreporting.
+
+	This holds for all $k = 1,\ldots,\left| X \right|$, so we are done.
+\end{proof}
+
+Unfortunately, the probabilistic serial mechanism is not strategy-proof.
+
+\begin{example}
+	Set $N = \left\{1,2,3\right\}$ and $X = \left\{a,b,c\right\}$:
+	\[
+		\begin{array}{ccc}
+			\succ_1 & \succ_2 & \succ_3 \\
+			\hline
+			a & a & b \\
+			b & c & a \\
+			c & b & c
+		\end{array}
+	.\]
+	Then, with time breaks $t=0,\frac{1}{2},\frac{3}{4}$,
+	\[
+		\operatorname{PS}(\succ)
+		=
+		\left(
+		\begin{array}{ccc}
+			\frac{1}{2} & \frac{1}{4} & \frac{1}{4} \\[0.45em]
+			\frac{1}{2} & 0 & \frac{1}{4} + \frac{1}{4}\\[0.45em]
+			0 & \frac{1}{2} + \frac{1}{4} & \frac{1}{4}
+		\end{array}
+		\right)
+		=
+		\left(
+		\begin{array}{ccc}
+			\frac{1}{2} & \frac{1}{4} & \frac{1}{4} \\[0.45em]
+			\frac{1}{2} & 0 & \frac{1}{2}\\[0.45em]
+			0 & \frac{3}{4} & \frac{1}{4}
+		\end{array}
+		\right)
+	.\]
+	But, if agent $3$ instead announced $a \succ_{3}' b \succ_{3}' c$,
+	we would get the allocation
+	\[
+		\operatorname{PS}(\succ_3', \succ_{-3})
+		=
+		\left(
+		\begin{array}{ccc}
+			\frac{1}{3} & \frac{1}{2} & \frac{1}{6} \\[0.45em]
+			\frac{1}{3} & 0 & \frac{2}{3} \\[0.45em]
+			\frac{1}{3} & \frac{1}{2} & \frac{1}{6}
+		\end{array}
+		\right)
+	.\]
+	Note that $\PS(\succ)$ and $\RSD(\succ)$ are not comparable under the notion of FOSD because while $\PS(\succ_{3}',\succ_{-3})$ gives 3 a higher total probability of her top two choices, it gives a lower probability of her top choice.
+
+\end{example}
+
+We have shown that $\PS$ is not strategy-proof.\footnote{Under the definition above, strategy-proofness requires the truthful outcome to FOSD every deviation outcome. Thus, to show that a random mechanism is not strategy-proof, it is enough to find a deviation outcome that FOSDs the truthful outcome, or to find a truthful/deviation pair that is not comparable by FOSD.} Furthermore, a first-order improvement is not possible, which is a different requirement from strategy-proofness: ordinal efficiency rules out a feasible allocation that FOSD-improves the agents' allocations, while strategy-proofness compares truthful and deviating reports for a single agent and requires truthful reporting to FOSD the deviation.
+We also see that $\PS$ satisfies ETOE.
+
+\begin{theorem}[Bogomolnaia and Moulin (2001)]
+	There is no strategy-proof, ordinally efficient mechanism that satisfies equal treatment of equals.
+\end{theorem}

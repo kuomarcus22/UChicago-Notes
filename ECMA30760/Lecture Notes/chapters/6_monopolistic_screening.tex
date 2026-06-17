@@ -1,0 +1,85 @@
+\styledchapter{Monopolistic Screening}
+
+This section provides a short application of our development of the optimal auction.
+
+\section{Mussa--Rosen (1978)}
+Suppose there is a single buyer, single seller (also called a monopolist), and single good. The seller can control the good's quality $q \coloneqq q(\theta)  \in [0,\overline{q}]$, but must pay a cost $C(q)$ for producing quality $q$. The cost is given to the seller, and we assume that \[
+	C(0) = 0, \quad  C(q) \ge 0, \quad C'(q) > 0, \quad C''(q) > 0,\ \forall q
+.\] \boxednote{The seller commits ex ante to a direct mechanism: after the buyer reports a type in $[0,\overline{\theta}]$, the mechanism assigns a quality level $q(\theta)$ and payment $p(\theta)$.}
+Let the buyer have value $\theta \in [0,\overline{\theta}]$ with CDF $F$ and density $f$. 
+
+If the buyer has type $\theta$, buys a good of quality $q$, and pays $p$, her utility is defined to be $\theta q - p$.
+The seller gets $p - C(q)$.
+The primitive is the buyer's value $\theta$ (both true and reported), and the seller chooses both the quality rule $q(\cdot)$ and payment rule $p(\cdot)$.
+How should she do so to maximize expected revenue?
+
+\begin{proposition}
+	Assume $F$ is regular, so its virtual value
+	\[
+		c(\theta) \coloneqq \theta - \frac{1-F(\theta)}{f(\theta)}
+	\]
+	is strictly increasing. Then an individually rational revenue-maximizing direct mechanism has quality rule
+	\[
+		q^\star(\theta) = \begin{cases}
+			0, \quad &c(\theta) \le C'(0) \\
+			\left(C'\right)^{-1}\left( c(\theta) \right), \quad &C'(0) < c(\theta) < C'(\overline{q}) \\
+			\overline{q}, \quad &c(\theta) \ge C'(\overline{q})
+		\end{cases}
+	\]
+	and payment rule
+	\[
+		p^\star(\theta) = \theta q^\star(\theta) - \int_{0}^{\theta} q^\star(t)dt
+	.\]
+	In particular, $q^\star$ is nondecreasing.
+\end{proposition}
+
+\begin{proof}
+	By the Revelation Principle, we can restrict attention to an incentive-compatible direct mechanism without loss, so the seller chooses functions
+	\[
+		q: [0,\overline{\theta}] \to [0,\overline{q}]
+		\quad \text{and} \quad
+		p: [0,\overline{\theta}] \to \R
+	.\] 
+	The previous section applies with quality playing the role of the one-dimensional allocation object: instead of a win probability $X(\theta)$, a report $\theta$ now determines a deterministic quality level $q(\theta)$, and utility still has the quasilinear form ``type times allocation minus payment.'' Therefore incentive compatibility and revenue maximization implies that $q$ is nondecreasing and that
+	\[
+		p(\theta) = \theta q(\theta) - \int_{0}^{\theta} q(t)dt 
+	.\]
+	Expected profit is
+	\begin{align*}
+		\int_{0}^{\overline{\theta}} \left[ p(\theta) - C(q(\theta)) \right]f(\theta)d\theta
+		&= \int_{0}^{\overline{\theta}} \left[ \theta q(\theta) - \int_{0}^{\theta} q(t)dt - C(q(\theta)) \right]f(\theta)d\theta \\
+		&= \int_{0}^{\overline{\theta}} \left[ \theta q(\theta) - C(q(\theta)) \right]f(\theta)d\theta - \int_{0}^{\overline{\theta}} \int_{0}^{\theta} q(t)dt\, f(\theta)d\theta \\
+		&= \int_{0}^{\overline{\theta}} \left[ \theta q(\theta) - C(q(\theta)) \right]f(\theta)d\theta - \int_{0}^{\overline{\theta}} \left( 1-F(\theta) \right) q(\theta)d\theta \\
+		&= \int_{0}^{\overline{\theta}} \left[ \left( \theta - \frac{1-F(\theta)}{f(\theta)} \right)q(\theta) - C(q(\theta)) \right]f(\theta)d\theta \\
+		&= \int_{0}^{\overline{\theta}} \left[ c(\theta)q(\theta) - C(q(\theta)) \right]f(\theta)d\theta
+	\end{align*} 
+	where the third line uses integration by parts, or equivalently Fubini's theorem.
+
+	For each fixed $\theta$, the choice $q(\theta)$ enters the objective only through the bracketed term at that same $\theta$, and $f(\theta)$ is a positive weight. Thus we can maximize pointwise:
+	\[
+		\max_{q \in [0,\overline{q}]} \left\{ c(\theta)q - C(q) \right\}.
+	\]
+	Since $C$ is strictly convex, the maximizer is unique. If $c(\theta) \le C'(0)$, then the objective is decreasing at $q=0$, so the maximizer is $q^\star(\theta)=0$. If $C'(0) < c(\theta) < C'(\overline{q})$, the unique interior maximizer satisfies
+	\[
+		C'(q^\star(\theta)) = c(\theta),
+	\]
+	or equivalently
+	\[
+		q^\star(\theta) = \left(C'\right)^{-1}\left( c(\theta) \right).
+	\]
+	If instead $c(\theta) \ge C'(\overline{q})$, the objective is still increasing at $q=\overline{q}$, so the constrained maximizer is $q^\star(\theta)=\overline{q}$.
+	Because $c$ is increasing and the casewise rule above is itself nondecreasing in $c(\theta)$, the resulting quality schedule $q^\star$ is nondecreasing. The payment formula then follows from the envelope formula above.
+\end{proof}
+
+How does $q^\star$ of the monopolist (seller) compare to the quality that a benevolent social planner picks? The BSP selects $q$ to maximize the sum of utilities $(q\theta - p) + (p - C(q)) = q\theta - C(q)$. The FOC is $C'(q^{FB}(\theta)) = \theta$.
+It turns out that the seller selects a lower quality for every value $\theta \in [0,\overline{\theta}]$. 
+Indeed, the planner's quality solves $C'(q^{FB}(\theta)) = \theta$, whereas the monopolist's quality solves $C'(q^\star(\theta)) = c(\theta)$ whenever $q^\star(\theta) \in (0,\overline{q})$. Since the virtual value cannot exceed the value, i.e. $c(\theta) \le \theta$, and $C'$ is increasing, we get $q^\star(\theta) \le q^{FB}(\theta)$.
+If, in addition,\boxednote{In a more heuristic way, we say that the ``no distortion at the top'' property holds if $f$ is positive enough near $\overline{\theta}$.}
+\[
+	\lim_{\theta \uparrow \overline{\theta}} \frac{1-F(\theta)}{f(\theta)} = 0,
+\]
+then
+\[
+	\lim\limits_{\theta \uparrow \overline{\theta}} \left( \theta - \frac{1-F(\theta)}{f(\theta)} \right) = \overline{\theta}
+.\] 
+In other words, as $\theta \uparrow \overline{\theta}$, the revenue-maximizing quality $q^\star$ approaches the benevolent planner's quality. This is the ``no distortion at the top'' property.
