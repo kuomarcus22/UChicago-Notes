@@ -18,7 +18,7 @@ Selected lecture notes of varying degrees of polish.
 
 ### Spring 2026
 
-ECMA 30760: Introduction to Economic Design
+[ECMA 30760](https://github.com/kuomarcus22/UChicago-Notes/tree/main/ECMA307600/Lecture%20Notes): Introduction to Economic Design
 
 ECMA 31150: Econometric Methods for Macroeconomics
 
@@ -53,7 +53,7 @@ Worse quality than Winter 2026.
 
 ## Features of Notes
 
-To give credit: the format of the notes from Winter 2026 and on was heavily inspired by a set of course notes by Alexander Torgovitsky.
+To give credit: the format of the notes from Winter 2026 takes inspiration from a set of course notes by Alexander Torgovitsky.
 
 Some nice features of my notes I would like you to notice, all four of which are displayed below:
 

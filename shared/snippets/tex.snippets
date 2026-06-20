@@ -383,12 +383,22 @@ endsnippet
 
 priority 200
 context "math()"
+snippet "(?<![A-Za-z\\])([A-Za-z])mbb\b" "math bb for single letter" riA
+\mathbb{`!p snip.rv = match.group(1)`}$0
+endsnippet
+
+priority 200
+context "math()"
 snippet "(\\[A-Za-z]+?)mbf\b" "math bf for control sequence" riA
 \boldsymbol{`!p snip.rv = match.group(1)`}$0
 endsnippet
 
 snippet mbf "math bf" iwA
 \mathbf{$1}$0
+endsnippet
+
+snippet mbb "math bb" iwA
+\mathbb{$1}$0
 endsnippet
 
 snippet tii "italic" iwA
@@ -1160,7 +1170,7 @@ snippet lecnotes_template "lecnotes template"
 
 \begin{document}
 
-\makelectitle{${1:Course Number} \\ \vspace{0.2em} ${2:Course Name}}{${3: Quarter}}{Marcus Kuo \\ \small{Lectures by ${4: Instructor}}}
+\makelectitle{${1:Course Number} \\\\ \vspace{0.2em} ${2:Course Name}}{${3: Quarter}}{Marcus Kuo \\\\ \small{Lectures by ${4: Instructor}}}
 \tableofcontents
 \clearpage
 

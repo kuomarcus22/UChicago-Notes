@@ -49,6 +49,11 @@
 \DeclareMathOperator{\Corr}{Corr}
 \DeclareMathOperator{\Bias}{Bias}
 \DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\FOSD}{FOSD}
+\DeclareMathOperator{\RSD}{RSD}
+\DeclareMathOperator{\SD}{SD}
+\DeclareMathOperator{\TTC}{TTC}
+\DeclareMathOperator{\RTTC}{RTTC}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
@@ -156,7 +161,7 @@
 \summarysection{4.2}{Quasilinear Preferences}
 
 \begin{proposition}[Quasilinear representation of preferences]
-	If $\succsim$ satisfies the axioms in (\ref{4-6-1}), there exists a utility function $u: A \to \R$ such that \[
+	If $\succsim$ satisfies the axioms, there exists a utility function $u: A \to \R$ such that \[
 		(a,p) \succsim (a',p') \iff u(a) - p \ge u(a') - p'
 	.\] 
 \end{proposition}
@@ -172,7 +177,7 @@
 \end{proposition}
 
 \begin{corollary}
-	Pairing this result with Proposition (\ref{4-8-0}) yields that any welfare-maximizing social choice function is implementable in dominant strategies.
+	Pairing this result with the referenced proposition yields that any welfare-maximizing social choice function is implementable in dominant strategies.
 \end{corollary}
 
 \summarysection{4.5}{The Vickrey--Clarke--Groves Mechanism}
@@ -195,7 +200,8 @@
 \end{corollary}
 
 \begin{theorem}[Roberts']
-	Suppose that $\left| A \right| \ge 3$. $g: \mathscr{U}^{\left| N \right|} \to A$ is implementable in dominant strategies iff there are nonnegative weights $\left\{w_i\right\}_{i \in N}$ which are not identically zero and constants $\left\{C_a\right\}_{a \in A}$ for each $a \in A$ such that \[
+	Suppose that $\left| A \right| \ge 3$. $g: \mathscr{U}^{\left| N \right|} \to A$ is implementable in dominant strategies iff there are nonnegative weights $\left\{w_i\right\}_{i \in N}$ which are not identically zero and constants $\left\{C_a\right\}_{a \in A}$ for each $a \in A$ such that 
+	\[
 		g\left( u_1,\ldots,u_{\left| N \right|} \right) \in \argmax_{ a\in A} \sum\limits_{i\in N}^{} w_i u_i(a) + C_a
 	.\] 
 \end{theorem}
@@ -206,7 +212,7 @@
 	Suppose $\mathscr{V} \subseteq \mathscr{U}$ is convex. $g: \mathscr{V}^{\left| N \right|}\to A$ is implementable in dominant strategies iff it is weakly monotonic.
 \end{theorem}
 
-\summarychapter{5}{Social Choice with Indifferences}
+\summarychapter{5}{Social Choice with Indifferences, Constrained Allocation}
 
 \summarysection{5.1}{Introduction and the Equivalence of Constrained Allocation}
 
@@ -226,7 +232,7 @@
 	If $f$ is strategy-proof and Pareto efficient, then for $\succ_i$ and $\succ_i'$ that differ only in the position of $x$, then \[
 		f(\succ_i, \succ_j)(i) = f\left( \succ_i', \succ_j \right)(i)
 	.\] 
-	Furthermore, $j$'s object is unchanged by $i$'s misreports: \[
+	Furthermore, $j$'s object is unchanged by $i$'s misreport: \[
 		f\left( \succ_i,\succ_j \right)(j)
 		= 
 		f\left( \succ_i',\succ_j \right)(j)
@@ -264,10 +270,10 @@
 \end{proposition}
 
 \begin{proposition}[Revenue of a first-price auction]
-	The optimal bidding strategy in a first price auction with common value distribution with CDF $F$ for a bidder with value $v$ is \[
+	An equilibrium bidding strategy in a symmetric first price auction with independent value distribution with CDF $F$ for a bidder with value $v$ is \[
 		b(v) = v - \frac{1}{F(v)} \int_{0}^{v} F(w)dw 
 	.\] 
-	The expected revenue is thus \[
+	The expected revenue is \[
 		R_{\text{FPA}} = 1 - \int_{0}^{1} F_{(2)}(w)dw = \int_{0}^{1} \left( 1-F(w) \right)^2dw 
 	,\] 
 	which is exactly the expected revenue of the second-price auction.
@@ -284,7 +290,7 @@
 \begin{proposition}
 	If $s$ is a Bayes--Nash equilibrium of an auction game $G$, then the induced interim allocation probabilities $X_i$ and payments $P_i$ satisfy the following:
 	\begin{enumerate}[label = (\roman*)]
-		\item The interim allocation $X(\cdot)$ is nondecreasing.
+		\item The interim allocation probability $X(\cdot)$ is nondecreasing in the report.
 		\item For any $v$, \[
 			P(v) = P(0) + vX(v) - \int_{0}^{v} X(t)dt 
 		.\] The only choices that the seller has are in controlling $P(0)$ and $X(v)$ for each $v \in [0,1]$. The payment at any value is then uniquely determined.
@@ -295,7 +301,8 @@
 	A revenue-maximizing auction satisfying individual rationality has payment schedule \[
 		P(v) = vX(v) - \int_{0}^{v} X(t)dt 
 	.\] 
-	This payment schedule and $X_i(\cdot)$ being nondecreasing (from Proposition \ref{4-20-b}) are necessary conditions for an auction to be revenue-maximizing.
+	This payment schedule and $X_i(\cdot)$ being nondecreasing (from the referenced proposition) are necessary conditions for an auction to be revenue-maximizing.
+	Note that we have not yet determined what exactly $X(\cdot)$ is in the revenue-maximizing auction.
 \end{corollary}
 
 \begin{proposition}
@@ -331,7 +338,9 @@
 	If both $F^1$ and $F^2$ are Beta distributions, the optimal mechanism offers an uncountably large menu.
 \end{proposition}
 
-\summarysection{6.6}{Mussa--Rosen (1978)}
+\summarychapter{7}{Monopolistic Screening}
+
+\summarysection{7.1}{Mussa--Rosen (1978)}
 
 \begin{proposition}
 	Assume $F$ is regular, so its virtual value
@@ -352,6 +361,130 @@
 	.\]
 	In particular, $q^\star$ is nondecreasing.
 \end{proposition}
+
+\summarychapter{8}{Cooperative Games}
+
+\summarysection{8.2}{Cooperative Games with Transferable Utility}
+
+\begin{theorem}[Bonderava--Shapley]
+	A cooperative game with transferable utility $(N,v)$ has a nonempty core if and only if for every set of balanced weights $\delta$, \[
+		\sum\limits_{S \subsetneq N \mid S \ne \O}^{} \delta(S) v(S) \le v(N)
+	.\] 
+\end{theorem}
+
+\summarychapter{9}{Stable Matching}
+
+\summarysection{9.1}{One-Sided Matching}
+
+\begin{proposition}
+	A matching $\mu$ is in the core if and only if it is stable. In particular, to check the core, we just need to check deviations from coalitions of size $2$.
+\end{proposition}
+
+\summarysection{9.2}{One-to-One Two-Sided Matching}
+
+\begin{proposition}
+	The $M$-proposing DA outcome is stable.
+	Hence, the core of the one-to-one two-sided matching problem is nonempty.
+\end{proposition}
+
+\begin{proposition}
+	In the $M$-proposing DA algorithm, each $m \in M$ who is matched is matched with his favorite achievable partner and each $w \in W$ who is matched is matched with her least-favorite achievable partner.
+\end{proposition}
+
+\begin{proposition}
+	There are no stable and strategy-proof one-to-one two-sided matching mechanisms.
+\end{proposition}
+
+\begin{theorem}
+	In the mechanism that returns the $M$-proposing DA outcome for every preference profile, it is a dominant strategy for each $m \in M$ to truthfully report his preference.
+\end{theorem}
+
+\begin{lemma}[Blocking]
+	Let $\mu_{DA}$ be the outcome of the $M$-proposing DA mechanism for the preferences $\succ$. 
+	Let $\mu$ be any other matching (not necessarily stable). Let $M'$ be the set of men who strictly prefer their matches under $\mu$ to their matches under $\mu_{DA}$, i.e. \[
+		M' = \left\{m \in M : \mu(m) \succ_m \mu_{DA}(m)\right\}
+	.\]  Then
+	\begin{enumerate}[label = (\roman*)]
+		\item $M' \ne M$, and 
+		\item If $M' \ne \O$, then there is an $m \in M \setminus M'$ and a $w$ in $\mu(M')$ such that $(m,w)$ is a blocking pair for $\mu$.
+	\end{enumerate} 
+\end{lemma}
+
+\summarysection{9.3}{Many-to-One Two-Sided Matching}
+
+\begin{proposition}[Stability of DA-$M$ under responsiveness.]
+	The many-to-one two-sided DA-$M$ algorithm is stable if each $w$'s preferences are responsive.
+\end{proposition}
+
+\summarychapter{10}{Allocation Problems}
+
+\summarysection{10.1}{Deterministic Allocation}
+
+\summarysubsection{Svensson (1999)}
+
+\begin{lemma}
+	For any mechanism $f$, the following are equivalent:
+	\begin{enumerate}[label = (\roman*)]
+		\item $f$ is group strategy-proof.
+		\item $f$ is strategy-proof and non-bossy.
+		\item $f$ is monotonic.
+	\end{enumerate}
+\end{lemma}
+
+\begin{lemma}
+	If a mechanism is group strategy-proof, then it is Pareto efficient iff it is surjective.
+\end{lemma}
+
+\begin{theorem}[Svensson]
+	A mechanism $f$ is group strategy-proof and neutral iff it is a serial dictatorship.
+	\end{theorem}
+
+\summarysubsection{Top Trading Cycles}
+
+\begin{proposition}
+	The top trading cycles mechanism is group strategy-proof and Pareto efficient.
+\end{proposition}
+
+\summarysection{10.2}{Random Allocation}
+
+\begin{theorem}[Birkhoff Von--Neumann]
+	Any bistochastic matrix can be written as a convex combination of permutation matrices.
+\end{theorem}
+
+\begin{proposition}
+	$\RSD = \RTTC$. 
+\end{proposition}
+
+\begin{proposition}
+	RSD and RTTC are strategy-proof, ex-post efficient, and satisfy ETOE.
+	Furthermore, by Bastek and Ehlers (2024), these three properties uniquely characerize RSD/RTTC up until $\left| N \right| = 4$, while there exist strategy-proof, ex-post efficient, and ETOE mechanisms for $\left| N \right| \ge 5$.
+\end{proposition}
+
+\begin{proposition}
+	The probabilistic serial mechanism is ordinally efficient.
+\end{proposition}
+
+\begin{theorem}[Bogomolnaia and Moulin (2001)]
+	There is no strategy-proof, ordinally efficient mechanism that satisfies equal treatment of equals.
+\end{theorem}
+
+\summarychapter{11}{Information Design}
+
+\summarysection{11.2}{General Model}
+
+\begin{lemma}
+	 A necessary condition for a distribution over posteriors to have some signal structure that induces it is that the expectation of the posterior beliefs is the prior.
+\end{lemma}
+
+\begin{proposition}
+	There is a signal structure with value $V^\star$ iff there is a Bayes-plausible distribution over posterior beliefs such that \[
+		\int \hat{u}_S(\mu)\, d \tau(\mu) = V^\star
+	.\]
+\end{proposition}
+
+\begin{theorem}[Carath\'eodory]
+	Suppose $X \subseteq \R^d$ and $y $ is a point in the convex hull of $X$. Then there are $d+1$ points in $X$ such that $y$ is in the convex hull of those points.
+\end{theorem}
 
 \summarychapter{A}{Tools}
 
@@ -502,7 +635,7 @@
 		\item Elimination: The outcome that is top-ranked by the fewest people is removed and the process repeats.
 		\item Borda count: Let $n = \left| A \right|$. Give $n$ points to a candidate for each agent that top-ranks them, $n-1$ points for each agent that second-ranks them, and so on. The outcome with the most points wins.
 		\item Summation social choice functions: Assign points $\phi_i(m)$ for agent $i$'s $m$th ranked outcome, and the outcome with the most points wins.
-		\item Pairwise comparison graph: We arrange the outcomes into a directed graph with all possible edges labeled by the number of people who prefer the tail node to the head node. A special case is the Copeland social choice function, which counts for each outcome how many arrows point out, and the winner is the node with the highest count. See Figure (\ref{fig:3-23-1}).
+		\item Pairwise comparison graph: We arrange the outcomes into a directed graph with all possible edges labeled by the number of people who prefer the tail node to the head node. A special case is the Copeland social choice function, which counts for each outcome how many arrows point out, and the winner is the node with the highest count. See the referenced figure.
 	\end{itemize}
 \end{definition}
 
@@ -655,7 +788,7 @@
 	.\] 
 \end{definition}
 
-\summarychapter{5}{Social Choice with Indifferences}
+\summarychapter{5}{Social Choice with Indifferences, Constrained Allocation}
 
 \summarysection{5.1}{Introduction and the Equivalence of Constrained Allocation}
 
@@ -740,7 +873,8 @@
 \summarysection{6.4}{Revenue-Maximizing Auctions}
 
 \begin{definition}[Individual rationality]
-	An auction game $G$ with equilibrium $s$ is individually rational if for each $v$, \[
+	An auction game $G$ with equilibrium $s$ is individually rational if for each $v$, 
+	\[
 		vX(v) - P(v) \ge 0
 	.\] 
 \end{definition}
@@ -753,6 +887,282 @@
 
 \begin{definition}[Virtual value auction]
 	In the virtual value auction, all buyers submit their values for the good. Using $F$, the seller converts these to virtual values. If no virtual value is positive, the seller keeps the good. Otherwise, she gives the good to the agent with the highest value. If there are multiple such agents, then each gets the good with equal probability. Buyers pay the lowest value they could have submitted and still won the auction with, i.e. the second-highest value after excluding duplicates.
+\end{definition}
+
+\summarychapter{8}{Cooperative Games}
+
+\summarysection{8.2}{Cooperative Games with Transferable Utility}
+
+\begin{definition}[Cooperative game with transferable utility]
+	A cooperative game with transferable utility is a pair $(N,v)$, where $N$ is a set of agents and\[
+		v: 2^N \setminus \O \to \R
+	,\] where $v(S)$ is the surplus associated with every nonempty coalition $S$.
+	\end{definition}
+
+\begin{definition}[Allocation]
+	An allocation is a vector $x \in \R^n$ such that \[
+		\sum\limits_{i \in N}^{} x_i = v(N)
+	.\] 
+	The allocation specifies the amount of surplus that each agents gets when the coalition includes all agents.
+\end{definition}
+
+\begin{definition}[Core]
+	The core of $(N,v)$ is the set of all allocations such that the sum of the allocation components within the coalition is larger than the surplus generated from the coalition: \[
+		\left\{\text{allocations } x \in \R^n : \text{for all nonempty } S \subsetneq N, \sum\limits_{i \in S}^{} x_i \ge v(S)\right\}
+	.\] 
+	Alternatively and more clearly, it is \[
+		\left\{x \in \R^n: \text{for all nonempty } S \subsetneq N, \sum\limits_{i \in S}^{} x_i \ge v(S) \text{ and } \sum\limits_{i \in N}^{} x_i = v(N)\right\}
+	.\] 
+\end{definition}
+
+\begin{definition}[Balanced weights]
+	A set of balanced weights is a function $\delta: 2^{N} \setminus \left\{\O, N\right\} \to [0,1]$ such that for every agent $i \in N$, \[
+		\sum\limits_{S: i \in S}^{} \delta(S) = 1
+	.\] 
+\end{definition}
+
+\summarysection{8.3}{Cooperative Games with Non-Transferable Utility}
+
+\begin{definition}[Core]
+	An action $a \in A_N$ is in the core if there is no coalition $S \subseteq N$ and $a' \in A_S$ such that \[
+		a' \succsim_j a, \ \forall j \in S \text{ and } a' \succ_k a \text{ for some }k \in S
+	.\] 
+\end{definition}
+
+\summarychapter{9}{Stable Matching}
+
+\summarysection{9.1}{One-Sided Matching}
+
+\begin{definition}[Matching]
+	A matching is a function $\mu: N \to N$ such that $\mu \circ \mu = \operatorname{id}_N$. Equivalently, if $i$ is matched with $j$, then $j$ is matched with $i$.
+\end{definition}
+
+\begin{definition}[Acceptable, individually rational]
+	We say that $j$ is acceptable to $i$ if $j \succ_i i$. A matching $\mu$ is individually rational if $\mu(i)$ is acceptable for every $i$ such that $\mu(i) \ne i$, i.e. if everyone who is matched weakly prefers his/her partner to him/herself.
+\end{definition}
+
+\begin{definition}[Stable, blocking pair]
+	A matching $\mu$ is stable if it is individually rational and there is no pair $i,j$ such that $i \ne j$ and \[
+		i \succ_j \mu(j) \text{ and } j \succ_i \mu(i)
+	.\] 
+
+	A pair $(i,j)$ in which \[
+		i \succ_j \mu(j) \text{ and } j \succ_i \mu(i)
+	\] is called a \emph{blocking pair}, as they could form a coalition (blocking the matching $\mu$) and both be better off.
+\end{definition}
+
+\summarysection{9.2}{One-to-One Two-Sided Matching}
+
+\begin{definition}[Gale--Shapley (Deferred Acceptance Algorithm)]
+	The traditional algorithm is the $M$-proposing deferred acceptance algorithm.
+	The algorithm proceeds in the following steps:
+	\begin{enumerate}[label = (\arabic*)]
+		\item Each $m \in M$ proposes to his favorite acceptable $w \in W$. Each $w \in W$ is tentatively matched with her favorite acceptable proposer and rejects everyone else. Call $\mu_1$ this match. If there were no rejections, stop and return the tentative matches.
+		\item In each step $k \ge 2$, each $m \in M$ who was rejected in the previous round proposes to his favorite acceptable $w$ who has not yet rejected him. Each $w \in W$ is tentatively matched with her favorite acceptable $m$ among those who applied in this round and her tentative match from the previous round. All other applicants are rejected. Let $\mu_k$ denote this match. If there were no rejections, stop and return the tentative matches.
+	\end{enumerate}
+
+	For any profile of preferences $\succ$, let $DA_M(\succ)$ be the matching returned by the $M$-proposing deferred acceptance algorithm.
+\end{definition}
+
+\begin{definition}[Achievable]
+	We say that $w \in W$ is achievable for $m \in M$ if there exists a stable matching where $m$ and $w$ are matched.
+\end{definition}
+
+\begin{definition}[Mechanism]
+	A one-to-one two-sided matching mechanism is a function $f: \mathscr{P} \to \Sigma$. It is stable if for every $\succ \in \mathscr{P}$, $f(\succ)$ is stable. In other words, mechanisms are stable if they give stable matchings for every preference profile.
+\end{definition}
+
+\summarysection{9.3}{Many-to-One Two-Sided Matching}
+
+\begin{definition}[Matching]
+	A matching is a function $\mu: M \to M \cup W$ such that:
+	\begin{enumerate}[label = (\roman*)]
+		\item $\left| \mu^{-1}(w) \right| \le c_w$ for every $w$ 
+		\item If $\mu(m) = m' \in M$, then $m = m'$.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}[Stable, blocking pair]
+	A matching $\mu$ is stable if:
+	\begin{enumerate}[label = (\roman*)]
+		\item Each $m$ is matched to an acceptable $w$ or is unmatched, and 
+		\item There is no $M' \subseteq M$ and some $w$ such that $M' \succ_w \left\{m: \mu(m) = w\right\}$ and each $m \in M'$ weakly prefers $w$ to his match in $\mu$.
+	\end{enumerate}
+	Such a pair $(M',w)$ in (ii) is called a blocking pair.
+\end{definition}
+
+\begin{definition}[Responsive]
+	A preference $\succ_w$ is responsive if there is a strict ranking $\succ_w^\star$ on $M\cup \left\{w\right\}$ such that for any $S$ with $\left| S \right| < c_w$,\begin{enumerate}[label = (\roman*)]
+		\item For any $m,m' \not\in S$, we have that \[
+			S \cup \left\{m\right\} \succ_w S \cup \left\{m'\right\} \iff m \succ_w^\star m'
+		,\] 
+		\item and for every $m \not\in S$, \[
+			S \cup \left\{m\right\} \succ_w S \iff m \succ_w^\star w
+		.\]  
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}[Deferred acceptance algorithm, many-to-one]
+	Let $\mu_0(m) = m$ for every $m$.
+	The algorithm proceeds as follows:
+	\begin{enumerate}[label = (\roman*)]
+		\item All $m \in M$ apply to their favorite acceptable $w$. If for every $m$, no $w$ is acceptable, return $\mu_0$. Otherwise, each $w \in W$ considers the set of applicants $A_w^{1}$ and rejects all $m \in A_m^{1}$ except those in \[
+			\argmax_{\succ_w} \left\{M' \subseteq A_w^{1}: \left| M' \right| \le c_w\right\}
+		.\] Let $\mu_1$ be the matching in which $m$ is matched to $w$ if he applied to $w$ and was not rejected, and where $m$ is otherwise unmatched.
+		\item For steps $k\ge 2$, \emph{each}\footnote{Contrasts with the one-to-one DA-$M$ algorithm.} $m$ applies to his favorite $w$ who has not yet rejected him. If there are not applications, return $\mu_{k-1}$.
+
+		Each $w$ gets applicants $A_w^{k}$ and rejects all $m$ not in \[
+			\argmax_{\succ_w} \left\{M' \subseteq A_w^{k} \cup \mu_{k-1}^{-1}(w): \left| M' \right| \le c_w\right\}
+		.\] 
+		Let $\mu_k$ be the matching where each $m$ is matched to his favorite $w$ to whom he applied and was not rejected. If there is no such $w$, then $m$ is unmatched.
+		If there are no rejections, then return $\mu_k$.
+	\end{enumerate}
+\end{definition}
+
+\summarysection{9.4}{More on the Deferred Acceptance Algorithm}
+
+\begin{definition}[Aligned]
+	We say that preferences $\left( \succ_m \right)_{m \in M}$ and $\left( \succ_w \right)_{w \in W}$ are aligned if there exists $U : M \times W \to \R$ such that for every $m \in M$ and $w \in W$, $U(m,\cdot)$ represents $m$'s preferences and $U(\cdot, w)$ represents $w$'s preferences.
+\end{definition}
+
+\summarychapter{10}{Allocation Problems}
+
+\summarysection{10.1}{Deterministic Allocation}
+
+\summarysubsection{Svensson (1999)}
+
+\begin{definition}[Allocation, mechanism]
+	An allocation is a bijection $\mu: N \to X$. We denote the set of allocations as $A$.
+
+	A mechanism is a function $f: P^N \to A$.
+\end{definition}
+
+\begin{definition}[(Group) strategy-proof]
+	A mechanism $f$ is:
+	\begin{itemize}
+		\item Strategy-proof if for every $i$, $\succ \in P^{N}$, and $\succ_i'$, \[
+			f(\succ)(i) \succsim_i f\left( \succ_i', \succ_{-i}\right) (i)
+		.\] 
+		\item Group strategy-proof if for all $\succ \in P^N$, there is no nonempty coalition $S \subseteq N$ and joint misreport $\succ_S' = \left( \succ_i' \right)_{i \in S}$ such that
+		\[
+			f(\succ_S',\succ_{-S})(j) \succsim_j f(\succ)(j) \quad \text{for all } j \in S
+		\]
+		and
+		\[
+			f(\succ_S', \succ_{-S})(i) \succ_i f(\succ)(i) \quad \text{for some } i \in S
+		.\] 
+		\item Monotonic if for any $\succ,\succ'$ such that for all $i$ and all $x \in X$, if \[
+			f(\succ)(i) \succ_i x \implies f(\succ)(i) \succ_i' x
+		,\] then $f(\succ') = f(\succ)$.
+		If the set of objects dispreferred to $f(\succ)(i)$ weakly grows from $\succ$ to $\succ'$ for agent $i$, then $f$ is monotone if $i$ maintains the same object.
+		\item Non-bossy if for all $i$, $\succ_{-i}$, $\succ_i$, and $\succ_i'$, \[
+				f(\succ_i,\succ_{-i})(i) = f(\succ_i', \succ_{-i})(i) \implies f(\succ_i, \succ_{-i}) = f(\succ_i', \succ_{-i})
+		.\] 
+		For an agent $i$ and preferences for the remaining agents, if $i$ is able to change her preference without affecting her own allocation, then her changing her preference can't change others' allocations.
+	\end{itemize}
+\end{definition}
+
+\begin{definition}[Serial dictatorship mechanism]
+	The serial dictatorship mechanism with order $\rho: \left\{1,2,\ldots,\left| N \right|\right\} \to N$ ($\rho$ is a bijection) is the mechanism that gives $\rho(1)$ her top choice, $\rho(2)$ her favorite choice of the remaining objects, and so on.
+
+	We call $\rho$ the \emph{picking order} of the mechanism.
+\end{definition}
+
+\begin{definition}[Neutrality]
+	Let $\sigma$ be a permutation on $X$. If $\mu\in A$, define $\sigma\,\mu$ to be the allocation where each agent $i$ gets $\sigma(\mu(i))$, i.e. \[
+		(\sigma\,\mu)(i) \coloneqq \sigma(\mu(i))
+	.\] 
+
+	If $\succ_i \in P$, let $\sigma\,\succ_i$ be the preference such that \[
+		x \mathrel{\sigma\!\succ_i} y \iff \sigma^{-1}(x) \succ_i \sigma^{-1}(y)
+	.\] 
+
+	A mechanism $f$ is neutral if for every $\succ \in P^{\left| N \right|}$ and all permutations $\sigma$, \[
+		f(\sigma\,\succ) = \sigma\,f(\succ)
+	.\] 
+\end{definition}
+
+\summarysection{10.2}{Random Allocation}
+
+\begin{definition}[Bistochastic matrix]
+	A square matrix $M$ is bistochastic if the rows and columns sum to $1$ and all entries are positive, i.e. \[
+		\sum\limits_{j} M_{ij} = 1, \ \forall i, \qquad \sum\limits_{i}^{} M_{ij} = 1,\ \forall j
+	.\] 
+
+	Let $\mathscr{B}_{\left| N \right|}$ be the set of bistochastic $\left| N \right| \times \left| N \right|$ matrices.
+\end{definition}
+
+\begin{definition}[Random allocation mechanism]
+	A random allocation mechanism is a function $f: P^{\left| N \right|} \to B_{\left| N \right|}$.
+	$f(\succ)_{i x}$ is agent $i$'s probability of being assigned house $x$ when preferences are $\succ$ under $f$.
+	We write $f(\succ)_i$ for the $i$th row of the matrix $f(\succ)$, which is agent $i$'s lottery over houses.
+\end{definition}
+
+\begin{definition}[First-order stochastic dominance]
+	Let $p,p \in \Delta(X)$ and let $\succ_i$ be a strict ordering on $X = \left\{x_1,x_2,\ldots,x_{\left| N \right|}\right\}$.
+	We say that $p$ first-order stochastically dominates $p'$ with respect to $\succ_i$ if\begin{itemize}
+		\item $p(x_1) \ge p'(x_1)$,
+		\item $p(x_1) + p(x_2) \ge p'(x_1) + p'(x_2)$,
+		\item and so on, such that for every $x \in X$, \[
+				\sum\limits_{y : y \succsim_i x} p(y) \ge \sum\limits_{y: y \succsim_i x}^{} p'(y)
+		.\] 
+	\end{itemize}
+	We denote first order stochastic dominance of $p$ over $p'$ with respect to $\succ_i$ by \[
+		p \FOSD_{\succ_i}p'
+	.\] 
+\end{definition}
+
+\begin{definition}[Strategy-proof, Ex-post efficient, Equal treatment of equals]
+	Let $f: P^{\left| N \right|}\to \mathscr{B}_{\left| N \right|}$ be a random mechanism. $f$ is strategy-proof if for all $i$, $\succ_{-i}$, $\succ_i$, and $\succ_{i}'$,
+	\[
+		f(\succ_i,\succ_{-i})_i \FOSD_{\succ_i} f(\succ_i', \succ_{-i})_i
+	.\]Implicitly, if $f$ is strategy-proof, then the lotteries $f(\succ_i,\succ_{-i})_i$ and $f(\succ_i',\succ_{-i})_i$ must be comparable.
+
+	We say that $f$ is ex-post efficient if for all $\succ$, $f(\succ)$ can be written as a convex combination\footnote{We alternatively say that $f(\succ)$ has a social implementation $\sum_k \alpha_k \mu_k$.} \[
+		\alpha_1 \mu_1 + \cdots + \alpha_p \mu_p
+	\] where each $\mu_j$ is a deterministic Pareto efficient allocation.
+
+	$f$ satisfies equal treatment of equals (ETOE) if for any $i,j$ and $\succ_{-ij}$, if $\succ_i = \succ_j$, \[
+		f(\succ_i,\succ_j,\succ_{-ij})_i = f\left( \succ_i,\succ_j,\succ_{-ij} \right)_{j}
+	.\]  
+\end{definition}
+
+\begin{definition}[Random serial dictatorship, random top trading cycles]
+	Random serial dictatorship (RSD) is the mechanism \[
+		\RSD(\succ) = \frac{1}{\left| N \right|!} \sum\limits_{\rho}^{} \SD_\rho(\succ)
+	.\] 
+
+	Random top trading cycles (RTTC) is the mechanism \[
+		\RTTC(\succ) = \frac{1}{\left| N \right|!} \sum\limits_{\mu_0 \in A}^{} \TTC_{\mu_0}(\succ)
+	.\] Note that $\left| N \right|! = \left| A \right|$, where $A$ is the set of \emph{allocations}, not objects.
+\end{definition}
+
+\begin{definition}[Ordinal efficiency]
+	We say that $f$ is ordinally efficient if for every $\succ$, there is no $M \ne f(\succ)$ such that \[
+		M_i \FOSD_{\succ_i} f(\succ)_i
+	\] for every $i$.
+\end{definition}
+
+\begin{definition}[Probabilistic serial mechansim]
+	The probability serial mechanism is defined by the following:
+	\begin{enumerate}[label = (\roman*)]
+		\item Start at $t=0$. 
+		\item As $t$ increases, let agent ``eat' probability shares of her favorite object at unit speed until one or more objects is fully consumed (i.e. the total probability share eaten of some object is $1$). Continue by having every agent ``eat'' probability shares of her favorite object remaining until $t=1$.
+	\end{enumerate}
+\end{definition}
+
+\summarychapter{11}{Information Design}
+
+\summarysection{11.2}{General Model}
+
+\begin{definition}[Signal structure]
+	A signal structure is a collection of distributions $\left\{\pi(\cdot \mid \omega)\right\}_{\omega \in \Omega}$ where there is a finite set $S$ such that each $\pi(\cdot\mid \omega)$ has support in $S$.
+\end{definition}
+
+\begin{definition}[Bayes-plausible]
+	Given a prior $\mu_0$, $\tau \in \Delta(\Delta(\Omega))$ is Bayes-plausible if \[
+		\int \mu\, d \tau(\mu) = \mu_0
+	.\] 
 \end{definition}
 
 \summarychapter{A}{Tools}
