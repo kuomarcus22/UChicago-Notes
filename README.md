@@ -18,7 +18,7 @@ Selected lecture notes of varying degrees of polish.
 
 ### Spring 2026
 
-[ECMA 30760](https://github.com/kuomarcus22/UChicago-Notes/tree/main/ECMA307600/Lecture%20Notes): Introduction to Economic Design
+[ECMA 30760](https://github.com/kuomarcus22/UChicago-Notes/tree/main/ECMA30760/Lecture%20Notes): Introduction to Economic Design
 
 ECMA 31150: Econometric Methods for Macroeconomics
 
