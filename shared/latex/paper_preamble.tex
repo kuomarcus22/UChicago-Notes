@@ -6,22 +6,16 @@
 \usepackage[
     paper=letterpaper,
     margin=1in,
-    includeheadfoot,
-    headheight=14pt,
-    headsep=0.22in,
+    includefoot,
     footskip=0.35in
 ]{geometry}
 
-% Typography.
+% Typography and microtypography.
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[semibold]{libertine}
 % Core math and theorem support.
 \usepackage{amsmath, amssymb, amsthm, mathtools}
-\DeclareMathSizes{10}{9.5}{7}{5}
-\DeclareMathSizes{10.5}{10}{7.25}{5.2}
-\DeclareMathSizes{11}{10.4}{7.6}{5.6}
-\DeclareMathSizes{12}{11.3}{8.1}{6}
+\usepackage{centernot}
 \setlength{\jot}{0.75pt}
 \setlength{\abovedisplayskip}{3pt plus 1pt minus 1pt}
 \setlength{\belowdisplayskip}{3pt plus 1pt minus 1pt}
@@ -30,7 +24,7 @@
 \usepackage{microtype}
 \usepackage{textcomp}
 \usepackage{setspace}
-\setstretch{1.08}
+\setstretch{1.0}
 \raggedbottom
 \usepackage{mathrsfs}
 \usepackage{dsfont}
@@ -64,10 +58,10 @@
 \NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
 \tcbset{
   lecrcodeboxstyle/.style={
-    colback=gray!8,
+    colback=gray!5,
     colframe=black!65,
     boxrule=0.45pt,
-    arc=2.4mm,
+    arc=1.4mm,
     left=6pt,
     right=6pt,
     top=6pt,
@@ -121,13 +115,13 @@
 % Title and section styling.
 \usepackage{titling}
 \usepackage{titlesec}
-\setlength{\droptitle}{-0.6in}
+\setlength{\droptitle}{-0.8in}
 \pretitle{\begin{center}\LARGE\bfseries}
-\posttitle{\par\end{center}\vspace{0.4em}}
+\posttitle{\par\end{center}\vspace{0.2em}}
 \preauthor{\begin{center}\normalsize}
-\postauthor{\par\end{center}\vspace{0.15em}}
+\postauthor{\par\end{center}\vspace{0em}}
 \predate{\begin{center}\small}
-\postdate{\par\end{center}\vspace{1.0em}}
+\postdate{\par\end{center}\vspace{0.5em}}
 
 \titleformat{\section}
   {\normalfont\large\bfseries}
@@ -173,6 +167,8 @@
 \newcommand*\Q{\mathbb{Q}}
 \newcommand*\Z{\mathbb{Z}}
 \newcommand*\E{\mathbb{E}}
+\let\oldd\d
+\renewcommand*\d{\mathop{}\!\mathrm{d}}
 \let\oldL\L
 \renewcommand*\L{\mathbb{L}}
 \let\oldP\P
@@ -185,6 +181,8 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\plim}{plim}
+\DeclareMathOperator*{\esssup}{ess\,sup}
+\DeclareMathOperator*{\essinf}{ess\,inf}
 \DeclareMathOperator{\opvec}{vec}
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Cov}{Cov}

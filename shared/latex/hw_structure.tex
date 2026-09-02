@@ -162,6 +162,7 @@
 \usepackage[utf8]{inputenc}
 % Core math and theorem support.
 \usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{centernot}
 
 %----------------------------------------------------------------------------------------
 %	HEADERS AND FOOTERS
@@ -363,6 +364,8 @@
 \newcommand*\Q{\mathbb{Q}}
 \newcommand*\Z{\mathbb{Z}}
 \newcommand*\E{\mathbb{E}}
+\let\oldd\d
+\renewcommand*\d{\mathop{}\!\mathrm{d}}
 \newcommand*\oldL{\L}
 \renewcommand*\L{\mathbb{L}}
 \newcommand*\oldP{\P}
@@ -380,3 +383,5 @@
 \DeclareMathOperator*{\Bias}{Bias}
 \DeclareMathOperator*{\Corr}{Corr}
 \DeclareMathOperator*{\plim}{plim}
+\DeclareMathOperator*{\esssup}{ess\,sup}
+\DeclareMathOperator*{\essinf}{ess\,inf}

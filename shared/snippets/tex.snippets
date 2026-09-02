@@ -375,6 +375,10 @@ snippet tbb "bold" iwA
 \textbf{$1}$0
 endsnippet
 
+snippet ttt "text" iwA
+\texttt{$1}$0
+endsnippet
+
 priority 200
 context "math()"
 snippet "(?<![A-Za-z\\])([A-Za-z])mbf\b" "math bf for single letter" riA
@@ -691,7 +695,7 @@ endsnippet
 
 priority 100
 context "math()"
-snippet '(?<!\\)(sin|cos|arccot|cot|csc|ln|log|exp|star|perp)' "ln" rw
+snippet '(?<!\\)(sin|cos|arccot|cot|csc|ln|log|star|perp)' "ln" rw
 \\`!p snip.rv = match.group(1)`{\left($1\right)}$0
 endsnippet
 
@@ -863,12 +867,17 @@ snippet ZZ "Z" iA
 \Z
 endsnippet
 
+context "math()"
+snippet TT "T" iA
+\mathbb{T}
+endsnippet
+
 snippet <! "normal" iA
 \triangleleft 
 endsnippet
 
-snippet <> "hokje" iA
-\diamond 
+snippet <> "left angle brackets" iA
+\left<${1:${VISUAL}} \right>$0
 endsnippet
 
 
@@ -898,10 +907,6 @@ endsnippet
 
 snippet it "item object" b
 \item 
-endsnippet
-
-snippet SI "SI" iA
-\SI{$1}{$2}
 endsnippet
 
 snippet bigfun "Big function" iA
@@ -1005,6 +1010,10 @@ endsnippet
 
 snippet msc "math script" wA
 \mathscr{$1}$0
+endsnippet
+
+snippet mcl "math calligraphic" wA
+\mathcal{$1}$0
 endsnippet
 
 priority 200

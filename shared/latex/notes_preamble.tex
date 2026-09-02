@@ -48,6 +48,7 @@
 %\usepackage[semibold]{libertine}
 % Core math and theorem support.
 \usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{centernot}
 %\DeclareMathSizes{10}{9.5}{7}{5}
 %\DeclareMathSizes{10.5}{10}{7.25}{5.2}
 %\DeclareMathSizes{11}{10.4}{7.6}{5.6}
@@ -535,6 +536,8 @@
 \newcommand*\Q{\mathbb{Q}}
 \newcommand*\Z{\mathbb{Z}}
 \newcommand*\E{\mathbb{E}}
+\let\oldd\d
+\renewcommand*\d{\mathop{}\!\mathrm{d}}
 \let\oldL\L
 \let\oldP\P
 \renewcommand*\P{\mathbb{P}}
@@ -547,6 +550,8 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\plim}{plim}
+\DeclareMathOperator*{\esssup}{ess\,sup}
+\DeclareMathOperator*{\essinf}{ess\,inf}
 \DeclareMathOperator{\opvec}{vec}
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Cov}{Cov}
@@ -910,25 +915,20 @@
   \begin{titlepage}
     \thispagestyle{empty}
     \begin{tikzpicture}[remember picture,overlay]
-      % Vertical rule.
-      \draw[line width=0.6pt]
-        ([xshift=0.78in,yshift=-0.78in]current page.north west) --
-        ([xshift=0.78in,yshift=0.92in]current page.south west);
-
       % Title block (positions tuned to match the reference layout).
       \node[
-        anchor=north west,
+        anchor=north,
         inner sep=0pt,
         % Use some of the outer margin for long titles, but keep within the page.
         text width=\dimexpr\textwidth+\marginparsep+\marginparwidth-0.60in\relax,
-        align=left
-      ] at ([xshift=1.18in,yshift=-3.55in]current page.north west) {%
+        align=center
+      ] at ([yshift=-3.55in]current page.north) {%
         \setstretch{1.0}%
-        \fontsize{30}{32}\selectfont\bfseries
+        \fontsize{24}{28}\selectfont\bfseries
         \spaceskip=0.35em plus 0.04em minus 0.015em\relax
         \xspaceskip=\spaceskip
         \hyphenchar\font=-1\relax
-        \raggedright
+        \centering
         % Prefer non-hyphenated breaks on long titles.
         \pretolerance=10000\relax
         \tolerance=10000\relax
@@ -939,20 +939,20 @@
       };
 
       \node[
-        anchor=north west,
+        anchor=north,
         inner sep=0pt,
         text width=\textwidth,
-        align=left
-      ] at ([xshift=1.18in,yshift=-5.05in]current page.north west) {%
+        align=center
+      ] at ([yshift=-5.05in]current page.north) {%
         \fontsize{17}{20}\selectfont\itshape #2%
       };
 
       \node[
-        anchor=north west,
+        anchor=north,
         inner sep=0pt,
         text width=\textwidth,
-        align=left
-      ] at ([xshift=1.18in,yshift=-6.40in]current page.north west) {%
+        align=center
+      ] at ([yshift=-6.40in]current page.north) {%
         \fontsize{14}{16}\selectfont\scshape #3%
       };
     \end{tikzpicture}
